@@ -11,6 +11,8 @@ import (
 
 func init() {
 	flag.StringVar(&config.Pages, "p", "", "Enter pages like 1,2,3-4,6,7,8-9")
+	flag.StringVar(&config.OutputName, "o", "", "Output name")
+	flag.StringVar(&config.OutputPath, "O", "", "Output path")
 }
 
 func download(url string) {
@@ -33,5 +35,5 @@ func download(url string) {
 func main() {
 	flag.Parse()
 	args := flag.Args()
-
+	download(args[0])
 }

@@ -1,7 +1,12 @@
 package static
 
+type URL struct {
+	URL string
+	Ext string
+}
+
 type Stream struct {
-	Url     string `json: "url"`
+	URLs    []URL  `json: "url"`
 	Quality string `json: "quality"`
 	Size    int64  `json: "size"`
 }

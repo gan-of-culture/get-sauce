@@ -6,6 +6,8 @@ import (
 	"regexp"
 	"strings"
 
+	"golang.org/x/tools/go/callgraph/static"
+
 	"github.com/anaskhan96/soup"
 	"github.com/gan-of-culture/go-hentai-scraper/request"
 	"github.com/gan-of-culture/go-hentai-scraper/static"
@@ -37,7 +39,12 @@ func Extractor(url string) ([]static.Data, error) {
 
 		stream := make(map[string]static.Stream)
 		stream["0"] = static.Stream{
-			Url:     elementTag["src"],
+			URLs: []URL{
+				{
+					URL: elementTag["src"],
+					Ext: utils.GetLastItem(strings.Split(elementTag["src"], ".")),
+				},
+			},
 			Quality: fmt.Sprintf("%s x %s", elementTag["data-width"], elementTag["data-height"]),
 			Size:    size,
 		}

@@ -94,7 +94,12 @@ func extractData(postURL string) (static.Data, error) {
 
 	streams := make(map[string]static.Stream, 1)
 	streams["0"] = static.Stream{
-		Url:     attrs["data-large-file-url"],
+		URLs: []URL{
+			{
+				URL: attrs["data-large-file-url"],
+				Ext: utils.GetLastItem(strings.Split(attrs["data-large-file-url"], ".")),
+			},
+		},
 		Quality: fmt.Sprintf("%s x %s", attrs["data-width"], attrs["data-height"]),
 		Size:    size,
 	}

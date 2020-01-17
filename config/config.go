@@ -3,6 +3,10 @@ package config
 var (
 	// Pages of doushin
 	Pages string
+	// OutputPath
+	OutputPath string
+	// OutputName
+	OutputName string
 )
 
 // FakeHeaders fake http headers

@@ -99,7 +99,12 @@ func extractImageData(id string) (map[string]static.Stream, error) {
 
 	stream := make(map[string]static.Stream)
 	stream["0"] = static.Stream{
-		Url:     imgTag["src"],
+		URLs: []URL{
+			{
+				URL: imgTag["src"],
+				Ext: utils.GetLastItem(strings.Split(imgTag["src"], ".")),
+			},
+		},
 		Quality: fmt.Sprintf("%s x %s", imgTag["width"], imgTag["height"]),
 		Size:    0,
 	}
