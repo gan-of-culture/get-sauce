@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/cheggaaa/pb"
+	"github.com/gan-of-culture/go-hentai-scraper/config"
 	"github.com/gan-of-culture/go-hentai-scraper/request"
 )
 
@@ -19,17 +20,29 @@ func progressBar(size int64) *pb.ProgressBar {
 	return bar
 }
 
+// Download data
 func Download(data static.Data) error {
-	//TODO add waitgroup
+	
+	var waitgroup sync.WaitGroup 
+
 	bar := progressBar(data.Size)
 	bar.Start()
+
+	var save_err error
+
 	for _, URL := range data.Streams[0].URLs {
-		err := save(URL, data.Title, config.FakeHeaders, bar)
-		if err != nil {
-			return
+		wg.add()
+		go func( URL URL, title data.Title, bar *pb.ProgressBar ) {
+			defer wgp.Done()
+			err := save(URL, title, config.FakeHeaders, bar)
+			if err != nil {
+				save_err = err
+			}
+		}
+		if save_err != nil{
+			return save_err
 		}
 	}
-
 	bar.Finish()
 	return nil
 }

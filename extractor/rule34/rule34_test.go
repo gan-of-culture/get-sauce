@@ -74,7 +74,7 @@ func TestExtract(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			elements, err := Extractor(tt.url)
+			elements, err := Extract(tt.url)
 			if err != nil {
 				t.Error("elements has error or is too big for single tests")
 			}

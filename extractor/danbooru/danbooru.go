@@ -9,12 +9,13 @@ import (
 	"github.com/anaskhan96/soup"
 	"github.com/gan-of-culture/go-hentai-scraper/request"
 	"github.com/gan-of-culture/go-hentai-scraper/static"
+	"github.com/gan-of-culture/go-hentai-scraper/utils"
 )
 
 const site = "https://danbooru.donmai.us"
 
-// Extractor for danbooru pages
-func Extractor(url string) ([]static.Data, error) {
+// Extract for danbooru pages
+func Extract(url string) ([]static.Data, error) {
 	posts, err := ParseURL(url)
 	if err != nil {
 		return nil, err
@@ -94,10 +95,10 @@ func extractData(postURL string) (static.Data, error) {
 
 	streams := make(map[string]static.Stream, 1)
 	streams["0"] = static.Stream{
-		URLs: []URL{
+		URLs: []static.URL{
 			{
 				URL: attrs["data-large-file-url"],
-				Ext: utils.GetLastItem(strings.Split(attrs["data-large-file-url"], ".")),
+				Ext: utils.GetLastItemString(strings.Split(attrs["data-large-file-url"], ".")),
 			},
 		},
 		Quality: fmt.Sprintf("%s x %s", attrs["data-width"], attrs["data-height"]),

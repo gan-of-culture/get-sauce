@@ -11,6 +11,7 @@ import (
 	"github.com/gan-of-culture/go-hentai-scraper/config"
 	"github.com/gan-of-culture/go-hentai-scraper/request"
 	"github.com/gan-of-culture/go-hentai-scraper/static"
+	"github.com/gan-of-culture/go-hentai-scraper/utils"
 )
 
 const site = "https://nhentai.net"
@@ -99,10 +100,10 @@ func extractImageData(id string) (map[string]static.Stream, error) {
 
 	stream := make(map[string]static.Stream)
 	stream["0"] = static.Stream{
-		URLs: []URL{
+		URLs: []static.URL{
 			{
 				URL: imgTag["src"],
-				Ext: utils.GetLastItem(strings.Split(imgTag["src"], ".")),
+				Ext: utils.GetLastItemString(strings.Split(imgTag["src"], ".")),
 			},
 		},
 		Quality: fmt.Sprintf("%s x %s", imgTag["width"], imgTag["height"]),

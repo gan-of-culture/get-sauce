@@ -1,11 +1,9 @@
 package utils
 
-import "reflect"
-
-func GetLastItem(list interface{}) interface{} {
-	v := reflect.ValueOf(list)
-	if v.Kind() != reflect.Slice {
-		return nil
+// GetLastItemString of slice
+func GetLastItemString(slice []string) string {
+	if len(slice) <= 0 {
+		return ""
 	}
-	return v.Index(v.Len() - 1)
+	return slice[len(slice)-1]
 }

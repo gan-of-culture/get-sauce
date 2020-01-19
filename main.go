@@ -6,7 +6,11 @@ import (
 
 	"github.com/bobesa/go-domain-util/domainutil"
 	"github.com/gan-of-culture/go-hentai-scraper/config"
+	"github.com/gan-of-culture/go-hentai-scraper/downloader"
+	"github.com/gan-of-culture/go-hentai-scraper/extractor/danbooru"
 	"github.com/gan-of-culture/go-hentai-scraper/extractor/nhentai"
+	"github.com/gan-of-culture/go-hentai-scraper/extractor/rule34"
+	"github.com/gan-of-culture/go-hentai-scraper/static"
 )
 
 func init() {
@@ -17,19 +21,23 @@ func init() {
 
 func download(url string) {
 	var err error
+	var data []static.Data
 	domain := domainutil.Domain(url)
 	switch domain {
 	case "nhentai":
-		data, err := nhentai.Extract(url)
+		data, err = nhentai.Extract(url)
 	case "rule34":
-		data, err := rule34.Extract(url)
-
+		data, err = rule34.Extract(url)
 	case "danbooru":
-		data, err := danbooru.Extract(url)
+		data, err = danbooru.Extract(url)
 	}
 	if err != nil {
 		log.Fatal(err)
 	}
+	for _, d := range data {
+		downloader.Download(d)
+	}
+
 }
 
 func main() {

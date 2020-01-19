@@ -11,6 +11,7 @@ import (
 	"github.com/gan-of-culture/go-hentai-scraper/config"
 )
 
+//Request http
 func Request(method string, url string, headers map[string]string) (*http.Response, error) {
 
 	transport := &http.Transport{
