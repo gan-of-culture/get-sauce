@@ -11,6 +11,7 @@ type Stream struct {
 	URLs    []URL  `json: "url"`
 	Quality string `json: "quality"`
 	Size    int64  `json: "size"`
+	Info    string `json: "info"`
 }
 
 // Data Struct of data

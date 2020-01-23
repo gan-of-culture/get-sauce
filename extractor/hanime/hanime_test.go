@@ -36,7 +36,7 @@ func TestParseURL(t *testing.T) {
 	}
 }
 
-func TestExtractor(t *testing.T) {
+func TestExtract(t *testing.T) {
 	type want struct {
 		Title     string
 		Type      string
@@ -67,7 +67,7 @@ func TestExtractor(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			data, err := Extractor(tt.url)
+			data, err := Extract(tt.url)
 			if err != nil {
 				t.Error(err)
 			}

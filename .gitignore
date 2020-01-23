@@ -1,3 +1,10 @@
 *.exe
 *.test
 *.log
+
+media
+*.jpg
+*.png
+*.mp4
+*.mkv
+*.torrent

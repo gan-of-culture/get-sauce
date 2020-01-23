@@ -46,7 +46,7 @@ func TestExtractData(t *testing.T) {
 			url:  "https://danbooru.donmai.us/posts/3749687",
 			want: want{
 				numberOfStream: 1,
-				title:          "touhou konpaku youmu niwashi  yuyu  ",
+				title:          " touhou konpaku youmu niwashi  yuyu ",
 			},
 		},
 	}

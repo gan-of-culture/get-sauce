@@ -19,7 +19,7 @@ import (
 const site = "hanime.tv"
 
 // Extractor for img/video data
-func Extractor(URL string) ([]static.Data, error) {
+func Extract(URL string) ([]static.Data, error) {
 
 	URLs, err := ParseURL(URL)
 	if err != nil {
