@@ -2,6 +2,8 @@ package danbooru
 
 import "testing"
 
+import "log"
+
 func TestParseURL(t *testing.T) {
 	tests := []struct {
 		name string
@@ -20,6 +22,7 @@ func TestParseURL(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			log.Println(tt.name)
 			urls, err := ParseURL(tt.url)
 			if err != nil {
 				t.Error(err)

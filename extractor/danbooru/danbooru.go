@@ -88,21 +88,23 @@ func extractData(postURL string) (static.Data, error) {
 	}
 
 	attrs := imageContainer.Attrs()
-	size, err := request.Size(attrs["data-large-file-url"], postURL)
+	//commented out because of performance issues and I think I don't really need it currently
+	// comment back in if needed
+	/*size, err := request.Size(attrs["data-file-url"], postURL)
 	if err != nil {
 		return static.Data{}, errors.New("[Danbooru]No image size not found")
-	}
+	}*/
 
 	streams := make(map[string]static.Stream, 1)
 	streams["0"] = static.Stream{
 		URLs: []static.URL{
 			{
-				URL: attrs["data-large-file-url"],
-				Ext: utils.GetLastItemString(strings.Split(attrs["data-large-file-url"], ".")),
+				URL: attrs["data-file-url"],
+				Ext: utils.GetLastItemString(strings.Split(attrs["data-file-url"], ".")),
 			},
 		},
 		Quality: fmt.Sprintf("%s x %s", attrs["data-width"], attrs["data-height"]),
-		Size:    size,
+		Size:    0,
 	}
 
 	title := getTitle(doc.Find("section", "id", "tag-list"))

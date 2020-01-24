@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"path/filepath"
 	"strings"
 	"sync"
 	"time"
@@ -14,10 +15,9 @@ import (
 	"github.com/gan-of-culture/go-hentai-scraper/config"
 	"github.com/gan-of-culture/go-hentai-scraper/request"
 	"github.com/gan-of-culture/go-hentai-scraper/static"
-	"github.com/schollz/progressbar"
+	"github.com/schollz/progressbar/v2"
 )
 
-const scraperPath = filepath.Abs("../")
 // DefaultConfig for Session. Do not pass zero value Config to NewSession. Copy this struct and modify instead.
 var DefaultConfig = torrent.Config{
 	// Session
@@ -117,9 +117,12 @@ func Download(data static.Data) error {
 		config.SelectStream = "0"
 	}
 
-	// set static paths for torrent downloader
-	DefaultConfig.Database = filepath.Join(scraperPath, DefaultConfig.Database)
-	DefaultConfig.DataDir = filepath.Join(scraperPath, DefaultConfig.DataDir)
+	scraperPath, err := filepath.Abs("../")
+	if err == nil {
+		// set static paths for torrent downloader
+		DefaultConfig.Database = filepath.Join(scraperPath, DefaultConfig.Database)
+		DefaultConfig.DataDir = filepath.Join(scraperPath, DefaultConfig.DataDir)
+	}
 
 	// select stream to download
 	stream := data.Streams[config.SelectStream]
@@ -139,6 +142,7 @@ func Download(data static.Data) error {
 			return saveErr
 		}
 	}
+	wg.Wait()
 
 	return nil
 }
@@ -164,7 +168,9 @@ func save(url static.URL, fileName string, headers map[string]string) error {
 			return err
 		}
 	} else {
-		resp, err := request.Request(http.MethodGet, url.URL, nil)
+		resp, err := request.Request(http.MethodGet, url.URL, map[string]string{
+			"Accept-Encoding": "gzip, deflate, br",
+		})
 		if err != nil {
 			return nil
 		}
@@ -190,9 +196,8 @@ func save(url static.URL, fileName string, headers map[string]string) error {
 			log.Fatal(torrent.Stats().Error)
 		default:
 			stats := torrent.Stats()
-			fmt.Println(fmt.Sprintf("Downloading %s - time left: %b - downloading with %bB/s - uploading with %bB/s"
-				,fileName, stats.ETA, stats.Speed.Download, stats.Speed.Upload))
-			time.Sleep(1 * time.Second)		
+			fmt.Println(fmt.Sprintf("Downloading %s - time left: %b - downloading with %bB/s - uploading with %bB/s", fileName, stats.ETA, stats.Speed.Download, stats.Speed.Upload))
+			time.Sleep(1 * time.Second)
 		}
 
 	}

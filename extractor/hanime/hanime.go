@@ -104,7 +104,7 @@ func ParseURL(URL string) ([]string, error) {
 
 	URLs := []string{}
 	for _, node := range nodes[0].Parent.Children {
-		if node.Name == "A" {
+		if node.NodeName == "A" {
 			URLs = append(URLs, node.Attributes[1])
 		}
 	}
