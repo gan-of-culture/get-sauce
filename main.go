@@ -50,10 +50,11 @@ func download(url string) {
 
 	if config.ShowInfo {
 		fmt.Println(data)
-	} else {
-		for _, d := range data {
-			downloader.Download(d)
-		}
+		return
+	}
+
+	for _, d := range data {
+		downloader.Download(d)
 	}
 
 }

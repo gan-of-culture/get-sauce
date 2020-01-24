@@ -7,7 +7,7 @@ var (
 	OutputPath string
 	// OutputName
 	OutputName string
-	// ShowInfo
+	// ShowInfo of all avaiable streams
 	ShowInfo bool
 	// SelectStream
 	SelectStream string

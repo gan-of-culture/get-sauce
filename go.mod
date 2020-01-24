@@ -7,7 +7,6 @@ require (
 	github.com/bradfitz/iter v0.0.0-20191230175014-e8f45d346db8 // indirect
 	github.com/cenkalti/backoff/v3 v3.2.2 // indirect
 	github.com/cenkalti/rain v1.1.8
-	github.com/cheggaaa/pb v2.0.7+incompatible
 	github.com/chromedp/cdproto v0.0.0-20200118073400-82dd5aea4c26
 	github.com/chromedp/chromedp v0.5.3
 	github.com/golang/groupcache v0.0.0-20200121045136-8c9f03a8e57e // indirect
@@ -32,5 +31,4 @@ require (
 	gopkg.in/mattn/go-colorable.v0 v0.1.0 // indirect
 	gopkg.in/mattn/go-isatty.v0 v0.0.4 // indirect
 	gopkg.in/mattn/go-runewidth.v0 v0.0.4 // indirect
-	sourcegraph.com/sourcegraph/go-selenium v0.0.0-20170113155244-3da7d00aac9c
 )

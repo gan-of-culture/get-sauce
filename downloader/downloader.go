@@ -11,17 +11,18 @@ import (
 	"time"
 
 	"github.com/cenkalti/rain/torrent"
-	"github.com/cheggaaa/pb"
 	"github.com/gan-of-culture/go-hentai-scraper/config"
 	"github.com/gan-of-culture/go-hentai-scraper/request"
 	"github.com/gan-of-culture/go-hentai-scraper/static"
+	"github.com/schollz/progressbar"
 )
 
+const scraperPath = filepath.Abs("../")
 // DefaultConfig for Session. Do not pass zero value Config to NewSession. Copy this struct and modify instead.
 var DefaultConfig = torrent.Config{
 	// Session
-	Database:                               "~/rain/session.db",
-	DataDir:                                "~/rain/data",
+	Database:                               "~/torrent/session.db",
+	DataDir:                                "~/torrent/data",
 	DataDirIncludesTorrentID:               true,
 	PortBegin:                              50000,
 	PortEnd:                                60000,
@@ -115,19 +116,25 @@ func Download(data static.Data) error {
 	if config.SelectStream == "" {
 		config.SelectStream = "0"
 	}
+
+	// set static paths for torrent downloader
+	DefaultConfig.Database = filepath.Join(scraperPath, DefaultConfig.Database)
+	DefaultConfig.DataDir = filepath.Join(scraperPath, DefaultConfig.DataDir)
+
+	// select stream to download
 	stream := data.Streams[config.SelectStream]
 
 	var saveErr error
 
 	for _, URL := range stream.URLs {
 		wg.Add(1)
-		func(URL static.URL, title string, bar *pb.ProgressBar) {
+		go func(URL static.URL, title string) {
 			defer wg.Done()
-			err := save(URL, title, config.FakeHeaders, bar)
+			err := save(URL, title, config.FakeHeaders)
 			if err != nil {
 				saveErr = err
 			}
-		}(URL, data.Title, bar)
+		}(URL, data.Title)
 		if saveErr != nil {
 			return saveErr
 		}
@@ -136,7 +143,7 @@ func Download(data static.Data) error {
 	return nil
 }
 
-func save(url static.URL, fileName string, headers map[string]string, bar *pb.ProgressBar) error {
+func save(url static.URL, fileName string, headers map[string]string) error {
 	if config.OutputName != "" {
 		fileName = config.OutputName
 	}
@@ -152,7 +159,7 @@ func save(url static.URL, fileName string, headers map[string]string, bar *pb.Pr
 			return err
 		}
 
-		_, err = writeFile(url.URL, file, headers, bar)
+		_, err = writeFile(url.URL, file, headers)
 		if err != nil {
 			return err
 		}
@@ -179,8 +186,13 @@ func save(url static.URL, fileName string, headers map[string]string, bar *pb.Pr
 
 		select {
 		case <-torrent.NotifyComplete():
-		case <-time.After(30 * time.Second):
-			log.Fatal("download did not finish")
+		case <-torrent.NotifyStop():
+			log.Fatal(torrent.Stats().Error)
+		default:
+			stats := torrent.Stats()
+			fmt.Println(fmt.Sprintf("Downloading %s - time left: %b - downloading with %bB/s - uploading with %bB/s"
+				,fileName, stats.ETA, stats.Speed.Download, stats.Speed.Upload))
+			time.Sleep(1 * time.Second)		
 		}
 
 	}
@@ -188,14 +200,21 @@ func save(url static.URL, fileName string, headers map[string]string, bar *pb.Pr
 	return nil
 }
 
-func writeFile(url string, file *os.File, headers map[string]string, bar *pb.ProgressBar) (int64, error) {
+func writeFile(url string, file *os.File, headers map[string]string) (int64, error) {
 	res, err := request.Request(http.MethodGet, url, headers)
 	if err != nil {
 		return 0, err
 	}
 	defer res.Body.Close()
 
-	writer := io.MultiWriter(file)
+	bar := progressbar.NewOptions(
+		int(res.ContentLength),
+		progressbar.OptionSetBytes(int(res.ContentLength)),
+		progressbar.OptionSetDescription(fmt.Sprintf("Downloading %s ...", file.Name())),
+		progressbar.OptionSetPredictTime(true),
+		progressbar.OptionSetRenderBlankState(true),
+	)
+	writer := io.MultiWriter(file, bar)
 	// Note that io.Copy reads 32kb(maximum) from input and writes them to output, then repeats.
 	// So don't worry about memory.
 	written, copyErr := io.Copy(writer, res.Body)
