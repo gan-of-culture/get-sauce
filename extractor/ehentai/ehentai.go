@@ -27,7 +27,7 @@ func Extract(URL string) ([]static.Data, error) {
 		if err != nil {
 			return nil, err
 		}
-		data = append(data, rData)
+		data = append(data, rData...)
 	}
 	return data, nil
 }
@@ -57,20 +57,20 @@ func ParseURL(URL string) []string {
 	return out
 }
 
-func extractData(URL string) (static.Data, error) {
+func extractData(URL string) ([]static.Data, error) {
 	htmlString, err := request.Get(URL)
 	if err != nil {
-		return static.Data{}, errors.New("[E-Hentai] unvaild URL")
+		return nil, errors.New("[E-Hentai] unvaild URL")
 	}
 
 	re := regexp.MustCompile("([0-9]+) pages")
 	htmlNumberOfPages := re.FindStringSubmatch(htmlString)
 	if len(htmlNumberOfPages) != 2 {
-		return static.Data{}, errors.New("[E-Hentai] error while trying to access the gallery images")
+		return nil, errors.New("[E-Hentai] error while trying to access the gallery images")
 	}
 	numberOfPages, err := strconv.Atoi(htmlNumberOfPages[1])
 	if err != nil {
-		return static.Data{}, errors.New("[E-Hentai] couldn't get number of pages")
+		return nil, errors.New("[E-Hentai] couldn't get number of pages")
 	}
 
 	re = regexp.MustCompile("https://e-hentai.org/s[^\"]+-[0-9]+")
@@ -83,27 +83,28 @@ func extractData(URL string) (static.Data, error) {
 	for page := 1; len(imgURLs) < numberOfPages; page++ {
 		htmlString, err := request.Get(fmt.Sprintf("%s?p=%b", URL, page))
 		if err != nil {
-			return static.Data{}, errors.New("[E-Hentai] unvaild page URL")
+			return nil, errors.New("[E-Hentai] unvaild page URL")
 		}
 		imgURLs = append(imgURLs, re.FindStringSubmatch(htmlString)...)
 	}
 
+	data := []static.Data{}
 	for idx, URL := range imgURLs {
 		htmlString, err := request.Get(URL)
 		if err != nil {
-			return static.Data{}, errors.New("[E-Hentai] unvaild image URL")
+			return nil, errors.New("[E-Hentai] unvaild image URL")
 		}
 
 		re := regexp.MustCompile("<h1>([^<]+)")
 		matchedTitle := re.FindAllStringSubmatch(htmlString, -1)
 		if len(matchedTitle) == 0 {
-			return static.Data{}, errors.New("[E-Hentai] unvaild image title")
+			return nil, errors.New("[E-Hentai] unvaild image title")
 		}
 
-		re = regexp.MustCompile("<div>[^.]+([^::]+):: ([^::]+) :: ([^.]+.[0-9]) ([A-Z]{2})")
+		re = regexp.MustCompile("<div>[^.]+([^::]+):: ([^::]+) :: ([^.]+.[0-9]+) ([A-Z]{2})")
 		matchedFileInfo := re.FindAllStringSubmatch(htmlString, -1)
 		if len(matchedFileInfo) == 0 {
-			return static.Data{}, errors.New("[E-Hentai] unvaild image file info")
+			return nil, errors.New("[E-Hentai] unvaild image file info")
 		}
 		fileInfo := matchedFileInfo[0]
 
@@ -115,7 +116,7 @@ func extractData(URL string) (static.Data, error) {
 			re = regexp.MustCompile("<img id=\"img\" src=\"([^\"]+)")
 			matchedSrcURL := re.FindAllStringSubmatch(htmlString, -1)
 			if len(matchedSrcURL) != 1 {
-				return static.Data{}, errors.New("[E-Hentai] unvaild image src")
+				return nil, errors.New("[E-Hentai] unvaild image src")
 			}
 			srcURL = []string{matchedSrcURL[0][1]}
 		}
@@ -123,7 +124,7 @@ func extractData(URL string) (static.Data, error) {
 		// size will be empty if err occurs
 		fSize, _ := strconv.ParseFloat(fileInfo[3], 64)
 
-		return static.Data{
+		data = append(data, static.Data{
 			Site:  site,
 			Title: fmt.Sprintf("%s - %b", matchedTitle[0][1], idx+1),
 			Type:  "image",
@@ -141,9 +142,9 @@ func extractData(URL string) (static.Data, error) {
 				},
 			},
 			Url: URL,
-		}, nil
+		})
 
 	}
 
-	return static.Data{}, errors.New("[E-Hentai] EOF")
+	return data, nil
 }
