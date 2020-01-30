@@ -9,6 +9,7 @@ import (
 	"github.com/gan-of-culture/go-hentai-scraper/config"
 	"github.com/gan-of-culture/go-hentai-scraper/downloader"
 	"github.com/gan-of-culture/go-hentai-scraper/extractor/danbooru"
+	"github.com/gan-of-culture/go-hentai-scraper/extractor/ehentai"
 	"github.com/gan-of-culture/go-hentai-scraper/extractor/hanime"
 	"github.com/gan-of-culture/go-hentai-scraper/extractor/nhentai"
 	"github.com/gan-of-culture/go-hentai-scraper/extractor/rule34"
@@ -33,14 +34,17 @@ func download(url string) {
 		log.Fatal("Can't parse URL")
 	}
 	switch matches[1] {
+	case "danbooru":
+		data, err = danbooru.Extract(url)
+	case "e-hentai":
+	case "exhentai":
+		data, err = ehentai.Extract(url)
+	case "hanime":
+		data, err = hanime.Extract(url)
 	case "nhentai":
 		data, err = nhentai.Extract(url)
 	case "rule34":
 		data, err = rule34.Extract(url)
-	case "danbooru":
-		data, err = danbooru.Extract(url)
-	case "hanime":
-		data, err = hanime.Extract(url)
 	case "underhentai":
 		data, err = underhentai.Extract(url)
 	}
