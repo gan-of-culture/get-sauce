@@ -12,10 +12,19 @@ import (
 	"github.com/gan-of-culture/go-hentai-scraper/utils"
 )
 
-const site = "https://e-hentai.org/"
+const ehentai = "https://e-hentai.org/"
+const exhentai = "https://exhentai.org/"
+
+var site string
 
 // Extract data
 func Extract(URL string) ([]static.Data, error) {
+	if strings.Contains(URL, "https://ex") {
+		site = exhentai
+	} else {
+		site = ehentai
+	}
+
 	URLs := ParseURL(URL)
 	if len(URLs) == 0 {
 		return nil, errors.New("[E-Hentai] no vaild URL found")
@@ -34,7 +43,13 @@ func Extract(URL string) ([]static.Data, error) {
 
 // ParseURL to gallery URL
 func ParseURL(URL string) []string {
-	if strings.Contains(URL, "https://e-hentai.org/g/") {
+	if strings.Contains(URL, "https://ex") {
+		site = exhentai
+	} else {
+		site = ehentai
+	}
+
+	if strings.Contains(URL, site+"g/") {
 		return []string{URL}
 	}
 
@@ -43,7 +58,7 @@ func ParseURL(URL string) []string {
 		return []string{}
 	}
 
-	re := regexp.MustCompile("https://e-hentai.org/g/[^\"]+")
+	re := regexp.MustCompile(fmt.Sprintf("%sg/[^\"]+", site))
 	galleries := re.FindAllStringSubmatch(htmlString, -1)
 	if len(galleries) == 0 {
 		return []string{}
@@ -73,7 +88,7 @@ func extractData(URL string) ([]static.Data, error) {
 		return nil, errors.New("[E-Hentai] couldn't get number of pages")
 	}
 
-	re = regexp.MustCompile("https://e-hentai.org/s[^\"]+-[0-9]+")
+	re = regexp.MustCompile(fmt.Sprintf("%ss[^\"]+-[0-9]+", site))
 	matchedImgURLs := re.FindAllStringSubmatch(htmlString, -1)
 	imgURLs := []string{}
 	for _, imgURL := range matchedImgURLs {
@@ -108,7 +123,7 @@ func extractData(URL string) ([]static.Data, error) {
 		}
 		fileInfo := matchedFileInfo[0]
 
-		re = regexp.MustCompile("https://e-hentai.org/fullimg[^\"]+")
+		re = regexp.MustCompile(fmt.Sprintf("%sfullimg[^\"]+", site))
 		srcURL := re.FindStringSubmatch(htmlString)
 		if len(srcURL) != 1 {
 

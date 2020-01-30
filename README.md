@@ -22,7 +22,7 @@ I'll do proper releases later *probably~*
 | [nhentai](https://nhentai.net)                                   | :heavy_check_mark: |        ?         |
 | [rule34](https://rule34.paheal.net)                              | :heavy_check_mark: |:heavy_check_mark:|
 | [underhentai](https://underhentai.net)                           |         ?          |:heavy_check_mark:|
-| [e-hentai](http://e-hentai.org/)/[exhentai](https://exhentai.org)|   coming soon      |        ?         |
+| [e-hentai](http://e-hentai.org/)/[exhentai](https://exhentai.org)| :heavy_check_mark: |        ?         |
 
 *Note that I currently didn't find a way to download 1080p hentai from hanime.tv and implenting 720p isn't that high on my list - I'll try to find a way in the future*
 

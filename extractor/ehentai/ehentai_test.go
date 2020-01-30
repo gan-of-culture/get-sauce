@@ -37,13 +37,17 @@ func TestExtract(t *testing.T) {
 		numberOfData int
 	}{
 		{
-			name:         "Parse page of galleries",
-			URL:          "https://e-hentai.org/?page=1&f_cats=1021",
-			numberOfData: 150,
-		}, {
 			name:         "Single gallery",
 			URL:          "https://e-hentai.org/g/1559777/dc952bd4c1/",
 			numberOfData: 1,
+		}, {
+			name:         "Single Extraction Exhentai",
+			URL:          "https://exhentai.org/g/1557343/96e5e684ae/",
+			numberOfData: 1,
+		}, {
+			name:         "Parse page of galleries",
+			URL:          "https://e-hentai.org/?page=1&f_cats=1021",
+			numberOfData: 150,
 		},
 	}
 
