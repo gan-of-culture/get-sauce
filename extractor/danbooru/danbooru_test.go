@@ -76,10 +76,6 @@ func TestExtract(t *testing.T) {
 		want int
 	}{
 		{
-			name: "Overview page",
-			url:  "https://danbooru.donmai.us/posts?page=3&tags=fire_emblem",
-			want: 2,
-		}, {
 			name: "Default extraction",
 			url:  "https://danbooru.donmai.us/posts/3749687",
 			want: 1,

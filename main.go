@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"flag"
 	"fmt"
 	"log"
@@ -9,6 +10,7 @@ import (
 	"github.com/gan-of-culture/go-hentai-scraper/config"
 	"github.com/gan-of-culture/go-hentai-scraper/downloader"
 	"github.com/gan-of-culture/go-hentai-scraper/extractor/danbooru"
+	"github.com/gan-of-culture/go-hentai-scraper/extractor/ehentai"
 	"github.com/gan-of-culture/go-hentai-scraper/extractor/hanime"
 	"github.com/gan-of-culture/go-hentai-scraper/extractor/nhentai"
 	"github.com/gan-of-culture/go-hentai-scraper/extractor/rule34"
@@ -17,30 +19,34 @@ import (
 )
 
 func init() {
-	flag.StringVar(&config.Pages, "p", "", "Enter pages like 1,2,3-4,6,7,8-9")
 	flag.StringVar(&config.OutputName, "o", "", "Output name")
 	flag.StringVar(&config.OutputPath, "O", "", "Output path")
-	flag.BoolVar(&config.ShowInfo, "i", false, "Show info")
+	flag.StringVar(&config.Pages, "p", "", "Enter pages like 1,2,3-4,6,7,8-9 for doujins")
+	flag.BoolVar(&config.RestrictContent, "r", false, "Don't scrape Restricted Content")
 	flag.StringVar(&config.SelectStream, "s", "0", "Select a stream")
+	flag.BoolVar(&config.ShowInfo, "i", false, "Show info")
 }
 
 func download(url string) {
 	var err error
 	var data []static.Data
-	re := regexp.MustCompile("http.://([^\\.]+)")
+	re := regexp.MustCompile("http?s://([^\\.]+)")
 	matches := re.FindStringSubmatch(url)
-	if len(matches) >= 1 {
+	if len(matches) < 2 {
 		log.Fatal("Can't parse URL")
 	}
 	switch matches[1] {
+	case "danbooru":
+		data, err = danbooru.Extract(url)
+	case "e-hentai":
+	case "exhentai":
+		data, err = ehentai.Extract(url)
+	case "hanime":
+		data, err = hanime.Extract(url)
 	case "nhentai":
 		data, err = nhentai.Extract(url)
 	case "rule34":
 		data, err = rule34.Extract(url)
-	case "danbooru":
-		data, err = danbooru.Extract(url)
-	case "hanime":
-		data, err = hanime.Extract(url)
 	case "underhentai":
 		data, err = underhentai.Extract(url)
 	}
@@ -49,12 +55,18 @@ func download(url string) {
 	}
 
 	if config.ShowInfo {
-		fmt.Println(data)
+		for _, singleData := range data {
+			jsonData, _ := json.MarshalIndent(singleData, "", "    ")
+			fmt.Printf("%s\n", jsonData)
+		}
 		return
 	}
 
 	for _, d := range data {
-		downloader.Download(d)
+		err = downloader.Download(d)
+		if err != nil {
+			log.Println(err)
+		}
 	}
 
 }

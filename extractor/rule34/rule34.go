@@ -6,7 +6,6 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/anaskhan96/soup"
 	"github.com/gan-of-culture/go-hentai-scraper/request"
 	"github.com/gan-of-culture/go-hentai-scraper/static"
 	"github.com/gan-of-culture/go-hentai-scraper/utils"
@@ -19,43 +18,13 @@ func Extract(URL string) ([]static.Data, error) {
 
 	data := []static.Data{}
 
-	for _, element := range ParseURL(URL) {
+	for _, postURL := range ParseURL(URL) {
 
-		htmlString, err := request.Get(site + element)
+		postData, err := extractData(postURL)
 		if err != nil {
 			return nil, err
 		}
-
-		elementTag, err := extractData(htmlString)
-		if err != nil {
-			return nil, err
-		}
-
-		size, err := request.Size(elementTag["src"], site+element)
-		if err != nil {
-			return nil, errors.New("[Danbooru]No image size not found")
-		}
-
-		streams := make(map[string]static.Stream)
-		streams["0"] = static.Stream{
-			URLs: []static.URL{
-				{
-					URL: elementTag["src"],
-					Ext: utils.GetLastItemString(strings.Split(elementTag["src"], ".")),
-				},
-			},
-			Quality: fmt.Sprintf("%s x %s", elementTag["data-width"], elementTag["data-height"]),
-			Size:    size,
-		}
-
-		data = append(data, static.Data{
-			Site:    site,
-			Title:   elementTag["title"],
-			Type:    elementTag["type"],
-			Streams: streams,
-			Url:     URL,
-		})
-
+		data = append(data, postData)
 	}
 
 	return data, nil
@@ -63,79 +32,111 @@ func Extract(URL string) ([]static.Data, error) {
 
 // ParseURL data
 func ParseURL(URL string) []string {
+
+	// if it's single post return
+	if strings.Contains(URL, "/post/view/") {
+		return []string{URL}
+	}
+
+	// everything other than a overview page gets returned
+	if !strings.Contains(URL, "/post/list/") {
+		return nil
+	}
+
 	htmlString, err := request.Get(URL)
 	if err != nil {
 		return nil
 	}
 
-	doc := soup.HTMLParse(htmlString)
-	items := doc.FindAll("a", "class", "shm-thumb-link")
-
-	// overview page | get URL to all elements
-	content := make([]string, len(items))
-	for idx, item := range items {
-		content[idx] = item.Attrs()["href"]
-	}
-
-	if len(content) != 0 {
-		return content
-	}
-
-	re := regexp.MustCompile("[0-9]{6,8}")
-	id := re.FindString(URL)
-	if id == "" {
+	re := regexp.MustCompile("data-post-id=\"([^\"]+)")
+	matchedPosts := re.FindAllStringSubmatch(htmlString, -1)
+	if len(matchedPosts) < 1 {
 		return nil
 	}
 
-	content = []string{"/post/view/" + id}
+	content := []string{}
+	for _, post := range matchedPosts {
+		content = append(content, fmt.Sprintf("%s/post/view/%s", site, post[1]))
+	}
 
 	return content
 }
 
-func extractData(htmlString string) (map[string]string, error) {
-	doc := soup.HTMLParse(htmlString)
-	mainTag := doc.Find("img", "class", "shm-main-image")
-	if mainTag.Error != nil {
-		mainTag = doc.Find("video", "class", "shm-main-image")
-		if mainTag.Error != nil {
-			return nil, mainTag.Error
-		}
-
+func extractData(URL string) (static.Data, error) {
+	htmlString, err := request.Get(URL)
+	if err != nil {
+		return static.Data{}, err
 	}
 
-	attrs := mainTag.Attrs()
-	attrs["title"] = doc.Find("input", "name", "tag_edit__tags").Attrs()["value"]
-
-	attrs["type"] = "image"
-	if strings.Contains(attrs["src"], ".gif") {
-		attrs["type"] = "gif"
+	re := regexp.MustCompile("tag_edit__tags' value='([^']+)")
+	matchedTagBox := re.FindStringSubmatch(htmlString)
+	if len(matchedTagBox) != 2 {
+		return static.Data{}, errors.New("[Rule34] couldn't extract tags for post " + URL)
 	}
+	title := matchedTagBox[1]
 
-	if attrs["data-width"] != "" {
-		return attrs, nil
-	}
+	// get source of img
+	re = regexp.MustCompile("id='main_image' src='([^']+)")
+	matchedPostSrcURL := re.FindStringSubmatch(htmlString)
+	if len(matchedPostSrcURL) != 2 {
 
-	attrs["type"] = "video"
-
-	// get the src attr of the source tag
-	attrs["src"] = doc.Find("section", "id", "Videomain").FindAll("a")[0].Attrs()["href"]
-	re := regexp.MustCompile("[a-z]+:[\t\n\f\r ][0-9]+px")
-	dimensions := re.FindAllString(attrs["style"], -1)
-
-	for _, dimension := range dimensions {
-		splitKey := strings.Split(dimension, ": ")
-
-		// splitKey[0] = width/height splitKey[1] = ?px
-
-		switch splitKey[0] {
-		case "width":
-			attrs["data-width"] = splitKey[1]
-		case "height":
-			attrs["data-width"] = splitKey[1]
-		default:
-			return nil, errors.New("[Rule34]Can't calc video size")
+		// maybe it's a video - try to get source URL
+		re = regexp.MustCompile("<source src='([^']+)")
+		matchedPostSrcURL = re.FindStringSubmatch(htmlString)
+		if len(matchedPostSrcURL) != 2 {
+			return static.Data{}, errors.New("[Rule34] src URL not found for post " + URL)
 		}
 	}
 
-	return attrs, nil
+	postSrcURL := matchedPostSrcURL[1]
+
+	size, err := request.Size(postSrcURL, URL)
+	if err != nil {
+		return static.Data{}, errors.New("[Rule34]No image size not found")
+	}
+
+	postType := "image"
+	if strings.HasSuffix(postSrcURL, ".gif") {
+		postType = "gif"
+	}
+	if strings.Contains(htmlString, "#Videomain") {
+		postType = "video"
+	}
+
+	var postQuality string
+	if postType == "video" {
+		re = regexp.MustCompile("id='main_image'.+\n[^0-9]+([0-9]+)[^0-9]+([0-9]+)")
+		matchedQualityProperties := re.FindStringSubmatch(htmlString)
+		if len(matchedQualityProperties) != 3 {
+			return static.Data{}, errors.New("[Rule34] quality not found for post " + URL)
+		}
+		postQuality = fmt.Sprintf("%s x %s", matchedQualityProperties[1], matchedQualityProperties[2])
+	} else {
+		re = regexp.MustCompile("data-(width|height)='([0-9]+)")
+		matchedQualityProperties := re.FindAllStringSubmatch(htmlString, -1)
+		if len(matchedQualityProperties) != 2 {
+			return static.Data{}, errors.New("[Rule34] quality not found for post " + URL)
+		}
+
+		postQuality = fmt.Sprintf("%s x %s", matchedQualityProperties[1][2], matchedQualityProperties[0][2])
+	}
+
+	return static.Data{
+		Site:  site,
+		Title: title,
+		Type:  postType,
+		Streams: map[string]static.Stream{
+			"0": static.Stream{
+				URLs: []static.URL{
+					static.URL{
+						URL: postSrcURL,
+						Ext: utils.GetLastItemString(strings.Split(postSrcURL, ".")),
+					},
+				},
+				Quality: postQuality,
+				Size:    size,
+			},
+		},
+		Url: URL,
+	}, nil
 }

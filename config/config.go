@@ -1,16 +1,18 @@
 package config
 
 var (
-	// Pages of doushin
-	Pages string
 	// OutputPath
 	OutputPath string
 	// OutputName
 	OutputName string
-	// ShowInfo of all avaiable streams
-	ShowInfo bool
+	// Pages of doujinshi
+	Pages string
+	// RestrictContent
+	RestrictContent bool
 	// SelectStream
 	SelectStream string
+	// ShowInfo of all avaiable streams
+	ShowInfo bool
 )
 
 // FakeHeaders fake http headers

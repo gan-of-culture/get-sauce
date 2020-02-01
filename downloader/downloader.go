@@ -1,6 +1,7 @@
 package downloader
 
 import (
+	"errors"
 	"fmt"
 	"io"
 	"log"
@@ -125,7 +126,11 @@ func Download(data static.Data) error {
 	}
 
 	// select stream to download
-	stream := data.Streams[config.SelectStream]
+	var stream static.Stream
+	var ok bool
+	if stream, ok = data.Streams[config.SelectStream]; !ok {
+		return errors.New(fmt.Sprintf("Stream %s not found", config.SelectStream))
+	}
 
 	var saveErr error
 
@@ -218,6 +223,7 @@ func writeFile(url string, file *os.File, headers map[string]string) (int64, err
 		progressbar.OptionSetDescription(fmt.Sprintf("Downloading %s ...", file.Name())),
 		progressbar.OptionSetPredictTime(true),
 		progressbar.OptionSetRenderBlankState(true),
+		//progressbar.OptionShowCount(),
 	)
 	writer := io.MultiWriter(file, bar)
 	// Note that io.Copy reads 32kb(maximum) from input and writes them to output, then repeats.

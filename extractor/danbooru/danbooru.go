@@ -40,15 +40,13 @@ func ParseURL(url string) ([]string, error) {
 	// pageNo = url?page=number -> if it's there it means overview page otherwise single post or invalid
 	if len(pageNo) == 0 {
 
-		re := regexp.MustCompile("[/]posts[/]([0-9]+)")
+		re := regexp.MustCompile("/posts/[0-9]+")
 		linkToPost := re.FindString(url)
 		if linkToPost == "" {
 			return nil, errors.New("[Danbooru]Invalid Url no post found")
 		}
 
-		out := []string{}
-		out = append(out, linkToPost)
-		return out, nil
+		return []string{linkToPost}, nil
 	}
 
 	htmlString, err := request.Get(url)
