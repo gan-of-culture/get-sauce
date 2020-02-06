@@ -6,6 +6,7 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/gan-of-culture/go-hentai-scraper/request"
 	"github.com/gan-of-culture/go-hentai-scraper/static"
@@ -85,6 +86,7 @@ func extractImageData(URL string) (map[string]static.Stream, error) {
 	}
 	// some times you need to retry
 	if strings.Contains(htmlString, "<title>503 Service Temporarily Unavailable</title>") {
+		time.Sleep(500 * time.Millisecond)
 		htmlString, err = request.Get(URL)
 	}
 
