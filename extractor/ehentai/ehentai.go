@@ -91,7 +91,7 @@ func extractData(URL string) ([]static.Data, error) {
 	}
 
 	for page := 1; len(imgURLs) < numberOfPages; page++ {
-		htmlString, err := request.Get(fmt.Sprintf("%s?p=%b", URL, page))
+		htmlString, err := request.Get(fmt.Sprintf("%s?p=%d", URL, page))
 		if err != nil {
 			return nil, errors.New("[E-Hentai] unvaild page URL")
 		}
@@ -136,7 +136,7 @@ func extractData(URL string) ([]static.Data, error) {
 
 		data = append(data, static.Data{
 			Site:  site,
-			Title: fmt.Sprintf("%s - %b", matchedTitle[0][1], idx+1),
+			Title: fmt.Sprintf("%s - %d", matchedTitle[0][1], idx+1),
 			Type:  "image",
 			Streams: map[string]static.Stream{
 				"0": {
