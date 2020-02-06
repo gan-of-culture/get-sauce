@@ -62,13 +62,57 @@ func TestExtractData(t *testing.T) {
 			URL:  "https://www.underhentai.net/ochi-mono-rpg-seikishi-luvilias/",
 			want: want{
 				Title:     []string{"ochi-mono-rpg-seikishi-luvilias episode 01", "ochi-mono-rpg-seikishi-luvilias episode 02", "ochi-mono-rpg-seikishi-luvilias episode 03", "ochi-mono-rpg-seikishi-luvilias episode 04"},
-				StreamLen: 8,
+				StreamLen: 2,
 			},
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			data, err := extractData(tt.URL)
+			if err != nil {
+				t.Error(err)
+			}
+			for idx, d := range data {
+				if d.Title != tt.want.Title[idx] {
+					t.Errorf("Got: %v - want: %v", d.Title, tt.want.Title[idx])
+				}
+				if len(d.Streams) != tt.want.StreamLen {
+					t.Errorf("Got: %v - want: %v", len(d.Streams), tt.want.StreamLen)
+				}
+			}
+		})
+	}
+}
+
+func TestExtract(t *testing.T) {
+	type want struct {
+		Title     []string
+		StreamLen int
+	}
+	tests := []struct {
+		name string
+		URL  string
+		want want
+	}{
+		{
+			name: "Single Episode",
+			URL:  "https://www.underhentai.net/kiss-hug/",
+			want: want{
+				Title:     []string{"kiss-hug episode 01"},
+				StreamLen: 2,
+			},
+		}, {
+			name: "Multiple Episodes",
+			URL:  "https://www.underhentai.net/ochi-mono-rpg-seikishi-luvilias/",
+			want: want{
+				Title:     []string{"ochi-mono-rpg-seikishi-luvilias episode 01", "ochi-mono-rpg-seikishi-luvilias episode 02", "ochi-mono-rpg-seikishi-luvilias episode 03", "ochi-mono-rpg-seikishi-luvilias episode 04"},
+				StreamLen: 2,
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			data, err := Extract(tt.URL)
 			if err != nil {
 				t.Error(err)
 			}

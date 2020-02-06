@@ -35,6 +35,11 @@ func download(url string) {
 	if len(matches) < 2 {
 		log.Fatal("Can't parse URL")
 	}
+	if matches[1] == "www" {
+		re := regexp.MustCompile("http?s://www.([^\\.]+)")
+		matches = re.FindStringSubmatch(url)
+	}
+
 	switch matches[1] {
 	case "danbooru":
 		data, err = danbooru.Extract(url)

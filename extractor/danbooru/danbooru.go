@@ -6,7 +6,6 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/anaskhan96/soup"
 	"github.com/gan-of-culture/go-hentai-scraper/request"
 	"github.com/gan-of-culture/go-hentai-scraper/static"
 	"github.com/gan-of-culture/go-hentai-scraper/utils"
@@ -54,20 +53,12 @@ func ParseURL(url string) ([]string, error) {
 		return nil, err
 	}
 
-	doc := soup.HTMLParse(htmlString)
-	container := doc.Find("div", "id", "posts-container")
-	if container.Error != nil {
-		return nil, errors.New("[Danbooru] " + container.Error.Error())
-	}
-
-	items := container.FindAll("article")
-	if len(items) == 0 {
-		return nil, errors.New("[Danbooru]No articles found in overview page")
-	}
+	re = regexp.MustCompile("data-id=\"([^\"]+)")
+	matchedIDs := re.FindAllStringSubmatch(htmlString, -1)
 
 	out := []string{}
-	for _, item := range items {
-		out = append(out, "/posts/"+item.Attrs()["data-id"])
+	for _, submatchID := range matchedIDs {
+		out = append(out, "/posts/"+submatchID[1])
 	}
 
 	return out, nil
@@ -79,71 +70,34 @@ func extractData(postURL string) (static.Data, error) {
 		return static.Data{}, err
 	}
 
-	doc := soup.HTMLParse(htmlString)
-	imageContainer := doc.Find("section", "id", "image-container")
-	if imageContainer.Error != nil {
-		return static.Data{}, errors.New("[Danbooru] " + imageContainer.Error.Error())
+	re := regexp.MustCompile("data-original-width=\"([^\"]+)\"[ ]+data-original-height=\"([^\"]+)\".+alt=\"([^\"]+)\".+src=\"([^\"]+)\"")
+	matchedImgData := re.FindStringSubmatch(htmlString)
+	if len(matchedImgData) != 5 {
+		return static.Data{}, errors.New("[Danbooru] Image parsing failed")
 	}
+	// [1] = img original width [2] image original height [3] image name [4] src url
 
-	attrs := imageContainer.Attrs()
-	//commented out because of performance issues and I think I don't really need it currently
-	// comment back in if needed
-	/*size, err := request.Size(attrs["data-file-url"], postURL)
+	size, err := request.Size(matchedImgData[4], postURL)
 	if err != nil {
 		return static.Data{}, errors.New("[Danbooru]No image size not found")
-	}*/
-
-	streams := make(map[string]static.Stream, 1)
-	streams["0"] = static.Stream{
-		URLs: []static.URL{
-			{
-				URL: attrs["data-file-url"],
-				Ext: utils.GetLastItemString(strings.Split(attrs["data-file-url"], ".")),
-			},
-		},
-		Quality: fmt.Sprintf("%s x %s", attrs["data-width"], attrs["data-height"]),
-		Size:    0,
-	}
-
-	title := getTitle(doc.Find("section", "id", "tag-list"))
-	if title == "" {
-		title = attrs["data-id"]
 	}
 
 	return static.Data{
 		Site:  site,
-		Title: title,
+		Title: matchedImgData[3],
 		Type:  "image",
-
-		Streams: streams,
-		Url:     postURL,
+		Streams: map[string]static.Stream{
+			"0": static.Stream{
+				URLs: []static.URL{
+					{
+						URL: matchedImgData[4],
+						Ext: utils.GetLastItemString(strings.Split(matchedImgData[4], ".")),
+					},
+				},
+				Quality: fmt.Sprintf("%s x %s", matchedImgData[1], matchedImgData[2]),
+				Size:    size,
+			},
+		},
+		Url: postURL,
 	}, nil
-}
-
-func getTitle(tagList soup.Root) string {
-	if tagList == (soup.Root{}) {
-		return ""
-	}
-
-	title := ""
-	tagLists := []string{"copyright", "character", "artist"}
-	for _, listName := range tagLists {
-		list := tagList.Find("ul", "class", fmt.Sprintf("%s-tag-list", listName))
-		if list.Error != nil {
-			continue
-		}
-
-		tagText := list.Children()[0].Find("a", "class", "search-tag")
-		if tagText.Error != nil {
-			continue
-		}
-
-		title = title + " " + tagText.Text()
-	}
-
-	title = strings.ReplaceAll(title, "(", " ")
-	title = strings.ReplaceAll(title, ")", " ")
-	title = strings.ReplaceAll(title, "|", " ")
-
-	return strings.ReplaceAll(title, "/", " ")
 }

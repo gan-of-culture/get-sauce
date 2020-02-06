@@ -40,8 +40,9 @@ func Extract(URL string) ([]static.Data, error) {
 
 		ext := utils.GetLastItemString(strings.Split(URL, "."))
 		contType := "image"
-		if ext == "gif" {
+		if strings.HasPrefix(ext, "gif") {
 			contType = "gif"
+			ext = "gif"
 		}
 
 		streams := make(map[string]static.Stream)

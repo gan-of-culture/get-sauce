@@ -46,10 +46,10 @@ func TestExtractData(t *testing.T) {
 	}{
 		{
 			name: "Default extraction",
-			url:  "https://danbooru.donmai.us/posts/3749687",
+			url:  "https://danbooru.donmai.us/posts/3773519",
 			want: want{
 				numberOfStream: 1,
-				title:          " touhou konpaku youmu niwashi  yuyu ",
+				title:          "kasumi and squirtle (pokemon and 2 more) drawn by shellvi",
 			},
 		},
 	}

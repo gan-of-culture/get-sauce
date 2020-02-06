@@ -3,12 +3,11 @@ package underhentai
 import (
 	"errors"
 	"fmt"
-	"math"
+	"log"
 	"regexp"
 	"strconv"
 	"strings"
 
-	"github.com/anaskhan96/soup"
 	"github.com/gan-of-culture/go-hentai-scraper/request"
 	"github.com/gan-of-culture/go-hentai-scraper/static"
 )
@@ -48,19 +47,16 @@ func ParseURL(URL string) ([]string, error) {
 	if err != nil {
 		return nil, err
 	}
-	doc := soup.HTMLParse(htmlString)
-	articles := doc.FindAll("article", "class", "data-block")
-	if len(articles) == 0 {
+
+	re = regexp.MustCompile("<[\t\n\f\r ]*div class=\"article[^>]*>[\t\n\f\r ]<a href=\"([^\"]+)\".*?<[\t\n\f\r ]*/[\t\n\f\r ]*div>")
+	matchedTitles := re.FindAllStringSubmatch(htmlString, -1)
+	if len(matchedTitles) == 0 {
 		return nil, errors.New("[Underhentai] No content found")
 	}
 
 	content := []string{}
-	for _, article := range articles {
-		imgTag := article.Find("a")
-		if imgTag.Error != nil {
-			continue
-		}
-		content = append(content, imgTag.Attrs()["href"])
+	for _, title := range matchedTitles {
+		content = append(content, title[1])
 	}
 
 	return content, nil
@@ -79,95 +75,87 @@ func extractData(URL string) ([]static.Data, error) {
 		return nil, err
 	}
 
-	doc := soup.HTMLParse(htmlString)
-	tableOfStreams := doc.Find("div", "class", "content-table")
-	if tableOfStreams == (soup.Root{}) {
-		return nil, errors.New("[Underhentai] no table of streams found")
-	}
-
 	var episode string
-	var streamError error
+	var extension string
+	var size int64
+	var hasSubtitles bool
+	var isCensored bool
+	var torrentURL string
 
+	currentEp := "01"
+
+	streams := map[string]static.Stream{}
 	data := []static.Data{}
-	streams := make(map[string]static.Stream)
 
-	tableRows := tableOfStreams.Find("tbody").FindAll("tr")
-	for rowIdx, row := range tableRows {
+	re = regexp.MustCompile("<td class=c([0-9])>(.*?)</td>")
+	matchedData := re.FindAllStringSubmatch(htmlString, -1)
+	for _, dataElement := range matchedData {
+		switch dataElement[1] {
+		case "1":
+			episode = dataElement[2]
+			if episode != currentEp {
+				data = append(data, static.Data{
+					Site:    site,
+					Title:   fmt.Sprintf("%s episode %s", title, currentEp),
+					Type:    "video",
+					Streams: streams,
+					Url:     URL,
+				})
+				streams = map[string]static.Stream{}
+			}
+			currentEp = episode
+		case "2":
+			extension = dataElement[2]
+		case "3":
+			size, _ = strconv.ParseInt(dataElement[2], 10, 64)
+		case "4":
+			if strings.Contains(dataElement[2], "/img/xnone.png") {
+				hasSubtitles = true
+				break
+			}
+			hasSubtitles = false
+		case "5":
+			// not implemented - not needed yet
+		case "6":
+			if dataElement[2] == "Yes" {
+				isCensored = true
+				break
+			}
+			isCensored = false
+		case "7":
+			ep := strings.TrimPrefix(episode, "0")
+			re = regexp.MustCompile("sv=nya&id=([0-9]*)&ep=" + ep)
+			torrentURLSuffix := re.FindString(htmlString)
 
-		children := row.Children()
-		if len(children) > 1 {
-
-			//if tr includes stream info add stream info
-			//if tr = images then add data and the streams for the data
-			rowIdxString := strconv.Itoa(rowIdx)
-			stream := static.Stream{
-				URLs: make([]static.URL, 1),
+			html, err := request.Get("https://www.underhentai.net/out/?" + torrentURLSuffix)
+			if err != nil {
+				log.Println(errors.New("[Underhentai] no .torrent found " + episode))
 			}
 
-			for idx, child := range children {
-				//only used for the switch statement thats why +1
-				childIdxString := strconv.Itoa(idx + 1)
-				switch fmt.Sprintf("c%s", childIdxString) {
-				case "c1":
-					episode = child.Text()
-				case "c2":
-					stream.URLs[0].Ext = child.Text()
-				case "c3":
-					size, _ := strconv.ParseInt(child.Text(), 10, 64)
-					stream.Size = size
-				case "c4":
-					//idx + 1 to conteract that idx starts at 0
-					if math.Mod(float64(rowIdx+1), 2) == 0.0 {
-						stream.Info = "Has subtitles"
-					}
-				case "c5":
-					//audio idk if it's important - implement if needed
-				case "c6":
-					stream.Info = fmt.Sprintf("%s isCensored %s", stream.Info, child.Text())
-				case "c7":
-					childChildren := child.Children()
-					if len(childChildren) == 0 {
-						streamError = errors.New("[Underhentai] no torrent found " + episode)
-					}
-					torrentChild := childChildren[0]
-					re := regexp.MustCompile("id=([0-9]+)")
-					matchedID := re.FindStringSubmatch(torrentChild.Attrs()["href"])
-					if len(matchedID) == 1 {
-						streamError = errors.New("[Underhentai] no id found " + episode)
-					}
-					id := matchedID[1]
+			re = regexp.MustCompile("url=\\\"(https://.+.torrent)")
+			torrentURL = re.FindStringSubmatch(html)[1]
 
-					// remove prefixed zeros
-					epForURL := strings.TrimPrefix(episode, "0")
-
-					html, err := request.Get(fmt.Sprintf("https://www.underhentai.net/out/?sv=nya&id=%s&ep=%s", id, epForURL))
-					if err != nil {
-						streamError = errors.New("[Underhentai] no .torrent found " + episode)
-					}
-
-					re = regexp.MustCompile("https://.+.torrent")
-					stream.URLs[0].URL = re.FindString(html)
-				}
+			streams[fmt.Sprintf("%d", len(streams))] = static.Stream{
+				URLs: []static.URL{
+					{
+						URL: torrentURL,
+						Ext: extension,
+					},
+				},
+				Quality: "?",
+				Size:    size,
+				Info:    fmt.Sprintf("hasSubtitles: %t isCensored: %t", hasSubtitles, isCensored),
 			}
-			if streamError == nil {
-				streams[rowIdxString] = stream
-			}
-
-		} else if len(children) == 1 {
-
-			//add new data for each new episode
-			data = append(data, static.Data{
-				Site:    site,
-				Title:   fmt.Sprintf("%s episode %s", title, episode),
-				Type:    "video",
-				Streams: streams,
-				Err:     streamError,
-				Url:     URL,
-			})
-
 		}
-
 	}
+
+	data = append(data, static.Data{
+		Site:    site,
+		Title:   fmt.Sprintf("%s episode %s", title, episode),
+		Type:    "video",
+		Streams: streams,
+		Url:     URL,
+	})
 
 	return data, nil
 

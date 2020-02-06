@@ -195,14 +195,22 @@ func save(url static.URL, fileName string, headers map[string]string) error {
 			return err
 		}
 
-		select {
-		case <-torrent.NotifyComplete():
-		case <-torrent.NotifyStop():
-			log.Fatal(torrent.Stats().Error)
-		default:
-			stats := torrent.Stats()
-			fmt.Println(fmt.Sprintf("Downloading %s - time left: %b - downloading with %bB/s - uploading with %bB/s", fileName, stats.ETA, stats.Speed.Download, stats.Speed.Upload))
-			time.Sleep(1 * time.Second)
+		var eta float64
+		for {
+			select {
+			case <-torrent.NotifyComplete():
+				return nil
+			case <-torrent.NotifyStop():
+				log.Fatal(torrent.Stats().Error)
+				return nil
+			case <-time.After(2 * time.Second):
+				stats := torrent.Stats()
+
+				if stats.ETA != nil {
+					eta = stats.ETA.Minutes()
+				}
+				fmt.Println(fmt.Sprintf("Downloading %s - time left: %.1f minutes - downloading with %dMB/s - uploading with %dMB/s", fileName, eta, stats.Speed.Download/125000, stats.Speed.Upload/125000))
+			}
 		}
 
 	}

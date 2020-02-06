@@ -31,7 +31,7 @@ func TestDownload(t *testing.T) {
 				Url: "https://www.underhentai.net/kiss-hug/",
 			},
 			want: nil,
-		},*/{
+		}, */{
 			name: "danbooru single post",
 			data: static.Data{
 				Site:  "https://danbooru.donmai.us/",
@@ -69,6 +69,23 @@ func TestDownload(t *testing.T) {
 				Url: "https://rule34.paheal.net/post/view/3427635",
 			},
 			want: nil,
+		}, {
+			name: "nhentai single page",
+			data: static.Data{
+				Site:  "https://nhentai.net",
+				Title: "(C97) [H@BREAK (Itose Ikuto)] Koe Dashicha Barechau kara! [English]",
+				Type:  "image",
+				Streams: map[string]static.Stream{
+					"0": {
+						URLs: []static.URL{
+							{
+								URL: "https://i.nhentai.net/galleries/1550711/14.jpg",
+								Ext: "jpg",
+							},
+						},
+					},
+				},
+			},
 		},
 	}
 	for _, tt := range tests {
