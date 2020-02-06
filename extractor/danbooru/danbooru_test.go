@@ -49,7 +49,7 @@ func TestExtractData(t *testing.T) {
 			url:  "https://danbooru.donmai.us/posts/3773519",
 			want: want{
 				numberOfStream: 1,
-				title:          "kasumi and squirtle (pokemon and 1 more) drawn by shellvi",
+				title:          "kasumi and squirtle (pokemon and 2 more) drawn by shellvi",
 			},
 		},
 	}

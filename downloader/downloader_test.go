@@ -12,7 +12,7 @@ func TestDownload(t *testing.T) {
 		data static.Data
 		want error
 	}{
-		{
+		/*{
 			name: "underhentai single episode",
 			data: static.Data{
 				Site:  "https://underhentai.net",
@@ -31,7 +31,7 @@ func TestDownload(t *testing.T) {
 				Url: "https://www.underhentai.net/kiss-hug/",
 			},
 			want: nil,
-		}, {
+		}, */{
 			name: "danbooru single post",
 			data: static.Data{
 				Site:  "https://danbooru.donmai.us/",
