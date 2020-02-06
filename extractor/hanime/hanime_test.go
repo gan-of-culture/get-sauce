@@ -18,7 +18,7 @@ func TestParseURL(t *testing.T) {
 			want: 1,
 		}, {
 			name: "Gif",
-			url:  "https://i2.hanimetv.club/uploads/777000/777886.gif",
+			url:  "https://i1.wp.com/dynamic-assets.imageg.top/uploads/798000/798727.gif?quality=99&h=250",
 			want: 1,
 		},
 	}
@@ -57,9 +57,9 @@ func TestExtract(t *testing.T) {
 			},
 		}, {
 			name: "Gif",
-			url:  "https://i2.hanimetv.club/uploads/777000/777886.gif",
+			url:  "https://i1.wp.com/dynamic-assets.imageg.top/uploads/798000/798727.gif?quality=99&h=250",
 			want: want{
-				Title:     "777886",
+				Title:     "798727",
 				Type:      "gif",
 				SteamsLen: 1,
 			},
