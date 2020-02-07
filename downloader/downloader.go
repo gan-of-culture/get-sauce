@@ -199,6 +199,7 @@ func save(url static.URL, fileName string, headers map[string]string) error {
 		for {
 			select {
 			case <-torrent.NotifyComplete():
+				fmt.Println(torrent.Name())
 				return nil
 			case <-torrent.NotifyStop():
 				log.Fatal(torrent.Stats().Error)

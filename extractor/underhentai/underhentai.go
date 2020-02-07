@@ -123,7 +123,7 @@ func extractData(URL string) ([]static.Data, error) {
 			}
 			isCensored = false
 		case "7":
-			ep := strings.TrimPrefix(episode, "0")
+			ep := strconv.Itoa(len(streams))
 			re = regexp.MustCompile("sv=nya&id=([0-9]*)&ep=" + ep)
 			torrentURLSuffix := re.FindString(htmlString)
 
