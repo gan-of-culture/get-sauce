@@ -8,21 +8,21 @@ This will be part of another project I have planned so stay tuned.
 
 ## Setup guide
 
-For now you need to clone the repo youself and download it. Then just do:
+Download the right release under the releases tab.
+
+You can clone this Repository youself and download it. Then just do:
 
 ```bash
 go build
 ```
 
-After that you should be provided with a **executable**. 
+After that you should be provided with a **executable**.
 
-Or you can just do 
+Or you can just do
 
 ```bash
 go run main.go ...
 ```
-
-I'll do proper releases later *probably~*
 
 ## Options
 
@@ -74,6 +74,9 @@ I'll do proper releases later *probably~*
 *Note that I currently didn't find a way to download 1080p hentai from hanime.tv and implenting 720p isn't that high on my list - I'll try to find a way in the future*  
 
 *Note exhentai is currently not supported, because it requires a user login and I don't want my user banned - I'll probably add a way to extract the data with your own user and a manual how to get one*
+
+If your site is not listed - you can still try to use the universal downloader
+This works really good for the pitures of hanime.tv
 
 ## Teach me
 

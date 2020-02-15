@@ -13,6 +13,10 @@ var (
 	SelectStream string
 	// ShowInfo of all avaiable streams
 	ShowInfo bool
+	// Username for exhentai.org
+	Username string
+	// UserPassword for exhentai.org
+	UserPassword string
 )
 
 // FakeHeaders fake http headers

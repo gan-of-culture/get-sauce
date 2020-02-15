@@ -1,5 +1,6 @@
 package hanime
 
+/*
 import (
 	"context"
 	"errors"
@@ -39,6 +40,7 @@ func Extract(URL string) ([]static.Data, error) {
 		}
 
 		ext := utils.GetLastItemString(strings.Split(URL, "."))
+		ext = strings.Split(ext, "?")[0]
 		contType := "image"
 		if strings.HasPrefix(ext, "gif") {
 			contType = "gif"
@@ -112,3 +114,4 @@ func ParseURL(URL string) ([]string, error) {
 
 	return URLs, nil
 }
+*/

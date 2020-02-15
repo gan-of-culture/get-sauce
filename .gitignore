@@ -11,3 +11,5 @@ media
 *.mp4
 *.mkv
 *.torrent
+
+*token

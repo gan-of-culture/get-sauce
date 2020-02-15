@@ -6,12 +6,15 @@ import (
 	"fmt"
 	"log"
 	"regexp"
+	"strings"
 
 	"github.com/gan-of-culture/go-hentai-scraper/config"
 	"github.com/gan-of-culture/go-hentai-scraper/downloader"
 	"github.com/gan-of-culture/go-hentai-scraper/extractor/danbooru"
 	"github.com/gan-of-culture/go-hentai-scraper/extractor/ehentai"
-	"github.com/gan-of-culture/go-hentai-scraper/extractor/hanime"
+	"github.com/gan-of-culture/go-hentai-scraper/utils"
+
+	//"github.com/gan-of-culture/go-hentai-scraper/extractor/hanime"
 	"github.com/gan-of-culture/go-hentai-scraper/extractor/nhentai"
 	"github.com/gan-of-culture/go-hentai-scraper/extractor/rule34"
 	"github.com/gan-of-culture/go-hentai-scraper/extractor/underhentai"
@@ -25,6 +28,8 @@ func init() {
 	flag.BoolVar(&config.RestrictContent, "r", false, "Don't scrape Restricted Content")
 	flag.StringVar(&config.SelectStream, "s", "0", "Select a stream")
 	flag.BoolVar(&config.ShowInfo, "i", false, "Show info")
+	flag.StringVar(&config.Username, "un", "", "Username for exhentai/forum e hentai")
+	flag.StringVar(&config.Username, "up", "", "User password for exhentai/forum e hentai")
 }
 
 func download(url string) {
@@ -46,14 +51,31 @@ func download(url string) {
 	case "e-hentai":
 	case "exhentai":
 		data, err = ehentai.Extract(url)
-	case "hanime":
-		data, err = hanime.Extract(url)
+	//case "hanime":
+	//data, err = hanime.Extract(url)
 	case "nhentai":
 		data, err = nhentai.Extract(url)
 	case "rule34":
 		data, err = rule34.Extract(url)
 	case "underhentai":
 		data, err = underhentai.Extract(url)
+	default:
+		data = append(data, static.Data{
+			Site:  "unknown",
+			Type:  "unknown",
+			Title: "Universal download",
+			Streams: map[string]static.Stream{
+				"0": static.Stream{
+					URLs: []static.URL{
+						{
+							URL: url,
+							Ext: utils.GetLastItemString(strings.Split(url, ".")),
+						},
+					},
+				},
+			},
+			Url: url,
+		})
 	}
 	if err != nil {
 		log.Fatal(err)

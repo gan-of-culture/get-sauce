@@ -39,7 +39,7 @@ func TestExtract(t *testing.T) {
 		{
 			name:         "Single gallery",
 			URL:          "https://e-hentai.org/g/1559777/dc952bd4c1/",
-			numberOfData: 1,
+			numberOfData: 26,
 		},
 		//commented out because of performance - look at the parseURl test instead
 		/*{
