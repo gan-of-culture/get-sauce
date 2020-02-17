@@ -1,6 +1,6 @@
 package exhentai
 
-import (
+/*import (
 	"testing"
 
 	"github.com/gan-of-culture/go-hentai-scraper/config"
@@ -54,4 +54,4 @@ func TestExtract(t *testing.T) {
 			}
 		})
 	}
-}
+}*/

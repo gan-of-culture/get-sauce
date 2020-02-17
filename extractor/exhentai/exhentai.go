@@ -1,6 +1,6 @@
 package exhentai
 
-import (
+/*import (
 	"context"
 	"errors"
 	"fmt"
@@ -164,4 +164,4 @@ func login() chromedp.Tasks {
 		chromedp.Click("//*[@id=\"border\"]/tbody/tr/td/table[3]/tbody/tr/td/table/tbody/tr[2]/td/div/div/div/form/div/div/table/tbody/tr[2]/td/input", chromedp.BySearch),
 		chromedp.WaitReady("//*[@id=\"userlinks\"]/p[2]/b/a", chromedp.BySearch),
 	}
-}
+}*/
