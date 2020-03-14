@@ -4,6 +4,7 @@
 *.exe
 *.test
 *.log
+*.zip
 
 media
 *.jpg

@@ -1,7 +1,6 @@
 package downloader
 
 import (
-	"errors"
 	"fmt"
 	"io"
 	"log"
@@ -129,12 +128,22 @@ func Download(data static.Data) error {
 	var stream static.Stream
 	var ok bool
 	if stream, ok = data.Streams[config.SelectStream]; !ok {
-		return errors.New(fmt.Sprintf("Stream %s not found", config.SelectStream))
+		return fmt.Errorf("Stream %s not found", config.SelectStream)
 	}
 
 	var saveErr error
+	appendEnum := false
+	if len(stream.URLs) > 1 {
+		appendEnum = true
+	}
 
-	for _, URL := range stream.URLs {
+	var URLTitle string
+	for idx, URL := range stream.URLs {
+		if appendEnum {
+			URLTitle = fmt.Sprintf("%s - %d", data.Title, idx)
+		} else {
+			URLTitle = data.Title
+		}
 		wg.Add(1)
 		go func(URL static.URL, title string) {
 			defer wg.Done()
@@ -142,7 +151,7 @@ func Download(data static.Data) error {
 			if err != nil {
 				saveErr = err
 			}
-		}(URL, data.Title)
+		}(URL, URLTitle)
 		if saveErr != nil {
 			return saveErr
 		}
