@@ -124,16 +124,24 @@ func extractData(URL string) ([]static.Data, error) {
 			isCensored = false
 		case "7":
 			ep := strconv.Itoa(len(streams))
-			re = regexp.MustCompile("sv=nya&id=([0-9]*)&ep=" + ep)
-			torrentURLSuffix := re.FindString(htmlString)
+			re = regexp.MustCompile(fmt.Sprintf("sv=nya&id=([0-9]*)&ep=%s", ep))
+			torrentURLSuffix := re.FindStringSubmatch(htmlString)
+			if len(torrentURLSuffix) == 0 {
+				// stream with no bittorrent
+				streams[fmt.Sprintf("%d", len(streams))] = static.Stream{}
+				continue
+			}
 
-			html, err := request.Get("https://www.underhentai.net/out/?" + torrentURLSuffix)
+			html, err := request.Get("https://www.underhentai.net/out/?" + torrentURLSuffix[0])
 			if err != nil {
 				log.Println(errors.New("[Underhentai] no .torrent found " + episode))
 			}
 
 			re = regexp.MustCompile("url=\\\"(https://.+.torrent)")
-			torrentURL = re.FindStringSubmatch(html)[1]
+			matchedTorrentURL := re.FindStringSubmatch(html)
+			if len(matchedTorrentURL) != 0 {
+				torrentURL = matchedTorrentURL[1]
+			}
 
 			streams[fmt.Sprintf("%d", len(streams))] = static.Stream{
 				URLs: []static.URL{

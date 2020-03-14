@@ -41,23 +41,52 @@ func Extract(url string) ([]static.Data, error) {
 	re = regexp.MustCompile("<h1>([^<]+)")
 	title := re.FindStringSubmatch(htmlString)[1]
 
-	data := []static.Data{}
+	URLs := []static.URL{}
+	var quality string
 
 	for _, page := range pages {
-		stream, err := extractImageData(fmt.Sprintf("https://nhentai.net/g/%s/%d", magicNumber, page))
+		pageURL := fmt.Sprintf("https://nhentai.net/g/%s/%d", magicNumber, page)
+		htmlString, err := request.Get(pageURL)
 		if err != nil {
-			return nil, err
+			continue
 		}
-		data = append(data, static.Data{
-			Site:    site,
-			Title:   fmt.Sprintf("%s page %d", title, page),
-			Type:    "image",
-			Streams: stream,
-			Url:     url,
+		// some times you need to retry
+		if strings.Contains(htmlString, "<title>503 Service Temporarily Unavailable</title>") {
+			time.Sleep(500 * time.Millisecond)
+			htmlString, err = request.Get(pageURL)
+		}
+
+		re := regexp.MustCompile("<img src=\"([^\"]+)\" width=\"([^\"]+)\" height=\"([^\"]+)\"")
+		matchedImgData := re.FindStringSubmatch(htmlString)
+		if len(matchedImgData) != 4 {
+			return nil, errors.New("[nhentai] Image parsing failed")
+		}
+
+		if page == 1 {
+			quality = fmt.Sprintf("%s x %s", matchedImgData[2], matchedImgData[3])
+		}
+
+		URLs = append(URLs, static.URL{
+			URL: matchedImgData[1],
+			Ext: utils.GetLastItemString(strings.Split(matchedImgData[1], ".")),
 		})
 	}
 
-	return data, nil
+	return []static.Data{
+		1: static.Data{
+			Site:  site,
+			Title: title,
+			Type:  "image",
+			Streams: map[string]static.Stream{
+				"0": static.Stream{
+					URLs:    URLs,
+					Quality: quality,
+					Size:    0,
+				},
+			},
+			Url: url,
+		},
+	}, nil
 }
 
 // ParseURL data
@@ -78,7 +107,7 @@ func ParseURL(url string) (string, string) {
 	return urlNumbers[0], page
 }
 
-func extractImageData(URL string) (map[string]static.Stream, error) {
+func extractImageData(URL string, stream static.Stream) (map[string]static.Stream, error) {
 
 	htmlString, err := request.Get(URL)
 	if err != nil {
@@ -102,7 +131,6 @@ func extractImageData(URL string) (map[string]static.Stream, error) {
 	if err != nil {
 		return nil, err
 	}*/
-
 	return map[string]static.Stream{
 		"0": static.Stream{
 			URLs: []static.URL{
