@@ -1,6 +1,6 @@
 package underhentai
 
-import (
+/*import (
 	"errors"
 	"fmt"
 	"log"
@@ -48,7 +48,7 @@ func ParseURL(URL string) ([]string, error) {
 		return nil, err
 	}
 
-	re = regexp.MustCompile("<[\t\n\f\r ]*div class=\"article[^>]*>[\t\n\f\r ]<a href=\"([^\"]+)\".*?<[\t\n\f\r ]*/[\t\n\f\r ]*div>")
+	re = regexp.MustCompile("<[\t\n\f\r ]*div class=\"article[^>]*>[\t\n\f\r ]<a href=\"([^\"]+)\".*?<[\t\n\f\r ]*\/[\t\n\f\r ]*div>")
 	matchedTitles := re.FindAllStringSubmatch(htmlString, -1)
 	if len(matchedTitles) == 0 {
 		return nil, errors.New("[Underhentai] No content found")
@@ -161,7 +161,7 @@ func extractData(URL string) ([]static.Data, error) {
 				// stream with no bittorrent
 				streams[fmt.Sprintf("%d", len(streams))] = static.Stream{}
 				continue
-			}*/
+			}
 
 		}
 	}
@@ -176,4 +176,4 @@ func extractData(URL string) ([]static.Data, error) {
 
 	return data, nil
 
-}
+}*/
