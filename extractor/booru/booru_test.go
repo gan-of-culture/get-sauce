@@ -28,7 +28,7 @@ func TestParseURL(t *testing.T) {
 			if err != nil {
 				t.Error(err)
 			}
-			if len(urls) < tt.want {
+			if len(urls) > tt.want {
 				t.Errorf("Got: %v - want: %v", len(urls), tt.want)
 			}
 		})
@@ -58,7 +58,7 @@ func TestExtractData(t *testing.T) {
 			if err != nil {
 				t.Error(err)
 			}
-			if len(data) <= tt.want {
+			if len(data) > tt.want {
 				t.Errorf("Got: %v - want: %v", len(data), tt.want)
 			}
 		})
