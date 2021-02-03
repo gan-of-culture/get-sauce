@@ -67,7 +67,7 @@ go run main.go ...
 | -----------------------------------------------------------------|:------------------:|:----------------:|
 | [danbooru](https://danbooru.donmai.us)                           | :heavy_check_mark: |        ?         |
 | [booru](https://booru.io/)                                       | :heavy_check_mark: |        ?         |
-| [hanime](https://hanime.tv)                                      |        :x:         |       :x:        |
+| [hanime](https://hanime.tv)                                      | :heavy_check_mark: |       :x:        |
 | [nhentai](https://nhentai.net)                                   | :heavy_check_mark: |        ?         |
 | [rule34](https://rule34.paheal.net)                              | :heavy_check_mark: |:heavy_check_mark:|
 | [underhentai](https://underhentai.net)                           |         ?          |       :x:        |

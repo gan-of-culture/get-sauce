@@ -9,27 +9,27 @@ func TestParseURL(t *testing.T) {
 	tests := []struct {
 		name string
 		url  string
-		want int
+		want string
 	}{
 		{
 			name: "Tag query",
-			url:  "https://booru.io/q/1girl%20nude%20animal_ears",
-			want: 50,
+			url:  "https://booru.io/q/1girl%20nude%20animal_ears%20cat%20solo",
+			want: "https://booru.io/api/query/entity?query=1girl%20nude%20animal_ears%20cat%20solo",
 		}, {
 			name: "Example Post",
 			url:  "https://booru.io/p/YoZR3jurfVNOXD4vjCNn",
-			want: 1,
+			want: "https://booru.io/api/entity/YoZR3jurfVNOXD4vjCNn",
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			log.Println(tt.name)
-			urls, err := ParseURL(tt.url)
+			url, err := ParseURL(tt.url)
 			if err != nil {
 				t.Error(err)
 			}
-			if len(urls) < tt.want {
-				t.Errorf("Got: %v - want: %v", len(urls), tt.want)
+			if url != tt.want {
+				t.Errorf("Got: %v - want: %v", url, tt.want)
 			}
 		})
 	}
@@ -48,8 +48,8 @@ func TestExtractData(t *testing.T) {
 		},
 		{
 			name: "Query extraction",
-			url:  "https://booru.io/api/query/entity?query=1girl%20nude%20animal_ears",
-			want: 50,
+			url:  "https://booru.io/api/query/entity?query=1girl%20nude%20animal_ears%20cat%20solo",
+			want: 100,
 		},
 	}
 	for _, tt := range tests {
@@ -58,7 +58,7 @@ func TestExtractData(t *testing.T) {
 			if err != nil {
 				t.Error(err)
 			}
-			if len(data) != tt.want {
+			if len(data) > tt.want {
 				t.Errorf("Got: %v - want: %v", len(data), tt.want)
 			}
 		})

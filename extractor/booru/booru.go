@@ -82,9 +82,23 @@ func extractData(queryURL string) ([]static.Data, error) {
 	}
 
 	if len(entitySlice.Data) == 0 {
-		err = json.Unmarshal([]byte(jsonString), &entitySlice)
-		if err != nil {
-			return []static.Data{}, err
+
+		cursor := 0
+		for {
+			entitySliceTmp := EntitySlice{}
+			err = json.Unmarshal([]byte(jsonString), &entitySliceTmp)
+			if err != nil {
+				return []static.Data{}, err
+			}
+			if len(entitySliceTmp.Data) == 0 {
+				break
+			}
+			entitySlice.Data = append(entitySlice.Data, entitySliceTmp.Data...)
+			cursor += 50
+			jsonString, err = request.Get(fmt.Sprintf("%s&cursor=%d", queryURL, cursor))
+			if err != nil {
+				return []static.Data{}, err
+			}
 		}
 	}
 
