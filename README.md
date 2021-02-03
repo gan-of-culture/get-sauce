@@ -1,5 +1,7 @@
 # go-hentai-scraper
 
+![GitHub Workflow Status](https://img.shields.io/github/workflow/status/gan-of-culture/go-hentai-scraper/Go)
+
 Is a commandline tool to download hentai made in go by me. You can see what site is supported in what extent down below.
 
 **[Notice]** This repo is still heavily work in progress - so stuff can change
