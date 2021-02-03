@@ -10,6 +10,7 @@ import (
 
 	"github.com/gan-of-culture/go-hentai-scraper/config"
 	"github.com/gan-of-culture/go-hentai-scraper/downloader"
+	"github.com/gan-of-culture/go-hentai-scraper/extractor/booru"
 	"github.com/gan-of-culture/go-hentai-scraper/extractor/danbooru"
 	"github.com/gan-of-culture/go-hentai-scraper/extractor/ehentai"
 	"github.com/gan-of-culture/go-hentai-scraper/utils"
@@ -17,7 +18,6 @@ import (
 	//"github.com/gan-of-culture/go-hentai-scraper/extractor/hanime"
 	"github.com/gan-of-culture/go-hentai-scraper/extractor/nhentai"
 	"github.com/gan-of-culture/go-hentai-scraper/extractor/rule34"
-	"github.com/gan-of-culture/go-hentai-scraper/extractor/underhentai"
 	"github.com/gan-of-culture/go-hentai-scraper/static"
 )
 
@@ -48,6 +48,8 @@ func download(url string) {
 	switch matches[1] {
 	case "danbooru":
 		data, err = danbooru.Extract(url)
+	case "booru":
+		data, err = booru.Extract(url)
 	case "e-hentai":
 	case "exhentai":
 		data, err = ehentai.Extract(url)
@@ -57,15 +59,15 @@ func download(url string) {
 		data, err = nhentai.Extract(url)
 	case "rule34":
 		data, err = rule34.Extract(url)
-	case "underhentai":
-		data, err = underhentai.Extract(url)
+	/*case "underhentai":
+	data, err = underhentai.Extract(url)*/
 	default:
 		data = append(data, static.Data{
 			Site:  "unknown",
 			Type:  "unknown",
 			Title: "Universal download",
 			Streams: map[string]static.Stream{
-				"0": static.Stream{
+				"0": {
 					URLs: []static.URL{
 						{
 							URL: url,

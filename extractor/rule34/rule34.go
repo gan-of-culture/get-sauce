@@ -71,9 +71,13 @@ func extractData(URL string) (static.Data, error) {
 	re := regexp.MustCompile("tag_edit__tags' value='([^']+)")
 	matchedTagBox := re.FindStringSubmatch(htmlString)
 	if len(matchedTagBox) != 2 {
+		fmt.Println(htmlString)
 		return static.Data{}, errors.New("[Rule34] couldn't extract tags for post " + URL)
 	}
-	title := matchedTagBox[1]
+
+	re = regexp.MustCompile("[0-9]{3,}")
+	id := re.FindStringSubmatch(URL)
+	title := fmt.Sprintf("%s %s", matchedTagBox[1], id[0])
 
 	// get source of img
 	re = regexp.MustCompile("id='main_image' src='([^']+)")
@@ -90,10 +94,10 @@ func extractData(URL string) (static.Data, error) {
 
 	postSrcURL := matchedPostSrcURL[1]
 
-	size, err := request.Size(postSrcURL, URL)
-	if err != nil {
-		return static.Data{}, errors.New("[Rule34]No image size not found")
-	}
+	//size, err := request.Size(postSrcURL, URL)
+	//if err != nil {
+	//return static.Data{}, errors.New("[Rule34]No image size not found")
+	//}
 
 	postType := "image"
 	if strings.HasSuffix(postSrcURL, ".gif") {
@@ -134,7 +138,7 @@ func extractData(URL string) (static.Data, error) {
 					},
 				},
 				Quality: postQuality,
-				Size:    size,
+				//Size:    size,
 			},
 		},
 		Url: URL,

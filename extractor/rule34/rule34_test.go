@@ -50,7 +50,7 @@ func TestExtract(t *testing.T) {
 			name: "Test image",
 			url:  "https://rule34.paheal.net/post/view/3427635",
 			want: want{
-				Title:     "Magical_Sempai_(Series) Magician_Sempai skyfreedom",
+				Title:     "Magical_Sempai_(Series) Magician_Sempai skyfreedom 3427635",
 				Type:      "image",
 				StreamLen: 1,
 			},
@@ -58,7 +58,7 @@ func TestExtract(t *testing.T) {
 			name: "Test video",
 			url:  "https://rule34.paheal.net/post/view/3464181",
 			want: want{
-				Title:     "Hv54rDSL Nier Nier_Automata YoRHa_No.2_Type_B animated audiodude blender sound webm",
+				Title:     "Hv54rDSL Nier Nier_Automata YoRHa_No.2_Type_B animated audiodude blender sound webm 3464181",
 				Type:      "video",
 				StreamLen: 1,
 			},
@@ -66,7 +66,7 @@ func TestExtract(t *testing.T) {
 			name: "Test gif",
 			url:  "https://rule34.paheal.net/post/view/3461411",
 			want: want{
-				Title:     "World_of_Warcraft animated blood_elf",
+				Title:     "World_of_Warcraft animated blood_elf 3461411",
 				Type:      "gif",
 				StreamLen: 1,
 			},

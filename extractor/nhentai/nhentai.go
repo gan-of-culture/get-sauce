@@ -38,21 +38,23 @@ func Extract(url string) ([]static.Data, error) {
 		pages = []int{pageNo}
 	}
 
-	re = regexp.MustCompile("<h1>([^<]+)")
+	re = regexp.MustCompile("<h1[^y]+y\">([^<]*)")
 	title := re.FindStringSubmatch(htmlString)[1]
+	title = strings.ReplaceAll(title, "?", "")
 
 	URLs := []static.URL{}
 	var quality string
 
 	for _, page := range pages {
 		pageURL := fmt.Sprintf("https://nhentai.net/g/%s/%d", magicNumber, page)
+		time.Sleep(250 * time.Millisecond)
 		htmlString, err := request.Get(pageURL)
 		if err != nil {
 			continue
 		}
 		// some times you need to retry
-		if strings.Contains(htmlString, "<title>503 Service Temporarily Unavailable</title>") {
-			time.Sleep(500 * time.Millisecond)
+		if strings.Contains(htmlString, "<title>503 Service Temporarily Unavailable</title>") || strings.Contains(htmlString, "<title>429 Too Many Requests</title>") {
+			time.Sleep(1 * time.Second)
 			htmlString, err = request.Get(pageURL)
 		}
 
@@ -73,12 +75,12 @@ func Extract(url string) ([]static.Data, error) {
 	}
 
 	return []static.Data{
-		1: static.Data{
+		0: {
 			Site:  site,
 			Title: title,
 			Type:  "image",
 			Streams: map[string]static.Stream{
-				"0": static.Stream{
+				"0": {
 					URLs:    URLs,
 					Quality: quality,
 					Size:    0,
@@ -132,7 +134,7 @@ func extractImageData(URL string, stream static.Stream) (map[string]static.Strea
 		return nil, err
 	}*/
 	return map[string]static.Stream{
-		"0": static.Stream{
+		"0": {
 			URLs: []static.URL{
 				{
 					URL: matchedImgData[1],

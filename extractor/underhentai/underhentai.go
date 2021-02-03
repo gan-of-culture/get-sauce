@@ -87,7 +87,7 @@ func extractData(URL string) ([]static.Data, error) {
 	streams := map[string]static.Stream{}
 	data := []static.Data{}
 
-	re = regexp.MustCompile("<td class=c([0-9])>(.*?)</td>")
+	re = regexp.MustCompile("<td class=\"c([0-9])\">(.*?)</td>")
 	matchedData := re.FindAllStringSubmatch(htmlString, -1)
 	for _, dataElement := range matchedData {
 		switch dataElement[1] {
@@ -137,7 +137,7 @@ func extractData(URL string) ([]static.Data, error) {
 				log.Println(errors.New("[Underhentai] no .torrent found " + episode))
 			}
 
-			re = regexp.MustCompile("url=\\\"(https://.+.torrent)")
+			re = regexp.MustCompile("url=\"(https://.+.torrent)")
 			matchedTorrentURL := re.FindStringSubmatch(html)
 			if len(matchedTorrentURL) != 0 {
 				torrentURL = matchedTorrentURL[1]
@@ -154,6 +154,15 @@ func extractData(URL string) ([]static.Data, error) {
 				Size:    size,
 				Info:    fmt.Sprintf("hasSubtitles: %t isCensored: %t", hasSubtitles, isCensored),
 			}
+		case "8":
+			/*re = regexp.MustCompile("href=\"(.*?)\"")
+			watchURL := re.FindStringSubmatch(dataElement[2])
+			if len(watchURL) != 2 {
+				// stream with no bittorrent
+				streams[fmt.Sprintf("%d", len(streams))] = static.Stream{}
+				continue
+			}*/
+
 		}
 	}
 

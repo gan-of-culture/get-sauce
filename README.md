@@ -64,10 +64,11 @@ go run main.go ...
 | Site                                                             | Images             | Videos           |
 | -----------------------------------------------------------------|:------------------:|:----------------:|
 | [danbooru](https://danbooru.donmai.us)                           | :heavy_check_mark: |        ?         |
-| [hanime](https://hanime.tv)                                      | :heavy_check_mark: |       :x:        |
+| [booru](https://booru.io/)                                       | :heavy_check_mark: |        ?         |
+| [hanime](https://hanime.tv)                                      |        :x:         |       :x:        |
 | [nhentai](https://nhentai.net)                                   | :heavy_check_mark: |        ?         |
 | [rule34](https://rule34.paheal.net)                              | :heavy_check_mark: |:heavy_check_mark:|
-| [underhentai](https://underhentai.net)                           |         ?          |:heavy_check_mark:|
+| [underhentai](https://underhentai.net)                           |         ?          |       :x:        |
 | [e-hentai](http://e-hentai.org/)                                 | :heavy_check_mark: |        ?         |
 | [exhentai](https://exhentai.org)                                 |        :x:         |        ?         |
 
