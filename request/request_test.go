@@ -4,7 +4,7 @@ import "testing"
 
 func TestSize(t *testing.T) {
 	t.Run("Default test", func(t *testing.T) {
-		size, err := Size("https://wikipedia.de/img/Wikipedia-logo-v2-de.svg", "")
+		size, err := Size("https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png", "")
 		if err != nil {
 			t.Error(err)
 		}
