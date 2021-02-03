@@ -70,7 +70,7 @@ func extractData(postURL string) (static.Data, error) {
 		return static.Data{}, err
 	}
 
-	re := regexp.MustCompile("data-original-width=\"([^\"]+)\"[ ]+data-original-height=\"([^\"]+)\".+alt=\"([^\"]+)\".+src=\"([^\"]+)\"")
+	re := regexp.MustCompile("data-width=\"([^\"]+)\"[ ]+data-height=\"([^\"]+)\".+alt=\"([^\"]+)\".+src=\"([^\"]+)\"")
 	matchedImgData := re.FindStringSubmatch(htmlString)
 	if len(matchedImgData) != 5 {
 		return static.Data{}, errors.New("[Danbooru] Image parsing failed")

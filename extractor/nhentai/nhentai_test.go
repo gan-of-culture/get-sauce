@@ -76,7 +76,7 @@ func TestExtract(t *testing.T) {
 			if err != nil {
 				t.Error(err)
 			}
-			URLlen := len(data[1].Streams["0"].URLs)
+			URLlen := len(data[0].Streams["0"].URLs)
 			if URLlen != tt.want {
 				t.Errorf("Got: %v - want: %v", URLlen, tt.want)
 			}
