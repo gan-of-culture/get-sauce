@@ -1,8 +1,9 @@
 package danbooru
 
-import "testing"
-
-import "log"
+import (
+	"log"
+	"testing"
+)
 
 func TestParseURL(t *testing.T) {
 	tests := []struct {
@@ -49,7 +50,7 @@ func TestExtractData(t *testing.T) {
 			url:  "https://danbooru.donmai.us/posts/3773519",
 			want: want{
 				numberOfStream: 1,
-				title:          "kasumi and squirtle (pokemon and 2 more) drawn by shellvi",
+				title:          "misty and squirtle (pokemon and 2 more) drawn by shellvi",
 			},
 		},
 	}
