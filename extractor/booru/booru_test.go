@@ -48,7 +48,7 @@ func TestExtractData(t *testing.T) {
 		},
 		{
 			name: "Query extraction",
-			url:  "https://booru.io/api/query/entity?query=1girl%20nude%20solo_focus",
+			url:  "https://booru.io/api/query/entity?query=1girl%20nude%20animal_ears%20cat%20solo",
 			want: 100,
 		},
 	}
