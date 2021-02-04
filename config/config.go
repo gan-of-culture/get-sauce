@@ -1,15 +1,17 @@
 package config
 
 var (
-	// OutputPath
+	//Amount of files to download
+	Amount int
+	// OutputPath for files
 	OutputPath string
-	// OutputName
+	// OutputName for file
 	OutputName string
 	// Pages of doujinshi
 	Pages string
 	// RestrictContent
 	RestrictContent bool
-	// SelectStream
+	// SelectStream to download
 	SelectStream string
 	// ShowInfo of all avaiable streams
 	ShowInfo bool
