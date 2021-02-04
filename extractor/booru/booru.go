@@ -7,7 +7,9 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
+	"time"
 
+	"github.com/gan-of-culture/go-hentai-scraper/config"
 	"github.com/gan-of-culture/go-hentai-scraper/request"
 	"github.com/gan-of-culture/go-hentai-scraper/static"
 )
@@ -20,11 +22,11 @@ const apiQueryURL = "https://booru.io/api/query/entity?query="
 
 // Entity JSON type
 type Entity struct {
-	Key         string            `json: "key"`
-	ContentType string            `json: "contentType"`
-	Attributes  map[string]int    `json: "attributes"`
-	Tags        map[string]int    `json: "tags"`
-	Transforms  map[string]string `json: "transforms"`
+	Key         string             `json: "key"`
+	ContentType string             `json: "contentType"`
+	Attributes  map[string]float32 `json: "attributes"`
+	Tags        map[string]int     `json: "tags"`
+	Transforms  map[string]string  `json: "transforms"`
 }
 
 // EntitySlice JSON type
@@ -76,6 +78,7 @@ func extractData(queryURL string) ([]static.Data, error) {
 		entity := Entity{}
 		err := json.Unmarshal([]byte(jsonString), &entity)
 		if err != nil {
+			fmt.Println(queryURL)
 			return []static.Data{}, err
 		}
 		entitySlice.Data = append(entitySlice.Data, entity)
@@ -85,9 +88,13 @@ func extractData(queryURL string) ([]static.Data, error) {
 
 		cursor := 0
 		for {
+			if config.Amount > 0 && config.Amount <= cursor {
+				break
+			}
 			entitySliceTmp := EntitySlice{}
 			err = json.Unmarshal([]byte(jsonString), &entitySliceTmp)
 			if err != nil {
+				fmt.Println(queryURL)
 				return []static.Data{}, err
 			}
 			if len(entitySliceTmp.Data) == 0 {
@@ -99,6 +106,7 @@ func extractData(queryURL string) ([]static.Data, error) {
 			if err != nil {
 				return []static.Data{}, err
 			}
+			time.Sleep(200 * time.Millisecond)
 		}
 	}
 
@@ -114,7 +122,7 @@ func extractData(queryURL string) ([]static.Data, error) {
 		data = append(data, static.Data{
 			Site:  site,
 			Title: e.Key,
-			Type:  "image",
+			Type:  e.ContentType,
 			Streams: map[string]static.Stream{
 				"0": {
 					URLs: []static.URL{

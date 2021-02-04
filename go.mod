@@ -5,8 +5,6 @@ go 1.13
 require (
 	github.com/cenkalti/backoff/v3 v3.2.2 // indirect
 	github.com/cenkalti/rain v1.1.8
-	github.com/chromedp/cdproto v0.0.0-20200118073400-82dd5aea4c26 // indirect
-	github.com/chromedp/chromedp v0.5.3 // indirect
 	github.com/golang/groupcache v0.0.0-20200121045136-8c9f03a8e57e // indirect
 	github.com/mattn/go-isatty v0.0.12 // indirect
 	github.com/mr-tron/base58 v1.1.3 // indirect
