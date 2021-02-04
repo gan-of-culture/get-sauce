@@ -8,13 +8,13 @@ Is a commandline tool to download hentai made in go by me. You can see what site
 
 Download the right release under the releases tab.
 
-You can clone this Repository youself and download it. Then just do:
+You can clone this Repository yourself and download it. Then just do:
 
 ```bash
 go build
 ```
 
-After that you should be provided with a **executable**.
+After that you should be provided with an **executable**.
 
 Or you can just do
 
@@ -60,6 +60,11 @@ go run main.go ...
 
  main -a 5000 http...
 
+--------------------------------------------------------------------------------
+
+ -p              Enter pages like 1,2,3-4,6,7,8-9 for doujins
+
+ main -p 1,2,3-4 http...
 ```
 
 ## Supported sites
