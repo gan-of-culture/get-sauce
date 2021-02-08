@@ -3,26 +3,52 @@ package request
 import (
 	"crypto/tls"
 	"errors"
+	"io"
 	"io/ioutil"
 	"net/http"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/gan-of-culture/go-hentai-scraper/config"
 )
 
+// LogRedirects to sanitize "Location" URLs
+type LogRedirects struct {
+	Transport http.RoundTripper
+}
+
+//RoundTrip implementaion
+func (l LogRedirects) RoundTrip(req *http.Request) (resp *http.Response, err error) {
+	t := l.Transport
+	if t == nil {
+		t = http.DefaultTransport
+	}
+	resp, err = t.RoundTrip(req)
+	if err != nil {
+		return
+	}
+	switch resp.StatusCode {
+	case http.StatusMovedPermanently, http.StatusFound, http.StatusSeeOther, http.StatusTemporaryRedirect:
+		LocationURL, _ := resp.Location()
+		if !strings.ContainsAny(LocationURL.String(), " ") {
+			return
+		}
+		resp.Header.Set("Location", strings.ReplaceAll(LocationURL.String(), " ", "%20"))
+	}
+	return
+}
+
 //Request http
 func Request(method string, url string, headers map[string]string) (*http.Response, error) {
 
-	transport := &http.Transport{
-		DisableCompression:  true,
-		TLSHandshakeTimeout: 10 * time.Second,
-		TLSClientConfig:     &tls.Config{InsecureSkipVerify: true},
-	}
-
 	client := &http.Client{
-		Transport: transport,
-		Timeout:   15 * time.Minute,
+		Transport: LogRedirects{&http.Transport{
+			DisableCompression:  true,
+			TLSHandshakeTimeout: 10 * time.Second,
+			TLSClientConfig:     &tls.Config{InsecureSkipVerify: true},
+		}},
+		Timeout: 15 * time.Minute,
 	}
 
 	req, err := http.NewRequest(method, url, nil)
@@ -58,7 +84,9 @@ func Get(url string) (string, error) {
 
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		return "", err
+		if err != io.ErrUnexpectedEOF {
+			return "", err
+		}
 	}
 
 	return string(body), nil

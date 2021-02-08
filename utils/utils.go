@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"os"
 	"strconv"
 	"strings"
 
@@ -57,4 +58,14 @@ func NeedDownloadList(length int) []int {
 		out = append(out, i)
 	}
 	return out
+}
+
+//IsInTest to limit run time of some extractors
+func IsInTests() bool {
+	for _, arg := range os.Args {
+		if strings.HasPrefix(arg, "-test.run") {
+			return true
+		}
+	}
+	return false
 }

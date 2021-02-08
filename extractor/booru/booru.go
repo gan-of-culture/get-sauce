@@ -69,6 +69,7 @@ func ParseURL(url string) (string, error) {
 func extractData(queryURL string) ([]static.Data, error) {
 	jsonString, err := request.Get(queryURL)
 	if err != nil {
+		fmt.Println(queryURL)
 		return []static.Data{}, err
 	}
 
@@ -106,7 +107,7 @@ func extractData(queryURL string) ([]static.Data, error) {
 			if err != nil {
 				return []static.Data{}, err
 			}
-			time.Sleep(200 * time.Millisecond)
+			time.Sleep(100 * time.Millisecond)
 		}
 	}
 
@@ -116,7 +117,7 @@ func extractData(queryURL string) ([]static.Data, error) {
 		ext := GetFileExt(tType)
 		size, err := request.Size(fmt.Sprintf("%s%s", apiDataURL, tVal), site)
 		if err != nil {
-			return []static.Data{}, errors.New("[Booru]No image size not found")
+			fmt.Printf("[Booru] can't get file size for: %s with error %v\n", fmt.Sprintf("%s%s", apiDataURL, tVal), err)
 		}
 
 		data = append(data, static.Data{

@@ -107,3 +107,24 @@ func TestNeedDownloadList(t *testing.T) {
 		})
 	}
 }
+
+/*func TestIsInTest(t *testing.T) {
+	tests := []struct {
+		name string
+		want bool
+	}{
+		{
+			name: "Test",
+			want: true,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			is := IsInTests()
+
+			if !is {
+				t.Errorf("Got: %v - want: %v", is, tt.want)
+			}
+		})
+	}
+}*/
