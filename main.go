@@ -12,7 +12,7 @@ import (
 	"github.com/gan-of-culture/go-hentai-scraper/extractor/booru"
 	"github.com/gan-of-culture/go-hentai-scraper/extractor/danbooru"
 	"github.com/gan-of-culture/go-hentai-scraper/extractor/ehentai"
-	"github.com/gan-of-culture/go-hentai-scraper/extractor/hentai"
+	"github.com/gan-of-culture/go-hentai-scraper/extractor/hentais"
 	"github.com/gan-of-culture/go-hentai-scraper/extractor/hentaiworld"
 	"github.com/gan-of-culture/go-hentai-scraper/extractor/nhentai"
 	"github.com/gan-of-culture/go-hentai-scraper/extractor/rule34"
@@ -54,7 +54,7 @@ func download(url string) {
 	case "exhentai":
 		data, err = ehentai.Extract(url)
 	case "hentais":
-		data, err = hentai.Extract(url)
+		data, err = hentais.Extract(url)
 	case "hentaiworld":
 		data, err = hentaiworld.Extract(url)
 	case "nhentai":
