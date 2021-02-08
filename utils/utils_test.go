@@ -120,7 +120,7 @@ func TestIsInTest(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			is := isInTests()
+			is := IsInTests()
 
 			if !is {
 				t.Errorf("Got: %v - want: %v", is, tt.want)
