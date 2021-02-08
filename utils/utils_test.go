@@ -108,7 +108,7 @@ func TestNeedDownloadList(t *testing.T) {
 	}
 }
 
-func TestIsInTest(t *testing.T) {
+/*func TestIsInTest(t *testing.T) {
 	tests := []struct {
 		name string
 		want bool
@@ -127,4 +127,4 @@ func TestIsInTest(t *testing.T) {
 			}
 		})
 	}
-}
+}*/
