@@ -71,13 +71,15 @@ go run main.go ...
 
 | Site                                                             | Images             | Videos           |
 | -----------------------------------------------------------------|:------------------:|:----------------:|
-| [danbooru](https://danbooru.donmai.us)                           | :heavy_check_mark: |        ?         |
 | [booru](https://booru.io/)                                       | :heavy_check_mark: |        ?         |
-| [hanime](https://hanime.tv)                                      | :heavy_check_mark: |       :x:        |
-| [nhentai](https://nhentai.net)                                   | :heavy_check_mark: |        ?         |
-| [rule34](https://rule34.paheal.net)                              | :heavy_check_mark: |:heavy_check_mark:|
+| [danbooru](https://danbooru.donmai.us)                           | :heavy_check_mark: |        ?         |
 | [e-hentai](http://e-hentai.org/)                                 | :heavy_check_mark: |        ?         |
 | [exhentai](https://exhentai.org)                                 |        :x:         |        ?         |
+| [hanime](https://hanime.tv)                                      | :heavy_check_mark: |       :x:        |
+| [hentais (480p only)](https://www.hentais.tube/)                 |         ?          |:heavy_check_mark:|
+| [hentaiworld (1080p only)](https://hentaiworld.tv/)              |         ?          |:heavy_check_mark:|
+| [nhentai](https://nhentai.net)                                   | :heavy_check_mark: |        ?         |
+| [rule34](https://rule34.paheal.net)                              | :heavy_check_mark: |:heavy_check_mark:|
 
 *Note exhentai is currently not supported, because it requires a user login and I don't want my user banned - I'll probably add a way to extract the data with your own user and a manual how to get one*
 
