@@ -61,7 +61,7 @@ func TestExtractData(t *testing.T) {
 		{
 			name: "Single default extraction",
 			url:  "https://hentaiworld.tv/hentai-videos/yuutousei-ayaka-no-uraomote-episode-1/",
-			want: "Yuutousei Ayaka no Uraomote – Episode 1",
+			want: "Yuutousei Ayaka no Uraomote - Episode 1",
 		},
 	}
 	for _, tt := range tests {
