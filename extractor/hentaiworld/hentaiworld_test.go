@@ -60,8 +60,8 @@ func TestExtractData(t *testing.T) {
 		},
 		{
 			name: "Single default extraction",
-			url:  "https://hentaiworld.tv/hentai-videos/ijirare-fukushuu-saimin-episode-2/",
-			want: "Ijirare Fukushuu Saimin – Episode 2",
+			url:  "https://hentaiworld.tv/hentai-videos/yuutousei-ayaka-no-uraomote-episode-1/",
+			want: "Yuutousei Ayaka no Uraomote - Episode 1",
 		},
 	}
 	for _, tt := range tests {
@@ -85,8 +85,8 @@ func TestExtract(t *testing.T) {
 	}{
 		{
 			name: "Page Extraction",
-			url:  "https://hentaiworld.tv/uncensored/",
-			want: 30,
+			url:  "https://hentaiworld.tv/hentai-videos/category/yuutousei-ayaka-no-uraomote/",
+			want: 2,
 		},
 	}
 	for _, tt := range tests {

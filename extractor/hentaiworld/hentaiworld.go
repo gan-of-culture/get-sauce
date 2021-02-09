@@ -27,15 +27,14 @@ func Extract(url string) ([]static.Data, error) {
 
 // ParseURL for data extraction
 func ParseURL(url string) ([]string, error) {
-	re := regexp.MustCompile("hentai-videos/(?:3d/)?(?:.+episode-[0-9]*)?")
-	validEpisodeURL := re.FindString(url)
-	if validEpisodeURL != "" {
-		return []string{url}, nil
-	}
-
-	re = regexp.MustCompile("(?:https://hentaiworld.tv/)(?:all-episodes|uncensored|3d|category|hentai-videos/tag)/")
+	re := regexp.MustCompile("(?:https://hentaiworld.tv/)(?:all-episodes|uncensored|3d|hentai-videos/category|hentai-videos/tag)/")
 	validMassURL := re.FindString(url)
 	if validMassURL == "" {
+		re := regexp.MustCompile("hentai-videos/(?:3d/)?(?:.+episode-[0-9]*)?")
+		validEpisodeURL := re.FindString(url)
+		if validEpisodeURL != "" {
+			return []string{url}, nil
+		}
 		return []string{}, fmt.Errorf("[HentaiWorld]Invalid URL %s", url)
 	}
 
@@ -52,7 +51,7 @@ func ParseURL(url string) ([]string, error) {
 	}
 
 	if utils.IsInTests() {
-		urls = urls[0:3]
+		urls = urls[0:2]
 	}
 
 	return urls, nil
@@ -67,6 +66,10 @@ func ExtractData(url string) static.Data {
 
 	re := regexp.MustCompile("<h1[^>]*>([^<]*)")
 	title := strings.TrimSpace(utils.GetLastItemString(re.FindStringSubmatch(postHTMLpage)))
+
+	if strings.Contains(title, "\u0026#8211;") {
+		title = strings.ReplaceAll(title, "\u0026#8211;", "-")
+	}
 
 	re = regexp.MustCompile("window.open\\(\\'([^']+\\.([0-9a-zA-z]*))")
 	infoAboutFile := re.FindStringSubmatch(postHTMLpage) // 1 = dlURL 2=ext
