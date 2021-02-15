@@ -96,14 +96,16 @@ func extractData(queryURL string) ([]static.Data, error) {
 			err = json.Unmarshal([]byte(jsonString), &entitySliceTmp)
 			if err != nil {
 				fmt.Println(queryURL)
-				return []static.Data{}, err
+				fmt.Println("Cursor", cursor)
+				fmt.Println(jsonString)
 			}
-			if len(entitySliceTmp.Data) == 0 {
+			if len(entitySliceTmp.Data) == 0 && err == nil {
 				break
 			}
 			entitySlice.Data = append(entitySlice.Data, entitySliceTmp.Data...)
 			cursor += 50
 			jsonString, err = request.Get(fmt.Sprintf("%s&cursor=%d", queryURL, cursor))
+			fmt.Println(fmt.Sprintf("%s&cursor=%d", queryURL, cursor))
 			if err != nil {
 				return []static.Data{}, err
 			}
@@ -115,10 +117,10 @@ func extractData(queryURL string) ([]static.Data, error) {
 	for _, e := range entitySlice.Data {
 		tType, tVal := GetBestQualityImg(e.Transforms)
 		ext := GetFileExt(tType)
-		size, err := request.Size(fmt.Sprintf("%s%s", apiDataURL, tVal), site)
+		/*size, err := request.Size(fmt.Sprintf("%s%s", apiDataURL, tVal), site)
 		if err != nil {
 			fmt.Printf("[Booru] can't get file size for: %s with error %v\n", fmt.Sprintf("%s%s", apiDataURL, tVal), err)
-		}
+		}*/
 
 		data = append(data, static.Data{
 			Site:  site,
@@ -133,7 +135,7 @@ func extractData(queryURL string) ([]static.Data, error) {
 						},
 					},
 					Quality: strings.Split(tType, ":")[0],
-					Size:    size,
+					Size:    0,
 				},
 			},
 			Url: fmt.Sprintf("%s%s", postURL, e.Key),

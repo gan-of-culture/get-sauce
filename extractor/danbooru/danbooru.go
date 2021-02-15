@@ -87,7 +87,7 @@ func extractData(postURL string) (static.Data, error) {
 		Title: matchedImgData[3],
 		Type:  "image",
 		Streams: map[string]static.Stream{
-			"0": static.Stream{
+			"0": {
 				URLs: []static.URL{
 					{
 						URL: matchedImgData[4],

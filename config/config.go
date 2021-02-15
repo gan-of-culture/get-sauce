@@ -9,12 +9,14 @@ var (
 	OutputName string
 	// Pages of doujinshi
 	Pages string
-	// RestrictContent
+	// RestrictContent for e-hentai
 	RestrictContent bool
 	// SelectStream to download
 	SelectStream string
 	// ShowInfo of all avaiable streams
 	ShowInfo bool
+	// Threads for downloading
+	Threads int
 	// Username for exhentai.org
 	Username string
 	// UserPassword for exhentai.org
