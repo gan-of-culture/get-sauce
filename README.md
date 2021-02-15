@@ -54,7 +54,13 @@ go run main.go ...
 
 --------------------------------------------------------------------------------
 
- -a              Amount of files (booru.io only)
+ -t             Number of download threads
+
+ go-hentai-scraper -t 4 http...
+
+--------------------------------------------------------------------------------
+
+ -a              Amount of files (image boards only)
 
  go-hentai-scraper -a 5000 http...
 
@@ -69,6 +75,7 @@ go run main.go ...
 
 | Site                                                             | Images             | Videos           |
 | -----------------------------------------------------------------|:------------------:|:----------------:|
+| [booruproject (ex. rule34, gelbooru)](https://booru.org/top)     | :heavy_check_mark: |:heavy_check_mark:|
 | [booru](https://booru.io/)                                       | :heavy_check_mark: |        ?         |
 | [danbooru](https://danbooru.donmai.us)                           | :heavy_check_mark: |        ?         |
 | [e-hentai](http://e-hentai.org/)                                 | :heavy_check_mark: |        ?         |

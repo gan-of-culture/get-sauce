@@ -1,4 +1,4 @@
-package rule34
+package booruproject
 
 import (
 	"testing"
@@ -15,20 +15,21 @@ func TestParseURL(t *testing.T) {
 	}{
 		{
 			name: "Single image",
-			url:  "https://rule34.paheal.net/post/view/3464197",
-			want: 1,
-		}, {
-			name: "Single video",
-			url:  "https://rule34.paheal.net/post/view/3464181",
+			url:  "https://rule34.xxx/index.php?page=post&s=view&id=4470590",
 			want: 1,
 		}, {
 			name: "Overview page",
-			url:  "https://rule34.paheal.net/post/list/2",
+			url:  "https://rule34.xxx/index.php?page=post&s=list&tags=all",
 			// atleast more than 2
 			want: 2,
 		}, {
 			name: "Mass extract page",
-			url:  "https://rule34.paheal.net/post/list/1",
+			url:  "https://rule34.xxx/index.php?page=post&s=list&tags=all",
+			// atleast more than 2
+			want: 100,
+		}, {
+			name: "Mass extract page",
+			url:  "https://gelbooru.com/index.php?page=post&s=list&tags=all",
 			// atleast more than 2
 			want: 100,
 		},
@@ -45,7 +46,6 @@ func TestParseURL(t *testing.T) {
 			}
 		})
 	}
-
 }
 
 func TestExtract(t *testing.T) {
@@ -61,26 +61,18 @@ func TestExtract(t *testing.T) {
 	}{
 		{
 			name: "Test image",
-			url:  "https://rule34.paheal.net/post/view/3427635",
+			url:  "https://gelbooru.com/index.php?page=post&s=view&id=5888807",
 			want: want{
-				Title:   "Magical_Sempai_(Series) Magician_Sempai skyfreedom 3427635",
-				Type:    "image",
+				Title:   "gelbooru_5888807",
+				Type:    "image/png",
 				DataLen: 1,
 			},
 		}, {
 			name: "Test video",
-			url:  "https://rule34.paheal.net/post/view/3464181",
+			url:  "https://rule34.xxx/index.php?page=post&s=view&id=4470579",
 			want: want{
-				Title:   "Hv54rDSL Nier Nier_Automata YoRHa_No.2_Type_B animated audiodude blender sound webm 3464181",
-				Type:    "video",
-				DataLen: 1,
-			},
-		}, {
-			name: "Test gif",
-			url:  "https://rule34.paheal.net/post/view/3461411",
-			want: want{
-				Title:   "World_of_Warcraft animated blood_elf 3461411",
-				Type:    "gif",
+				Title:   "rule34_4470579",
+				Type:    "video/mp4",
 				DataLen: 1,
 			},
 		},
@@ -113,13 +105,13 @@ func TestMassExtract(t *testing.T) {
 	}{
 		{
 			name: "Test mass",
-			url:  "https://rule34.paheal.net/post/list/1",
-			want: 26,
+			url:  "https://rule34.xxx/index.php?page=post&s=list&tags=all",
+			want: 62,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			config.Amount = 26
+			config.Amount = 62
 			elements, err := Extract(tt.url)
 			if err != nil {
 				t.Error("elements has error or is too big for single tests")

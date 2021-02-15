@@ -12,26 +12,26 @@ func TestDownload(t *testing.T) {
 		data static.Data
 		want error
 	}{
-		/*{
-			name: "underhentai single episode",
+		{
+			name: "rule34.xxx single img",
 			data: static.Data{
-				Site:  "https://underhentai.net",
-				Title: "kiss-hug episode 01",
-				Type:  "video",
+				Site:  "https://rule34.xxx",
+				Title: "4470590",
+				Type:  "image/jpg",
 				Streams: map[string]static.Stream{
 					"0": {
 						URLs: []static.URL{
 							{
-								URL: "https://sukebei.nyaa.si/download/2895133.torrent",
-								Ext: "mp4",
+								URL: "https://wimg.rule34.xxx//images/3942/089a5ea08c47a1e79df5cb58b334693f686709de.jpg?4470590",
+								Ext: "jpg",
 							},
 						},
 					},
 				},
-				Url: "https://www.underhentai.net/kiss-hug/",
+				Url: "https://rule34.xxx/index.php?page=post&s=view&id=4470590",
 			},
 			want: nil,
-		}, */{
+		}, {
 			name: "danbooru single post",
 			data: static.Data{
 				Site:  "https://danbooru.donmai.us/",

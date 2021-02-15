@@ -131,16 +131,16 @@ func Download(data static.Data) error {
 		return fmt.Errorf("Stream %s not found", config.SelectStream)
 	}
 
-	var saveErr error
 	appendEnum := false
 	if len(stream.URLs) > 1 {
 		appendEnum = true
 	}
 
+	var saveErr error
 	var URLTitle string
 	for idx, URL := range stream.URLs {
 		if appendEnum {
-			URLTitle = fmt.Sprintf("%s - %d", data.Title, idx)
+			URLTitle = fmt.Sprintf("%s_%d", data.Title, idx)
 		} else {
 			URLTitle = data.Title
 		}
