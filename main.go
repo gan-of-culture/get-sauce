@@ -67,6 +67,8 @@ func download(url string) {
 			break
 		}
 		data, err = booruproject.Extract(url)
+	case "tbib":
+		data, err = booruproject.Extract(url)
 	default:
 		if strings.Contains(url, "booru.org") {
 			data, err = booruproject.Extract(url)
@@ -87,21 +89,22 @@ func download(url string) {
 	}
 
 	var wg sync.WaitGroup
-	datachan := make(chan static.Data)
+	wg.Add(len(data))
+	datachan := make(chan static.Data, len(data))
 
 	for i := 0; i < config.Threads; i++ {
-		wg.Add(1)
 		go func() {
 			defer wg.Done()
 			for {
 				select {
-				case d, _ := <-datachan:
+				case d, ok := <-datachan:
+					if !ok {
+						return
+					}
 					err := downloader.Download(d)
 					if err != nil {
 						log.Println(err)
 					}
-				default:
-					return
 				}
 			}
 		}()
@@ -110,6 +113,7 @@ func download(url string) {
 	for _, d := range data {
 		datachan <- d
 	}
+	close(datachan)
 	wg.Wait()
 }
 

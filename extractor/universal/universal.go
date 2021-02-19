@@ -1,7 +1,6 @@
 package universal
 
 import (
-	"fmt"
 	"regexp"
 	"strings"
 
@@ -39,23 +38,13 @@ func Extract(url string, site string) ([]static.Data, error) {
 		}, nil
 	}
 
-	dataType := ""
-	switch matches[2] {
-	case "jpg", "jpeg", "png", "gif", "webp":
-		dataType = fmt.Sprintf("%s/%s", "image", matches[2])
-	case "webm", "mp4", "mkv", "m4a":
-		dataType = fmt.Sprintf("%s/%s", "video", matches[2])
-	default:
-		dataType = fmt.Sprintf("%s/%s", "unknown", matches[2])
-	}
-
 	size, _ := request.Size(url, url)
 
 	return []static.Data{
 		0: {
 			Site:  site,
 			Title: matches[1],
-			Type:  dataType,
+			Type:  utils.GetMediaType(matches[2]),
 			Streams: map[string]static.Stream{
 				"0": {
 					URLs: []static.URL{
