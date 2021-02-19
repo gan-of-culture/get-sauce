@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"fmt"
 	"os"
 	"strconv"
 	"strings"
@@ -60,7 +61,7 @@ func NeedDownloadList(length int) []int {
 	return out
 }
 
-//IsInTest to limit run time of some extractors
+// IsInTests to limit run time of some extractors
 func IsInTests() bool {
 	for _, arg := range os.Args {
 		if strings.HasPrefix(arg, "-test.run") {
@@ -68,4 +69,16 @@ func IsInTests() bool {
 		}
 	}
 	return false
+}
+
+// GetMediaType e.x put in png get image/png, mp4 -> video/mp4
+func GetMediaType(t string) string {
+	switch t {
+	case "jpg", "jpeg", "png", "gif", "webp":
+		return fmt.Sprintf("%s/%s", "image", t)
+	case "webm", "mp4", "mkv", "m4a":
+		return fmt.Sprintf("%s/%s", "video", t)
+	default:
+		return fmt.Sprintf("%s/%s", "unknown", t)
+	}
 }

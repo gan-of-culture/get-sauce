@@ -128,3 +128,51 @@ func TestNeedDownloadList(t *testing.T) {
 		})
 	}
 }*/
+
+func Test(t *testing.T) {
+	tests := []struct {
+		ext  string
+		want string
+	}{
+		{
+			ext:  "jpg",
+			want: "image/jpg",
+		}, {
+			ext:  "jpeg",
+			want: "image/jpeg",
+		}, {
+			ext:  "png",
+			want: "image/png",
+		}, {
+			ext:  "gif",
+			want: "image/gif",
+		}, {
+			ext:  "webp",
+			want: "image/webp",
+		}, {
+			ext:  "webm",
+			want: "video/webm",
+		}, {
+			ext:  "mp4",
+			want: "video/mp4",
+		}, {
+			ext:  "mkv",
+			want: "video/mkv",
+		}, {
+			ext:  "m4a",
+			want: "video/m4a",
+		}, {
+			ext:  "txt",
+			want: "unknown/txt",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.ext, func(t *testing.T) {
+			dtype := GetMediaType(tt.ext)
+
+			if dtype != tt.want {
+				t.Errorf("Got: %v - want: %v", dtype, tt.want)
+			}
+		})
+	}
+}

@@ -105,13 +105,13 @@ func TestMassExtract(t *testing.T) {
 	}{
 		{
 			name: "Test mass",
-			url:  "https://rule34.xxx/index.php?page=post&s=list&tags=all",
-			want: 62,
+			url:  "https://tbib.org/index.php?page=post&s=list&tags=1girl+solo+uncensored+full_body+&pid=0",
+			want: 5,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			config.Amount = 62
+			config.Amount = 5
 			elements, err := Extract(tt.url)
 			if err != nil {
 				t.Error("elements has error or is too big for single tests")

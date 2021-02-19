@@ -8,6 +8,7 @@ import (
 	"github.com/gan-of-culture/go-hentai-scraper/config"
 	"github.com/gan-of-culture/go-hentai-scraper/request"
 	"github.com/gan-of-culture/go-hentai-scraper/static"
+	"github.com/gan-of-culture/go-hentai-scraper/utils"
 )
 
 // ParseURL of input
@@ -40,6 +41,9 @@ func ParseURL(url string) []string {
 		}
 
 		matchedPosts := rePost.FindAllString(htmlString, -1)
+		if len(matchedPosts) == 0 {
+			return urls
+		}
 
 		for _, p := range matchedPosts {
 			if found >= config.Amount && config.Amount > 0 {
@@ -91,12 +95,16 @@ func extractData(url string, site string) (static.Data, error) {
 	re = regexp.MustCompile("<a href=\"(https.*/?/images[^\"]*\\.([^\"?]*)(?:[^\"])*?)\"[\\s\\S]*Original") //1=url 2=ext
 	matchedPostURL := re.FindStringSubmatch(postHTML)
 	if len(matchedPostURL) != 3 {
-		re := regexp.MustCompile("(https.*/?/images[^.]*\\.([^\"?]*)(?:[^\"])*?)[\\s\\S]*?id=\"image")
+		re := regexp.MustCompile("((?:https:)?//[^/]*/?/(?:images|samples)[^.]*\\.([^\"?]*)(?:[^\"])*?).*?id=\"image")
 		matchedPostURL = re.FindStringSubmatch(postHTML)
 		if len(matchedPostURL) != 3 {
 			return static.Data{}, err
 		}
 
+	}
+
+	if !strings.HasPrefix(matchedPostURL[1], "https") {
+		matchedPostURL[1] = fmt.Sprintf("%s%s", "https:", matchedPostURL[1]) //tbib.org/ direct img link has no https:
 	}
 
 	var size int64
@@ -114,20 +122,10 @@ func extractData(url string, site string) (static.Data, error) {
 	quality := re.FindString(postHTML)
 	quality = strings.ReplaceAll(quality, "Size: ", "")
 
-	dataType := ""
-	switch matchedPostURL[2] {
-	case "jpg", "jpeg", "png", "gif", "webp":
-		dataType = fmt.Sprintf("%s/%s", "image", matchedPostURL[2])
-	case "webm", "mp4", "mkv", "m4a":
-		dataType = fmt.Sprintf("%s/%s", "video", matchedPostURL[2])
-	default:
-		dataType = fmt.Sprintf("%s/%s", "unknown", matchedPostURL[2])
-	}
-
 	return static.Data{
 		Site:  site,
 		Title: fmt.Sprintf("%s_%s", siteName, strings.ReplaceAll(id, "Id: ", "")),
-		Type:  dataType,
+		Type:  utils.GetMediaType(matchedPostURL[2]),
 		Streams: map[string]static.Stream{
 			"0": {
 				URLs: []static.URL{
