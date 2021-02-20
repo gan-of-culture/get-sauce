@@ -83,8 +83,10 @@ go run main.go ...
 | [hanime](https://hanime.tv)                                      | :heavy_check_mark: |       :x:        |
 | [hentais (480p only)](https://www.hentais.tube/)                 |         ?          |:heavy_check_mark:|
 | [hentaiworld (1080p, 720p, 480p)](https://hentaiworld.tv/)       |         ?          |:heavy_check_mark:|
+| [konachan](https://konachan.com/post?tags=)                      | :heavy_check_mark: |        ?         |
 | [nhentai](https://nhentai.net)                                   | :heavy_check_mark: |        ?         |
 | [rule34](https://rule34.paheal.net)                              | :heavy_check_mark: |:heavy_check_mark:|
+| [yandere](https://yande.re/post)                                 | :heavy_check_mark: |        ?         |
 
 *Note exhentai is currently not supported, because it requires a user login and I don't want my user banned - I'll probably add a way to extract the data with your own user and a manual how to get one*
 
@@ -94,6 +96,7 @@ This works really good for the pitures of hanime.tv or reddit.com. This also wor
 ## TODO's
 
 - Add site to download hentai 1080p only (video)
+- Add mass extract for imageboards that have direct download links (yandere, konachan)
 - Clean up coding and add more sites
 
 ## Licencse

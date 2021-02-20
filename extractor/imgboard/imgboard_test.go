@@ -1,6 +1,7 @@
-package booruproject
+package imgboard
 
 import (
+	"strings"
 	"testing"
 
 	"github.com/gan-of-culture/go-hentai-scraper/config"
@@ -14,29 +15,53 @@ func TestParseURL(t *testing.T) {
 		want   int
 	}{
 		{
-			name: "Single image",
+			name: "Mass extract page booru project",
+			url:  "https://tbib.org/index.php?page=post&s=list&tags=1girl+solo+uncensored+full_body+&pid=0",
+			want: 100,
+		},
+		/*{
+			name: "Single image booru project",
 			url:  "https://rule34.xxx/index.php?page=post&s=view&id=4470590",
 			want: 1,
 		}, {
-			name: "Overview page",
+			name: "Overview page booru project",
 			url:  "https://rule34.xxx/index.php?page=post&s=list&tags=all",
 			// atleast more than 2
 			want: 2,
 		}, {
-			name: "Mass extract page",
+			name: "Mass extract page booru project",
 			url:  "https://rule34.xxx/index.php?page=post&s=list&tags=all",
 			// atleast more than 2
 			want: 100,
 		}, {
-			name: "Mass extract page",
+			name: "Mass extract page booru project2",
 			url:  "https://gelbooru.com/index.php?page=post&s=list&tags=all",
 			// atleast more than 2
 			want: 100,
-		},
+		}, {
+			name: "Single image",
+			url:  "https://yande.re/post/show/745150",
+			want: 1,
+		}, {
+			name: "Overview page booru project",
+			url:  "https://konachan.com/post?tags=uncensored",
+			// atleast more than 2
+			want: 2,
+		}, {
+			name: "Mass extract page",
+			url:  "https://konachan.com/post?tags=uncensored",
+			// atleast more than 2
+			want: 100,
+		}, {
+			name: "Mass extract page2",
+			url:  "https://yande.re/post?tags=tateha&page=2",
+			// atleast more than 2
+			want: 100,
+		},*/
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if tt.name == "Mass extract page" {
+			if strings.HasPrefix(tt.name, "Mass extract") {
 				config.Amount = 101
 			}
 			elements := ParseURL(tt.url)
@@ -75,11 +100,34 @@ func TestExtract(t *testing.T) {
 				Type:    "video/mp4",
 				DataLen: 1,
 			},
+		}, {
+			name: "Test image konachan",
+			url:  "https://konachan.com/post/show/323560/anthropomorphism-azur_lane-black_hair-blush-breast",
+			want: want{
+				Title:   "konachan_323560",
+				Type:    "image/jpg",
+				DataLen: 1,
+			},
+		}, {
+			name: "Test image yande.re",
+			url:  "https://yande.re/post/show/745150",
+			want: want{
+				Title:   "yande_745150",
+				Type:    "image/png",
+				DataLen: 1,
+			},
+		}, {
+			name: "Test image tbib",
+			url:  "https://tbib.org/index.php?page=post&s=view&id=9022091",
+			want: want{
+				Title:   "tbib_9022091",
+				Type:    "image/jpg",
+				DataLen: 1,
+			},
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			config.Amount = 26
 			elements, err := Extract(tt.url)
 			if err != nil {
 				t.Error("elements has error or is too big for single tests")
@@ -91,33 +139,6 @@ func TestExtract(t *testing.T) {
 			}
 			if act != tt.want {
 				t.Errorf("Got: %v - want: %v", act, tt.want)
-			}
-		})
-	}
-}
-
-func TestMassExtract(t *testing.T) {
-
-	tests := []struct {
-		name string
-		url  string
-		want int
-	}{
-		{
-			name: "Test mass",
-			url:  "https://tbib.org/index.php?page=post&s=list&tags=1girl+solo+uncensored+full_body+&pid=0",
-			want: 5,
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			config.Amount = 5
-			elements, err := Extract(tt.url)
-			if err != nil {
-				t.Error("elements has error or is too big for single tests")
-			}
-			if len(elements) != tt.want {
-				t.Errorf("Got: %v - want: %v", len(elements), tt.want)
 			}
 		})
 	}

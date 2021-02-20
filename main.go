@@ -6,17 +6,16 @@ import (
 	"fmt"
 	"log"
 	"regexp"
-	"strings"
 	"sync"
 
 	"github.com/gan-of-culture/go-hentai-scraper/config"
 	"github.com/gan-of-culture/go-hentai-scraper/downloader"
 	"github.com/gan-of-culture/go-hentai-scraper/extractor/booru"
-	"github.com/gan-of-culture/go-hentai-scraper/extractor/booruproject"
 	"github.com/gan-of-culture/go-hentai-scraper/extractor/danbooru"
 	"github.com/gan-of-culture/go-hentai-scraper/extractor/ehentai"
 	"github.com/gan-of-culture/go-hentai-scraper/extractor/hentais"
 	"github.com/gan-of-culture/go-hentai-scraper/extractor/hentaiworld"
+	"github.com/gan-of-culture/go-hentai-scraper/extractor/imgboard"
 	"github.com/gan-of-culture/go-hentai-scraper/extractor/nhentai"
 	"github.com/gan-of-culture/go-hentai-scraper/extractor/rule34"
 	"github.com/gan-of-culture/go-hentai-scraper/extractor/universal"
@@ -51,10 +50,7 @@ func download(url string) {
 	case "danbooru":
 		data, err = danbooru.Extract(url)
 	case "e-hentai":
-	case "exhentai":
 		data, err = ehentai.Extract(url)
-	case "gelbooru":
-		data, err = booruproject.Extract(url)
 	case "hentais":
 		data, err = hentais.Extract(url)
 	case "hentaiworld":
@@ -62,19 +58,12 @@ func download(url string) {
 	case "nhentai":
 		data, err = nhentai.Extract(url)
 	case "rule34":
-		if strings.Contains(url, "paheal") {
-			data, err = rule34.Extract(url)
-			break
-		}
-		data, err = booruproject.Extract(url)
-	case "tbib":
-		data, err = booruproject.Extract(url)
+		data, err = rule34.Extract(url)
 	default:
-		if strings.Contains(url, "booru.org") {
-			data, err = booruproject.Extract(url)
-			break
+		data, err = imgboard.Extract(url)
+		if err != nil {
+			data, err = universal.Extract(url, matches[1])
 		}
-		data, err = universal.Extract(url, matches[1])
 	}
 	if err != nil {
 		log.Fatal(err)
@@ -89,7 +78,7 @@ func download(url string) {
 	}
 
 	var wg sync.WaitGroup
-	wg.Add(len(data))
+	wg.Add(config.Threads)
 	datachan := make(chan static.Data, len(data))
 
 	for i := 0; i < config.Threads; i++ {

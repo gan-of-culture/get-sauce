@@ -1,4 +1,4 @@
-package booruproject
+package imgboard
 
 import (
 	"fmt"
@@ -11,31 +11,46 @@ import (
 	"github.com/gan-of-culture/go-hentai-scraper/utils"
 )
 
+var siteURL string
+
 // ParseURL of input
 func ParseURL(url string) []string {
-	if strings.Contains(url, "s=view") {
+
+	re := regexp.MustCompile("(?:show/|&id=)[0-9]*")
+	if re.MatchString(url) {
 		return []string{url}
 	}
 
-	if !strings.Contains(url, "s=list") {
+	re = regexp.MustCompile("(?:s=list|post\\?|page=[0-9]+)")
+	if !re.MatchString(url) {
 		return []string{}
 	}
 
-	re := regexp.MustCompile("https://[^/]*")
-	siteURL := re.FindString(url)
-
-	re = regexp.MustCompile("(.*)pid=[0-9]*")
-	matchedBaseQueryURL := re.FindStringSubmatch(url)
-	baseQueryURL := url
-	if len(matchedBaseQueryURL) == 2 {
-		baseQueryURL = matchedBaseQueryURL[1]
+	pageParam := ""
+	if strings.Contains(url, "index.php?") {
+		pageParam = "&pid=%d"
+	}
+	if strings.Contains(url, "post?") {
+		pageParam = "&page=%d"
 	}
 
-	rePost := regexp.MustCompile("index.php\\?page=post(?:(?:&)|(?:&amp;))s=view(?:(?:&)|(?:&amp;))id=[0-9]*")
+	re = regexp.MustCompile("(.+(?:pid=|page=))[0-9]+([^\\s]+)?") //1=basequeryurl 2=parameters after the page parameter
+	matchedBaseQueryURL := re.FindStringSubmatch(url)
+	baseQueryURL := ""
+	switch len(matchedBaseQueryURL) {
+	case 0, 1:
+		baseQueryURL = fmt.Sprintf("%s%s", url, pageParam)
+	case 2:
+		baseQueryURL = fmt.Sprintf("%s%s", matchedBaseQueryURL[1], "%d")
+	case 3:
+		baseQueryURL = fmt.Sprintf("%s%s%s", matchedBaseQueryURL[1], "%d", matchedBaseQueryURL[2])
+	}
+
+	rePost := regexp.MustCompile("(?:index.php\\?page=post(?:(?:&)|(?:&amp;))s=view(?:(?:&)|(?:&amp;))id=[0-9]*)|\"/post/show/[^\"]*")
 	found := 0
 	urls := []string{}
-	for i := 0; ; i += 42 {
-		htmlString, err := request.Get(fmt.Sprintf("%s&pid=%d", baseQueryURL, i))
+	for i := 0; ; {
+		htmlString, err := request.Get(fmt.Sprintf(baseQueryURL, i))
 		if err != nil {
 			break
 		}
@@ -47,14 +62,23 @@ func ParseURL(url string) []string {
 
 		for _, p := range matchedPosts {
 			if found >= config.Amount && config.Amount > 0 {
+				fmt.Println(urls)
 				return urls
 			}
-			urls = append(urls, fmt.Sprintf("%s/%s", siteURL, strings.ReplaceAll(p, "&amp;", "&")))
+			p = strings.TrimLeft(p, "\"/")
+			p = strings.ReplaceAll(p, "&amp;", "&")
+
+			urls = append(urls, fmt.Sprintf("%s/%s", siteURL, p))
 			found++
 		}
 		if config.Amount == 0 {
 			return urls
 		}
+		if pageParam == "&pid=%d" {
+			i += 42
+			continue
+		}
+		i++
 	}
 
 	return urls
@@ -62,17 +86,17 @@ func ParseURL(url string) []string {
 
 // Extract post data
 func Extract(url string) ([]static.Data, error) {
+	re := regexp.MustCompile("https://[^/]*")
+	siteURL = re.FindString(url)
+
 	urls := ParseURL(url)
 	if len(urls) == 0 {
 		return nil, fmt.Errorf("Can't find a post for %s", url)
 	}
 
-	re := regexp.MustCompile("https://[^/]*")
-	siteURL := re.FindString(url)
-
 	var data []static.Data
 	for _, u := range urls {
-		d, err := extractData(u, siteURL)
+		d, err := extractData(u)
 		if err != nil {
 			return nil, err
 		}
@@ -82,25 +106,24 @@ func Extract(url string) ([]static.Data, error) {
 	return data, nil
 }
 
-func extractData(url string, site string) (static.Data, error) {
+func extractData(url string) (static.Data, error) {
 
 	re := regexp.MustCompile("http?s://(?:www.)?([^.]*)")
-	siteName := re.FindStringSubmatch(site)[1]
+	siteName := re.FindStringSubmatch(siteURL)[1]
 
 	postHTML, err := request.Get(url)
 	if err != nil {
 		return static.Data{}, err
 	}
 
-	re = regexp.MustCompile("<a href=\"(https.*/?/images[^\"]*\\.([^\"?]*)(?:[^\"])*?)\"[\\s\\S]*Original") //1=url 2=ext
+	re = regexp.MustCompile("<a.+href=\"([^\"]+\\.([^\"?]+)).+>\\s*(?:Original|Download PNG)") //1=url 2=ext
 	matchedPostURL := re.FindStringSubmatch(postHTML)
 	if len(matchedPostURL) != 3 {
-		re := regexp.MustCompile("((?:https:)?//[^/]*/?/(?:images|samples)[^.]*\\.([^\"?]*)(?:[^\"])*?).*?id=\"image")
+		re = regexp.MustCompile("<a.+href=\"([^\"]+\\.([^\"?]+)).+>\\s*(?:Original|View larger|Download PNG)")
 		matchedPostURL = re.FindStringSubmatch(postHTML)
 		if len(matchedPostURL) != 3 {
 			return static.Data{}, err
 		}
-
 	}
 
 	if !strings.HasPrefix(matchedPostURL[1], "https") {
@@ -123,7 +146,7 @@ func extractData(url string, site string) (static.Data, error) {
 	quality = strings.ReplaceAll(quality, "Size: ", "")
 
 	return static.Data{
-		Site:  site,
+		Site:  siteURL,
 		Title: fmt.Sprintf("%s_%s", siteName, strings.ReplaceAll(id, "Id: ", "")),
 		Type:  utils.GetMediaType(matchedPostURL[2]),
 		Streams: map[string]static.Stream{
