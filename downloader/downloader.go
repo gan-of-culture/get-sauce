@@ -144,6 +144,10 @@ func Download(data static.Data) error {
 		} else {
 			URLTitle = data.Title
 		}
+
+		//sanitize filename here
+		URLTitle = strings.ReplaceAll(URLTitle, "|", "_")
+
 		wg.Add(1)
 		go func(URL static.URL, title string) {
 			defer wg.Done()
