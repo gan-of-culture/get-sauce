@@ -144,9 +144,14 @@ func Download(data static.Data) error {
 		} else {
 			URLTitle = data.Title
 		}
+
+		//sanitize filename here
+		URLTitle = strings.ReplaceAll(URLTitle, "|", "_")
+
 		wg.Add(1)
 		go func(URL static.URL, title string) {
 			defer wg.Done()
+			fmt.Println("Start saving")
 			err := save(URL, title, config.FakeHeaders)
 			if err != nil {
 				saveErr = err
@@ -177,6 +182,7 @@ func save(url static.URL, fileName string, headers map[string]string) error {
 			return err
 		}
 
+		fmt.Println("Write file")
 		_, err = writeFile(url.URL, file, headers)
 		if err != nil {
 			return err

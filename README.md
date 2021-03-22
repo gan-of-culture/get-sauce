@@ -96,7 +96,6 @@ This works really good for the pitures of hanime.tv or reddit.com. This also wor
 ## TODO's
 
 - Add site to download hentai 1080p only (video)
-- Add mass extract for imageboards that have direct download links (yandere, konachan)
 - Clean up coding and add more sites
 
 ## Licencse

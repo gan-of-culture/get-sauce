@@ -12,6 +12,7 @@ import (
 )
 
 var siteURL string
+var mass = false
 
 // ParseURL of input
 func ParseURL(url string) []string {
@@ -21,7 +22,7 @@ func ParseURL(url string) []string {
 		return []string{url}
 	}
 
-	re = regexp.MustCompile("(?:s=list|post\\?|page=[0-9]+)")
+	re = regexp.MustCompile(`(?:s=list|post\?|page=[0-9]+)`)
 	if !re.MatchString(url) {
 		return []string{}
 	}
@@ -34,7 +35,7 @@ func ParseURL(url string) []string {
 		pageParam = "&page=%d"
 	}
 
-	re = regexp.MustCompile("(.+(?:pid=|page=))[0-9]+([^\\s]+)?") //1=basequeryurl 2=parameters after the page parameter
+	re = regexp.MustCompile(`(.+(?:pid=|page=))[0-9]+([^\s]+)?`) //1=basequeryurl 2=parameters after the page parameter
 	matchedBaseQueryURL := re.FindStringSubmatch(url)
 	baseQueryURL := ""
 	switch len(matchedBaseQueryURL) {
@@ -46,7 +47,8 @@ func ParseURL(url string) []string {
 		baseQueryURL = fmt.Sprintf("%s%s%s", matchedBaseQueryURL[1], "%d", matchedBaseQueryURL[2])
 	}
 
-	rePost := regexp.MustCompile("(?:index.php\\?page=post(?:(?:&)|(?:&amp;))s=view(?:(?:&)|(?:&amp;))id=[0-9]*)|\"/post/show/[^\"]*")
+	rePost := regexp.MustCompile(`(?:index.php\?page=post(?:(?:&)|(?:&amp;))s=view(?:(?:&)|(?:&amp;))id=[0-9]*)|"/post/show/[^"]*`)
+	reDirectLinks := regexp.MustCompile(`directlink largeimg"\s*href="([^"]*)`)
 	found := 0
 	urls := []string{}
 	for i := 0; ; {
@@ -55,21 +57,32 @@ func ParseURL(url string) []string {
 			break
 		}
 
-		matchedPosts := rePost.FindAllString(htmlString, -1)
-		if len(matchedPosts) == 0 {
-			return urls
+		matchedDirectLinks := reDirectLinks.FindAllStringSubmatch(htmlString, -1)
+		if len(matchedDirectLinks) > 0 {
+			for _, l := range matchedDirectLinks {
+				urls = append(urls, l[1])
+				found++
+			}
+			mass = true
 		}
 
-		for _, p := range matchedPosts {
-			if found >= config.Amount && config.Amount > 0 {
-				fmt.Println(urls)
+		if !mass {
+			matchedPosts := rePost.FindAllString(htmlString, -1)
+			if len(matchedPosts) == 0 {
 				return urls
 			}
-			p = strings.TrimLeft(p, "\"/")
-			p = strings.ReplaceAll(p, "&amp;", "&")
 
-			urls = append(urls, fmt.Sprintf("%s/%s", siteURL, p))
-			found++
+			for _, p := range matchedPosts {
+				if found >= config.Amount && config.Amount > 0 {
+					fmt.Println(urls)
+					return urls
+				}
+				p = strings.TrimLeft(p, `"/`)
+				p = strings.ReplaceAll(p, "&amp;", "&")
+
+				urls = append(urls, fmt.Sprintf("%s/%s", siteURL, p))
+				found++
+			}
 		}
 		if config.Amount == 0 {
 			return urls
@@ -95,12 +108,22 @@ func Extract(url string) ([]static.Data, error) {
 	}
 
 	var data []static.Data
-	for _, u := range urls {
-		d, err := extractData(u)
-		if err != nil {
-			return nil, err
+	if mass {
+		for _, u := range urls {
+			d, err := extractDataFromDirectLink(u)
+			if err != nil {
+				return nil, err
+			}
+			data = append(data, d)
 		}
-		data = append(data, d)
+	} else {
+		for _, u := range urls {
+			d, err := extractData(u)
+			if err != nil {
+				return nil, err
+			}
+			data = append(data, d)
+		}
 	}
 
 	return data, nil
@@ -116,10 +139,10 @@ func extractData(url string) (static.Data, error) {
 		return static.Data{}, err
 	}
 
-	re = regexp.MustCompile("<a.+href=\"([^\"]+\\.([^\"?]+)).+>\\s*(?:Original|Download PNG)") //1=url 2=ext
+	re = regexp.MustCompile(`<a.+href="([^"]+\.([^"?]+)).+>\s*(?:Original|Download PNG)`) //1=url 2=ext
 	matchedPostURL := re.FindStringSubmatch(postHTML)
 	if len(matchedPostURL) != 3 {
-		re = regexp.MustCompile("<a.+href=\"([^\"]+\\.([^\"?]+)).+>\\s*(?:Original|View larger|Download PNG)")
+		re = regexp.MustCompile(`<a.+href="([^"]+\.([^"?]+)).+>\s*(?:Original|View larger|Download PNG)`)
 		matchedPostURL = re.FindStringSubmatch(postHTML)
 		if len(matchedPostURL) != 3 {
 			return static.Data{}, err
@@ -165,4 +188,29 @@ func extractData(url string) (static.Data, error) {
 		Url: url,
 	}, nil
 
+}
+
+func extractDataFromDirectLink(url string) (static.Data, error) {
+	re := regexp.MustCompile(`https://[^/]*/[^/]*/([^/]*)/[^.\s]*\.[^\.\s]*\.(\w{3,4})`) //1=title //2=ext
+	matchedURL := re.FindStringSubmatch(url)
+
+	return static.Data{
+		Site:  siteURL,
+		Title: matchedURL[1],
+		Type:  utils.GetMediaType(matchedURL[2]),
+		Streams: map[string]static.Stream{
+			"0": {
+				URLs: []static.URL{
+					{
+						URL: matchedURL[1],
+						Ext: matchedURL[2],
+					},
+				},
+				Quality: "best",
+				Size:    0,
+			},
+		},
+		Err: nil,
+		Url: url,
+	}, nil
 }

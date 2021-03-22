@@ -25,14 +25,14 @@ import (
 func init() {
 	flag.IntVar(&config.Amount, "a", 0, "Amount of files to download")
 	flag.StringVar(&config.OutputName, "o", "", "Output name")
-	flag.StringVar(&config.OutputPath, "O", "", "Output path")
+	flag.StringVar(&config.OutputPath, "O", "", "Output path (include ending slash)")
 	flag.StringVar(&config.Pages, "p", "", "Enter pages like 1,2,3-4,6,7,8-9 for doujins")
 	flag.BoolVar(&config.RestrictContent, "r", false, "Don't scrape Restricted Content")
 	flag.StringVar(&config.SelectStream, "s", "0", "Select a stream")
 	flag.BoolVar(&config.ShowInfo, "i", false, "Show info")
 	flag.IntVar(&config.Threads, "t", 1, "Number of threads used for downloading")
 	flag.StringVar(&config.Username, "un", "", "Username for exhentai/forum e hentai")
-	flag.StringVar(&config.Username, "up", "", "User password for exhentai/forum e hentai")
+	flag.StringVar(&config.UserPassword, "up", "", "User password for exhentai/forum e hentai")
 }
 
 func download(url string) {

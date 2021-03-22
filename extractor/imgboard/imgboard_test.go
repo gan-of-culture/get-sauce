@@ -9,17 +9,16 @@ import (
 
 func TestParseURL(t *testing.T) {
 	tests := []struct {
-		name   string
-		url    string
-		amount int
-		want   int
+		name string
+		url  string
+		want int
 	}{
 		{
 			name: "Mass extract page booru project",
 			url:  "https://tbib.org/index.php?page=post&s=list&tags=1girl+solo+uncensored+full_body+&pid=0",
 			want: 100,
 		},
-		/*{
+		{
 			name: "Single image booru project",
 			url:  "https://rule34.xxx/index.php?page=post&s=view&id=4470590",
 			want: 1,
@@ -57,7 +56,7 @@ func TestParseURL(t *testing.T) {
 			url:  "https://yande.re/post?tags=tateha&page=2",
 			// atleast more than 2
 			want: 100,
-		},*/
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -139,6 +138,35 @@ func TestExtract(t *testing.T) {
 			}
 			if act != tt.want {
 				t.Errorf("Got: %v - want: %v", act, tt.want)
+			}
+		})
+	}
+}
+
+func TestExtractDataFromDirectLink(t *testing.T) {
+	tests := []struct {
+		name string
+		url  string
+		want int
+	}{
+		{
+			name: "DL extract yande.re",
+			url:  "https://yande.re/post?",
+			want: 10,
+		}, {
+			name: "DL extract konachan",
+			url:  "https://konachan.com/post?tags=",
+			want: 10,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			elements, err := Extract(tt.url)
+			if err != nil {
+				t.Error("elements has error or is too big for single tests")
+			}
+			if len(elements) < tt.want {
+				t.Errorf("Got: %v - want: %v", len(elements), tt.want)
 			}
 		})
 	}
