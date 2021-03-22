@@ -60,6 +60,9 @@ func ParseURL(url string) []string {
 		matchedDirectLinks := reDirectLinks.FindAllStringSubmatch(htmlString, -1)
 		if len(matchedDirectLinks) > 0 {
 			for _, l := range matchedDirectLinks {
+				if found >= config.Amount && config.Amount > 0 {
+					return urls
+				}
 				urls = append(urls, l[1])
 				found++
 			}
@@ -74,7 +77,6 @@ func ParseURL(url string) []string {
 
 			for _, p := range matchedPosts {
 				if found >= config.Amount && config.Amount > 0 {
-					fmt.Println(urls)
 					return urls
 				}
 				p = strings.TrimLeft(p, `"/`)
