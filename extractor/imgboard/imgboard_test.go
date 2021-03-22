@@ -129,7 +129,7 @@ func TestExtract(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			elements, err := Extract(tt.url)
 			if err != nil {
-				t.Error("elements has error or is too big for single tests")
+				t.Error(err)
 			}
 			act := want{
 				Title:   elements[0].Title,
