@@ -50,6 +50,7 @@ func ParseURL(url string) []string {
 	rePost := regexp.MustCompile(`(?:index.php\?page=post(?:(?:&)|(?:&amp;))s=view(?:(?:&)|(?:&amp;))id=[0-9]*)|"/post/show/[^"]*`)
 	reDirectLinks := regexp.MustCompile(`directlink largeimg"\s*href="([^"]*)`)
 	found := 0
+	mass = false
 	urls := []string{}
 	for i := 0; ; {
 		htmlString, err := request.Get(fmt.Sprintf(baseQueryURL, i))
