@@ -12,7 +12,7 @@ import (
 )
 
 var siteURL string
-var mass = false
+var mass bool
 
 // ParseURL of input
 func ParseURL(url string) []string {
@@ -50,7 +50,6 @@ func ParseURL(url string) []string {
 	rePost := regexp.MustCompile(`(?:index.php\?page=post(?:(?:&)|(?:&amp;))s=view(?:(?:&)|(?:&amp;))id=[0-9]*)|"/post/show/[^"]*`)
 	reDirectLinks := regexp.MustCompile(`directlink largeimg"\s*href="([^"]*)`)
 	found := 0
-	mass = false
 	urls := []string{}
 	for i := 0; ; {
 		htmlString, err := request.Get(fmt.Sprintf(baseQueryURL, i))
@@ -106,16 +105,13 @@ func Extract(url string) ([]static.Data, error) {
 	siteURL = re.FindString(url)
 	mass = false
 
-	fmt.Println(mass)
 	urls := ParseURL(url)
 	if len(urls) == 0 {
 		return nil, fmt.Errorf("Can't find a post for %s", url)
 	}
-	fmt.Println(mass)
 
 	var data []static.Data
 	if mass {
-		fmt.Println(mass)
 		for _, u := range urls {
 			d, err := extractDataFromDirectLink(u)
 			if err != nil {
