@@ -60,8 +60,6 @@ func ParseURL(url string) []string {
 
 		matchedDirectLinks := reDirectLinks.FindAllStringSubmatch(htmlString, -1)
 		if len(matchedDirectLinks) > 0 {
-			fmt.Println("Set Mass true")
-			fmt.Println(matchedDirectLinks)
 			mass = true
 			for _, l := range matchedDirectLinks {
 				if found >= config.Amount && config.Amount > 0 {
@@ -107,10 +105,12 @@ func Extract(url string) ([]static.Data, error) {
 	re := regexp.MustCompile("https://[^/]*")
 	siteURL = re.FindString(url)
 
+	fmt.Println(mass)
 	urls := ParseURL(url)
 	if len(urls) == 0 {
 		return nil, fmt.Errorf("Can't find a post for %s", url)
 	}
+	fmt.Println(mass)
 
 	var data []static.Data
 	if mass {
