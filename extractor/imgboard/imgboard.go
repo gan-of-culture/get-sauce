@@ -104,6 +104,7 @@ func ParseURL(url string) []string {
 func Extract(url string) ([]static.Data, error) {
 	re := regexp.MustCompile("https://[^/]*")
 	siteURL = re.FindString(url)
+	mass = false
 
 	fmt.Println(mass)
 	urls := ParseURL(url)
