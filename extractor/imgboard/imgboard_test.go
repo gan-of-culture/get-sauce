@@ -163,7 +163,7 @@ func TestExtractDataFromDirectLink(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			elements, err := Extract(tt.url)
 			if err != nil {
-				t.Error("elements has error or is too big for single tests")
+				t.Error(err)
 			}
 			if len(elements) < tt.want {
 				t.Errorf("Got: %v - want: %v", len(elements), tt.want)
