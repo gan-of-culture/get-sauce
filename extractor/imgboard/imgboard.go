@@ -112,6 +112,7 @@ func Extract(url string) ([]static.Data, error) {
 
 	var data []static.Data
 	if mass {
+		fmt.Println(mass)
 		for _, u := range urls {
 			d, err := extractDataFromDirectLink(u)
 			if err != nil {
