@@ -60,6 +60,9 @@ func ParseURL(url string) []string {
 
 		matchedDirectLinks := reDirectLinks.FindAllStringSubmatch(htmlString, -1)
 		if len(matchedDirectLinks) > 0 {
+			fmt.Println("Set Mass true")
+			fmt.Println(matchedDirectLinks)
+			mass = true
 			for _, l := range matchedDirectLinks {
 				if found >= config.Amount && config.Amount > 0 {
 					return urls
@@ -67,7 +70,6 @@ func ParseURL(url string) []string {
 				urls = append(urls, l[1])
 				found++
 			}
-			mass = true
 		}
 
 		if !mass {
