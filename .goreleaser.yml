@@ -1,5 +1,7 @@
 # This is an example .goreleaser.yml file with some sane defaults.
 # Make sure to check the documentation at http://goreleaser.com
+env:
+  - GO111MODULE=on
 before:
   hooks:
     # You may remove this if you don't use go modules.
@@ -32,4 +34,15 @@ changelog:
       - '^test:'
 env_files:
   github_token: gh_token
+archives:
+  format: tar.gz
+    format_overrides:
+      - goos: windows
+        format: zip
+    files:
+      - none*
+  wrap_in_directory: false
+  replacements:
+    amd64: 64-bit
+    386: 32-bit
   

@@ -38,7 +38,7 @@ func Extract(url string) ([]static.Data, error) {
 		pages = []int{pageNo}
 	}
 
-	re = regexp.MustCompile("<h1[^y]+y\">([^<]*)")
+	re = regexp.MustCompile(`<h1.*?pretty">([^>]*)<`)
 	title := re.FindStringSubmatch(htmlString)[1]
 	title = strings.ReplaceAll(title, "?", "")
 
