@@ -208,7 +208,7 @@ func extractDataFromDirectLink(url string) (static.Data, error) {
 			"0": {
 				URLs: []static.URL{
 					{
-						URL: matchedURL[1],
+						URL: url,
 						Ext: matchedURL[2],
 					},
 				},

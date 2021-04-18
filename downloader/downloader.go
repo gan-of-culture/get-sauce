@@ -237,8 +237,18 @@ func writeFile(url string, file *os.File, headers map[string]string) (int64, err
 	if err != nil {
 		return 0, err
 	}
+	//fmt.Printf("Url: %s, Status: %s, Size: %d", url, res.Status, res.ContentLength)
+	if res.Status != "200 OK" {
+		time.Sleep(1 * time.Second)
+		res, err = request.Request(http.MethodGet, url, headers)
+	}
 	defer res.Body.Close()
 
+	/*var writer = io.MultiWriter()
+	if config.Threads == 1 {
+
+	}
+	writer = io.MultiWriter(file)*/
 	bar := progressbar.NewOptions(
 		int(res.ContentLength),
 		progressbar.OptionSetBytes(int(res.ContentLength)),
@@ -248,6 +258,7 @@ func writeFile(url string, file *os.File, headers map[string]string) (int64, err
 		//progressbar.OptionShowCount(),
 	)
 	writer := io.MultiWriter(file, bar)
+
 	// Note that io.Copy reads 32kb(maximum) from input and writes them to output, then repeats.
 	// So don't worry about memory.
 	written, copyErr := io.Copy(writer, res.Body)

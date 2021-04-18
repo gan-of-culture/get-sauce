@@ -3,11 +3,9 @@ package request
 import (
 	"crypto/tls"
 	"errors"
-	"fmt"
 	"io"
 	"io/ioutil"
 	"net/http"
-	"net/url"
 	"strconv"
 	"strings"
 	"time"
@@ -124,7 +122,7 @@ func Size(url, refer string) (int64, error) {
 }
 
 // Myjar of client
-type Myjar struct {
+/*type Myjar struct {
 	Jar map[string][]*http.Cookie
 }
 
@@ -140,4 +138,4 @@ func (p *Myjar) Cookies(u *url.URL) []*http.Cookie {
 	fmt.Printf("The URL is : %s\n", u.String())
 	fmt.Printf("Cookie being returned is : %s\n", p.Jar[u.Host])
 	return p.Jar[u.Host]
-}
+}*/
