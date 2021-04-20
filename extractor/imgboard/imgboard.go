@@ -194,7 +194,7 @@ func extractData(url string) (static.Data, error) {
 }
 
 func extractDataFromDirectLink(url string) (static.Data, error) {
-	re := regexp.MustCompile(`https://[^/]*/[^/]*/([^/]*)/[^.\s]*\.[^\.\s]*\.(\w{3,4})`) //1=title //2=ext
+	re := regexp.MustCompile(`https://[^/]*/[^/]*/([^/]*)/[^.\s]*\.[^\.\s]*\..*(\w{3,4})$`) //1=title //2=ext
 	matchedURL := re.FindStringSubmatch(url)
 	if len(matchedURL) != 3 {
 		return static.Data{}, fmt.Errorf("[IMGBoard] direct download can't match URL %s", url)
