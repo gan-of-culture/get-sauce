@@ -2,11 +2,14 @@
 
 ![GitHub Workflow Status](https://img.shields.io/github/workflow/status/gan-of-culture/go-hentai-scraper/Go)
 
-Is a commandline tool to download hentai made in golang by me. You can see what site is supported to what extent down below.
+Is a commandline tool to download hentai made in golang by me. It was important for me that you don't need to sign in to any site you want to scrape content from. Unfortunatly this also means that for somesites it might take longer to download content because the connection will be restricted.  
+You can see what site is supported to what extent [here](#supported-sites).
 
 ## Setup guide
 
-You can clone this Repository yourself and download it. Then just do:
+If you don't want to build the app yourself checkout the [releases page](https://github.com/gan-of-culture/go-hentai-scraper/releases).
+
+Otherwise you can clone this Repository yourself and download it. Then just do:
 
 ```bash
 go build
@@ -91,7 +94,7 @@ go run main.go ...
 *Note exhentai is currently not supported, because it requires a user login and I don't want my user banned - I'll probably add a way to extract the data with your own user and a manual how to get one*
 
 If your site is not listed - you can still try to use the universal downloader
-This works really good for the pitures of hanime.tv or reddit.com. This also works for .torrent urls
+This works really good for the pitures of hanime.tv. This also works for .torrent urls
 
 ## TODO's
 
