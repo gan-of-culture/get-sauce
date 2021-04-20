@@ -16,12 +16,19 @@ builds:
       - windows
       - darwin
 archives:
-  - replacements:
-      darwin: Darwin
-      linux: Linux
-      windows: Windows
-      386: i386
-      amd64: x86_64
+- format: tar.gz
+  format_overrides:
+    - goos: windows
+      format: zip
+  files:
+    - none*
+  wrap_in_directory: false
+  replacements:
+    darwin: Darwin
+    linux: Linux
+    windows: Windows
+    amd64: 64-bit
+    386: 32-bit
 checksum:
   name_template: 'checksums.txt'
 snapshot:
@@ -34,15 +41,5 @@ changelog:
       - '^test:'
 env_files:
   github_token: gh_token
-archives:
-  format: tar.gz
-    format_overrides:
-      - goos: windows
-        format: zip
-    files:
-      - none*
-  wrap_in_directory: false
-  replacements:
-    amd64: 64-bit
-    386: 32-bit
+
   
