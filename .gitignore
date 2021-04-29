@@ -1,5 +1,7 @@
 *.vscode/
 *DS_Store
+dist*
+torrent*
 
 *.exe
 *.test
@@ -15,4 +17,3 @@ media
 
 *token
 *exhentai_test.go
-dist*

@@ -117,11 +117,11 @@ func Download(data static.Data) error {
 		config.SelectStream = "0"
 	}
 
-	scraperPath, err := filepath.Abs("../")
+	scraperPath, err := os.Getwd()
 	if err == nil {
 		// set static paths for torrent downloader
-		DefaultConfig.Database = filepath.Join(scraperPath, DefaultConfig.Database)
-		DefaultConfig.DataDir = filepath.Join(scraperPath, DefaultConfig.DataDir)
+		DefaultConfig.Database = filepath.Join(scraperPath, "torrent/session.db")
+		DefaultConfig.DataDir = filepath.Join(scraperPath, "torrent/data/")
 	}
 
 	// select stream to download
@@ -223,7 +223,7 @@ func save(url static.URL, fileName string, headers map[string]string) error {
 				if stats.ETA != nil {
 					eta = stats.ETA.Minutes()
 				}
-				fmt.Println(fmt.Sprintf("Downloading %s - time left: %.1f minutes - downloading with %dMB/s - uploading with %dMB/s", fileName, eta, stats.Speed.Download/125000, stats.Speed.Upload/125000))
+				fmt.Printf("\rDownloading %s - time left: %.1f minutes - downloading %dMB/s - uploading %dMB/s", stats.Name, eta, stats.Speed.Download/125000, stats.Speed.Upload/125000)
 			}
 		}
 
@@ -244,11 +244,6 @@ func writeFile(url string, file *os.File, headers map[string]string) (int64, err
 	}
 	defer res.Body.Close()
 
-	/*var writer = io.MultiWriter()
-	if config.Threads == 1 {
-
-	}
-	writer = io.MultiWriter(file)*/
 	bar := progressbar.NewOptions(
 		int(res.ContentLength),
 		progressbar.OptionSetBytes(int(res.ContentLength)),

@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"regexp"
+	"strings"
 	"sync"
 
 	"github.com/gan-of-culture/go-hentai-scraper/config"
@@ -58,7 +59,11 @@ func download(url string) {
 	case "nhentai":
 		data, err = nhentai.Extract(url)
 	case "rule34":
-		data, err = rule34.Extract(url)
+		if strings.Contains(url, "rule34.paheal") {
+			data, err = rule34.Extract(url)
+			break
+		}
+		data, err = imgboard.Extract(url)
 	default:
 		data, err = imgboard.Extract(url)
 		if err != nil {
