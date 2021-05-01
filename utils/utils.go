@@ -31,7 +31,7 @@ func CalcSizeInByte(number float64, unit string) int64 {
 	}
 }
 
-// NeedDownloadList return the indices of playlist that need download
+// NeedDownloadList return the indices of gallery that need download
 func NeedDownloadList(length int) []int {
 	if config.Pages != "" {
 		var items []int

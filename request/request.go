@@ -6,6 +6,7 @@ import (
 	"io"
 	"io/ioutil"
 	"net/http"
+	"net/url"
 	"strconv"
 	"strings"
 	"time"
@@ -122,20 +123,39 @@ func Size(url, refer string) (int64, error) {
 }
 
 // Myjar of client
-/*type Myjar struct {
+type Myjar struct {
 	Jar map[string][]*http.Cookie
 }
 
 // SetCookies of client
 func (p *Myjar) SetCookies(u *url.URL, cookies []*http.Cookie) {
-	fmt.Printf("The URL is : %s\n", u.String())
-	fmt.Printf("The cookie being set is : %s\n", cookies)
-	p.Jar[u.Host] = cookies
+	// swap cookie assignment after login
+	if u.Host == "forums.e-hentai.org" {
+		u.Host = "exhentai.org"
+	}
+	//fmt.Printf("The URL is : %s\n", u.String())
+	//fmt.Printf("The cookie being set is : %s\n", cookies)
+
+	//preserve old cookies and overwrite old ones with new cookies
+	isInJar := false
+	for k, cookie := range cookies {
+		isInJar = false
+		for k_old, cookieInJar := range p.Jar[u.Host] {
+			if cookie.Name == cookieInJar.Name && !isInJar {
+				isInJar = true
+				p.Jar[u.Host][k_old] = cookies[k]
+			}
+		}
+		if !isInJar {
+			p.Jar[u.Host] = append(p.Jar[u.Host], cookies[k])
+		}
+	}
+	//p.Jar[u.Host] = cookies
 }
 
 // Cookies of client
 func (p *Myjar) Cookies(u *url.URL) []*http.Cookie {
-	fmt.Printf("The URL is : %s\n", u.String())
-	fmt.Printf("Cookie being returned is : %s\n", p.Jar[u.Host])
+	//fmt.Printf("The URL is : %s\n", u.String())
+	//fmt.Printf("Cookie being returned is : %s\n", p.Jar[u.Host])
 	return p.Jar[u.Host]
-}*/
+}
