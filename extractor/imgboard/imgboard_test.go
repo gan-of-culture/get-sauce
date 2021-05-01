@@ -14,6 +14,11 @@ func TestParseURL(t *testing.T) {
 		want int
 	}{
 		{
+			name: "Single Page",
+			url:  "https://rule34.xxx/index.php?page=post&s=list&tags=world_of_warcraft+video+draenei&pid=378",
+			// atleast more than 2
+			want: 2,
+		}, {
 			name: "Mass extract page booru project",
 			url:  "https://tbib.org/index.php?page=post&s=list&tags=1girl+solo+uncensored+full_body+&pid=0",
 			want: 100,

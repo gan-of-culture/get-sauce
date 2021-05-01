@@ -2,7 +2,7 @@
 
 ![GitHub Workflow Status](https://img.shields.io/github/workflow/status/gan-of-culture/go-hentai-scraper/Go)
 
-Is a commandline tool to download hentai made in golang by me. It was important for me that you don't need to sign in to any site you want to scrape content from. Unfortunatly this also means that for somesites it might take longer to download content because the connection will be restricted.  
+Is a commandline tool to download hentai made in golang by me. This scraper is not using official APIs since some of them have limitations. Unfortunatly this also means that for somesites it might take longer to download content because the connection will be restricted.  
 You can see what site is supported to what extent [here](#supported-sites).
 
 ## Setup guide
@@ -82,7 +82,7 @@ go run main.go ...
 | [booru](https://booru.io/)                                       | :heavy_check_mark: |        ?         |
 | [danbooru](https://danbooru.donmai.us)                           | :heavy_check_mark: |        ?         |
 | [e-hentai](http://e-hentai.org/)                                 | :heavy_check_mark: |        ?         |
-| [exhentai](https://exhentai.org)                                 |        :x:         |        ?         |
+| [exhentai*](http://exhentai.org/)                                | :heavy_check_mark: |        ?         |
 | [hanime](https://hanime.tv)                                      | :heavy_check_mark: |       :x:        |
 | [hentais (480p only)](https://www.hentais.tube/)                 |         ?          |:heavy_check_mark:|
 | [hentaiworld (1080p, 720p, 480p)](https://hentaiworld.tv/)       |         ?          |:heavy_check_mark:|
@@ -91,7 +91,7 @@ go run main.go ...
 | [rule34](https://rule34.paheal.net)                              | :heavy_check_mark: |:heavy_check_mark:|
 | [yandere](https://yande.re/post)                                 | :heavy_check_mark: |        ?         |
 
-*Note exhentai is currently not supported, because it requires a user login and I don't want my user banned - I'll probably add a way to extract the data with your own user and a manual how to get one*
+* you need a login for this site. You can supply it via the parameters -un and -up
 
 If your site is not listed - you can still try to use the universal downloader
 This works really good for the pitures of hanime.tv. This also works for .torrent urls

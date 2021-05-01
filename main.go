@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"regexp"
+	"strings"
 	"sync"
 
 	"github.com/gan-of-culture/go-hentai-scraper/config"
@@ -13,6 +14,7 @@ import (
 	"github.com/gan-of-culture/go-hentai-scraper/extractor/booru"
 	"github.com/gan-of-culture/go-hentai-scraper/extractor/danbooru"
 	"github.com/gan-of-culture/go-hentai-scraper/extractor/ehentai"
+	"github.com/gan-of-culture/go-hentai-scraper/extractor/exhentai"
 	"github.com/gan-of-culture/go-hentai-scraper/extractor/hentais"
 	"github.com/gan-of-culture/go-hentai-scraper/extractor/hentaiworld"
 	"github.com/gan-of-culture/go-hentai-scraper/extractor/imgboard"
@@ -51,6 +53,8 @@ func download(url string) {
 		data, err = danbooru.Extract(url)
 	case "e-hentai":
 		data, err = ehentai.Extract(url)
+	case "exhentai":
+		data, err = exhentai.Extract(url)
 	case "hentais":
 		data, err = hentais.Extract(url)
 	case "hentaiworld":
@@ -58,7 +62,11 @@ func download(url string) {
 	case "nhentai":
 		data, err = nhentai.Extract(url)
 	case "rule34":
-		data, err = rule34.Extract(url)
+		if strings.Contains(url, "rule34.paheal") {
+			data, err = rule34.Extract(url)
+			break
+		}
+		data, err = imgboard.Extract(url)
 	default:
 		data, err = imgboard.Extract(url)
 		if err != nil {

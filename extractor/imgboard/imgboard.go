@@ -3,6 +3,7 @@ package imgboard
 import (
 	"fmt"
 	"regexp"
+	"strconv"
 	"strings"
 
 	"github.com/gan-of-culture/go-hentai-scraper/config"
@@ -35,7 +36,7 @@ func ParseURL(url string) []string {
 		pageParam = "&page=%d"
 	}
 
-	re = regexp.MustCompile(`(.+(?:pid=|page=))[0-9]+([^\s]+)?`) //1=basequeryurl 2=parameters after the page parameter
+	re = regexp.MustCompile(`(.+(?:pid=|page=))([0-9]+)([^\s]+)?`) //1=basequeryurl 2=current page 3=parameters after the page parameter
 	matchedBaseQueryURL := re.FindStringSubmatch(url)
 	baseQueryURL := ""
 	switch len(matchedBaseQueryURL) {
@@ -43,15 +44,23 @@ func ParseURL(url string) []string {
 		baseQueryURL = fmt.Sprintf("%s%s", url, pageParam)
 	case 2:
 		baseQueryURL = fmt.Sprintf("%s%s", matchedBaseQueryURL[1], "%d")
-	case 3:
-		baseQueryURL = fmt.Sprintf("%s%s%s", matchedBaseQueryURL[1], "%d", matchedBaseQueryURL[2])
+	case 4:
+		baseQueryURL = fmt.Sprintf("%s%s%s", matchedBaseQueryURL[1], "%d", matchedBaseQueryURL[3])
 	}
 
 	rePost := regexp.MustCompile(`(?:index.php\?page=post(?:(?:&)|(?:&amp;))s=view(?:(?:&)|(?:&amp;))id=[0-9]*)|"/post/show/[^"]*`)
 	reDirectLinks := regexp.MustCompile(`directlink largeimg"\s*href="([^"]*)`)
 	found := 0
 	urls := []string{}
-	for i := 0; ; {
+	pID := 0
+
+	// if the url contains a specific page number and there is no amount set
+	// scrape only this page
+	if config.Amount == 0 && len(matchedBaseQueryURL) >= 3 {
+		pID, _ = strconv.Atoi(matchedBaseQueryURL[2])
+	}
+
+	for i := pID; ; {
 		htmlString, err := request.Get(fmt.Sprintf(baseQueryURL, i))
 		if err != nil {
 			break
