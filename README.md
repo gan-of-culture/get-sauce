@@ -84,6 +84,7 @@ go run main.go ...
 | [e-hentai](http://e-hentai.org/)                                 | :heavy_check_mark: |        ?         |
 | [exhentai*](http://exhentai.org/)                                | :heavy_check_mark: |        ?         |
 | [hanime](https://hanime.tv)                                      | :heavy_check_mark: |       :x:        |
+| [hentaimama](https://hentaimama.io)                              |         ?          |:heavy_check_mark:|
 | [hentais (480p only)](https://www.hentais.tube/)                 |         ?          |:heavy_check_mark:|
 | [hentaistream (2160p, 1080p, 480p)](https://hentaistream.moe/)   |         ?          |:heavy_check_mark:|
 | [hentaiworld (1080p, 720p, 480p)](https://hentaiworld.tv/)       |         ?          |:heavy_check_mark:|
@@ -99,8 +100,8 @@ This works really good for the pitures of hanime.tv. This also works for .torren
 
 ## TODO's
 
-- Add site to download hentai 1080p only (video)
 - Clean up coding and add more sites
+- Speed improovements
 
 ## Licencse
 

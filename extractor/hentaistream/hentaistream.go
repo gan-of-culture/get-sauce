@@ -6,6 +6,7 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/gan-of-culture/go-hentai-scraper/request"
 	"github.com/gan-of-culture/go-hentai-scraper/static"
@@ -102,20 +103,30 @@ func extractData(URL string) (static.Data, error) {
 		return static.Data{}, err
 	}
 
+	if strings.Contains(htmlString, "<title>DDOS-GUARD</title>") {
+		time.Sleep(50 * time.Millisecond)
+		htmlString, err = request.Get(URL)
+	}
+
 	re := regexp.MustCompile(`<iframe[\s\S]*?(player[^#]*)#([^"]*)`)
-	matchedBase64CDNURL := re.FindStringSubmatch(htmlString)
+	matchedBase64CDNURL := re.FindStringSubmatch(htmlString) // 1=player[4k].html  2 = "url=https://01cdn.hentaistream.moe/2021/02/Overflow/E08/"
 	if len(matchedBase64CDNURL) < 2 {
 		return static.Data{}, fmt.Errorf("[HentaiStream] Can't locate BASE64 string in video URL: %s", URL)
 	}
 
-	downloadURLBytes, err := base64.StdEncoding.DecodeString(matchedBase64CDNURL[2]) // 1=player[4k].html  2 = "url=https://01cdn.hentaistream.moe/2021/02/Overflow/E08/"
+	downloadURLBytes, err := base64.StdEncoding.DecodeString(matchedBase64CDNURL[2])
 	if err != nil {
 		return static.Data{}, fmt.Errorf("[HentaiStream] Error decoding string: %s ", err.Error())
 	}
-	baseDownloadURL := strings.TrimPrefix(strings.Trim(string(downloadURLBytes), `"`), "url=")
+	baseDownloadURL := strings.Split(strings.TrimPrefix(strings.Trim(string(downloadURLBytes), `"`), "url="), ";")[0]
 
 	streams := make(map[string]static.Stream)
 	for i, quality := range players[matchedBase64CDNURL[1]] {
+		size, err := request.Size(fmt.Sprintf("%s%s", baseDownloadURL, quality.codec), site)
+		if err != nil {
+			return static.Data{}, err
+		}
+
 		streams[strconv.Itoa(i)] = static.Stream{
 			URLs: []static.URL{
 				{
@@ -124,7 +135,7 @@ func extractData(URL string) (static.Data, error) {
 				},
 			},
 			Quality: quality.codec,
-			Size:    0,
+			Size:    size,
 		}
 	}
 

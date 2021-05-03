@@ -14,6 +14,7 @@ import (
 	"github.com/gan-of-culture/go-hentai-scraper/extractor/danbooru"
 	"github.com/gan-of-culture/go-hentai-scraper/extractor/ehentai"
 	"github.com/gan-of-culture/go-hentai-scraper/extractor/exhentai"
+	"github.com/gan-of-culture/go-hentai-scraper/extractor/hentaimama"
 	"github.com/gan-of-culture/go-hentai-scraper/extractor/hentais"
 	"github.com/gan-of-culture/go-hentai-scraper/extractor/hentaistream"
 	"github.com/gan-of-culture/go-hentai-scraper/extractor/hentaiworld"
@@ -55,6 +56,8 @@ func download(URL string) {
 		data, err = ehentai.Extract(URL)
 	case "exhentai.org":
 		data, err = exhentai.Extract(URL)
+	case "hentaimama.io":
+		data, err = hentaimama.Extract(URL)
 	case "hentais.tube":
 		data, err = hentais.Extract(URL)
 	case "hentaistream.moe":
