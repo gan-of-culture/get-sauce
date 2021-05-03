@@ -3,6 +3,7 @@ package request
 import (
 	"crypto/tls"
 	"errors"
+	"fmt"
 	"io"
 	"io/ioutil"
 	"net/http"
@@ -107,15 +108,25 @@ func Headers(url, refer string) (http.Header, error) {
 
 // Size get size of the url
 func Size(url, refer string) (int64, error) {
-	h, err := Headers(url, refer)
+	resp, err := Request(http.MethodGet, url, map[string]string{
+		"Range": "bytes=0-0",
+	})
 	if err != nil {
 		return 0, err
 	}
-	s := h.Get("Content-Length")
-	if s == "" {
-		return 0, errors.New("Content-Length is not present")
+	if resp.StatusCode == 503 {
+		time.Sleep(200 * time.Millisecond)
+		resp, err = Request(http.MethodGet, url, map[string]string{
+			"Range": "bytes=0-0",
+		})
 	}
-	size, err := strconv.ParseInt(s, 10, 64)
+
+	s := resp.Header.Get("Content-Range")
+	if s == "" {
+		fmt.Println(url)
+		return 0, errors.New("content-range is not present")
+	}
+	size, err := strconv.ParseInt(strings.Split(s, "/")[1], 10, 64)
 	if err != nil {
 		return 0, err
 	}

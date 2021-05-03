@@ -3,6 +3,7 @@ package utils
 import (
 	"fmt"
 	"os"
+	"regexp"
 	"strconv"
 	"strings"
 
@@ -81,4 +82,11 @@ func GetMediaType(t string) string {
 	default:
 		return fmt.Sprintf("%s/%s", "unknown", t)
 	}
+}
+
+// GetH1 of html file
+func GetH1(htmlString string) string {
+	re := regexp.MustCompile(`[^>]*</h1>`)
+	h1s := re.FindAllString(htmlString, -1)
+	return strings.TrimSuffix(h1s[len(h1s)-1], "</h1>")
 }
