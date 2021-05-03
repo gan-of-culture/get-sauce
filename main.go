@@ -47,6 +47,7 @@ func download(URL string) {
 	}
 	log.Printf("Identified site: %s", u.Host)
 
+
 	switch u.Host {
 	case "booru.io":
 		data, err = booru.Extract(URL)
