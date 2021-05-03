@@ -101,7 +101,7 @@ This works really good for the pitures of hanime.tv. This also works for .torren
 ## TODO's
 
 - Clean up coding and add more sites
-- Speed improovements
+- Speed improvements
 
 ## Licencse
 
