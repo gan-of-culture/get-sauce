@@ -104,7 +104,7 @@ func extractData(URL string) (static.Data, error) {
 	}
 
 	if strings.Contains(htmlString, "<title>DDOS-GUARD</title>") {
-		time.Sleep(100 * time.Millisecond)
+		time.Sleep(150 * time.Millisecond)
 		htmlString, err = request.Get(URL)
 	}
 
