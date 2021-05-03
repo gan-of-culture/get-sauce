@@ -129,7 +129,7 @@ func TestNeedDownloadList(t *testing.T) {
 	}
 }*/
 
-func Test(t *testing.T) {
+func TestGetMediaType(t *testing.T) {
 	tests := []struct {
 		ext  string
 		want string
@@ -172,6 +172,31 @@ func Test(t *testing.T) {
 
 			if dtype != tt.want {
 				t.Errorf("Got: %v - want: %v", dtype, tt.want)
+			}
+		})
+	}
+}
+
+func TestGetH1(t *testing.T) {
+	tests := []struct {
+		htmlString string
+		want       string
+	}{
+		{
+			htmlString: `<h1 class="entry-title" itemprop="name">Overflow 8</h1>`,
+			want:       "Overflow 8",
+		},
+		{
+			htmlString: `<h1>Overflow 8</h1>`,
+			want:       "Overflow 8",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.htmlString, func(t *testing.T) {
+			h1 := GetH1(tt.htmlString)
+
+			if h1 != tt.want {
+				t.Errorf("Got: %v - want: %v", h1, tt.want)
 			}
 		})
 	}

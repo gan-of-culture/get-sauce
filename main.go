@@ -5,8 +5,7 @@ import (
 	"flag"
 	"fmt"
 	"log"
-	"regexp"
-	"strings"
+	"net/url"
 	"sync"
 
 	"github.com/gan-of-culture/go-hentai-scraper/config"
@@ -16,6 +15,7 @@ import (
 	"github.com/gan-of-culture/go-hentai-scraper/extractor/ehentai"
 	"github.com/gan-of-culture/go-hentai-scraper/extractor/exhentai"
 	"github.com/gan-of-culture/go-hentai-scraper/extractor/hentais"
+	"github.com/gan-of-culture/go-hentai-scraper/extractor/hentaistream"
 	"github.com/gan-of-culture/go-hentai-scraper/extractor/hentaiworld"
 	"github.com/gan-of-culture/go-hentai-scraper/extractor/imgboard"
 	"github.com/gan-of-culture/go-hentai-scraper/extractor/nhentai"
@@ -37,40 +37,40 @@ func init() {
 	flag.StringVar(&config.UserPassword, "up", "", "User password for exhentai/forum e hentai")
 }
 
-func download(url string) {
+func download(URL string) {
 	var err error
 	var data []static.Data
-	re := regexp.MustCompile("http?s://(?:www.)?([^.]*)")
-	matches := re.FindStringSubmatch(url)
-	if len(matches) < 2 {
-		log.Fatal("Can't parse URL")
+	u, err := url.Parse(URL)
+	if err != nil {
+		log.Fatal(err)
 	}
+	log.Printf("Identified site: %s", u.Host)
 
-	switch matches[1] {
-	case "booru":
-		data, err = booru.Extract(url)
-	case "danbooru":
-		data, err = danbooru.Extract(url)
-	case "e-hentai":
-		data, err = ehentai.Extract(url)
-	case "exhentai":
-		data, err = exhentai.Extract(url)
-	case "hentais":
-		data, err = hentais.Extract(url)
-	case "hentaiworld":
-		data, err = hentaiworld.Extract(url)
-	case "nhentai":
-		data, err = nhentai.Extract(url)
-	case "rule34":
-		if strings.Contains(url, "rule34.paheal") {
-			data, err = rule34.Extract(url)
-			break
-		}
-		data, err = imgboard.Extract(url)
+	switch u.Host {
+	case "booru.io":
+		data, err = booru.Extract(URL)
+	case "danbooru.donmai.us":
+		data, err = danbooru.Extract(URL)
+	case "e-hentai.org":
+		data, err = ehentai.Extract(URL)
+	case "exhentai.org":
+		data, err = exhentai.Extract(URL)
+	case "hentais.tube":
+		data, err = hentais.Extract(URL)
+	case "hentaistream.moe":
+		data, err = hentaistream.Extract(URL)
+	case "hentaiworld.tv":
+		data, err = hentaiworld.Extract(URL)
+	case "nhentai.net":
+		data, err = nhentai.Extract(URL)
+	case "rule34.paheal.net":
+		data, err = rule34.Extract(URL)
+	case "rule34.xxx":
+		data, err = imgboard.Extract(URL)
 	default:
-		data, err = imgboard.Extract(url)
+		data, err = imgboard.Extract(URL)
 		if err != nil {
-			data, err = universal.Extract(url, matches[1])
+			data, err = universal.Extract(URL, u.Host)
 		}
 	}
 	if err != nil {

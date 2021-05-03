@@ -85,6 +85,7 @@ go run main.go ...
 | [exhentai*](http://exhentai.org/)                                | :heavy_check_mark: |        ?         |
 | [hanime](https://hanime.tv)                                      | :heavy_check_mark: |       :x:        |
 | [hentais (480p only)](https://www.hentais.tube/)                 |         ?          |:heavy_check_mark:|
+| [hentaistream (2160p, 1080p, 480p)](https://hentaistream.moe/)   |         ?          |:heavy_check_mark:|
 | [hentaiworld (1080p, 720p, 480p)](https://hentaiworld.tv/)       |         ?          |:heavy_check_mark:|
 | [konachan](https://konachan.com/post?tags=)                      | :heavy_check_mark: |        ?         |
 | [nhentai](https://nhentai.net)                                   | :heavy_check_mark: |        ?         |
