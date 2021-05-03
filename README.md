@@ -93,7 +93,7 @@ go run main.go ...
 | [rule34](https://rule34.paheal.net)                              | :heavy_check_mark: |:heavy_check_mark:|
 | [yandere](https://yande.re/post)                                 | :heavy_check_mark: |        ?         |
 
-* you need a login for this site. You can supply it via the parameters -un and -up
+*you need a login for this site. You can supply it via the parameters -un and -up
 
 If your site is not listed - you can still try to use the universal downloader
 This works really good for the pitures of hanime.tv. This also works for .torrent urls
