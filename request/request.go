@@ -115,7 +115,7 @@ func Size(url, refer string) (int64, error) {
 		return 0, err
 	}
 	if resp.StatusCode == 503 {
-		time.Sleep(150 * time.Millisecond)
+		time.Sleep(200 * time.Millisecond)
 		resp, err = Request(http.MethodGet, url, map[string]string{
 			"Range": "bytes=0-0",
 		})
