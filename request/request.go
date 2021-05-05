@@ -108,6 +108,10 @@ func Headers(url, refer string) (http.Header, error) {
 
 // Size get size of the url
 func Size(url, refer string) (int64, error) {
+	if !config.ShowInfo {
+		return 0, nil
+	}
+
 	resp, err := Request(http.MethodGet, url, map[string]string{
 		"Range": "bytes=0-0",
 	})
