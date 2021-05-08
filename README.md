@@ -80,10 +80,11 @@ go run main.go ...
 | -----------------------------------------------------------------|:------------------:|:----------------:|
 | [booruproject (ex. rule34, gelbooru)](https://booru.org/top)     | :heavy_check_mark: |:heavy_check_mark:|
 | [booru](https://booru.io/)                                       | :heavy_check_mark: |        ?         |
+| [damn](https://www.damn.stream)                                  |         ?          |:heavy_check_mark:|
 | [danbooru](https://danbooru.donmai.us)                           | :heavy_check_mark: |        ?         |
 | [e-hentai](http://e-hentai.org/)                                 | :heavy_check_mark: |        ?         |
 | [exhentai*](http://exhentai.org/)                                | :heavy_check_mark: |        ?         |
-| [hanime](https://hanime.tv)                                      | :heavy_check_mark: |       :x:        |
+| [hanime](https://hanime.tv)                                      | :heavy_check_mark: |:heavy_check_mark:|
 | [hentaimama(1080p, 720p)](https://hentaimama.io)                 |         ?          |:heavy_check_mark:|
 | [hentais (480p only)](https://www.hentais.tube/)                 |         ?          |:heavy_check_mark:|
 | [hentaistream (2160p, 1080p, 480p)](https://hentaistream.moe/)   |         ?          |:heavy_check_mark:|
@@ -95,8 +96,7 @@ go run main.go ...
 
 *you need a login for this site. You can supply it via the parameters -un and -up
 
-If your site is not listed - you can still try to use the universal downloader
-This works really good for the pitures of hanime.tv.
+If your site is not listed - you can still try to use the universal downloader.
 
 ## TODO's
 

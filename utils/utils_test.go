@@ -201,3 +201,26 @@ func TestGetH1(t *testing.T) {
 		})
 	}
 }
+
+func TestMeta(t *testing.T) {
+	tests := []struct {
+		htmlString string
+		property   string
+		want       string
+	}{
+		{
+			htmlString: `<meta property="og:title" content="Imouto Paradise! 3 The Animation Episode 1" />`,
+			property:   "og:title",
+			want:       "Imouto Paradise! 3 The Animation Episode 1",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.htmlString, func(t *testing.T) {
+			h1 := GetMeta(tt.htmlString, tt.property)
+
+			if h1 != tt.want {
+				t.Errorf("Got: %v - want: %v", h1, tt.want)
+			}
+		})
+	}
+}

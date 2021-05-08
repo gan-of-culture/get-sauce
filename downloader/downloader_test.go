@@ -3,6 +3,7 @@ package downloader
 import (
 	"testing"
 
+	"github.com/gan-of-culture/go-hentai-scraper/config"
 	"github.com/gan-of-culture/go-hentai-scraper/static"
 )
 
@@ -54,19 +55,19 @@ func TestDownload(t *testing.T) {
 			name: "rule 34 single post image",
 			data: static.Data{
 				Site:  "https://rule34.paheal.net",
-				Title: "Magical_Sempai_(Series) Magician_Sempai skyfreedom",
+				Title: "The_Dark_Mangaka tagme",
 				Type:  "image",
 				Streams: map[string]static.Stream{
 					"0": {
 						URLs: []static.URL{
 							{
-								URL: "https://scarlet.paheal.net/_images/a73b8b0053fd525488b1dbfd1b5ac2ed/3427635%20-%20Magical_Sempai_%28Series%29%20Magician_Sempai%20skyfreedom.jpg",
-								Ext: "jpg",
+								URL: "https://lotus.paheal.net/_images/886fc1aeb1e67fedbbc2f1a40431fdc8/4322498%20-%20The_Dark_Mangaka%20tagme.png",
+								Ext: "png",
 							},
 						},
 					},
 				},
-				Url: "https://rule34.paheal.net/post/view/3427635",
+				Url: "https://rule34.paheal.net/post/view/4322498",
 			},
 			want: nil,
 		}, {
@@ -86,11 +87,50 @@ func TestDownload(t *testing.T) {
 					},
 				},
 			},
+		}, {
+			name: "m3u8 normal",
+			data: static.Data{
+				Site:  "https://hentaistream.xxx/",
+				Title: "Hime-sama Love Life! Episode 3",
+				Type:  "application/x-mpegurl",
+				Streams: map[string]static.Stream{
+					"0": {
+						URLs: []static.URL{
+							{
+								URL: "https://cdn1.htstreaming.com/cdn/down/7216c29dee7815942188208fe13e4068/720p/720p.txt",
+								Ext: "mp4",
+							},
+						},
+					},
+				},
+				Url: "https://hentaistream.xxx/watch/hime-sama-love-life-episode-3_P9TlY9FAOGHM7nn.html",
+			},
+		}, {
+			name: "m3u8 normal",
+			data: static.Data{
+				Site:  "https://hanime.tv/",
+				Title: "Toilet no Hanako-san vs Kukkyou Taimashi 2",
+				Type:  "application/x-mpegurl",
+				Streams: map[string]static.Stream{
+					"0": {
+						URLs: []static.URL{
+							{
+								URL: "https://m3u8s.highwinds-cdn.com/api/v9/m3u8s/j8gzqzcz3ck8pph771qqyr95v1ZzA049s9nkclk0pphclgbgn9sq2.m3u8",
+								Ext: "ts",
+							},
+						},
+					},
+				},
+			},
 		},
 	}
+
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			err := Download(tt.data)
+			config.SelectStream = "0"
+			//config.OutputPath = "K://Temp//"
+			downloader := New(tt.data, "0", false)
+			err := downloader.Download()
 			if err != tt.want {
 				t.Error(err)
 			}

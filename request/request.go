@@ -49,6 +49,8 @@ func Request(method string, url string, headers map[string]string) (*http.Respon
 			DisableCompression:  true,
 			TLSHandshakeTimeout: 10 * time.Second,
 			TLSClientConfig:     &tls.Config{InsecureSkipVerify: true},
+			IdleConnTimeout:     5 * time.Second,
+			DisableKeepAlives:   true,
 		}},
 		Timeout: 15 * time.Minute,
 	}
@@ -98,6 +100,7 @@ func Get(url string) (string, error) {
 func Headers(url, refer string) (http.Header, error) {
 	headers := map[string]string{
 		"Referer": refer,
+		"Range":   "bytes=0-0",
 	}
 	res, err := Request(http.MethodGet, url, headers)
 	if err != nil {
