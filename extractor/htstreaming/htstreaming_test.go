@@ -27,15 +27,15 @@ func TestParseURL(t *testing.T) {
 			name: "Overview hentaihaven.red/",
 			url:  "https://hentaihaven.red/ratings/",
 			want: 35,
-		}, /*{
+		}, {
 			name: "Single Episode hentai.tv",
 			url:  "https://hentai.tv/hentai/chiisana-tsubomi-no-sono-oku-ni-episode-1/",
 			want: 1,
-		},{
+		}, {
 			name: "Overview hentai.tv",
 			url:  "https://hentai.tv/trending/",
 			want: 24,
-		},*/{
+		}, {
 			name: "Single Episode animeidhentai.com",
 			url:  "https://animeidhentai.com/31577/doukyuusei-natsu-no-owari-ni-episode-1/",
 			want: 1,
@@ -81,11 +81,11 @@ func TestExtract(t *testing.T) {
 			name: "Single Episode hentai.tv",
 			url:  "https://hentai.tv/hentai/chiisana-tsubomi-no-sono-oku-ni-episode-1/",
 			want: 1,
-		}, {
+		}, /*{
 			name: "Overview hentai.tv",
 			url:  "https://hentai.tv/trending/",
 			want: 24,
-		}, {
+		},*/{
 			name: "Single Episode animeidhentai.com",
 			url:  "https://animeidhentai.com/31577/doukyuusei-natsu-no-owari-ni-episode-1/",
 			want: 1,
