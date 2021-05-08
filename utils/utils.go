@@ -2,6 +2,7 @@ package utils
 
 import (
 	"fmt"
+	"log"
 	"os"
 	"regexp"
 	"strconv"
@@ -93,9 +94,13 @@ func GetH1(htmlString string) string {
 	return strings.TrimSuffix(GetLastItemString(h1s), "</h1>")
 }
 
-// GetH1 of html file
+// GetMeta of html file
 func GetMeta(htmlString, property string) string {
 	re := regexp.MustCompile(fmt.Sprintf("<meta property=\"%s\" content=\"([^\"]*)", property))
 	metaTags := re.FindAllStringSubmatch(htmlString, -1)
+	if len(metaTags) < 1 {
+		log.Println(htmlString)
+		return fmt.Sprintf("No matches found for %s", property)
+	}
 	return metaTags[0][1]
 }

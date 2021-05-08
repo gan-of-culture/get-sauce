@@ -78,11 +78,11 @@ func TestExtract(t *testing.T) {
 			url:  "https://hentaihaven.red/ratings/",
 			want: 35,
 		}, {
-			name: "Single Episode /hentai.tv",
+			name: "Single Episode hentai.tv",
 			url:  "https://hentai.tv/hentai/chiisana-tsubomi-no-sono-oku-ni-episode-1/",
 			want: 1,
 		}, {
-			name: "Overview /hentai.tv",
+			name: "Overview hentai.tv",
 			url:  "https://hentai.tv/trending/",
 			want: 24,
 		}, {

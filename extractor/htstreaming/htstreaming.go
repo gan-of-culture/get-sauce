@@ -62,6 +62,7 @@ func Extract(URL string) ([]static.Data, error) {
 		return nil, err
 	}
 	site = baseURL.Host
+	log.Println(site)
 
 	URLs := ParseURL(URL)
 	if len(URLs) < 1 {
@@ -113,6 +114,11 @@ func extractData(URL string) (static.Data, error) {
 		log.Println(htmlString)
 		return static.Data{}, err
 	}
+	if site == "hentai.tv" {
+		jsonData, _ := json.MarshalIndent(pData, "", "    ")
+		fmt.Printf("%s\n", jsonData)
+	}
+
 	if pData.Title != "" {
 		title = strings.Split(pData.Title, ".")[0]
 	}
