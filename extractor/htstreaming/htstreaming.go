@@ -63,10 +63,10 @@ func Extract(URL string) ([]static.Data, error) {
 		return nil, err
 	}
 	site = baseURL.Host
-	log.Println(site)
 
 	URLs := ParseURL(URL)
 	if len(URLs) < 1 {
+		log.Println(URL)
 		return nil, fmt.Errorf("[%s] No matching URL found.", site)
 	}
 
