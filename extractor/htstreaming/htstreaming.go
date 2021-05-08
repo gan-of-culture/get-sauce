@@ -8,6 +8,7 @@ import (
 	"net/url"
 	"regexp"
 	"strings"
+	"time"
 
 	"github.com/gan-of-culture/go-hentai-scraper/request"
 	"github.com/gan-of-culture/go-hentai-scraper/static"
@@ -87,6 +88,14 @@ func extractData(URL string) (static.Data, error) {
 	if err != nil {
 		return static.Data{}, err
 	}
+	if strings.Contains(htmlString, "<title>Just a moment...</title>") {
+		//DDOS GUARD | CAPTCHA?
+		time.Sleep(2 * time.Second)
+		htmlString, err = request.Get(URL)
+		if err != nil {
+			return static.Data{}, err
+		}
+	}
 	title := utils.GetMeta(htmlString, "og:title")
 
 	re := regexp.MustCompile(`[^"]*index.php\?data[^"]*`)
@@ -113,14 +122,6 @@ func extractData(URL string) (static.Data, error) {
 		log.Println(jsonString)
 		log.Println(htmlString)
 		return static.Data{}, err
-	}
-	if site == "hentai.tv" {
-		jsonData, _ := json.MarshalIndent(pData, "", "    ")
-		fmt.Printf("%s\n", jsonData)
-	}
-
-	if pData.Title != "" {
-		title = strings.Split(pData.Title, ".")[0]
 	}
 
 	ext := "ts"
