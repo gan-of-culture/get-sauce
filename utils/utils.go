@@ -79,6 +79,8 @@ func GetMediaType(t string) string {
 		return fmt.Sprintf("%s/%s", "image", t)
 	case "webm", "mp4", "mkv", "m4a":
 		return fmt.Sprintf("%s/%s", "video", t)
+	case "txt", "m3u8":
+		return fmt.Sprintf("%s/%s", "application", "x-mpegurl")
 	default:
 		return fmt.Sprintf("%s/%s", "unknown", t)
 	}

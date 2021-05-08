@@ -39,6 +39,10 @@ func Extract(url string, site string) ([]static.Data, error) {
 	}
 
 	size, _ := request.Size(url, url)
+	ext := matches[2]
+	if ext == "m3u8" || ext == "txt" {
+		ext = "ts"
+	}
 
 	return []static.Data{
 		0: {
@@ -50,7 +54,7 @@ func Extract(url string, site string) ([]static.Data, error) {
 					URLs: []static.URL{
 						0: {
 							URL: url,
-							Ext: matches[2],
+							Ext: ext,
 						},
 					},
 					Quality: "unknown",

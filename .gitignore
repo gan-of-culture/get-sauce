@@ -15,6 +15,7 @@ media
 *.mkv
 *.torrent
 *.ts
+*.txt
 
 *token
 *exhentai_test.go

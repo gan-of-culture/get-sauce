@@ -1,10 +1,11 @@
-package hentaistreamxxx
+package htstreaming
 
 import (
 	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
+	"net/url"
 	"regexp"
 	"strings"
 
@@ -33,45 +34,45 @@ type pageData struct {
 	VideoData   videoData           `json:"videoData"`
 }
 
-const site = "https://hentaistream.xxx"
+var site string
 
 func ParseURL(URL string) []string {
-	if strings.HasPrefix(URL, "https://hentaistream.xxx/watch/") {
+	if ok, _ := regexp.MatchString(`episode-\d+[/_]`, URL); ok {
 		return []string{URL}
 	}
 
-	if !strings.HasPrefix(URL, "https://hentaistream.xxx/videos/category/") {
-		return []string{}
-	}
-
+	//check if it's an overview/series page maybe
 	htmlString, err := request.Get(URL)
 	if err != nil {
 		return []string{}
 	}
 
-	re := regexp.MustCompile(`[^"]*xxx/watch[^"]*`)
+	re := regexp.MustCompile(`https[^"\s]*?episode-\d*[/_]?[^"]*`)
+	if strings.HasPrefix(URL, "https://hentaihaven.red") {
+		re = regexp.MustCompile(`[^"]*red/hentai[^"]*`) //this sites URLs are built diff
+	}
 	matchedURLs := re.FindAllString(htmlString, -1)
 
-	URLs := []string{}
-	for i := range matchedURLs {
-		if i%2 == 0 {
-			URLs = append(URLs, fmt.Sprintf("%s%s", site, strings.TrimPrefix(matchedURLs[i], "/")))
-		}
-	}
-
-	return URLs
+	return removeAdjDuplicates(matchedURLs)
 }
 
 func Extract(URL string) ([]static.Data, error) {
+	baseURL, err := url.Parse(URL)
+	if err != nil {
+		return nil, err
+	}
+	site = baseURL.Host
+
 	URLs := ParseURL(URL)
 	if len(URLs) < 1 {
-		return nil, fmt.Errorf("[Hanime] No matching URL found.")
+		return nil, fmt.Errorf("[%s] No matching URL found.", site)
 	}
 
 	data := []static.Data{}
 	for _, u := range URLs {
 		d, err := extractData(u)
 		if err != nil {
+			log.Println(u)
 			return nil, err
 		}
 		data = append(data, d)
@@ -87,7 +88,7 @@ func extractData(URL string) (static.Data, error) {
 	}
 	title := utils.GetMeta(htmlString, "og:title")
 
-	re := regexp.MustCompile(`[^"]*php\?data[^"]*`)
+	re := regexp.MustCompile(`[^"]*index.php\?data[^"]*`)
 	playerURL := re.FindString(htmlString)
 
 	htmlString, err = request.Get(playerURL)
@@ -95,18 +96,25 @@ func extractData(URL string) (static.Data, error) {
 		return static.Data{}, err
 	}
 
-	re = regexp.MustCompile(`({"[\s\S]*?), `)
+	re = regexp.MustCompile(`({"[\s\S]*?), false`)
 	jsonString := re.FindStringSubmatch(htmlString)
 	if len(jsonString) < 2 {
-		return static.Data{}, fmt.Errorf("[HentaistreamXXX] JSON string no found")
+		if strings.Contains(htmlString, "Video not found") {
+			return static.Data{}, fmt.Errorf("[%s] Video not found %s", site, URL)
+		}
+		fmt.Println(htmlString)
+		return static.Data{}, fmt.Errorf("[%s] JSON string no found %s", site, URL)
 	}
 
 	pData := pageData{}
 	err = json.Unmarshal([]byte(jsonString[1]), &pData)
 	if err != nil {
-		log.Println(URL)
 		log.Println(jsonString)
+		log.Println(htmlString)
 		return static.Data{}, err
+	}
+	if pData.Title != "" {
+		title = strings.Split(pData.Title, ".")[0]
 	}
 
 	ext := "ts"
@@ -134,7 +142,9 @@ func extractData(URL string) (static.Data, error) {
 
 	streams := map[string]static.Stream{}
 	for i, stream := range p.Variants {
-		streams[fmt.Sprintf("%d", i)] = static.Stream{
+		// len(p.Variants)-i-1 builds stream map in reverse order
+		// in order for the best quality stream to be on top
+		streams[fmt.Sprintf("%d", len(p.Variants)-i-1)] = static.Stream{
 			URLs: []static.URL{
 				{
 					URL: fmt.Sprintf("%s%s", baseCDNURL, stream.URI),
@@ -155,4 +165,17 @@ func extractData(URL string) (static.Data, error) {
 		Err:     nil,
 		Url:     URL,
 	}, nil
+}
+
+func removeAdjDuplicates(slice []string) []string {
+	out := []string{}
+	var last string
+	for _, s := range slice {
+		if s != last {
+			out = append(out, s)
+		}
+		last = s
+	}
+
+	return out
 }

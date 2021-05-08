@@ -163,7 +163,10 @@ func TestGetMediaType(t *testing.T) {
 			want: "video/m4a",
 		}, {
 			ext:  "txt",
-			want: "unknown/txt",
+			want: "application/x-mpegurl",
+		}, {
+			ext:  "m3u8",
+			want: "application/x-mpegurl",
 		},
 	}
 	for _, tt := range tests {

@@ -49,7 +49,7 @@ type server struct {
 }
 
 type videosManifest struct {
-	Servers []server `json: "servers,omitempty"`
+	Servers []server `json:"servers,omitempty"`
 }
 
 type hentaiVideo struct {

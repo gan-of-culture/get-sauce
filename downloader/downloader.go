@@ -1,6 +1,7 @@
 package downloader
 
 import (
+	"crypto/sha1"
 	"crypto/tls"
 	"errors"
 	"fmt"
@@ -25,16 +26,27 @@ func init() {
 	runtime.GOMAXPROCS(runtime.NumCPU())
 }
 
+type filePiece struct {
+	data   []byte
+	offset int64
+}
+
 type Downloader struct {
 	data        static.Data
 	stream      string
 	client      *http.Client
 	filePath    string
+	tmpFilePath string
 	progressBar *progressbar.ProgressBar
 	bar         bool
 }
 
 func New(data static.Data, stream string, bar bool) *Downloader {
+	// ensure a different tmpDir for each m3u8 download so concurrent processes won't colide
+	h := sha1.New()
+	h.Write([]byte(data.Title))
+	tmpFilePath := filepath.Join(config.OutputPath, fmt.Sprintf("%x/", h.Sum(nil)[15:]))
+
 	return &Downloader{
 		data:   data,
 		stream: stream,
@@ -48,8 +60,9 @@ func New(data static.Data, stream string, bar bool) *Downloader {
 			},
 			Timeout: 15 * time.Minute,
 		},
-		filePath: config.OutputPath,
-		bar:      bar,
+		filePath:    config.OutputPath,
+		tmpFilePath: tmpFilePath,
+		bar:         bar,
 	}
 }
 
@@ -83,6 +96,7 @@ func (downloader *Downloader) Download() error {
 
 		//sanitize filename here
 		fileURI = strings.ReplaceAll(fileURI, "|", "_")
+		fileURI = strings.ReplaceAll(fileURI, ":", "")
 
 		//build final file URI
 		fileURI = filepath.Join(downloader.filePath, fileURI+"."+URL.Ext)
@@ -231,7 +245,7 @@ func (downloader *Downloader) writeM3U(url string, file *os.File) (int64, error)
 		return 0, fmt.Errorf("No segments found in %s", url)
 	}
 
-	err = os.MkdirAll(filepath.Join(downloader.filePath, "tmp/"), os.ModePerm)
+	err = os.MkdirAll(downloader.tmpFilePath, os.ModePerm)
 	if err != nil {
 		return 0, err
 	}
@@ -264,7 +278,7 @@ func (downloader *Downloader) writeM3U(url string, file *os.File) (int64, error)
 		return 0, err
 	}
 
-	err = os.RemoveAll(filepath.Join(downloader.filePath, "tmp/"))
+	err = os.RemoveAll(downloader.tmpFilePath)
 	if err != nil {
 		return 0, err
 	}
@@ -309,7 +323,7 @@ func (downloader *Downloader) writeSeg(segment *m3u8.MediaSegment) (int64, error
 		}
 	}
 
-	file, err := os.Create(filepath.Join(downloader.filePath, "tmp/", segment.Title+".ts"))
+	file, err := os.Create(filepath.Join(downloader.tmpFilePath, segment.Title+".ts"))
 	if err != nil {
 		return 0, err
 	}
@@ -342,7 +356,7 @@ func (downloader *Downloader) mergeSegments(file *os.File, segments []*m3u8.Medi
 
 	for _, seg := range segments {
 
-		d, err := decrypt(seg, filepath.Join(downloader.filePath, "tmp/", seg.Title+".ts"))
+		d, err := decrypt(seg, filepath.Join(downloader.tmpFilePath, seg.Title+".ts"))
 		if err != nil {
 			return err
 		}

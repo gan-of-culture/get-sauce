@@ -97,7 +97,7 @@ func TestDownload(t *testing.T) {
 					"0": {
 						URLs: []static.URL{
 							{
-								URL: "https://cdn1.htstreaming.com/cdn/down/7216c29dee7815942188208fe13e4068/720p/720p.txt",
+								URL: "https://cdn1.htstreaming.com/cdn/down/7216c29dee7815942188208fe13e4068/480p/480p.txt",
 								Ext: "mp4",
 							},
 						},
@@ -121,6 +121,7 @@ func TestDownload(t *testing.T) {
 						},
 					},
 				},
+				Url: "https://hanime.tv/videos/hentai/toilet-no-hanako-san-vs-kukkyou-taimashi-2",
 			},
 		},
 	}
@@ -128,7 +129,6 @@ func TestDownload(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			config.SelectStream = "0"
-			//config.OutputPath = "K://Temp//"
 			downloader := New(tt.data, "0", false)
 			err := downloader.Download()
 			if err != tt.want {
