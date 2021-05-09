@@ -1,7 +1,5 @@
 package booru
 
-//site currently not reachable
-/*
 import (
 	"log"
 	"testing"
@@ -90,4 +88,4 @@ func TestExtract(t *testing.T) {
 			}
 		})
 	}
-}*/
+}

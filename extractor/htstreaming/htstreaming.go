@@ -8,7 +8,6 @@ import (
 	"net/url"
 	"regexp"
 	"strings"
-	"time"
 
 	"github.com/gan-of-culture/go-hentai-scraper/request"
 	"github.com/gan-of-culture/go-hentai-scraper/static"
@@ -74,6 +73,10 @@ func Extract(URL string) ([]static.Data, error) {
 	for _, u := range URLs {
 		d, err := extractData(u)
 		if err != nil {
+			if strings.Contains(err.Error(), "Video not found") || strings.Contains(err.Error(), "PlayerURL not found") {
+				log.Println(err.Error())
+				continue
+			}
 			log.Println(u)
 			return nil, err
 		}
@@ -86,20 +89,17 @@ func Extract(URL string) ([]static.Data, error) {
 func extractData(URL string) (static.Data, error) {
 	htmlString, err := request.Get(URL)
 	if err != nil {
+		log.Println(htmlString)
 		return static.Data{}, err
 	}
-	if strings.Contains(htmlString, "<title>Just a moment...</title>") {
-		//DDOS GUARD | CAPTCHA?
-		time.Sleep(2 * time.Second)
-		htmlString, err = request.Get(URL)
-		if err != nil {
-			return static.Data{}, err
-		}
-	}
+
 	title := utils.GetMeta(htmlString, "og:title")
 
 	re := regexp.MustCompile(`[^"]*index.php\?data[^"]*`)
 	playerURL := re.FindString(htmlString)
+	if playerURL == "" {
+		return static.Data{}, fmt.Errorf("[%s] PlayerURL not found %s", site, URL)
+	}
 
 	htmlString, err = request.Get(playerURL)
 	if err != nil {

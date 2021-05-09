@@ -55,7 +55,7 @@ func New(data static.Data, stream string, bar bool) *Downloader {
 				DisableCompression:  true,
 				TLSHandshakeTimeout: 10 * time.Second,
 				TLSClientConfig:     &tls.Config{InsecureSkipVerify: true},
-				IdleConnTimeout:     5 * time.Second,
+				IdleConnTimeout:     10 * time.Second,
 				//DisableKeepAlives:   true,
 			},
 			Timeout: 15 * time.Minute,
@@ -81,6 +81,7 @@ func (downloader *Downloader) Download() error {
 	}
 
 	var wg sync.WaitGroup
+	lock := sync.Mutex{}
 	var saveErr error
 	var fileURI string
 	for idx, URL := range stream.URLs {
@@ -97,6 +98,10 @@ func (downloader *Downloader) Download() error {
 		//sanitize filename here
 		fileURI = strings.ReplaceAll(fileURI, "|", "_")
 		fileURI = strings.ReplaceAll(fileURI, ":", "")
+		fileURI = strings.ReplaceAll(fileURI, "?", "")
+		fileURI = strings.ReplaceAll(fileURI, "<", "")
+		fileURI = strings.ReplaceAll(fileURI, ">", "")
+		fileURI = strings.ReplaceAll(fileURI, "/", "")
 
 		//build final file URI
 		fileURI = filepath.Join(downloader.filePath, fileURI+"."+URL.Ext)
@@ -106,15 +111,17 @@ func (downloader *Downloader) Download() error {
 			defer wg.Done()
 			err := downloader.save(URL, title, downloader.data.Type)
 			if err != nil {
+				lock.Lock()
 				saveErr = err
+				lock.Unlock()
 			}
 		}(URL, fileURI)
-		if saveErr != nil {
-			return saveErr
-		}
 
 	}
 	wg.Wait()
+	if saveErr != nil {
+		return saveErr
+	}
 
 	return nil
 }
@@ -151,7 +158,21 @@ func (downloader *Downloader) save(url static.URL, fileURI string, mimeType stri
 }
 
 func (downloader *Downloader) writeFile(URL string, file *os.File, headers map[string]string) (int64, error) {
-	res, err := downloader.client.Get(URL)
+	// Supply http request with headers to ensure a higher possibility of success
+	req, err := http.NewRequest(http.MethodGet, URL, nil)
+	if err != nil {
+		return 0, err
+	}
+
+	for k, v := range config.FakeHeaders {
+		req.Header.Set(k, v)
+	}
+
+	if ref := req.Header.Get("Referer"); ref == "" {
+		req.Header.Set("Referer", URL)
+	}
+
+	res, err := downloader.client.Do(req)
 	if err != nil {
 		return 0, err
 	}

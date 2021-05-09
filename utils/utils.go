@@ -96,7 +96,7 @@ func GetH1(htmlString string) string {
 
 // GetMeta of html file
 func GetMeta(htmlString, property string) string {
-	re := regexp.MustCompile(fmt.Sprintf("<meta property=\"%s\" content=\"([^\"]*)", property))
+	re := regexp.MustCompile(fmt.Sprintf("<meta property=[\"']%s[\"'] content=[\"']([^\"']*)", property))
 	metaTags := re.FindAllStringSubmatch(htmlString, -1)
 	if len(metaTags) < 1 {
 		log.Println(htmlString)

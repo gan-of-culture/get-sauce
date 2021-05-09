@@ -65,7 +65,7 @@ func download(URL string) {
 		data, err = hanime.Extract(URL)
 	case "hentaimama.io":
 		data, err = hentaimama.Extract(URL)
-	case "hentais.tube":
+	case "www.hentais.tube":
 		data, err = hentais.Extract(URL)
 	case "hentaistream.moe":
 		data, err = hentaistream.Extract(URL)
