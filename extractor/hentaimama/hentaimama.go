@@ -76,8 +76,10 @@ func extractData(URL string) (static.Data, error) {
 		if err != nil {
 			return static.Data{}, err
 		}
+
 		re = regexp.MustCompile(`\.([\d\w]*)\?`)
 		ext := strings.TrimSuffix(re.FindStringSubmatch(srcURL)[1], "?")
+    
 		if ext == "" {
 			re = regexp.MustCompile(`video/[^']*`)
 			ext = strings.Split(re.FindString(srcURL), "/")[1]
