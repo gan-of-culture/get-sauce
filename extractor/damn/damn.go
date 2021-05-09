@@ -7,6 +7,7 @@ import (
 
 	"github.com/gan-of-culture/go-hentai-scraper/request"
 	"github.com/gan-of-culture/go-hentai-scraper/static"
+	"github.com/gan-of-culture/go-hentai-scraper/utils"
 )
 
 const site = "https://damn.stream"
@@ -55,7 +56,7 @@ func extractData(URL string) (static.Data, error) {
 		return static.Data{}, err
 	}
 
-	title := strings.TrimPrefix(URL, "https://www.damn.stream/watch/hentai/")
+	title := strings.TrimSuffix(utils.GetMeta(htmlString, "og:title"), " - Damnstream")
 	re := regexp.MustCompile(`"/video/([^"]*)`)
 	videoID := re.FindStringSubmatch(htmlString)[1]
 

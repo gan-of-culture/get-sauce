@@ -88,7 +88,7 @@ go run main.go ...
 | [hanime.tv(720p, 480p, 360p)](https://hanime.tv)                         | :heavy_check_mark: |:heavy_check_mark:|
 | [hentaihaven.red (1080p, 720p, 480p, 360p)](https://hentaihaven.red)     |         ?          |:heavy_check_mark:|
 | [hentaimama.io(1080p, 720p)](https://hentaimama.io)                      |         ?          |:heavy_check_mark:|
-| [hentais.tube (480p only)](https://www.hentais.tube/)                    |         ?          |:heavy_check_mark:|
+| [hentais.tube (720p, 480p, 360p)](https://www.hentais.tube/)             |         ?          |:heavy_check_mark:|
 | [hentaistream.moe (2160p, 1080p, 480p)](https://hentaistream.moe/)       |         ?          |:heavy_check_mark:|
 | [hentaistream.xxx (1080p, 720, 480p, 360p)](https://hentaistream.xxx/)   |         ?          |:heavy_check_mark:|
 | [hentaiworld.tv (1080p, 720p, 480p)](https://hentaiworld.tv/)            |         ?          |:heavy_check_mark:|
@@ -104,6 +104,7 @@ If your site is not listed - you can still try to use the universal downloader.
 
 ## TODO's
 
+- Implement concurrency for big single file downloads
 - Clean up coding and add more sites
 - Speed improvements
 

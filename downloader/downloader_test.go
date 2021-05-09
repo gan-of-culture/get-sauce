@@ -97,7 +97,7 @@ func TestDownload(t *testing.T) {
 					"0": {
 						URLs: []static.URL{
 							{
-								URL: "https://cdn1.htstreaming.com/cdn/down/7216c29dee7815942188208fe13e4068/480p/480p.txt",
+								URL: "https://cdn1.htstreaming.com/cdn/down/7216c29dee7815942188208fe13e4068/360p/360p.txt",
 								Ext: "mp4",
 							},
 						},
@@ -106,7 +106,7 @@ func TestDownload(t *testing.T) {
 				Url: "https://hentaistream.xxx/watch/hime-sama-love-life-episode-3_P9TlY9FAOGHM7nn.html",
 			},
 		}, {
-			name: "m3u8 normal",
+			name: "m3u8 with aes-128 key",
 			data: static.Data{
 				Site:  "https://hanime.tv/",
 				Title: "Toilet no Hanako-san vs Kukkyou Taimashi 2",

@@ -22,17 +22,17 @@ const apiQueryURL = "https://booru.io/api/query/entity?query="
 
 // Entity JSON type
 type Entity struct {
-	Key         string             `json: "key"`
-	ContentType string             `json: "contentType"`
-	Attributes  map[string]float32 `json: "attributes"`
-	Tags        map[string]int     `json: "tags"`
-	Transforms  map[string]string  `json: "transforms"`
+	Key         string             `json:"key"`
+	ContentType string             `json:"contentType"`
+	Attributes  map[string]float32 `json:"attributes"`
+	Tags        map[string]int     `json:"tags"`
+	Transforms  map[string]string  `json:"transforms"`
 }
 
 // EntitySlice JSON type
 type EntitySlice struct {
-	Data   []Entity `json: "data"`
-	Cursor string   `json: "cursor"`
+	Data   []Entity `json:"data"`
+	Cursor string   `json:"cursor"`
 }
 
 // Extract for booru pages

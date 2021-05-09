@@ -2,8 +2,8 @@ package hentais
 
 import (
 	"fmt"
+	"log"
 	"regexp"
-	"strconv"
 	"strings"
 
 	"github.com/gan-of-culture/go-hentai-scraper/request"
@@ -16,122 +16,100 @@ const infoSite = "https://www.hentais.tube/tvshows/"
 const dlSite = "https://www.hentais.tube/download-hentai/"
 
 // Extract hentai data
-func Extract(url string) ([]static.Data, error) {
-	url, err := ParseURL(url)
+func Extract(URL string) ([]static.Data, error) {
+	URLs, err := ParseURL(URL)
 	if err != nil {
-		return []static.Data{}, err
-	}
-
-	return ExtractData(url)
-}
-
-// ParseURL to extract hentai data
-func ParseURL(url string) (string, error) {
-	return url, nil
-}
-
-// ExtractData of hentai
-func ExtractData(url string) ([]static.Data, error) {
-
-	re := regexp.MustCompile("/([^/0-9]*)?([0-9])*/?$")
-	seriesInfo := re.FindStringSubmatch(url)
-
-	seriesName := seriesInfo[1]
-	if strings.Contains(seriesName, "episode") {
-		seriesName = strings.TrimSuffix(seriesName, "episode-")
-	}
-
-	seriesName = strings.TrimSuffix(seriesName, "-")
-	wantedEpisodes := 0
-	if seriesInfo[2] != "" {
-		wantedEpisodes, _ = strconv.Atoi(seriesInfo[2])
-	}
-
-	htmlInfoPage, err := request.Get(fmt.Sprintf("%s%s", infoSite, seriesName))
-	if err != nil {
-		return []static.Data{}, err
-	}
-
-	re = regexp.MustCompile("<h1>([^<]*)")
-	title := re.FindStringSubmatch(htmlInfoPage)
-
-	re = regexp.MustCompile("n>?\\s*([0-9]*-[0-9]*-[0-9]*)")
-	dates := re.FindAllStringSubmatch(htmlInfoPage, -1)
-
-	/*re = regexp.MustCompile("\"/genre/[^\"]*\">?\\s*([^<]*)")
-	tags := re.FindAllStringSubmatch(htmlInfoPage, -1)
-
-	re = regexp.MustCompile("info1\"[^>]*>?\\s*<[^>]*>?\\s*<p>([^<]*)")
-	descr := re.FindStringSubmatch(htmlInfoPage)
-
-	re = regexp.MustCompile("/studio[^>]*>([^<]*)")
-	studio := re.FindStringSubmatch(htmlInfoPage)
-
-	re = regexp.MustCompile("Episodes[^0-9]*([0-9]*)")
-	numberOfEpisodes := re.FindStringSubmatch(htmlInfoPage)*/
-
-	re = regexp.MustCompile("/episodes/([^/\"]*)")
-	matchedEpisodeURLs := re.FindAllStringSubmatch(htmlInfoPage, -1)
-
-	episodeURLs := []string{}
-	if wantedEpisodes != 0 {
-		if wantedEpisodes-1 > len(matchedEpisodeURLs) {
-			return []static.Data{}, fmt.Errorf("[Hentai] wanted episode %d not in availabel episodes %d", wantedEpisodes, len(episodeURLs))
-		}
-		episodeURLs = []string{matchedEpisodeURLs[wantedEpisodes-1][1]}
-	} else {
-		for _, url := range matchedEpisodeURLs {
-			episodeURLs = append(episodeURLs, url[1])
-		}
+		return nil, err
 	}
 
 	data := []static.Data{}
-	for idx, episodeURL := range episodeURLs {
-		downloadSite, err := request.Get(fmt.Sprintf("%s%s/", dlSite, episodeURL))
+	for _, u := range URLs {
+		d, err := extractData(u)
 		if err != nil {
-			return []static.Data{}, err
+			return nil, err
 		}
-
-		re = regexp.MustCompile("https://www\\.hentais\\.tube/baixar\\.php\\?enc=[^\"]*")
-		redirectURL := re.FindString(downloadSite)
-
-		headers, err := request.Headers(redirectURL, dlSite)
-		if err != nil {
-			return []static.Data{}, err
-		}
-
-		ext := utils.GetLastItemString(strings.Split(headers.Get("content-type"), "/"))
-		if ext == "" {
-			ext = "mp4"
-		}
-		size, _ := strconv.Atoi(headers.Get("content-length"))
-
-		currentEp := wantedEpisodes
-		if wantedEpisodes == 0 {
-			currentEp = idx
-		}
-		data = append(data, static.Data{
-			Site:  site,
-			Title: fmt.Sprintf("%s Episode %d", title[1], currentEp),
-			Type:  "video",
-			Streams: map[string]static.Stream{
-				"0": {
-					URLs: []static.URL{
-						0: {
-							URL: redirectURL,
-							Ext: ext,
-						},
-					},
-					Quality: "unknown",
-					Size:    int64(size),
-					Info:    fmt.Sprintf("Date: %s", dates[idx][1]),
-				},
-			},
-			Err: nil,
-			Url: fmt.Sprintf("%s/tvshows/%s", site, seriesName),
-		})
+		data = append(data, d)
 	}
 
 	return data, nil
+}
 
+// ParseURL to extract hentai data
+func ParseURL(URL string) ([]string, error) {
+	if strings.HasPrefix(URL, site+"episodes/") {
+		return []string{URL}, nil
+	}
+
+	if !strings.HasPrefix(URL, site+"tvshows/") {
+		return nil, fmt.Errorf("[Hentais] Can't parse URL %s", URL)
+	}
+
+	htmlString, err := request.Get(URL)
+	if err != nil {
+		return nil, err
+	}
+
+	re := regexp.MustCompile(`/episodes/[^"]*`)
+	return re.FindAllString(htmlString, -1), nil
+}
+
+func extractData(URL string) (static.Data, error) {
+	htmlString, err := request.Get(URL)
+	if err != nil {
+		return static.Data{}, err
+	}
+
+	title := utils.GetH1(htmlString)
+
+	re := regexp.MustCompile(`player.php[^']*`)
+	playerURL := site + re.FindString(htmlString)
+	if playerURL == "" {
+		return static.Data{}, fmt.Errorf("[Hentais] Can't parse playerURL for %s", URL)
+	}
+
+	htmlString, err = request.Get(playerURL)
+	if err != nil {
+		log.Println(URL)
+		return static.Data{}, err
+	}
+
+	re = regexp.MustCompile(`src="([^"]*)" type="([^"]*)" label="([^"]*)"`) // 1=videoURL 2=mimeType 3=quality
+	matchedSrcTag := re.FindAllStringSubmatch(htmlString, -1)               //<-- is basically the different streams
+	if len(matchedSrcTag) < 1 {
+		return static.Data{}, fmt.Errorf("[Hentais] No source tags found in %s", playerURL)
+	}
+
+	quality := ""
+	mimeType := ""
+	streams := map[string]static.Stream{}
+	for i, srcTag := range matchedSrcTag {
+		quality = ""
+		mimeType = ""
+		switch len(srcTag) {
+		case 3:
+			mimeType = srcTag[2]
+		case 4:
+			mimeType = srcTag[2]
+			quality = srcTag[3]
+		}
+		size, _ := request.Size(srcTag[1], site)
+		streams[fmt.Sprintf("%d", len(matchedSrcTag)-i-1)] = static.Stream{
+			URLs: []static.URL{
+				{
+					URL: srcTag[1],
+					Ext: utils.GetLastItemString(strings.Split(mimeType, "/")),
+				},
+			},
+			Quality: quality,
+			Size:    size,
+		}
+	}
+	return static.Data{
+		Site:    site,
+		Title:   title,
+		Type:    "video",
+		Streams: streams,
+		Err:     nil,
+		Url:     URL,
+	}, nil
 }

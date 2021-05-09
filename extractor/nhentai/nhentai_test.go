@@ -4,8 +4,8 @@ import "testing"
 
 func TestParseURL(t *testing.T) {
 	type want struct {
-		magicNumer string
-		page       string
+		magicNumbers int
+		page         string
 	}
 	tests := []struct {
 		name string
@@ -16,35 +16,41 @@ func TestParseURL(t *testing.T) {
 			name: "Only magic number supplied",
 			url:  "https://nhentai.net/g/297495/",
 			want: want{
-				magicNumer: "297495",
-				page:       "",
+				magicNumbers: 1,
+				page:         "",
 			},
 		}, {
 			name: "magic number and page number supplied",
 			url:  "https://nhentai.net/g/297485/9/",
 			want: want{
-				magicNumer: "297485",
-				page:       "9",
+				magicNumbers: 1,
+				page:         "9",
 			},
 		}, {
 			name: "Incorrect url",
 			url:  "https://nhentai.net/g/",
 			want: want{
-				magicNumer: "",
-				page:       "",
+				magicNumbers: 0,
+				page:         "",
+			},
+		}, {
+			name: "Doujin collection",
+			url:  "https://nhentai.net/search/?q=dragon",
+			want: want{
+				magicNumbers: 25,
+				page:         "",
 			},
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			magicNumer, page := ParseURL(tt.url)
-
-			if magicNumer != tt.want.magicNumer {
-				t.Errorf("Got: %v - want: %v", magicNumer, tt.want)
+			magicNumber, page := ParseURL(tt.url)
+			if len(magicNumber) != tt.want.magicNumbers {
+				t.Errorf("Got: %v - want: %v", magicNumber, tt.want)
 			}
 
 			if page != tt.want.page {
-				t.Errorf("Got: %v - want: %v", magicNumer, tt.want)
+				t.Errorf("Got: %v - want: %v", magicNumber, tt.want)
 			}
 		})
 	}
