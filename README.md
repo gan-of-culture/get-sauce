@@ -57,7 +57,7 @@ go run main.go ...
 
 --------------------------------------------------------------------------------
 
- -t             Number of download threads
+ -t             Number of download threads (works if you download multiple files)
 
  go-hentai-scraper -t 4 http...
 
@@ -76,27 +76,31 @@ go run main.go ...
 
 ## Supported sites
 
-| Site                                                             | Images             | Videos           |
-| -----------------------------------------------------------------|:------------------:|:----------------:|
-| [booruproject (ex. rule34, gelbooru)](https://booru.org/top)     | :heavy_check_mark: |:heavy_check_mark:|
-| [booru](https://booru.io/)                                       | :heavy_check_mark: |        ?         |
-| [danbooru](https://danbooru.donmai.us)                           | :heavy_check_mark: |        ?         |
-| [e-hentai](http://e-hentai.org/)                                 | :heavy_check_mark: |        ?         |
-| [exhentai*](http://exhentai.org/)                                | :heavy_check_mark: |        ?         |
-| [hanime](https://hanime.tv)                                      | :heavy_check_mark: |       :x:        |
-| [hentaimama](https://hentaimama.io)                              |         ?          |:heavy_check_mark:|
-| [hentais (480p only)](https://www.hentais.tube/)                 |         ?          |:heavy_check_mark:|
-| [hentaistream (2160p, 1080p, 480p)](https://hentaistream.moe/)   |         ?          |:heavy_check_mark:|
-| [hentaiworld (1080p, 720p, 480p)](https://hentaiworld.tv/)       |         ?          |:heavy_check_mark:|
-| [konachan](https://konachan.com/post?tags=)                      | :heavy_check_mark: |        ?         |
-| [nhentai](https://nhentai.net)                                   | :heavy_check_mark: |        ?         |
-| [rule34](https://rule34.paheal.net)                              | :heavy_check_mark: |:heavy_check_mark:|
-| [yandere](https://yande.re/post)                                 | :heavy_check_mark: |        ?         |
+| Site                                                                     | Images             | Videos           |
+| -------------------------------------------------------------------------|:------------------:|:----------------:|
+| [animeidhentai.com (1080p, 720p, 480p, 360p)](https://animeidhentai.com) |         ?          |:heavy_check_mark:|
+| [booruproject (ex. rule34, gelbooru)](https://booru.org/top)             | :heavy_check_mark: |:heavy_check_mark:|
+| [booru.io](https://booru.io/)                                            | :heavy_check_mark: |        ?         |
+| [damn.stream](https://www.damn.stream)                                   |         ?          |:heavy_check_mark:|
+| [danbooru.donmai.us](https://danbooru.donmai.us)                         | :heavy_check_mark: |        ?         |
+| [e-hentai.org](http://e-hentai.org/)                                     | :heavy_check_mark: |        ?         |
+| [exhentai.org*](http://exhentai.org/)                                    | :heavy_check_mark: |        ?         |
+| [hanime.tv(720p, 480p, 360p)](https://hanime.tv)                         | :heavy_check_mark: |:heavy_check_mark:|
+| [hentaihaven.red (1080p, 720p, 480p, 360p)](https://hentaihaven.red)     |         ?          |:heavy_check_mark:|
+| [hentaimama.io(1080p, 720p)](https://hentaimama.io)                      |         ?          |:heavy_check_mark:|
+| [hentais.tube (480p only)](https://www.hentais.tube/)                    |         ?          |:heavy_check_mark:|
+| [hentaistream.moe (2160p, 1080p, 480p)](https://hentaistream.moe/)       |         ?          |:heavy_check_mark:|
+| [hentaistream.xxx (1080p, 720, 480p, 360p)](https://hentaistream.xxx/)   |         ?          |:heavy_check_mark:|
+| [hentaiworld.tv (1080p, 720p, 480p)](https://hentaiworld.tv/)            |         ?          |:heavy_check_mark:|
+| [hentai.tv (1080p, 720p, 480p, 360p)](https://hentai.tv/)                |         ?          |:heavy_check_mark:|
+| [konachan.com](https://konachan.com/post?tags=)                          | :heavy_check_mark: |        ?         |
+| [nhentai.net](https://nhentai.net)                                       | :heavy_check_mark: |        ?         |
+| [rule34.paheal.net](https://rule34.paheal.net)                           | :heavy_check_mark: |:heavy_check_mark:|
+| [yandere.re](https://yande.re/post)                                      | :heavy_check_mark: |        ?         |
 
-* you need a login for this site. You can supply it via the parameters -un and -up
+*you need a login for this site. You can supply it via the parameters -un and -up
 
-If your site is not listed - you can still try to use the universal downloader
-This works really good for the pitures of hanime.tv. This also works for .torrent urls
+If your site is not listed - you can still try to use the universal downloader.
 
 ## TODO's
 

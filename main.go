@@ -11,13 +11,16 @@ import (
 	"github.com/gan-of-culture/go-hentai-scraper/config"
 	"github.com/gan-of-culture/go-hentai-scraper/downloader"
 	"github.com/gan-of-culture/go-hentai-scraper/extractor/booru"
+	"github.com/gan-of-culture/go-hentai-scraper/extractor/damn"
 	"github.com/gan-of-culture/go-hentai-scraper/extractor/danbooru"
 	"github.com/gan-of-culture/go-hentai-scraper/extractor/ehentai"
 	"github.com/gan-of-culture/go-hentai-scraper/extractor/exhentai"
+	"github.com/gan-of-culture/go-hentai-scraper/extractor/hanime"
 	"github.com/gan-of-culture/go-hentai-scraper/extractor/hentaimama"
 	"github.com/gan-of-culture/go-hentai-scraper/extractor/hentais"
 	"github.com/gan-of-culture/go-hentai-scraper/extractor/hentaistream"
 	"github.com/gan-of-culture/go-hentai-scraper/extractor/hentaiworld"
+	"github.com/gan-of-culture/go-hentai-scraper/extractor/htstreaming"
 	"github.com/gan-of-culture/go-hentai-scraper/extractor/imgboard"
 	"github.com/gan-of-culture/go-hentai-scraper/extractor/nhentai"
 	"github.com/gan-of-culture/go-hentai-scraper/extractor/rule34"
@@ -50,18 +53,25 @@ func download(URL string) {
 	switch u.Host {
 	case "booru.io":
 		data, err = booru.Extract(URL)
+	case "www.damn.stream", "damn.stream":
+		data, err = damn.Extract(URL)
 	case "danbooru.donmai.us":
 		data, err = danbooru.Extract(URL)
 	case "e-hentai.org":
 		data, err = ehentai.Extract(URL)
 	case "exhentai.org":
 		data, err = exhentai.Extract(URL)
+	case "hanime.tv":
+		data, err = hanime.Extract(URL)
 	case "hentaimama.io":
 		data, err = hentaimama.Extract(URL)
 	case "hentais.tube":
 		data, err = hentais.Extract(URL)
 	case "hentaistream.moe":
 		data, err = hentaistream.Extract(URL)
+	case "hentaistream.xxx", "hentaihaven.red", "hentai.tv", "animeidhentai.com":
+		//all of them use the same cdn and nearly identical site structure
+		data, err = htstreaming.Extract(URL)
 	case "hentaiworld.tv":
 		data, err = hentaiworld.Extract(URL)
 	case "nhentai.net":
@@ -88,6 +98,10 @@ func download(URL string) {
 		return
 	}
 
+	if config.SelectStream == "" {
+		config.SelectStream = "0"
+	}
+
 	var wg sync.WaitGroup
 	wg.Add(config.Threads)
 	datachan := make(chan static.Data, len(data))
@@ -101,7 +115,8 @@ func download(URL string) {
 					if !ok {
 						return
 					}
-					err := downloader.Download(d)
+					downloader := downloader.New(d, config.SelectStream, true)
+					err := downloader.Download()
 					if err != nil {
 						log.Println(err)
 					}

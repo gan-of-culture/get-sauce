@@ -2,6 +2,7 @@ package utils
 
 import (
 	"fmt"
+	"log"
 	"os"
 	"regexp"
 	"strconv"
@@ -79,6 +80,8 @@ func GetMediaType(t string) string {
 		return fmt.Sprintf("%s/%s", "image", t)
 	case "webm", "mp4", "mkv", "m4a":
 		return fmt.Sprintf("%s/%s", "video", t)
+	case "txt", "m3u8":
+		return fmt.Sprintf("%s/%s", "application", "x-mpegurl")
 	default:
 		return fmt.Sprintf("%s/%s", "unknown", t)
 	}
@@ -88,5 +91,16 @@ func GetMediaType(t string) string {
 func GetH1(htmlString string) string {
 	re := regexp.MustCompile(`[^>]*</h1>`)
 	h1s := re.FindAllString(htmlString, -1)
-	return strings.TrimSuffix(h1s[len(h1s)-1], "</h1>")
+	return strings.TrimSuffix(GetLastItemString(h1s), "</h1>")
+}
+
+// GetMeta of html file
+func GetMeta(htmlString, property string) string {
+	re := regexp.MustCompile(fmt.Sprintf("<meta property=\"%s\" content=\"([^\"]*)", property))
+	metaTags := re.FindAllStringSubmatch(htmlString, -1)
+	if len(metaTags) < 1 {
+		log.Println(htmlString)
+		return fmt.Sprintf("No matches found for %s", property)
+	}
+	return metaTags[0][1]
 }

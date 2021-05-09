@@ -54,7 +54,7 @@ func Extract(url string) ([]static.Data, error) {
 		}
 		// some times you need to retry
 		if strings.Contains(htmlString, "<title>503 Service Temporarily Unavailable</title>") || strings.Contains(htmlString, "<title>429 Too Many Requests</title>") {
-			time.Sleep(1 * time.Second)
+			time.Sleep(400 * time.Millisecond)
 			htmlString, err = request.Get(pageURL)
 		}
 

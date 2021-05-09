@@ -1,8 +1,13 @@
 package request
 
-import "testing"
+import (
+	"testing"
+
+	"github.com/gan-of-culture/go-hentai-scraper/config"
+)
 
 func TestSize(t *testing.T) {
+	config.ShowInfo = true
 	t.Run("Default test", func(t *testing.T) {
 		size, err := Size("https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png", "")
 		if err != nil {
