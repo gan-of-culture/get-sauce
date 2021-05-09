@@ -73,6 +73,10 @@ func Extract(URL string) ([]static.Data, error) {
 	for _, u := range URLs {
 		d, err := extractData(u)
 		if err != nil {
+			if strings.Contains(err.Error(), "Video not found") {
+				log.Println(err.Error())
+				continue
+			}
 			log.Println(u)
 			return nil, err
 		}
@@ -87,6 +91,9 @@ func extractData(URL string) (static.Data, error) {
 	if err != nil {
 		log.Println(htmlString)
 		return static.Data{}, err
+	}
+	if strings.Contains(htmlString, "Oops!...") {
+		return static.Data{}, fmt.Errorf("[%s] Video not found %s", site, URL)
 	}
 
 	title := utils.GetMeta(htmlString, "og:title")
