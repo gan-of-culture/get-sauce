@@ -102,6 +102,7 @@ func (downloader *Downloader) Download() error {
 		fileURI = strings.ReplaceAll(fileURI, "<", "")
 		fileURI = strings.ReplaceAll(fileURI, ">", "")
 		fileURI = strings.ReplaceAll(fileURI, "/", "")
+		fileURI = strings.ReplaceAll(fileURI, "*", "")
 
 		//build final file URI
 		fileURI = filepath.Join(downloader.filePath, fileURI+"."+URL.Ext)

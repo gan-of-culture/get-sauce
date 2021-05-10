@@ -73,18 +73,25 @@ func extractData(URL string) (static.Data, error) {
 		return static.Data{}, err
 	}
 
-	re = regexp.MustCompile(`src="([^"]*)" type="([^"]*)" label="([^"]*)"`) // 1=videoURL 2=mimeType 3=quality
-	matchedSrcTag := re.FindAllStringSubmatch(htmlString, -1)               //<-- is basically the different streams
+	re = regexp.MustCompile(`src="([^"]*)" type="([^"]*)"(?: label="([^"]*)")?`) // 1=videoURL 2=mimeType 3=quality
+	matchedSrcTag := re.FindAllStringSubmatch(htmlString, -1)                    //<-- is basically the different streams
 	if len(matchedSrcTag) < 1 {
 		return static.Data{}, fmt.Errorf("[Hentais] No source tags found in %s", playerURL)
 	}
 
+	u := ""
 	quality := ""
 	mimeType := ""
 	streams := map[string]static.Stream{}
 	for i, srcTag := range matchedSrcTag {
 		quality = ""
 		mimeType = ""
+
+		u = srcTag[1]
+		if !strings.Contains(srcTag[1], "http") {
+			u = site + srcTag[1][1:] //remove extra slash
+		}
+
 		switch len(srcTag) {
 		case 3:
 			mimeType = srcTag[2]
@@ -92,11 +99,11 @@ func extractData(URL string) (static.Data, error) {
 			mimeType = srcTag[2]
 			quality = srcTag[3]
 		}
-		size, _ := request.Size(srcTag[1], site)
+		size, _ := request.Size(u, playerURL)
 		streams[fmt.Sprintf("%d", len(matchedSrcTag)-i-1)] = static.Stream{
 			URLs: []static.URL{
 				{
-					URL: srcTag[1],
+					URL: u,
 					Ext: utils.GetLastItemString(strings.Split(mimeType, "/")),
 				},
 			},

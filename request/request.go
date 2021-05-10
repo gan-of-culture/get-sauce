@@ -116,7 +116,8 @@ func Size(url, refer string) (int64, error) {
 	}
 
 	resp, err := Request(http.MethodGet, url, map[string]string{
-		"Range": "bytes=0-0",
+		"Range":   "bytes=0-0",
+		"Referer": refer,
 	})
 	if err != nil {
 		return 0, err
@@ -124,7 +125,8 @@ func Size(url, refer string) (int64, error) {
 	if resp.StatusCode == 503 {
 		time.Sleep(200 * time.Millisecond)
 		resp, err = Request(http.MethodGet, url, map[string]string{
-			"Range": "bytes=0-0",
+			"Range":   "bytes=0-0",
+			"Referer": refer,
 		})
 	}
 
