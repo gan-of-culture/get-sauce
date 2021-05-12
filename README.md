@@ -86,13 +86,16 @@ go run main.go ...
 | [e-hentai.org](http://e-hentai.org/)                                     | :heavy_check_mark: |        ?         |
 | [exhentai.org*](http://exhentai.org/)                                    | :heavy_check_mark: |        ?         |
 | [hanime.tv(720p, 480p, 360p)](https://hanime.tv)                         | :heavy_check_mark: |:heavy_check_mark:|
+| [hentaidude.com(720p, 480, 360p)](https://hentaidude.com/)               |         ?          |:heavy_check_mark:|
 | [hentaihaven.red (1080p, 720p, 480p, 360p)](https://hentaihaven.red)     |         ?          |:heavy_check_mark:|
+| [hentaihaven.xxx (1080p, 720p, 480p, 360p)](https://hentaihaven.xxx)     |         ?          |:heavy_check_mark:|
 | [hentaimama.io(1080p, 720p)](https://hentaimama.io)                      |         ?          |:heavy_check_mark:|
 | [hentais.tube (720p, 480p, 360p)](https://www.hentais.tube/)             |         ?          |:heavy_check_mark:|
 | [hentaistream.moe (2160p, 1080p, 480p)](https://hentaistream.moe/)       |         ?          |:heavy_check_mark:|
 | [hentaistream.xxx (1080p, 720, 480p, 360p)](https://hentaistream.xxx/)   |         ?          |:heavy_check_mark:|
 | [hentaiworld.tv (1080p, 720p, 480p)](https://hentaiworld.tv/)            |         ?          |:heavy_check_mark:|
 | [hentai.tv (1080p, 720p, 480p, 360p)](https://hentai.tv/)                |         ?          |:heavy_check_mark:|
+| [miohentai.com (1080p, 720p, 480p)](https://miohentai.com/)              | :heavy_check_mark: |:heavy_check_mark:|
 | [konachan.com](https://konachan.com/post?tags=)                          | :heavy_check_mark: |        ?         |
 | [nhentai.net](https://nhentai.net)                                       | :heavy_check_mark: |        ?         |
 | [rule34.paheal.net](https://rule34.paheal.net)                           | :heavy_check_mark: |:heavy_check_mark:|

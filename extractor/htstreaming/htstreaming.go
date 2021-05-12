@@ -37,7 +37,7 @@ type pageData struct {
 var site string
 
 func ParseURL(URL string) []string {
-	if ok, _ := regexp.MatchString(`episode-\d+[/_]`, URL); ok {
+	if ok, _ := regexp.MatchString(`episode-\d+[/_-]`, URL); ok {
 		return []string{URL}
 	}
 

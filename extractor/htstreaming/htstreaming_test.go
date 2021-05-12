@@ -63,7 +63,7 @@ func TestExtract(t *testing.T) {
 	}{
 		{
 			name: "Single Episode hentaistream.xxx",
-			url:  "https://hentaistream.xxx/watch/tonari-no-ie-no-anette-san-the-animation-episode-1_waYqxLSASjFPICZ.html",
+			url:  "https://hentaistream.xxx/watch/ecchi-na-onee-chan-ni-shiboraretai-episode-1-subbed_2v5zblbKJSynGJ6.html",
 			want: 1,
 		}, {
 			name: "Overview hentaistream.xxx",
@@ -101,7 +101,7 @@ func TestExtract(t *testing.T) {
 			if err != nil && !strings.Contains(err.Error(), "Video not found") {
 				t.Error(err)
 			}
-			if len(data) > tt.want {
+			if len(data) > tt.want || len(data) == 0 {
 				t.Errorf("Got: %v - want: %v", len(data), tt.want)
 			}
 		})

@@ -100,7 +100,7 @@ func Get(url string) (string, error) {
 func Headers(url, refer string) (http.Header, error) {
 	headers := map[string]string{
 		"Referer": refer,
-		"Range":   "bytes=0-0",
+		"Range":   "bytes=0-1",
 	}
 	res, err := Request(http.MethodGet, url, headers)
 	if err != nil {
