@@ -213,18 +213,32 @@ func (downloader *Downloader) parseSegments(URL string) ([]*m3u8.MediaSegment, e
 		return nil, fmt.Errorf("Invalid m3u8 url %s", URL)
 	}
 
-	masterFileResp, err := downloader.client.Get(URL)
+	req, err := http.NewRequest(http.MethodGet, URL, nil)
+	if err != nil {
+		return nil, errors.New("Request can't be created")
+	}
+
+	for k, v := range config.FakeHeaders {
+		req.Header.Set(k, v)
+	}
+
+	//this is important other wise you might get something weird as response
+	if _, ok := req.Header["Referer"]; !ok {
+		req.Header.Set("Referer", URL)
+	}
+
+	mediaFileResp, err := downloader.client.Do(req)
 	if err != nil {
 		return nil, err
 	}
-	defer masterFileResp.Body.Close()
+	defer mediaFileResp.Body.Close()
 
-	p, listType, err := m3u8.DecodeFrom(masterFileResp.Body, true)
+	p, listType, err := m3u8.DecodeFrom(mediaFileResp.Body, true)
 	if err != nil {
 		return nil, err
 	}
 
-	var savedSegments []*m3u8.MediaSegment
+	savedSegments := []*m3u8.MediaSegment{}
 	switch listType {
 	case m3u8.MEDIA:
 		mediapl := p.(*m3u8.MediaPlaylist)
@@ -245,6 +259,14 @@ func (downloader *Downloader) parseSegments(URL string) ([]*m3u8.MediaSegment, e
 
 			if seg.Key == nil && mediapl.Key != nil {
 				seg.Key = mediapl.Key
+			}
+			if seg.Key != nil && !strings.Contains(seg.Key.URI, "http") {
+				keyURL, err := baseURL.Parse(seg.Key.URI)
+				if err != nil {
+					return nil, err
+				}
+
+				seg.Key.URI = keyURL.String()
 			}
 
 			seg.Title = fmt.Sprintf("%d", i)
@@ -283,7 +305,6 @@ func (downloader *Downloader) writeM3U(url string, file *os.File) (int64, error)
 
 	var written int64
 	for _, seg := range segments {
-
 		w, err := downloader.writeSeg(seg)
 		if err != nil {
 			return 0, err
@@ -377,7 +398,6 @@ func (downloader *Downloader) mergeSegments(file *os.File, segments []*m3u8.Medi
 	}
 
 	for _, seg := range segments {
-
 		d, err := decrypt(seg, filepath.Join(downloader.tmpFilePath, seg.Title+".ts"))
 		if err != nil {
 			return err

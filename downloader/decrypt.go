@@ -4,13 +4,15 @@ import (
 	"bytes"
 	"crypto/aes"
 	"crypto/cipher"
+	"crypto/tls"
 	"encoding/binary"
 	"errors"
 	"io/ioutil"
 	"net/http"
 	"os"
+	"time"
 
-	"github.com/gan-of-culture/go-hentai-scraper/request"
+	"github.com/gan-of-culture/go-hentai-scraper/config"
 	"github.com/grafov/m3u8"
 )
 
@@ -81,7 +83,27 @@ func decrypt(segment *m3u8.MediaSegment, fileName string) ([]byte, error) {
 }
 
 func getKey(segment *m3u8.MediaSegment) (key []byte, iv []byte, err error) {
-	res, err := request.Request(http.MethodGet, segment.Key.URI, nil)
+	req, err := http.NewRequest(http.MethodGet, segment.Key.URI, nil)
+	if err != nil {
+		return nil, nil, errors.New("Request can't be created")
+	}
+
+	for k, v := range config.FakeHeaders {
+		req.Header.Set(k, v)
+	}
+	req.Header.Set("Accept", "*/*")
+	req.Header.Set("Referer", segment.Key.URI)
+
+	client := &http.Client{
+		Transport: &http.Transport{
+			DisableCompression:  true,
+			TLSHandshakeTimeout: 10 * time.Second,
+			TLSClientConfig:     &tls.Config{InsecureSkipVerify: true},
+			DisableKeepAlives:   true,
+		},
+		Timeout: 15 * time.Minute,
+	}
+	res, err := client.Do(req)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -89,6 +111,10 @@ func getKey(segment *m3u8.MediaSegment) (key []byte, iv []byte, err error) {
 
 	if res.StatusCode != 200 {
 		return nil, nil, errors.New("Failed to get descryption key")
+	}
+
+	if res.ContentLength > 64 {
+		return nil, nil, errors.New("Invalid key content length for segment")
 	}
 
 	key, err = ioutil.ReadAll(res.Body)

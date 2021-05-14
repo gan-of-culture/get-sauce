@@ -37,7 +37,7 @@ type pageData struct {
 var site string
 
 func ParseURL(URL string) []string {
-	if ok, _ := regexp.MatchString(`episode-\d+[/_-]`, URL); ok {
+	if ok, _ := regexp.MatchString(`episode-\d+[/_\-\&]`, URL); ok {
 		return []string{URL}
 	}
 
@@ -71,7 +71,7 @@ func Extract(URL string) ([]static.Data, error) {
 
 	data := []static.Data{}
 	for _, u := range URLs {
-		d, err := extractData(u)
+		d, err := ExtractData(u)
 		if err != nil {
 			if strings.Contains(err.Error(), "Video not found") || strings.Contains(err.Error(), "PlayerURL not found") {
 				log.Println(err.Error())
@@ -86,7 +86,8 @@ func Extract(URL string) ([]static.Data, error) {
 	return data, nil
 }
 
-func extractData(URL string) (static.Data, error) {
+// ExtractData for a single episode that is hosted by the htstreaming network
+func ExtractData(URL string) (static.Data, error) {
 	htmlString, err := request.Get(URL)
 	if err != nil {
 		log.Println(htmlString)

@@ -2,7 +2,6 @@ package utils
 
 import (
 	"fmt"
-	"log"
 	"os"
 	"regexp"
 	"strconv"
@@ -99,7 +98,6 @@ func GetMeta(htmlString, property string) string {
 	re := regexp.MustCompile(fmt.Sprintf("<meta property=[\"']%s[\"'] content=[\"']([^\"']*)", property))
 	metaTags := re.FindAllStringSubmatch(htmlString, -1)
 	if len(metaTags) < 1 {
-		log.Println(htmlString)
 		return fmt.Sprintf("No matches found for %s", property)
 	}
 	return metaTags[0][1]
