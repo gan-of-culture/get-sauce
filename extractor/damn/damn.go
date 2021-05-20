@@ -56,7 +56,7 @@ func extractData(URL string) (static.Data, error) {
 		return static.Data{}, err
 	}
 
-	title := strings.TrimSuffix(utils.GetMeta(htmlString, "og:title"), " - Damnstream")
+	title := strings.TrimSuffix(utils.GetMeta(&htmlString, "og:title"), " - Damnstream")
 	re := regexp.MustCompile(`"/video/([^"]*)`)
 	videoID := re.FindStringSubmatch(htmlString)[1]
 

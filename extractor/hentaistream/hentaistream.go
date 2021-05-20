@@ -141,7 +141,7 @@ func extractData(URL string) (static.Data, error) {
 
 	return static.Data{
 		Site:    site,
-		Title:   utils.GetH1(htmlString),
+		Title:   utils.GetH1(&htmlString),
 		Type:    "video",
 		Streams: streams,
 		Url:     URL,

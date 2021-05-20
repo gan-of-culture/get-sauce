@@ -59,7 +59,7 @@ func extractData(URL string) (static.Data, error) {
 		return static.Data{}, err
 	}
 
-	title := utils.GetH1(htmlString)
+	title := utils.GetH1(&htmlString)
 
 	re := regexp.MustCompile(`player.php[^']*`)
 	playerURL := site + re.FindString(htmlString)

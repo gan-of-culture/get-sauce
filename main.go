@@ -30,6 +30,7 @@ import (
 	"github.com/gan-of-culture/go-hentai-scraper/extractor/miohentai"
 	"github.com/gan-of-culture/go-hentai-scraper/extractor/muchohentai"
 	"github.com/gan-of-culture/go-hentai-scraper/extractor/nhentai"
+	"github.com/gan-of-culture/go-hentai-scraper/extractor/pururin"
 	"github.com/gan-of-culture/go-hentai-scraper/extractor/rule34"
 	"github.com/gan-of-culture/go-hentai-scraper/extractor/tsumino"
 	"github.com/gan-of-culture/go-hentai-scraper/extractor/universal"
@@ -98,6 +99,8 @@ func download(URL string) {
 		data, err = muchohentai.Extract(URL)
 	case "nhentai.net":
 		data, err = nhentai.Extract(URL)
+	case "pururin.io":
+		data, err = pururin.Extract(URL)
 	case "rule34.paheal.net":
 		data, err = rule34.Extract(URL)
 	case "rule34.xxx":

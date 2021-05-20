@@ -1,4 +1,4 @@
-package tsumino
+package pururin
 
 import "testing"
 
@@ -10,16 +10,12 @@ func TestParseURL(t *testing.T) {
 	}{
 		{
 			name: "Single Gallery",
-			url:  "https://www.tsumino.com/entry/55285",
+			url:  "https://pururin.io/gallery/53855/melty-yuel",
 			want: 1,
 		}, {
-			name: "Tag",
-			url:  "https://www.tsumino.com/books#~(Sort~'Rating~Include~(~)~Tags~(~(Type~1~Text~'Angel~Exclude~false)))#",
-			want: 36,
-		}, {
-			name: "Tag different page",
-			url:  "https://www.tsumino.com/books#~(PageNumber~3~Sort~'Rating~Include~(~)~Tags~(~(Type~1~Text~'Angel~Exclude~false)))#",
-			want: 36,
+			name: "Stockings",
+			url:  "https://pururin.io/browse/tags/contents/1563/stockings.html",
+			want: 20,
 		},
 	}
 	for _, tt := range tests {
@@ -40,13 +36,13 @@ func TestExtract(t *testing.T) {
 	}{
 		{
 			name: "Single Gallery",
-			url:  "https://www.tsumino.com/entry/55285",
+			url:  "https://pururin.io/gallery/53855/melty-yuel",
 			want: 1,
-		}, /*{
-			name: "Tag different page",
-			url:  "https://www.tsumino.com/books#~(PageNumber~3~Sort~'Rating~Include~(~)~Tags~(~(Type~1~Text~'Angel~Exclude~false)))#",
-			want: 25,
-		},*/ //somtimes you run into a captcha
+		}, {
+			name: "Stockings",
+			url:  "https://pururin.io/browse/tags/contents/1563/stockings.html",
+			want: 20,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

@@ -196,7 +196,7 @@ func TestGetH1(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.htmlString, func(t *testing.T) {
-			h1 := GetH1(tt.htmlString)
+			h1 := GetH1(&tt.htmlString)
 
 			if h1 != tt.want {
 				t.Errorf("Got: %v - want: %v", h1, tt.want)
@@ -219,7 +219,7 @@ func TestMeta(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.htmlString, func(t *testing.T) {
-			h1 := GetMeta(tt.htmlString, tt.property)
+			h1 := GetMeta(&tt.htmlString, tt.property)
 
 			if h1 != tt.want {
 				t.Errorf("Got: %v - want: %v", h1, tt.want)

@@ -133,6 +133,16 @@ func Size(url, refer string) (int64, error) {
 		return 0, err
 	}
 
+	size, err := GetSizeFromHeaders(&headers)
+	if err != nil {
+		return 0, err
+	}
+
+	return size, nil
+}
+
+// GetSizeFromHeaders of http.Response
+func GetSizeFromHeaders(headers *http.Header) (int64, error) {
 	s := utils.GetLastItemString(strings.Split(headers.Get("Content-Range"), "/"))
 	if s == "" {
 		s = headers.Get("Content-Length")
@@ -145,7 +155,6 @@ func Size(url, refer string) (int64, error) {
 	if size == 0 {
 		return 0, errors.New("Size not found")
 	}
-
 	return size, nil
 }
 

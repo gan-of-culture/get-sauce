@@ -54,7 +54,7 @@ func extractData(URL string) (static.Data, error) {
 	if err != nil {
 		return static.Data{}, err
 	}
-	title := utils.GetMeta(htmlString, "og:title")
+	title := utils.GetMeta(&htmlString, "og:title")
 
 	re := regexp.MustCompile(`(https://www.hentaicloud.com/media/videos/hd/\d*\.([^"]*)).+res="([^"]*)`)
 	srcTag := re.FindStringSubmatch(htmlString) //1=URL 2=ext 3=resolution
