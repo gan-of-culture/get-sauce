@@ -12,7 +12,7 @@ import (
 )
 
 type stream struct {
-	ID                 float64 `json:"id,omitempty"`
+	ID                 int     `json:"id,omitempty"`
 	ServerID           float64 `json:"server_id,omitempty"`
 	Slug               string  `json:"slug,omitempty"`
 	Kind               string  `json:"kind,omitempty"`
@@ -54,6 +54,7 @@ type videosManifest struct {
 
 type hentaiVideo struct {
 	Name string `json:"name"`
+	Slug string `json:"slug"`
 }
 
 type video struct {
@@ -74,6 +75,10 @@ type pageData struct {
 }
 
 const site = "https://hanime.tv/"
+
+// thanks to https://github.com/rxqv/htv for providing the premium api link
+const apiWithSlug = "https://hw.hanime.tv/api/v8/video?id="
+const apiM3U8 = "https://weeb.hanime.tv/weeb-api-cache/api/v8/m3u8s/%d.m3u8"
 
 func ParseURL(URL string) []string {
 	if strings.HasPrefix(URL, "https://hanime.tv/videos/hentai/") {
@@ -119,20 +124,17 @@ func Extract(URL string) ([]static.Data, error) {
 }
 
 func extractData(URL string) (static.Data, error) {
-	htmlString, err := request.Get(URL)
+	slug := utils.GetLastItemString(strings.Split(URL, "/"))
+	if slug == "" {
+		return static.Data{}, fmt.Errorf("[Hanime] Slug for %s not parseable", URL)
+	}
+
+	jsonString, err := request.Get(apiWithSlug + slug)
 	if err != nil {
 		return static.Data{}, err
 	}
 
-	re := regexp.MustCompile(`NUXT__=([\s\S]*?);<`)
-	matchedJSONString := re.FindStringSubmatch(htmlString)
-	if len(matchedJSONString) < 2 {
-		return static.Data{}, fmt.Errorf("[Hanime] JSON string no found")
-	}
-
-	jsonString := strings.Trim(matchedJSONString[1], ",")
-
-	pData := pageData{}
+	pData := video{}
 	err = json.Unmarshal([]byte(jsonString), &pData)
 	if err != nil {
 		fmt.Println(URL)
@@ -141,15 +143,12 @@ func extractData(URL string) (static.Data, error) {
 	}
 
 	streams := map[string]static.Stream{}
-	for _, stream := range pData.State.Data.Video.VideosManifest.Servers[0].Streams {
-		if stream.URL == "" {
-			continue
-		}
+	for _, stream := range pData.VideosManifest.Servers[0].Streams {
 
 		streams[fmt.Sprintf("%d", len(streams))] = static.Stream{
 			URLs: []static.URL{
 				{
-					URL: stream.URL,
+					URL: fmt.Sprintf(apiM3U8, stream.ID),
 					Ext: "ts",
 				},
 			},
@@ -161,7 +160,7 @@ func extractData(URL string) (static.Data, error) {
 
 	return static.Data{
 		Site:    site,
-		Title:   pData.State.Data.Video.HentaiVideo.Name,
+		Title:   pData.HentaiVideo.Name,
 		Type:    "application/x-mpegurl",
 		Streams: streams,
 		Err:     nil,
