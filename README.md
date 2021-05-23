@@ -86,6 +86,7 @@ go run main.go ...
 | [e-hentai.org](http://e-hentai.org/)                                     | :heavy_check_mark: |        ?         |
 | [exhentai.org*](http://exhentai.org/)                                    | :heavy_check_mark: |        ?         |
 | [hanime.tv(1080p, 720p, 480p, 360p)](https://hanime.tv)                  | :heavy_check_mark: |:heavy_check_mark:|
+| [hentai2w.com(720p, 480p, 360p)](https://hentai2w.com)                   |         ?          |:heavy_check_mark:|
 | [hentaicloud.com(720p)](https://www.hentaicloud.com)                     |        :x:         |:heavy_check_mark:|
 | [hentaidude.com(720p, 480, 360p)](https://hentaidude.com/)               |         ?          |:heavy_check_mark:|
 | [hentaihaven.red (1080p, 720p, 480p, 360p)](https://hentaihaven.red)     |         ?          |:heavy_check_mark:|
@@ -98,10 +99,11 @@ go run main.go ...
 | [hentai.tv (1080p, 720p, 480p, 360p)](https://hentai.tv/)                |         ?          |:heavy_check_mark:|
 | [hentaiyes.com (1080p, 720p, 480p, 360p)](https://hentaiyes.com/)        |         ?          |:heavy_check_mark:|
 | [hitomi.la](https://hitomi.la/)                                          | :heavy_check_mark: |        ?         |
+| [konachan.com](https://konachan.com/post?tags=)                          | :heavy_check_mark: |        ?         |
 | [miohentai.com (1080p, 720p, 480p)](https://miohentai.com/)              | :heavy_check_mark: |:heavy_check_mark:|
 | [muchohentai.com (1080p, 720p, 480p, 360p)](https://muchohentai.com/)    |         ?          |:heavy_check_mark:|
-| [konachan.com](https://konachan.com/post?tags=)                          | :heavy_check_mark: |        ?         |
 | [nhentai.net](https://nhentai.net)                                       | :heavy_check_mark: |        ?         |
+| [pururin.io](https://pururin.io)                                         | :heavy_check_mark: |        ?         |
 | [rule34.paheal.net](https://rule34.paheal.net)                           | :heavy_check_mark: |:heavy_check_mark:|
 | [yandere.re](https://yande.re/post)                                      | :heavy_check_mark: |        ?         |
 

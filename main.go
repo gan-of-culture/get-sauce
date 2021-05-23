@@ -16,6 +16,7 @@ import (
 	"github.com/gan-of-culture/go-hentai-scraper/extractor/ehentai"
 	"github.com/gan-of-culture/go-hentai-scraper/extractor/exhentai"
 	"github.com/gan-of-culture/go-hentai-scraper/extractor/hanime"
+	"github.com/gan-of-culture/go-hentai-scraper/extractor/hentai2w"
 	"github.com/gan-of-culture/go-hentai-scraper/extractor/hentaicloud"
 	"github.com/gan-of-culture/go-hentai-scraper/extractor/hentaidude"
 	"github.com/gan-of-culture/go-hentai-scraper/extractor/hentaihaven"
@@ -32,7 +33,6 @@ import (
 	"github.com/gan-of-culture/go-hentai-scraper/extractor/nhentai"
 	"github.com/gan-of-culture/go-hentai-scraper/extractor/pururin"
 	"github.com/gan-of-culture/go-hentai-scraper/extractor/rule34"
-	"github.com/gan-of-culture/go-hentai-scraper/extractor/tsumino"
 	"github.com/gan-of-culture/go-hentai-scraper/extractor/universal"
 	"github.com/gan-of-culture/go-hentai-scraper/static"
 )
@@ -72,6 +72,8 @@ func download(URL string) {
 		data, err = exhentai.Extract(URL)
 	case "hanime.tv":
 		data, err = hanime.Extract(URL)
+	case "hentai2w.com":
+		data, err = hentai2w.Extract(URL)
 	case "www.hentaicloud.com":
 		data, err = hentaicloud.Extract(URL)
 	case "hentaidude.com":
@@ -105,8 +107,6 @@ func download(URL string) {
 		data, err = rule34.Extract(URL)
 	case "rule34.xxx":
 		data, err = imgboard.Extract(URL)
-	case "www.tsumino.com":
-		data, err = tsumino.Extract(URL)
 	default:
 		data, err = imgboard.Extract(URL)
 		if err != nil {

@@ -24,42 +24,42 @@ const CDN = "https://01cdn.hentaistream.moe/"
 var players = map[string][]quality{
 	"player.html": {
 		{
-			codec: "x264.720p.mp4",
-			vType: "video/mp4",
-		},
-		{
-			codec: "av1.720p.webm",
+			codec: "av1.1080p.webm",
 			vType: "video/webm",
 		},
 		{
-			codec: "av1.1080p.webm",
+			codec: "av1.720p.webm",
 			vType: "video/webm",
 		},
 		{
 			codec: "vp9.720p.webm",
 			vType: "video/webm",
 		},
-	},
-	"player4k.html": {
 		{
 			codec: "x264.720p.mp4",
 			vType: "video/mp4",
 		},
-		{
-			codec: "av1.720p.webm",
-			vType: "video/webm",
-		},
-		{
-			codec: "av1.1080p.webm",
-			vType: "video/webm",
-		},
+	},
+	"player4k.html": {
 		{
 			codec: "av1.2160p.webm",
 			vType: "video/webm",
 		},
 		{
+			codec: "av1.1080p.webm",
+			vType: "video/webm",
+		},
+		{
+			codec: "av1.720p.webm",
+			vType: "video/webm",
+		},
+		{
 			codec: "vp9.720p.webm",
 			vType: "video/webm",
+		},
+		{
+			codec: "x264.720p.mp4",
+			vType: "video/mp4",
 		},
 	},
 }

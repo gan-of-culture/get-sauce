@@ -1,4 +1,4 @@
-package pururin
+package hentai2w
 
 import "testing"
 
@@ -9,13 +9,13 @@ func TestParseURL(t *testing.T) {
 		want int
 	}{
 		{
-			name: "Single Gallery",
-			url:  "https://pururin.io/gallery/53855/melty-yuel",
+			name: "Single Video",
+			url:  "https://hentai2w.com/video/youkoso-sukebe-elf-no-mori-e-episode-2-3693.html",
 			want: 1,
 		}, {
-			name: "Tag",
-			url:  "https://pururin.io/browse/tags/contents/1563/stockings.html",
-			want: 20,
+			name: "Category",
+			url:  "https://hentai2w.com/channels/125/magic/",
+			want: 40,
 		},
 	}
 	for _, tt := range tests {
@@ -35,13 +35,13 @@ func TestExtract(t *testing.T) {
 		want int
 	}{
 		{
-			name: "Single Gallery",
-			url:  "https://pururin.io/gallery/53855/melty-yuel",
+			name: "Single Video",
+			url:  "https://hentai2w.com/video/youkoso-sukebe-elf-no-mori-e-episode-2-3693.html",
 			want: 1,
 		}, {
-			name: "Tag",
-			url:  "https://pururin.io/browse/tags/contents/1563/stockings.html",
-			want: 20,
+			name: "Category",
+			url:  "https://hentai2w.com/channels/125/magic/",
+			want: 40,
 		},
 	}
 	for _, tt := range tests {
