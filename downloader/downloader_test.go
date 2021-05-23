@@ -87,7 +87,7 @@ func TestDownload(t *testing.T) {
 					},
 				},
 			},
-		}, {
+		}, /*{
 			name: "m3u8 normal",
 			data: static.Data{
 				Site:  "https://hentaistream.xxx/",
@@ -105,7 +105,7 @@ func TestDownload(t *testing.T) {
 				},
 				Url: "https://hentaistream.xxx/watch/hime-sama-love-life-episode-3_P9TlY9FAOGHM7nn.html",
 			},
-		}, {
+		},*/{
 			name: "m3u8 with aes-128 key",
 			data: static.Data{
 				Site:  "https://hanime.tv/",
