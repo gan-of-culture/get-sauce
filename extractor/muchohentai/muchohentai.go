@@ -67,7 +67,7 @@ func extractData(URL string) (static.Data, error) {
 	if err != nil {
 		return static.Data{}, err
 	}
-	title := utils.GetMeta(htmlString, "og:title")
+	title := utils.GetMeta(&htmlString, "og:title")
 
 	re := regexp.MustCompile(`var servers=\[([^\]]*).*?var server="([^;]*)";var files=\[([^\]]*)`)
 	serverInfo := re.FindStringSubmatch(htmlString) //1=servers ('va01','va02','va03','va04') 2=server URL template https://"+servers[choice-1]+"-edge.tmncdn.io" 3=master file URL {"file":"\/wp-content\/uploads\/Soshite_Watashi\/episode_3\/ja.m3u8"}

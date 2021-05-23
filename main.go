@@ -16,6 +16,7 @@ import (
 	"github.com/gan-of-culture/go-hentai-scraper/extractor/ehentai"
 	"github.com/gan-of-culture/go-hentai-scraper/extractor/exhentai"
 	"github.com/gan-of-culture/go-hentai-scraper/extractor/hanime"
+	"github.com/gan-of-culture/go-hentai-scraper/extractor/hentai2w"
 	"github.com/gan-of-culture/go-hentai-scraper/extractor/hentaicloud"
 	"github.com/gan-of-culture/go-hentai-scraper/extractor/hentaidude"
 	"github.com/gan-of-culture/go-hentai-scraper/extractor/hentaihaven"
@@ -24,11 +25,13 @@ import (
 	"github.com/gan-of-culture/go-hentai-scraper/extractor/hentaistream"
 	"github.com/gan-of-culture/go-hentai-scraper/extractor/hentaiworld"
 	"github.com/gan-of-culture/go-hentai-scraper/extractor/hentaiyes"
+	"github.com/gan-of-culture/go-hentai-scraper/extractor/hitomi"
 	"github.com/gan-of-culture/go-hentai-scraper/extractor/htstreaming"
 	"github.com/gan-of-culture/go-hentai-scraper/extractor/imgboard"
 	"github.com/gan-of-culture/go-hentai-scraper/extractor/miohentai"
 	"github.com/gan-of-culture/go-hentai-scraper/extractor/muchohentai"
 	"github.com/gan-of-culture/go-hentai-scraper/extractor/nhentai"
+	"github.com/gan-of-culture/go-hentai-scraper/extractor/pururin"
 	"github.com/gan-of-culture/go-hentai-scraper/extractor/rule34"
 	"github.com/gan-of-culture/go-hentai-scraper/extractor/universal"
 	"github.com/gan-of-culture/go-hentai-scraper/static"
@@ -69,6 +72,8 @@ func download(URL string) {
 		data, err = exhentai.Extract(URL)
 	case "hanime.tv":
 		data, err = hanime.Extract(URL)
+	case "hentai2w.com":
+		data, err = hentai2w.Extract(URL)
 	case "www.hentaicloud.com":
 		data, err = hentaicloud.Extract(URL)
 	case "hentaidude.com":
@@ -88,12 +93,16 @@ func download(URL string) {
 		data, err = hentaiworld.Extract(URL)
 	case "hentaiyes.com":
 		data, err = hentaiyes.Extract(URL)
+	case "hitomi.la":
+		data, err = hitomi.Extract(URL)
 	case "miohentai.com":
 		data, err = miohentai.Extract(URL)
 	case "muchohentai.com":
 		data, err = muchohentai.Extract(URL)
 	case "nhentai.net":
 		data, err = nhentai.Extract(URL)
+	case "pururin.io":
+		data, err = pururin.Extract(URL)
 	case "rule34.paheal.net":
 		data, err = rule34.Extract(URL)
 	case "rule34.xxx":

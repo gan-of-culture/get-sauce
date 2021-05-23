@@ -87,16 +87,16 @@ func GetMediaType(t string) string {
 }
 
 // GetH1 of html file
-func GetH1(htmlString string) string {
+func GetH1(htmlString *string) string {
 	re := regexp.MustCompile(`[^>]*</h1>`)
-	h1s := re.FindAllString(htmlString, -1)
+	h1s := re.FindAllString(*htmlString, -1)
 	return strings.TrimSuffix(GetLastItemString(h1s), "</h1>")
 }
 
 // GetMeta of html file
-func GetMeta(htmlString, property string) string {
+func GetMeta(htmlString *string, property string) string {
 	re := regexp.MustCompile(fmt.Sprintf("<meta property=[\"']%s[\"'] content=[\"']([^\"']*)", property))
-	metaTags := re.FindAllStringSubmatch(htmlString, -1)
+	metaTags := re.FindAllStringSubmatch(*htmlString, -1)
 	if len(metaTags) < 1 {
 		return fmt.Sprintf("No matches found for %s", property)
 	}

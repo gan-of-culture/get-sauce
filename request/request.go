@@ -13,6 +13,7 @@ import (
 	"time"
 
 	"github.com/gan-of-culture/go-hentai-scraper/config"
+	"github.com/gan-of-culture/go-hentai-scraper/utils"
 )
 
 // LogRedirects to sanitize "Location" URLs
@@ -50,7 +51,7 @@ func Request(method string, url string, headers map[string]string) (*http.Respon
 			TLSHandshakeTimeout: 10 * time.Second,
 			TLSClientConfig:     &tls.Config{InsecureSkipVerify: true},
 			IdleConnTimeout:     5 * time.Second,
-			DisableKeepAlives:   true,
+			//DisableKeepAlives:   true,
 		}},
 		Timeout: 15 * time.Minute,
 	}
@@ -100,9 +101,21 @@ func Get(url string) (string, error) {
 func Headers(url, refer string) (http.Header, error) {
 	headers := map[string]string{
 		"Referer": refer,
-		"Range":   "bytes=0-1",
 	}
-	res, err := Request(http.MethodGet, url, headers)
+	res, err := Request(http.MethodHead, url, headers)
+	if err == nil {
+		return res.Header, nil
+	}
+	if res.StatusCode == 503 {
+		time.Sleep(200 * time.Millisecond)
+		res, err := Request(http.MethodHead, url, headers)
+		if err == nil {
+			return res.Header, nil
+		}
+	}
+
+	headers["Range"] = "bytes=0-1"
+	res, err = Request(http.MethodGet, url, headers)
 	if err != nil {
 		return nil, err
 	}
@@ -115,29 +128,32 @@ func Size(url, refer string) (int64, error) {
 		return 0, nil
 	}
 
-	resp, err := Request(http.MethodGet, url, map[string]string{
-		"Range":   "bytes=0-0",
-		"Referer": refer,
-	})
+	headers, err := Headers(url, refer)
 	if err != nil {
 		return 0, err
-	}
-	if resp.StatusCode == 503 {
-		time.Sleep(200 * time.Millisecond)
-		resp, err = Request(http.MethodGet, url, map[string]string{
-			"Range":   "bytes=0-0",
-			"Referer": refer,
-		})
 	}
 
-	s := resp.Header.Get("Content-Range")
-	if s == "" {
-		fmt.Println(url)
-		return 0, errors.New("content-range is not present")
-	}
-	size, err := strconv.ParseInt(strings.Split(s, "/")[1], 10, 64)
+	size, err := GetSizeFromHeaders(&headers)
 	if err != nil {
 		return 0, err
+	}
+
+	return size, nil
+}
+
+// GetSizeFromHeaders of http.Response
+func GetSizeFromHeaders(headers *http.Header) (int64, error) {
+	s := utils.GetLastItemString(strings.Split(headers.Get("Content-Range"), "/"))
+	if s == "" {
+		s = headers.Get("Content-Length")
+	}
+	size, err := strconv.ParseInt(s, 10, 64)
+	if err != nil {
+		return 0, err
+	}
+
+	if size == 0 {
+		return 0, errors.New("Size not found")
 	}
 	return size, nil
 }

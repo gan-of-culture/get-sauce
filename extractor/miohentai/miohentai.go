@@ -3,7 +3,6 @@ package miohentai
 import (
 	"fmt"
 	"regexp"
-	"strconv"
 	"strings"
 
 	"github.com/gan-of-culture/go-hentai-scraper/request"
@@ -71,7 +70,7 @@ func extractData(URL string) (static.Data, error) {
 	if err != nil {
 		return static.Data{}, err
 	}
-	size, err := strconv.ParseInt(strings.Split(headers.Get("content-range"), "/")[1], 10, 64)
+	size, err := request.GetSizeFromHeaders(&headers)
 	if err != nil {
 		return static.Data{}, err
 	}
@@ -83,7 +82,7 @@ func extractData(URL string) (static.Data, error) {
 
 	return static.Data{
 		Site:  site,
-		Title: strings.Split(utils.GetMeta(htmlString, "og:title"), " | ")[0],
+		Title: strings.Split(utils.GetMeta(&htmlString, "og:title"), " | ")[0],
 		Type:  headers.Get("content-type"),
 		Streams: map[string]static.Stream{
 			"0": {

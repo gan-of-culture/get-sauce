@@ -9,7 +9,7 @@ You can see what site is supported to what extent [here](#supported-sites).
 
 If you don't want to build the app yourself checkout the [releases page](https://github.com/gan-of-culture/go-hentai-scraper/releases).
 
-Otherwise you can clone this Repository yourself and download it. Then just do:
+Otherwise you can clone this Repository yourself and download it. Then use [GO](https://golang.org/dl/) to build it yourself:
 
 ```bash
 go build
@@ -85,7 +85,8 @@ go run main.go ...
 | [danbooru.donmai.us](https://danbooru.donmai.us)                         | :heavy_check_mark: |        ?         |
 | [e-hentai.org](http://e-hentai.org/)                                     | :heavy_check_mark: |        ?         |
 | [exhentai.org*](http://exhentai.org/)                                    | :heavy_check_mark: |        ?         |
-| [hanime.tv(720p, 480p, 360p)](https://hanime.tv)                         | :heavy_check_mark: |:heavy_check_mark:|
+| [hanime.tv(1080p, 720p, 480p, 360p)](https://hanime.tv)                  | :heavy_check_mark: |:heavy_check_mark:|
+| [hentai2w.com(720p, 480p, 360p)](https://hentai2w.com)                   |         ?          |:heavy_check_mark:|
 | [hentaicloud.com(720p)](https://www.hentaicloud.com)                     |        :x:         |:heavy_check_mark:|
 | [hentaidude.com(720p, 480, 360p)](https://hentaidude.com/)               |         ?          |:heavy_check_mark:|
 | [hentaihaven.red (1080p, 720p, 480p, 360p)](https://hentaihaven.red)     |         ?          |:heavy_check_mark:|
@@ -97,10 +98,12 @@ go run main.go ...
 | [hentaiworld.tv (1080p, 720p, 480p)](https://hentaiworld.tv/)            |         ?          |:heavy_check_mark:|
 | [hentai.tv (1080p, 720p, 480p, 360p)](https://hentai.tv/)                |         ?          |:heavy_check_mark:|
 | [hentaiyes.com (1080p, 720p, 480p, 360p)](https://hentaiyes.com/)        |         ?          |:heavy_check_mark:|
+| [hitomi.la](https://hitomi.la/)                                          | :heavy_check_mark: |        ?         |
+| [konachan.com](https://konachan.com/post?tags=)                          | :heavy_check_mark: |        ?         |
 | [miohentai.com (1080p, 720p, 480p)](https://miohentai.com/)              | :heavy_check_mark: |:heavy_check_mark:|
 | [muchohentai.com (1080p, 720p, 480p, 360p)](https://muchohentai.com/)    |         ?          |:heavy_check_mark:|
-| [konachan.com](https://konachan.com/post?tags=)                          | :heavy_check_mark: |        ?         |
 | [nhentai.net](https://nhentai.net)                                       | :heavy_check_mark: |        ?         |
+| [pururin.io](https://pururin.io)                                         | :heavy_check_mark: |        ?         |
 | [rule34.paheal.net](https://rule34.paheal.net)                           | :heavy_check_mark: |:heavy_check_mark:|
 | [yandere.re](https://yande.re/post)                                      | :heavy_check_mark: |        ?         |
 
@@ -113,6 +116,14 @@ If your site is not listed - you can still try to use the universal downloader.
 - Implement concurrency for big single file downloads
 - Clean up coding and add more sites
 - Speed improvements
+
+## Donate
+
+You won't gain extra benefits from it. Although it's very much appriciated.
+
+```bash
+XMR 4AFThbPDiig6tEZdRL4NnvDfqPETiuewDgpCJKkSs11BGCVqoydRUHkZr5cotGMx395V7c2swDxi5Xjhbztiqyod7P31szF
+```
 
 ## Licencse
 

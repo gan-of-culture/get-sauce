@@ -88,7 +88,7 @@ func extractData(URL string) (static.Data, error) {
 	if err != nil {
 		return static.Data{}, err
 	}
-	title := strings.Trim(utils.GetH1(htmlString), " \n\t")
+	title := strings.Trim(utils.GetH1(&htmlString), " \n\t")
 
 	re := regexp.MustCompile(`[^"]*/player/[^"]*`)
 	playerURL := re.FindString(htmlString) // 1=id  2=nonce

@@ -63,7 +63,7 @@ func extractData(URL string) (static.Data, error) {
 	if err != nil {
 		return static.Data{}, err
 	}
-	title := utils.GetMeta(htmlString, "og:title")
+	title := utils.GetMeta(&htmlString, "og:title")
 	title = strings.TrimSuffix(title, " | Hentaidude.com")
 
 	re := regexp.MustCompile(`id: '(\d*)',\s*nonce: '([^']*)`)
@@ -123,7 +123,7 @@ func extractData(URL string) (static.Data, error) {
 			return static.Data{}, err
 		}
 
-		size, err := strconv.ParseInt(strings.Split(headers.Get("content-range"), "/")[1], 10, 64)
+		size, err := request.GetSizeFromHeaders(&headers)
 		if err != nil {
 			return static.Data{}, err
 		}
