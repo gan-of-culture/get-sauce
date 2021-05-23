@@ -9,7 +9,7 @@ You can see what site is supported to what extent [here](#supported-sites).
 
 If you don't want to build the app yourself checkout the [releases page](https://github.com/gan-of-culture/go-hentai-scraper/releases).
 
-Otherwise you can clone this Repository yourself and download it. Then just do:
+Otherwise you can clone this Repository yourself and download it. Then use [GO](https://golang.org/dl/) to build it yourself:
 
 ```bash
 go build
@@ -119,7 +119,7 @@ If your site is not listed - you can still try to use the universal downloader.
 
 ## Donate
 
-Donating is completly free and you gain no extra benefits from it. Although it's very much appriciated.
+You won't gain extra benefits from it. Although it's very much appriciated.
 
 ```bash
 XMR 4AFThbPDiig6tEZdRL4NnvDfqPETiuewDgpCJKkSs11BGCVqoydRUHkZr5cotGMx395V7c2swDxi5Xjhbztiqyod7P31szF
