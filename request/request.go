@@ -3,7 +3,6 @@ package request
 import (
 	"crypto/tls"
 	"errors"
-	"fmt"
 	"io"
 	"io/ioutil"
 	"net/http"
@@ -169,8 +168,8 @@ func (p *Myjar) SetCookies(u *url.URL, cookies []*http.Cookie) {
 	if u.Host == "forums.e-hentai.org" {
 		u.Host = "exhentai.org"
 	}
-	fmt.Printf("The URL is : %s\n", u.String())
-	fmt.Printf("The cookie being set is : %s\n", cookies)
+	//fmt.Printf("The URL is : %s\n", u.String())
+	//fmt.Printf("The cookie being set is : %s\n", cookies)
 
 	//preserve old cookies and overwrite old ones with new cookies
 	isInJar := false
@@ -191,7 +190,7 @@ func (p *Myjar) SetCookies(u *url.URL, cookies []*http.Cookie) {
 
 // Cookies of client
 func (p *Myjar) Cookies(u *url.URL) []*http.Cookie {
-	fmt.Printf("The URL is : %s\n", u.String())
-	fmt.Printf("Cookie being returned is : %s\n", p.Jar[u.Host])
+	//fmt.Printf("The URL is : %s\n", u.String())
+	//fmt.Printf("Cookie being returned is : %s\n", p.Jar[u.Host])
 	return p.Jar[u.Host]
 }
