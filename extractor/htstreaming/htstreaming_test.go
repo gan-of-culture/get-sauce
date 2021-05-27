@@ -75,8 +75,9 @@ func TestExtract(t *testing.T) {
 			want: 1,
 		}, {
 			name: "Overview hentaihaven.red/",
-			url:  "https://hentaihaven.red/ratings/",
-			want: 35,
+			url:  "https://hentaihaven.red/genre/2019-english/",
+			want: 9,
+			//can be more videos at the time when I am adding this it was only 9 -> normally it is 35 per site but that would be too much for testing
 		}, /*{
 			name: "Single Episode hentai.tv",
 			url:  "https://hentai.tv/hentai/chiisana-tsubomi-no-sono-oku-ni-episode-1/",

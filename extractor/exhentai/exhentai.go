@@ -159,25 +159,24 @@ func (ex *extractor) extractData(URLs []string) ([]static.Data, error) {
 			return nil, err
 		}
 
-		re := regexp.MustCompile("<h1>([^<]+)")
-		matchedTitle := re.FindAllStringSubmatch(htmlString, -1)
-		if len(matchedTitle) == 0 {
+		title := utils.GetH1(&htmlString, 0)
+		if len(title) == 0 {
 			return nil, errors.New("[ExHentai] invaild image title")
 		}
 
-		re = regexp.MustCompile(`<div>[^.]+\.([^::]+):: ([^::]+) :: ([^.]+.[0-9]+) ([A-Z]{2})`)
+		re := regexp.MustCompile(`<div>[^.]+\.([^::]+):: ([^::]+) :: ([^.]+.[0-9]+) ([A-Z]{2})`)
 		matchedFileInfo := re.FindAllStringSubmatch(htmlString, -1)
 		if len(matchedFileInfo) == 0 {
 			return nil, errors.New("[ExHentai] invaild image file info")
 		}
 		fileInfo := matchedFileInfo[0]
 
-		re = regexp.MustCompile("https://exhentai.org/fullimg[^\"]+")
+		re = regexp.MustCompile(`https://exhentai.org/fullimg[^"]+`)
 		srcURL := re.FindStringSubmatch(htmlString)
 		if len(srcURL) != 1 {
 
 			// sometimes the "full image url is not provided"
-			re = regexp.MustCompile("<img id=\"img\" src=\"([^\"]+)")
+			re = regexp.MustCompile(`<img id="img" src="([^"]+)`)
 			matchedSrcURL := re.FindAllStringSubmatch(htmlString, -1)
 			if len(matchedSrcURL) != 1 {
 				return nil, errors.New("[ExHentai] invaild image src")
@@ -208,7 +207,7 @@ func (ex *extractor) extractData(URLs []string) ([]static.Data, error) {
 
 		data = append(data, static.Data{
 			Site:  site,
-			Title: fmt.Sprintf("%s - %d", matchedTitle[0][1], idx+1),
+			Title: fmt.Sprintf("%s - %d", title, idx+1),
 			Type:  "image",
 			Streams: map[string]static.Stream{
 				"0": {
@@ -276,7 +275,7 @@ func Extract(URL string) ([]static.Data, error) {
 			return nil, errors.New("[ExHentai] invaild URL")
 		}
 
-		re := regexp.MustCompile("([0-9]+) pages")
+		re := regexp.MustCompile(`([0-9]+) pages`)
 		htmlNumberOfPages := re.FindStringSubmatch(htmlString)
 		if len(htmlNumberOfPages) != 2 {
 			return nil, errors.New("[ExHentai] error while trying to access the gallery images")

@@ -27,10 +27,10 @@ func Extract(url string) ([]static.Data, error) {
 
 // ParseURL for data extraction
 func ParseURL(url string) ([]string, error) {
-	re := regexp.MustCompile("(?:https://hentaiworld.tv/)(?:all-episodes|uncensored|3d|hentai-videos/category|hentai-videos/tag)/")
+	re := regexp.MustCompile(`(?:https://hentaiworld.tv/)(?:all-episodes|uncensored|3d|hentai-videos/category|hentai-videos/tag)/`)
 	validMassURL := re.FindString(url)
 	if validMassURL == "" {
-		re := regexp.MustCompile("hentai-videos/(?:3d/)?(?:.+episode-[0-9]*)?")
+		re := regexp.MustCompile(`hentai-videos/(?:3d/)?(?:.+episode-[0-9]*)?`)
 		validEpisodeURL := re.FindString(url)
 		if validEpisodeURL != "" {
 			return []string{url}, nil
@@ -43,7 +43,7 @@ func ParseURL(url string) ([]string, error) {
 		return []string{}, fmt.Errorf("[HentaiWorld]HTTP GET URL  error %v", err)
 	}
 
-	re = regexp.MustCompile("\"display-all-posts-background\"><a href=\"([^\"]*)")
+	re = regexp.MustCompile(`"display-all-posts-background"><a href="([^"]*)`)
 	matchedEpisodesURLs := re.FindAllStringSubmatch(massHTMLPage, -1)
 	urls := []string{}
 	for _, matchedURL := range matchedEpisodesURLs {
@@ -64,18 +64,17 @@ func ExtractData(url string) static.Data {
 		return static.Data{Err: err}
 	}
 
-	re := regexp.MustCompile("<h1[^>]*>([^<]*)")
-	title := strings.TrimSpace(utils.GetLastItemString(re.FindStringSubmatch(postHTMLpage)))
+	title := strings.TrimSpace(utils.GetH1(&postHTMLpage, -1))
 
 	if strings.Contains(title, "\u0026#8211;") {
 		title = strings.ReplaceAll(title, "\u0026#8211;", "-")
 	}
 
-	re = regexp.MustCompile("window.open\\(\\'([^']+\\.([0-9a-zA-z]*))")
+	re := regexp.MustCompile(`window.open\(\'([^']+\.([0-9a-zA-z]*))`)
 	infoAboutFile := re.FindStringSubmatch(postHTMLpage) // 1 = dlURL 2=ext
 
 	if len(infoAboutFile) != 3 {
-		re = regexp.MustCompile("src='(.*)\\.(mp4*).*")
+		re = regexp.MustCompile(`src='(.*)\.(mp4*).*`)
 		infoAboutFile = re.FindStringSubmatch(postHTMLpage) // 1 = dlURL 2=ext
 		if len(infoAboutFile) != 3 {
 			return static.Data{Err: fmt.Errorf("[HentaiWorld] Get scrape video info for URL %s", url)}

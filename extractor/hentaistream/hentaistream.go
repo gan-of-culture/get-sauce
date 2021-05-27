@@ -105,7 +105,7 @@ func extractData(URL string) (static.Data, error) {
 
 	if strings.Contains(htmlString, "<title>DDOS-GUARD</title>") {
 		time.Sleep(200 * time.Millisecond)
-		htmlString, err = request.Get(URL)
+		htmlString, _ = request.Get(URL)
 	}
 
 	re := regexp.MustCompile(`<iframe[\s\S]*?(player[^#]*)#([^"]*)`)
@@ -141,7 +141,7 @@ func extractData(URL string) (static.Data, error) {
 
 	return static.Data{
 		Site:    site,
-		Title:   utils.GetH1(&htmlString),
+		Title:   utils.GetH1(&htmlString, -1),
 		Type:    "video",
 		Streams: streams,
 		Url:     URL,

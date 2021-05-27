@@ -12,7 +12,7 @@ import (
 // Extract universal link
 func Extract(url string, site string) ([]static.Data, error) {
 
-	re := regexp.MustCompile("/([^/]+)\\.([a-zA-z0-9]*)?\\??[0-9a-zA-Z&=]*$")
+	re := regexp.MustCompile(`/([^/]+)\.([a-zA-z0-9]*)?\??[0-9a-zA-Z&=]*$`)
 	// matches[1] = title, matches[2] = fileext
 	matches := re.FindStringSubmatch(url)
 	if len(matches) < 3 {

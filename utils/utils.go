@@ -86,11 +86,26 @@ func GetMediaType(t string) string {
 	}
 }
 
-// GetH1 of html file
-func GetH1(htmlString *string) string {
+// GetH1s of html file
+// idx -1 = last h1 found
+// if index out of range set to last h1
+func GetH1(htmlString *string, idx int) string {
 	re := regexp.MustCompile(`[^>]*</h1>`)
 	h1s := re.FindAllString(*htmlString, -1)
-	return strings.TrimSuffix(GetLastItemString(h1s), "</h1>")
+
+	h1sLen := len(h1s)
+	if idx == -1 {
+		idx = h1sLen
+	}
+
+	// if index out of range set last
+	if h1sLen < idx+1 {
+		idx = h1sLen - 1
+		if idx == -1 {
+			return ""
+		}
+	}
+	return strings.TrimSuffix(h1s[idx], "</h1>")
 }
 
 // GetMeta of html file

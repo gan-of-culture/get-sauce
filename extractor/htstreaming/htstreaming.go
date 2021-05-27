@@ -66,7 +66,7 @@ func Extract(URL string) ([]static.Data, error) {
 	URLs := ParseURL(URL)
 	if len(URLs) < 1 {
 		log.Println(URL)
-		return nil, fmt.Errorf("[%s] No matching URL found.", site)
+		return nil, fmt.Errorf("[%s] No matching URL found", site)
 	}
 
 	data := []static.Data{}
