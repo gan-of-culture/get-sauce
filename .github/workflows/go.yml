@@ -3,6 +3,8 @@ on:
   push:
     tags-ignore:
       - '*.*' # We don't want this to run on release
+    branches:
+      - '*.*'
 jobs:
 
   build:
