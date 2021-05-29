@@ -183,6 +183,7 @@ func (ex *extractor) extractData(URLs []string) ([]static.Data, error) {
 			}
 			srcURL = []string{matchedSrcURL[0][1]}
 		}
+		fmt.Println(srcURL[0])
 
 		// size will be empty if err occurs
 		fSize, _ := strconv.ParseFloat(fileInfo[3], 64)

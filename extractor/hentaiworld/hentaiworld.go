@@ -64,7 +64,7 @@ func ExtractData(url string) static.Data {
 		return static.Data{Err: err}
 	}
 
-	title := strings.TrimSpace(utils.GetH1(&postHTMLpage, -1))
+	title := strings.TrimSuffix(utils.GetMeta(&postHTMLpage, "og:title"), " - HentaiWorld")
 
 	if strings.Contains(title, "\u0026#8211;") {
 		title = strings.ReplaceAll(title, "\u0026#8211;", "-")
