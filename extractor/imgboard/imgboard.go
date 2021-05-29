@@ -18,7 +18,7 @@ var mass bool
 // ParseURL of input
 func ParseURL(url string) []string {
 
-	re := regexp.MustCompile("(?:show/|&id=)[0-9]*")
+	re := regexp.MustCompile(`(?:show/|&id=)[0-9]*`)
 	if re.MatchString(url) {
 		return []string{url}
 	}
@@ -110,7 +110,7 @@ func ParseURL(url string) []string {
 
 // Extract post data
 func Extract(url string) ([]static.Data, error) {
-	re := regexp.MustCompile("https://[^/]*")
+	re := regexp.MustCompile(`https://[^/]*`)
 	siteURL = re.FindString(url)
 	mass = false
 
@@ -143,7 +143,7 @@ func Extract(url string) ([]static.Data, error) {
 
 func extractData(url string) (static.Data, error) {
 
-	re := regexp.MustCompile("http?s://(?:www.)?([^.]*)")
+	re := regexp.MustCompile(`http?s://(?:www.)?([^.]*)`)
 	siteName := re.FindStringSubmatch(siteURL)[1]
 
 	postHTML, err := request.Get(url)
@@ -173,10 +173,10 @@ func extractData(url string) (static.Data, error) {
 		}
 	}
 
-	re = regexp.MustCompile("Id: [^<]*")
+	re = regexp.MustCompile(`Id: [^<]*`)
 	id := re.FindString(postHTML)
 
-	re = regexp.MustCompile("Size: [^<]*")
+	re = regexp.MustCompile(`Size: [^<]*`)
 	quality := re.FindString(postHTML)
 	quality = strings.ReplaceAll(quality, "Size: ", "")
 

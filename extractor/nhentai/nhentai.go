@@ -77,7 +77,7 @@ func ParseURL(URL string) ([]string, string) {
 		// if there are two "int" values it means the exact page was supplied
 		var page string
 
-		re = regexp.MustCompile("[0-9]+")
+		re = regexp.MustCompile(`[\d]+`)
 		urlNumbers := re.FindAllString(URL, -1)
 		if len(urlNumbers) <= 0 {
 			return nil, ""

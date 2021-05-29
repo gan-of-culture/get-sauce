@@ -52,6 +52,10 @@ func ParseURL(URL string) []string {
 		re = regexp.MustCompile(`[^"]*red/hentai[^"]*`) //this sites URLs are built diff
 	}
 	matchedURLs := re.FindAllString(htmlString, -1)
+	if strings.HasPrefix(URL, "https://hentaihaven.red") {
+		//remove the five popular hentai on the side bar
+		matchedURLs = matchedURLs[:len(matchedURLs)-5]
+	}
 
 	return removeAdjDuplicates(matchedURLs)
 }
@@ -66,7 +70,7 @@ func Extract(URL string) ([]static.Data, error) {
 	URLs := ParseURL(URL)
 	if len(URLs) < 1 {
 		log.Println(URL)
-		return nil, fmt.Errorf("[%s] No matching URL found.", site)
+		return nil, fmt.Errorf("[%s] No matching URL found", site)
 	}
 
 	data := []static.Data{}

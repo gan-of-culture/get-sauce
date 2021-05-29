@@ -53,7 +53,7 @@ func Extract(url string) ([]static.Data, error) {
 // ParseURL for danbooru pages
 func ParseURL(url string) (string, error) {
 	if !strings.Contains(url, "%20") {
-		re := regexp.MustCompile("https://booru\\.io/p/(.+)")
+		re := regexp.MustCompile(`https://booru\.io/p/(.+)`)
 		matchedID := re.FindStringSubmatch(url)
 		if len(matchedID) > 2 {
 			return "", errors.New("Invalid URL")
@@ -147,7 +147,7 @@ func extractData(queryURL string) ([]static.Data, error) {
 
 // GetBestQualityImg of transformation
 func GetBestQualityImg(transformations map[string]string) (string, string) {
-	re := regexp.MustCompile("[0-9]+")
+	re := regexp.MustCompile(`[0-9]+`)
 	transformationType := ""
 	transformationValue := ""
 	currentBest := 0

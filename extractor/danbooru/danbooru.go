@@ -34,12 +34,12 @@ func Extract(url string) ([]static.Data, error) {
 
 // ParseURL for danbooru pages
 func ParseURL(url string) ([]string, error) {
-	re := regexp.MustCompile("page=([0-9]+)")
+	re := regexp.MustCompile(`page=([0-9]+)`)
 	pageNo := re.FindAllString(url, -1)
 	// pageNo = url?page=number -> if it's there it means overview page otherwise single post or invalid
 	if len(pageNo) == 0 {
 
-		re := regexp.MustCompile("/posts/[0-9]+")
+		re := regexp.MustCompile(`/posts/[0-9]+`)
 		linkToPost := re.FindString(url)
 		if linkToPost == "" {
 			return nil, errors.New("[Danbooru]Invalid Url no post found")
@@ -53,7 +53,7 @@ func ParseURL(url string) ([]string, error) {
 		return nil, err
 	}
 
-	re = regexp.MustCompile("data-id=\"([^\"]+)")
+	re = regexp.MustCompile(`data-id="([^"]+)`)
 	matchedIDs := re.FindAllStringSubmatch(htmlString, -1)
 
 	out := []string{}
@@ -70,7 +70,7 @@ func extractData(postURL string) (static.Data, error) {
 		return static.Data{}, err
 	}
 
-	re := regexp.MustCompile("data-width=\"([^\"]+)\"[ ]+data-height=\"([^\"]+)\".+alt=\"([^\"]+)\".+src=\"([^\"]+)\"")
+	re := regexp.MustCompile(`data-width="([^"]+)"[ ]+data-height="([^"]+)".+alt="([^"]+)".+src="([^"]+)"`)
 	matchedImgData := re.FindStringSubmatch(htmlString)
 	if len(matchedImgData) != 5 {
 		return static.Data{}, errors.New("[Danbooru] Image parsing failed")

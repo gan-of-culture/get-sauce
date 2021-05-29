@@ -182,21 +182,43 @@ func TestGetMediaType(t *testing.T) {
 
 func TestGetH1(t *testing.T) {
 	tests := []struct {
+		name       string
 		htmlString string
+		idx        int
 		want       string
 	}{
 		{
+			name:       "h1 tag with params",
 			htmlString: `<h1 class="entry-title" itemprop="name">Overflow 8</h1>`,
+			idx:        0,
 			want:       "Overflow 8",
 		},
 		{
+			name:       "normal case",
 			htmlString: `<h1>Overflow 8</h1>`,
+			idx:        0,
+			want:       "Overflow 8",
+		},
+		{
+			name:       "get specific",
+			htmlString: `<h1>Overflow 8</h1><h1>Overflow 9</h1><h1>Overflow 10</h1>`,
+			idx:        1,
+			want:       "Overflow 9",
+		}, {
+			name:       "out of range but has one, return it",
+			htmlString: `<h1>Overflow 8</h1>`,
+			idx:        1,
+			want:       "Overflow 8",
+		}, {
+			name:       "last",
+			htmlString: `<h1>Overflow 7</h1><h1>Overflow 8</h1>`,
+			idx:        -1,
 			want:       "Overflow 8",
 		},
 	}
 	for _, tt := range tests {
-		t.Run(tt.htmlString, func(t *testing.T) {
-			h1 := GetH1(&tt.htmlString)
+		t.Run(tt.name, func(t *testing.T) {
+			h1 := GetH1(&tt.htmlString, tt.idx)
 
 			if h1 != tt.want {
 				t.Errorf("Got: %v - want: %v", h1, tt.want)

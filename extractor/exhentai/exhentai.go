@@ -75,7 +75,7 @@ func (ex *extractor) Login() error {
 		}
 	}
 
-	return fmt.Errorf("No login possible for User: %s and Password: %s", config.Username, config.UserPassword)
+	return fmt.Errorf("[Exhentai]No login possible for User: %s and Password: %s", config.Username, config.UserPassword)
 
 }
 
@@ -159,31 +159,31 @@ func (ex *extractor) extractData(URLs []string) ([]static.Data, error) {
 			return nil, err
 		}
 
-		re := regexp.MustCompile("<h1>([^<]+)")
-		matchedTitle := re.FindAllStringSubmatch(htmlString, -1)
-		if len(matchedTitle) == 0 {
+		title := utils.GetH1(&htmlString, 0)
+		if len(title) == 0 {
 			return nil, errors.New("[ExHentai] invaild image title")
 		}
 
-		re = regexp.MustCompile("<div>[^.]+([^::]+):: ([^::]+) :: ([^.]+.[0-9]+) ([A-Z]{2})")
+		re := regexp.MustCompile(`<div>[^.]+\.([^::]+):: ([^::]+) :: ([^.]+.[0-9]+) ([A-Z]{2})`)
 		matchedFileInfo := re.FindAllStringSubmatch(htmlString, -1)
 		if len(matchedFileInfo) == 0 {
 			return nil, errors.New("[ExHentai] invaild image file info")
 		}
 		fileInfo := matchedFileInfo[0]
 
-		re = regexp.MustCompile("https://exhentai.org/fullimg[^\"]+")
+		re = regexp.MustCompile(`https://exhentai.org/fullimg[^"]+`)
 		srcURL := re.FindStringSubmatch(htmlString)
 		if len(srcURL) != 1 {
 
 			// sometimes the "full image url is not provided"
-			re = regexp.MustCompile("<img id=\"img\" src=\"([^\"]+)")
+			re = regexp.MustCompile(`<img id="img" src="([^"]+)`)
 			matchedSrcURL := re.FindAllStringSubmatch(htmlString, -1)
 			if len(matchedSrcURL) != 1 {
 				return nil, errors.New("[ExHentai] invaild image src")
 			}
 			srcURL = []string{matchedSrcURL[0][1]}
 		}
+		fmt.Println(srcURL[0])
 
 		// size will be empty if err occurs
 		fSize, _ := strconv.ParseFloat(fileInfo[3], 64)
@@ -197,7 +197,7 @@ func (ex *extractor) extractData(URLs []string) ([]static.Data, error) {
 			switch resp.StatusCode {
 			case http.StatusOK, http.StatusMovedPermanently, http.StatusFound, http.StatusSeeOther, http.StatusTemporaryRedirect:
 				if u, _ := resp.Location(); u.String() == "" {
-					return nil, errors.New("Error 509 - Bandwidth Exceeded. Check https://ehwiki.org/wiki/Technical_Issues#509")
+					return nil, errors.New("[Exhentai]Error 509 - Bandwidth Exceeded. Check https://ehwiki.org/wiki/Technical_Issues#509")
 				}
 				l, _ := resp.Location()
 				srcURL[0] = l.String()
@@ -208,7 +208,7 @@ func (ex *extractor) extractData(URLs []string) ([]static.Data, error) {
 
 		data = append(data, static.Data{
 			Site:  site,
-			Title: fmt.Sprintf("%s - %d", matchedTitle[0][1], idx+1),
+			Title: fmt.Sprintf("%s - %d", title, idx+1),
 			Type:  "image",
 			Streams: map[string]static.Stream{
 				"0": {
@@ -276,9 +276,33 @@ func Extract(URL string) ([]static.Data, error) {
 			return nil, errors.New("[ExHentai] invaild URL")
 		}
 
-		re := regexp.MustCompile(`[^"]*/s/[^"\s]*`)
+		re := regexp.MustCompile(`([0-9]+) pages`)
+		htmlNumberOfPages := re.FindStringSubmatch(htmlString)
+		if len(htmlNumberOfPages) != 2 {
+			return nil, errors.New("[ExHentai] error while trying to access the gallery images")
+		}
+		numberOfPages, err := strconv.Atoi(htmlNumberOfPages[1])
+		if err != nil {
+			return nil, errors.New("[ExHentai] couldn't get number of pages")
+		}
+		pages := utils.NeedDownloadList(numberOfPages)
+
+		re = regexp.MustCompile(`[^"]*/s/[^"\s]*`)
 		matchedImgURLs := re.FindAllString(htmlString, -1)
-		pages := utils.NeedDownloadList(len(matchedImgURLs))
+
+		// with this only necessary pages of gallery are scraped
+		// for example you have a gallery with 150 sites, but you only
+		// want -p "1-10" there is no need to scrape the other sites
+		numberOfPages = pages[len(pages)-1]
+		// if gallery has more than 40 images -> walk other pages for links aswell
+		for page := 1; len(matchedImgURLs) < numberOfPages; page++ {
+			htmlString, err := ex.Get(fmt.Sprintf("%s?p=%d", URL, page))
+			if err != nil {
+				return nil, errors.New("[ExHentai] invaild page URL")
+			}
+			matchedImgURLs = append(matchedImgURLs, re.FindAllString(htmlString, -1)...)
+		}
+
 		for _, page := range pages {
 			imgURLs = append(imgURLs, matchedImgURLs[page-1])
 		}
