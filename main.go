@@ -16,6 +16,7 @@ import (
 	"github.com/gan-of-culture/go-hentai-scraper/extractor/ehentai"
 	"github.com/gan-of-culture/go-hentai-scraper/extractor/exhentai"
 	"github.com/gan-of-culture/go-hentai-scraper/extractor/hanime"
+	"github.com/gan-of-culture/go-hentai-scraper/extractor/hentai2read"
 	"github.com/gan-of-culture/go-hentai-scraper/extractor/hentai2w"
 	"github.com/gan-of-culture/go-hentai-scraper/extractor/hentaicloud"
 	"github.com/gan-of-culture/go-hentai-scraper/extractor/hentaidude"
@@ -74,6 +75,8 @@ func download(URL string) {
 		data, err = hanime.Extract(URL)
 	case "hentai2w.com":
 		data, err = hentai2w.Extract(URL)
+	case "hentai2read.com":
+		data, err = hentai2read.Extract(URL)
 	case "www.hentaicloud.com":
 		data, err = hentaicloud.Extract(URL)
 	case "hentaidude.com":
