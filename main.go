@@ -45,7 +45,7 @@ func init() {
 	flag.BoolVar(&config.RestrictContent, "r", false, "Don't scrape Restricted Content")
 	flag.StringVar(&config.SelectStream, "s", "0", "Select a stream")
 	flag.BoolVar(&config.ShowInfo, "i", false, "Show info")
-	flag.IntVar(&config.Threads, "t", 1, "Number of threads used for downloading")
+	flag.IntVar(&config.Workers, "w", 1, "Number of workers used for downloading")
 	flag.StringVar(&config.Username, "un", "", "Username for exhentai/forum e hentai")
 	flag.StringVar(&config.UserPassword, "up", "", "User password for exhentai/forum e hentai")
 }
@@ -129,24 +129,35 @@ func download(URL string) {
 		config.SelectStream = "0"
 	}
 
-	var wg sync.WaitGroup
-	wg.Add(config.Threads)
-	datachan := make(chan static.Data, len(data))
+	lenOfData := len(data)
+	/*
+		We have 3 main types of data that has to be downloaded concurrently
+		1. lenOfData = 3000 e.g. mass scraping image boards
+		2. lenOfData = 1 URLs = 200 e.g. doujin
+		3. lenOfData = 1-10 but big file size e.g.hentai video
+		here in main we will deal with the first type
+	*/
+	workers := config.Workers
+	if workers > lenOfData {
+		workers = lenOfData
+	}
 
-	for i := 0; i < config.Threads; i++ {
+	var wg sync.WaitGroup
+	wg.Add(workers)
+	datachan := make(chan static.Data, lenOfData)
+
+	downloader := downloader.New(config.SelectStream, true)
+	for i := 0; i < workers; i++ {
 		go func() {
 			defer wg.Done()
 			for {
-				select {
-				case d, ok := <-datachan:
-					if !ok {
-						return
-					}
-					downloader := downloader.New(d, config.SelectStream, true)
-					err := downloader.Download()
-					if err != nil {
-						log.Println(err)
-					}
+				d, ok := <-datachan
+				if !ok {
+					return
+				}
+				err := downloader.Download(d)
+				if err != nil {
+					log.Println(err)
 				}
 			}
 		}()

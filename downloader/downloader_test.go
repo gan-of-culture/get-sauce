@@ -14,6 +14,24 @@ func TestDownload(t *testing.T) {
 		want error
 	}{
 		{
+			name: "hentaistream.moe 4k episode concurWriter",
+			data: static.Data{
+				Site:  "https://hentaistream.moe/",
+				Title: "Overflow 1",
+				Type:  "video",
+				Streams: map[string]static.Stream{
+					"0": {
+						URLs: []static.URL{
+							{
+								URL: "https://01cdn.hentaistream.moe/2021/02/Overflow/E01/av1.2160p.webm",
+								Ext: "webm",
+							},
+						},
+						Size: int64(96865295),
+					},
+				},
+			},
+		}, {
 			name: "rule34.xxx single img",
 			data: static.Data{
 				Site:  "https://rule34.xxx",
@@ -125,12 +143,11 @@ func TestDownload(t *testing.T) {
 			},
 		},
 	}
-
+	config.Workers = 3
+	downloader := New("0", false)
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			config.SelectStream = "0"
-			downloader := New(tt.data, "0", false)
-			err := downloader.Download()
+			err := downloader.Download(tt.data)
 			if err != tt.want {
 				t.Error(err)
 			}

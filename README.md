@@ -57,9 +57,9 @@ go run main.go ...
 
 --------------------------------------------------------------------------------
 
- -t             Number of download threads (works if you download multiple files)
+ -t             Number of download workers
 
- go-hentai-scraper -t 4 http...
+ go-hentai-scraper -w 4 http...
 
 --------------------------------------------------------------------------------
 

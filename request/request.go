@@ -123,10 +123,6 @@ func Headers(url, refer string) (http.Header, error) {
 
 // Size get size of the url
 func Size(url, refer string) (int64, error) {
-	if !config.ShowInfo {
-		return 0, nil
-	}
-
 	headers, err := Headers(url, refer)
 	if err != nil {
 		return 0, err

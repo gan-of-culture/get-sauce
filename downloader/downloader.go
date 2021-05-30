@@ -6,10 +6,12 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"io/ioutil"
 	"net/http"
 	"net/url"
 	"os"
 	"path/filepath"
+	"regexp"
 	"runtime"
 	"sort"
 	"strings"
@@ -22,13 +24,20 @@ import (
 	"github.com/schollz/progressbar/v2"
 )
 
-func init() {
-	runtime.GOMAXPROCS(runtime.NumCPU())
-}
+/*
+TODO:
+1. split up M3U in spereate file
+2. set option for same M3U keys so it will not need to send a request 24/7
+*/
 
 type filePiece struct {
-	data   []byte
 	offset int64
+	length int64
+}
+
+type downloadInfo struct {
+	URL   static.URL
+	Title string
 }
 
 type Downloader struct {
@@ -41,14 +50,12 @@ type Downloader struct {
 	bar         bool
 }
 
-func New(data static.Data, stream string, bar bool) *Downloader {
-	// ensure a different tmpDir for each m3u8 download so concurrent processes won't colide
-	h := sha1.New()
-	h.Write([]byte(data.Title))
-	tmpFilePath := filepath.Join(config.OutputPath, fmt.Sprintf("%x/", h.Sum(nil)[15:]))
+func init() {
+	runtime.GOMAXPROCS(runtime.NumCPU())
+}
 
+func New(stream string, bar bool) *Downloader {
 	return &Downloader{
-		data:   data,
 		stream: stream,
 		client: &http.Client{
 			Transport: &http.Transport{
@@ -60,29 +67,65 @@ func New(data static.Data, stream string, bar bool) *Downloader {
 			},
 			Timeout: 15 * time.Minute,
 		},
-		filePath:    config.OutputPath,
-		tmpFilePath: tmpFilePath,
-		bar:         bar,
+		filePath: config.OutputPath,
+		bar:      bar,
 	}
 }
 
-func (downloader *Downloader) Download() error {
+func (downloader *Downloader) Download(data static.Data) error {
+	downloader.data = data
 
 	// select stream to download
 	var stream static.Stream
 	var ok bool
-	if stream, ok = downloader.data.Streams[config.SelectStream]; !ok {
-		return fmt.Errorf("Stream %s not found", config.SelectStream)
+	if stream, ok = downloader.data.Streams[downloader.stream]; !ok {
+		return fmt.Errorf("Stream %s not found", downloader.stream)
 	}
 
+	if downloader.data.Type == "application/x-mpegurl" {
+		// ensure a different tmpDir for each download so concurrent processes won't colide
+		h := sha1.New()
+		h.Write([]byte(downloader.data.Title))
+		downloader.tmpFilePath = filepath.Join(downloader.filePath, fmt.Sprintf("%x/", h.Sum(nil)[15:]))
+	}
+
+	lenOfUrls := len(stream.URLs)
+
 	appendEnum := false
-	if len(stream.URLs) > 1 {
+	if lenOfUrls > 1 {
 		appendEnum = true
 	}
 
 	var wg sync.WaitGroup
-	lock := sync.Mutex{}
+	wg.Add(lenOfUrls)
+
 	var saveErr error
+	lock := sync.Mutex{}
+	URLchan := make(chan downloadInfo, lenOfUrls)
+
+	workers := config.Workers
+	if config.Workers > lenOfUrls {
+		workers = lenOfUrls
+	}
+
+	for i := 0; i < workers; i++ {
+		go func() {
+			defer wg.Done()
+			for {
+				dlInfo, ok := <-URLchan
+				if !ok {
+					return
+				}
+				err := downloader.save(dlInfo.URL, dlInfo.Title)
+				if err != nil {
+					lock.Lock()
+					saveErr = err
+					lock.Unlock()
+				}
+			}
+		}()
+	}
+
 	var fileURI string
 	for idx, URL := range stream.URLs {
 		if appendEnum {
@@ -91,34 +134,20 @@ func (downloader *Downloader) Download() error {
 			fileURI = downloader.data.Title
 		}
 
-		if config.OutputName != "" && len(stream.URLs) == 1 {
+		if config.OutputName != "" && lenOfUrls == 1 {
 			fileURI = config.OutputName
 		}
 
 		//sanitize filename here
-		fileURI = strings.ReplaceAll(fileURI, "|", "_")
-		fileURI = strings.ReplaceAll(fileURI, ":", "")
-		fileURI = strings.ReplaceAll(fileURI, "?", "")
-		fileURI = strings.ReplaceAll(fileURI, "<", "")
-		fileURI = strings.ReplaceAll(fileURI, ">", "")
-		fileURI = strings.ReplaceAll(fileURI, "/", "")
-		fileURI = strings.ReplaceAll(fileURI, "*", "")
+		re := regexp.MustCompile(`[|:?<>/*\\ ]+`)
+		fileURI = re.ReplaceAllString(fileURI, " ")
 
 		//build final file URI
 		fileURI = filepath.Join(downloader.filePath, fileURI+"."+URL.Ext)
 
-		wg.Add(1)
-		go func(URL static.URL, title string) {
-			defer wg.Done()
-			err := downloader.save(URL, title, downloader.data.Type)
-			if err != nil {
-				lock.Lock()
-				saveErr = err
-				lock.Unlock()
-			}
-		}(URL, fileURI)
-
+		URLchan <- downloadInfo{URL, fileURI}
 	}
+	close(URLchan)
 	wg.Wait()
 	if saveErr != nil {
 		return saveErr
@@ -127,15 +156,14 @@ func (downloader *Downloader) Download() error {
 	return nil
 }
 
-func (downloader *Downloader) save(url static.URL, fileURI string, mimeType string) error {
+func (downloader *Downloader) save(url static.URL, fileURI string) error {
 
 	file, err := os.Create(fileURI)
 	if err != nil {
 		return err
 	}
 
-	switch mimeType {
-	case "application/x-mpegurl":
+	if downloader.data.Type == "application/x-mpegurl" {
 		file.Close()
 		file, err = os.OpenFile(fileURI, os.O_APPEND|os.O_WRONLY, 0644)
 		if err != nil {
@@ -148,21 +176,132 @@ func (downloader *Downloader) save(url static.URL, fileURI string, mimeType stri
 			return err
 		}
 		return nil
-	default:
-		_, err = downloader.writeFile(url.URL, file, nil)
+	}
+	defer file.Close()
+
+	//if stream size bigger than 10MB then use concurWrite
+	if downloader.data.Streams[downloader.stream].Size > 10000000 && config.Workers > 1 {
+
+		err = downloader.concurWriteFile(url.URL, file)
 		if err != nil {
 			return err
 		}
+		return nil
+	}
+
+	err = downloader.writeFile(url.URL, file)
+	if err != nil {
+		return err
 	}
 
 	return nil
 }
 
-func (downloader *Downloader) writeFile(URL string, file *os.File, headers map[string]string) (int64, error) {
+func (downloader *Downloader) concurWriteFile(URL string, file *os.File) error {
+	fileSize := downloader.data.Streams[downloader.stream].Size
+	pieceSize := int64(10_000_000)
+
+	var saveErr error
+	lock := sync.Mutex{}
+	var wg sync.WaitGroup
+	wg.Add(config.Workers)
+	datachan := make(chan filePiece, config.Workers)
+
+	for i := 0; i < config.Workers; i++ {
+		go func() {
+			defer wg.Done()
+			for {
+				d, ok := <-datachan
+				if !ok {
+					return
+				}
+
+				req, err := http.NewRequest(http.MethodGet, URL, nil)
+				if err != nil {
+					lock.Lock()
+					saveErr = err
+					lock.Unlock()
+				}
+
+				for k, v := range config.FakeHeaders {
+					req.Header.Set(k, v)
+				}
+
+				if ref := req.Header.Get("Referer"); ref == "" {
+					req.Header.Set("Referer", URL)
+				}
+				req.Header.Set("Range", fmt.Sprintf("bytes=%d-%d", d.offset, d.length))
+				//fmt.Println(req.Header.Get("Range"))
+
+				res, err := downloader.client.Do(req)
+				if err != nil {
+					lock.Lock()
+					saveErr = err
+					lock.Unlock()
+				}
+				//fmt.Printf("Url: %s, Status: %s, Size: %d", url, res.Status, res.ContentLength)
+				if res.StatusCode != http.StatusPartialContent {
+					time.Sleep(1 * time.Second)
+					res, err = downloader.client.Get(URL)
+					if err != nil {
+						lock.Lock()
+						saveErr = err
+						lock.Unlock()
+					}
+				}
+				defer res.Body.Close()
+				//fmt.Println(res.ContentLength)
+
+				buffer, err := ioutil.ReadAll(res.Body)
+				if err != nil {
+					lock.Lock()
+					saveErr = err
+					lock.Unlock()
+				}
+
+				lock.Lock()
+				written, err := file.WriteAt(buffer, d.offset)
+				if err != nil {
+					saveErr = err
+				}
+				downloader.progressBar.Add(written)
+				lock.Unlock()
+
+				if saveErr != nil {
+					return
+				}
+			}
+		}()
+	}
+
+	downloader.progressBar = progressbar.NewOptions(
+		int(fileSize),
+		progressbar.OptionSetDescription(fmt.Sprintf("Downloading with workers %s ...", file.Name())),
+		progressbar.OptionSetPredictTime(true),
+		progressbar.OptionSetRenderBlankState(true),
+	)
+
+	var offset int64
+	for ; fileSize > 0; fileSize -= pieceSize {
+		if pieceSize+pieceSize > fileSize {
+			pieceSize += fileSize - pieceSize
+			datachan <- filePiece{offset: offset, length: offset + pieceSize}
+			break
+		}
+		datachan <- filePiece{offset: offset, length: offset + pieceSize - 1}
+		offset += pieceSize
+	}
+	close(datachan)
+	wg.Wait()
+
+	return nil
+}
+
+func (downloader *Downloader) writeFile(URL string, file *os.File) error {
 	// Supply http request with headers to ensure a higher possibility of success
 	req, err := http.NewRequest(http.MethodGet, URL, nil)
 	if err != nil {
-		return 0, err
+		return err
 	}
 
 	for k, v := range config.FakeHeaders {
@@ -175,12 +314,12 @@ func (downloader *Downloader) writeFile(URL string, file *os.File, headers map[s
 
 	res, err := downloader.client.Do(req)
 	if err != nil {
-		return 0, err
+		return err
 	}
 	//fmt.Printf("Url: %s, Status: %s, Size: %d", url, res.Status, res.ContentLength)
-	if res.Status != "200 OK" {
+	if res.StatusCode != http.StatusOK {
 		time.Sleep(1 * time.Second)
-		res, err = downloader.client.Get(URL)
+		res, _ = downloader.client.Get(URL)
 	}
 	defer res.Body.Close()
 
@@ -200,11 +339,11 @@ func (downloader *Downloader) writeFile(URL string, file *os.File, headers map[s
 
 	// Note that io.Copy reads 32kb(maximum) from input and writes them to output, then repeats.
 	// So don't worry about memory.
-	written, copyErr := io.Copy(writer, res.Body)
+	_, copyErr := io.Copy(writer, res.Body)
 	if copyErr != nil && copyErr != io.EOF {
-		return written, fmt.Errorf("file copy error: %s", copyErr)
+		return fmt.Errorf("file copy error: %s", copyErr)
 	}
-	return written, nil
+	return nil
 }
 
 func (downloader *Downloader) parseSegments(URL string) ([]*m3u8.MediaSegment, error) {

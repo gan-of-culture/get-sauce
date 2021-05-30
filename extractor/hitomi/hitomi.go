@@ -51,7 +51,7 @@ const galleriesPerPage = 25
 //view-source:https://ltn.hitomi.la/galleryblock.js
 
 func ParseURL(URL string) []string {
-	if strings.HasPrefix(URL, site+"doujinshi/") {
+	if ok, _ := regexp.MatchString(fmt.Sprintf("%s(?:manga|doujinshi)/", site), URL); ok {
 		re := regexp.MustCompile(`(\d*).html$`)
 		id := re.FindStringSubmatch(URL)[1]
 		return []string{fmt.Sprintf("%sgalleries/%s.js", nozomi, id)}

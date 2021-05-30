@@ -13,6 +13,7 @@ media
 *.png
 *.mp4
 *.mkv
+*.webm
 *.torrent
 *.ts
 *.txt
