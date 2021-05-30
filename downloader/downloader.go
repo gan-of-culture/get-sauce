@@ -122,7 +122,8 @@ func (downloader *Downloader) Download(data static.Data) error {
 		}()
 	}
 
-	pageNumbers := utils.NeedDownloadList(0)
+	//get page numbers if -p is supplied to name files correctly
+	pageNumbers := utils.NeedDownloadList(lenOfUrls)
 
 	var fileURI string
 	for idx, URL := range stream.URLs {
