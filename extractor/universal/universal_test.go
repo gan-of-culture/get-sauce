@@ -20,11 +20,6 @@ func TestExtract(t *testing.T) {
 			site: "awwni",
 			want: 1,
 		}, {
-			name: "jpeg",
-			url:  "http://imgzam.com/uploads/4/2336/5zrymhsckxal7oa1.jpeg",
-			site: "imgzam",
-			want: 1,
-		}, {
 			name: "with bloat after ext",
 			url:  "https://img.rule34.xxx//images/1979/b84be533024a3d1dcc6b01c0cb7358c9.jpeg?2686173",
 			site: "rule34.xxx",
