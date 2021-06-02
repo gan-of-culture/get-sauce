@@ -66,9 +66,7 @@ func extractData(URL string) ([]static.Data, error) {
 
 	if strings.Contains(htmlString, "<h1>Content Warning</h1>") {
 		if config.RestrictContent {
-			return []static.Data{
-				{Err: errors.New("[E-hentai] Restricted content")},
-			}, nil
+			return []static.Data{}, errors.New("[E-hentai] Restricted content")
 		}
 		return extractData(URL + "?nw=session")
 	}

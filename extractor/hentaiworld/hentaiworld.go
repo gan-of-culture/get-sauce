@@ -20,7 +20,11 @@ func Extract(url string) ([]static.Data, error) {
 	}
 	data := []static.Data{}
 	for _, u := range urls {
-		data = append(data, ExtractData(u))
+		d, err := ExtractData(u)
+		if err != nil {
+			return nil, err
+		}
+		data = append(data, d)
 	}
 	return data, nil
 }
@@ -50,18 +54,14 @@ func ParseURL(url string) ([]string, error) {
 		urls = append(urls, matchedURL[1])
 	}
 
-	if utils.IsInTests() {
-		urls = urls[0:2]
-	}
-
 	return urls, nil
 }
 
 //ExtractData of hentai
-func ExtractData(url string) static.Data {
+func ExtractData(url string) (static.Data, error) {
 	postHTMLpage, err := request.Get(url)
 	if err != nil {
-		return static.Data{Err: err}
+		return static.Data{}, nil
 	}
 
 	title := strings.TrimSuffix(utils.GetMeta(&postHTMLpage, "og:title"), " - HentaiWorld")
@@ -77,7 +77,7 @@ func ExtractData(url string) static.Data {
 		re = regexp.MustCompile(`src='(.*)\.(mp4*).*`)
 		infoAboutFile = re.FindStringSubmatch(postHTMLpage) // 1 = dlURL 2=ext
 		if len(infoAboutFile) != 3 {
-			return static.Data{Err: fmt.Errorf("[HentaiWorld] Get scrape video info for URL %s", url)}
+			return static.Data{}, fmt.Errorf("[HentaiWorld] Get scrape video info for URL %s", url)
 		}
 	}
 	infoAboutFile[1] = strings.ReplaceAll(infoAboutFile[1], " ", "%20")
@@ -100,5 +100,5 @@ func ExtractData(url string) static.Data {
 			},
 		},
 		Url: url,
-	}
+	}, nil
 }

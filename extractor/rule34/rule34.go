@@ -160,7 +160,6 @@ func extractData(URL string) (static.Data, error) {
 				Size:    size,
 			},
 		},
-		Err: nil,
 		Url: URL,
 	}, nil
 }

@@ -66,9 +66,9 @@ func TestExtractData(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			data := ExtractData(tt.url)
-			if data.Err != nil {
-				t.Error(data.Err)
+			data, err := ExtractData(tt.url)
+			if err != nil {
+				t.Error(err)
 			}
 			if data.Title != tt.want {
 				t.Errorf("Got: %v - want: %v", data.Title, tt.want)

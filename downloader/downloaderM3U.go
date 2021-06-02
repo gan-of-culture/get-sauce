@@ -10,6 +10,7 @@ import (
 	"path/filepath"
 	"sort"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/gan-of-culture/go-hentai-scraper/config"
@@ -48,60 +49,61 @@ func (downloader *Downloader) parseSegments(URL string) ([]*m3u8.MediaSegment, e
 		return nil, err
 	}
 
-	savedSegments := []*m3u8.MediaSegment{}
+	var mediapl *m3u8.MediaPlaylist
 	switch listType {
 	case m3u8.MEDIA:
-		mediapl := p.(*m3u8.MediaPlaylist)
-
-		for i, seg := range mediapl.Segments {
-			if seg == nil {
-				continue
-			}
-
-			if !strings.Contains(seg.URI, "http") {
-				segmentURL, err := baseURL.Parse(seg.URI)
-				if err != nil {
-					return nil, err
-				}
-
-				seg.URI = segmentURL.String()
-			}
-
-			if seg.Key == nil && mediapl.Key != nil {
-				seg.Key = mediapl.Key
-			}
-			if seg.Key != nil && !strings.Contains(seg.Key.URI, "http") {
-				keyURL, err := baseURL.Parse(seg.Key.URI)
-				if err != nil {
-					return nil, err
-				}
-
-				seg.Key.URI = keyURL.String()
-			}
-
-			seg.Title = fmt.Sprintf("%d", i)
-			savedSegments = append(savedSegments, seg)
-		}
+		mediapl = p.(*m3u8.MediaPlaylist)
 
 	case m3u8.MASTER:
 		return nil, fmt.Errorf("%s M3U File is a master! Needs to be a media list instead", p.String())
 	}
 
+	savedSegments := []*m3u8.MediaSegment{}
+	for i, seg := range mediapl.Segments {
+		if seg == nil {
+			continue
+		}
+
+		if !strings.Contains(seg.URI, "http") {
+			segmentURL, err := baseURL.Parse(seg.URI)
+			if err != nil {
+				return nil, err
+			}
+
+			seg.URI = segmentURL.String()
+		}
+
+		if seg.Key == nil && mediapl.Key != nil {
+			seg.Key = mediapl.Key
+		}
+		if seg.Key != nil && !strings.Contains(seg.Key.URI, "http") {
+			keyURL, err := baseURL.Parse(seg.Key.URI)
+			if err != nil {
+				return nil, err
+			}
+
+			seg.Key.URI = keyURL.String()
+		}
+
+		seg.Title = fmt.Sprintf("%d", i)
+		savedSegments = append(savedSegments, seg)
+	}
+
 	return savedSegments, nil
 }
 
-func (downloader *Downloader) writeM3U(url string, file *os.File) (int64, error) {
+func (downloader *Downloader) writeM3U(url string, file *os.File) error {
 	segments, err := downloader.parseSegments(url)
 	if err != nil {
-		return 0, err
+		return err
 	}
 	if len(segments) < 1 {
-		return 0, fmt.Errorf("No segments found in %s", url)
+		return fmt.Errorf("No segments found in %s", url)
 	}
 
 	err = os.MkdirAll(downloader.tmpFilePath, os.ModePerm)
 	if err != nil {
-		return 0, err
+		return err
 	}
 
 	if downloader.bar {
@@ -113,38 +115,69 @@ func (downloader *Downloader) writeM3U(url string, file *os.File) (int64, error)
 		)
 	}
 
-	var written int64
-	for _, seg := range segments {
-		w, err := downloader.writeSeg(seg)
-		if err != nil {
-			return 0, err
-		}
+	lenOfSegements := len(segments)
+	var saveErr error
+	lock := sync.Mutex{}
+	segmentchan := make(chan *m3u8.MediaSegment, lenOfSegements)
 
-		if downloader.bar {
-			downloader.progressBar.Add(1)
-		}
-		written += w
+	workers := config.Workers
+	if config.Workers > lenOfSegements {
+		workers = lenOfSegements
+	}
+
+	var wg sync.WaitGroup
+	wg.Add(workers)
+
+	for i := 0; i < workers; i++ {
+		go func() {
+			defer wg.Done()
+			for {
+				seg, ok := <-segmentchan
+				if !ok {
+					return
+				}
+				err := downloader.writeSeg(seg)
+				if err != nil {
+					lock.Lock()
+					saveErr = err
+					lock.Unlock()
+				}
+
+				if downloader.bar {
+					downloader.progressBar.Add(1)
+				}
+			}
+		}()
+	}
+
+	for _, seg := range segments {
+		segmentchan <- seg
+	}
+	close(segmentchan)
+	wg.Wait()
+	if saveErr != nil {
+		return saveErr
 	}
 
 	err = downloader.mergeSegments(file, segments)
 	if err != nil {
-		return 0, err
+		return err
 	}
 
 	err = os.RemoveAll(downloader.tmpFilePath)
 	if err != nil {
-		return 0, err
+		return err
 	}
 
-	return written, nil
+	return nil
 
 }
 
-func (downloader *Downloader) writeSeg(segment *m3u8.MediaSegment) (int64, error) {
+func (downloader *Downloader) writeSeg(segment *m3u8.MediaSegment) error {
 	// Supply http request with headers to ensure a higher possibility of success
 	req, err := http.NewRequest(http.MethodGet, segment.URI, nil)
 	if err != nil {
-		return 0, err
+		return err
 	}
 
 	for k, v := range config.FakeHeaders {
@@ -157,7 +190,7 @@ func (downloader *Downloader) writeSeg(segment *m3u8.MediaSegment) (int64, error
 
 	res, err := downloader.client.Do(req)
 	if err != nil {
-		return 0, err
+		return err
 	}
 	defer res.Body.Close()
 
@@ -166,30 +199,30 @@ func (downloader *Downloader) writeSeg(segment *m3u8.MediaSegment) (int64, error
 
 		res, err = downloader.client.Do(req)
 		if err != nil {
-			return 0, err
+			return err
 		}
 		defer res.Body.Close()
 		if res.StatusCode != http.StatusOK {
 			fmt.Println(segment.SeqId)
 			fmt.Println(req.Header)
-			return 0, errors.New(res.Status)
+			return errors.New(res.Status)
 		}
 	}
 
 	file, err := os.Create(filepath.Join(downloader.tmpFilePath, segment.Title+".ts"))
 	if err != nil {
-		return 0, err
+		return err
 	}
 	defer file.Close()
 
 	// Note that io.Copy reads 32kb(maximum) from input and writes them to output, then repeats.
 	// So don't worry about memory.
-	w, copyErr := io.Copy(file, res.Body)
+	_, copyErr := io.Copy(file, res.Body)
 	if copyErr != nil && copyErr != io.EOF {
-		return 0, fmt.Errorf("file copy error: %s", copyErr)
+		return fmt.Errorf("file copy error: %s", copyErr)
 	}
 
-	return int64(w), nil
+	return nil
 }
 
 func (downloader *Downloader) mergeSegments(file *os.File, segments []*m3u8.MediaSegment) error {

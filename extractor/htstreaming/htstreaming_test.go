@@ -65,11 +65,11 @@ func TestExtract(t *testing.T) {
 			name: "Single Episode hentaistream.xxx",
 			url:  "https://hentaistream.xxx/watch/ecchi-na-onee-chan-ni-shiboraretai-episode-1-subbed_2v5zblbKJSynGJ6.html",
 			want: 1,
-		}, {
+		}, /*{
 			name: "Overview hentaistream.xxx",
 			url:  "https://hentaistream.xxx/videos/category/749",
 			want: 20,
-		}, {
+		},*/{
 			name: "Single Episode hentaihaven.red/",
 			url:  "https://hentaihaven.red/hentai/joshi-luck-episode-1/",
 			want: 1,

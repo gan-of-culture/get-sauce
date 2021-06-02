@@ -196,7 +196,6 @@ func extractData(url string) (static.Data, error) {
 				Size:    size,
 			},
 		},
-		Err: nil,
 		Url: url,
 	}, nil
 
@@ -225,7 +224,6 @@ func extractDataFromDirectLink(url string) (static.Data, error) {
 				Size:    0,
 			},
 		},
-		Err: nil,
 		Url: url,
 	}, nil
 }

@@ -143,7 +143,7 @@ func TestDownload(t *testing.T) {
 			},
 		},
 	}
-	config.Workers = 3
+	config.Workers = 5
 	downloader := New("0", false)
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

@@ -105,7 +105,6 @@ func extractData(URL string) (static.Data, error) {
 		Type:    "video",
 		Streams: streams,
 		Url:     URL,
-		Err:     nil,
 	}, nil
 
 }

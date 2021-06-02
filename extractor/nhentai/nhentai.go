@@ -6,6 +6,7 @@ import (
 	"log"
 	"regexp"
 	"strconv"
+	"time"
 
 	"github.com/gan-of-culture/go-hentai-scraper/request"
 	"github.com/gan-of-culture/go-hentai-scraper/static"
@@ -112,10 +113,16 @@ func extractData(id string, page string) (static.Data, error) {
 		return static.Data{}, err
 	}
 
+	if utils.GetH1(&htmlString, 0) == "429 Too Many Requests" {
+		time.Sleep(250 * time.Millisecond)
+		htmlString, _ = request.Get(URL)
+	}
+
 	re := regexp.MustCompile(`("{\\u0022[\s\S]*?}")`)
 	matchedJsonString := re.FindStringSubmatch(htmlString)
 	if len(matchedJsonString) < 2 {
-		return static.Data{}, fmt.Errorf("[Nhentai] invalid JSON %s", URL)
+		fmt.Println(htmlString)
+		return static.Data{}, fmt.Errorf("[NHentai] invalid JSON %s", URL)
 	}
 	jsonString, _ := strconv.Unquote(matchedJsonString[1])
 
@@ -150,7 +157,7 @@ func extractData(id string, page string) (static.Data, error) {
 
 	title, ok := gData.Title["pretty"]
 	if !ok {
-		return static.Data{}, fmt.Errorf("[Nhentai] Cannot find title for %s", URL)
+		return static.Data{}, fmt.Errorf("[NHentai] Cannot find title for %s", URL)
 	}
 
 	return static.Data{

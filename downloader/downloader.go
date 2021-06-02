@@ -23,7 +23,7 @@ import (
 
 /*
 TODO:
-1. set option for same M3U keys so it will not need to send a request 24/7
+1. Implement concurrency for m3u segement merging
 */
 
 type filePiece struct {
@@ -170,7 +170,7 @@ func (downloader *Downloader) save(url static.URL, fileURI string) error {
 		}
 		defer file.Close()
 
-		_, err = downloader.writeM3U(url.URL, file)
+		err = downloader.writeM3U(url.URL, file)
 		if err != nil {
 			return err
 		}

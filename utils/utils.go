@@ -2,7 +2,6 @@ package utils
 
 import (
 	"fmt"
-	"os"
 	"regexp"
 	"strconv"
 	"strings"
@@ -60,16 +59,6 @@ func NeedDownloadList(length int) []int {
 		out = append(out, i)
 	}
 	return out
-}
-
-// IsInTests to limit run time of some extractors
-func IsInTests() bool {
-	for _, arg := range os.Args {
-		if strings.HasPrefix(arg, "-test.run") {
-			return true
-		}
-	}
-	return false
 }
 
 // GetMediaType e.x put in png get image/png, mp4 -> video/mp4

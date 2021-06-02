@@ -174,7 +174,6 @@ func ExtractData(URL string) (static.Data, error) {
 		Title:   title,
 		Type:    "application/x-mpegurl",
 		Streams: streams,
-		Err:     nil,
 		Url:     URL,
 	}, nil
 }

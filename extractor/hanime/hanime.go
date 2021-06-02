@@ -163,7 +163,6 @@ func extractData(URL string) (static.Data, error) {
 		Title:   pData.HentaiVideo.Name,
 		Type:    "application/x-mpegurl",
 		Streams: streams,
-		Err:     nil,
 		Url:     URL,
 	}, nil
 }

@@ -43,9 +43,9 @@ func TestExtract(t *testing.T) {
 			url:  "https://hitomi.la/doujinshi/%E3%82%B8%E3%82%A7%E3%83%B3%E3%83%88%E3%83%AB%E3%82%B3%E3%83%8D%E3%82%AF%E3%83%88!re:dive-%E6%97%A5%E6%9C%AC%E8%AA%9E-1905632.html",
 			want: 1,
 		}, {
-			name: "Tag different page",
-			url:  "https://hitomi.la/tag/artbook-all.html?page=2",
-			want: 25,
+			name: "Single Gallery",
+			url:  "https://hitomi.la/manga/%E7%8C%A5%E8%A4%BB%E3%83%9F%E3%82%B5%E3%82%A4%E3%83%AB-%E6%97%A5%E6%9C%AC%E8%AA%9E-440479.html",
+			want: 1,
 		},
 	}
 	for _, tt := range tests {
