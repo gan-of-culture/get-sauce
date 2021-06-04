@@ -114,7 +114,6 @@ If your site is not listed - you can still try to use the universal downloader.
 
 ## TODO's
 
-- Implement concurrency for big single file downloads
 - Clean up coding and add more sites
 - Speed improvements
 

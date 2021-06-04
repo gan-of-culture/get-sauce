@@ -79,7 +79,7 @@ func ParseURL(URL string) []string {
 	end_byte := startByte + galleriesPerPage*4 - 1
 	resp, err := request.Request(http.MethodGet, nozomiURL, map[string]string{
 		"Range": fmt.Sprintf("bytes=%d-%d", startByte, end_byte),
-	})
+	}, nil)
 	if err != nil {
 		return []string{}
 	}

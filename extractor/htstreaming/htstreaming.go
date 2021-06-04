@@ -141,10 +141,11 @@ func ExtractData(URL string) (static.Data, error) {
 
 	baseCDNURL := m3u8MasterURL[:len(m3u8MasterURL)-10] //remove master.txt
 
-	m3u8Master, err := request.Request(http.MethodGet, m3u8MasterURL, nil)
+	m3u8Master, err := request.Request(http.MethodGet, m3u8MasterURL, nil, nil)
 	if err != nil {
 		return static.Data{}, err
 	}
+	defer m3u8Master.Body.Close()
 
 	p := m3u8.NewMasterPlaylist()
 	err = p.DecodeFrom(m3u8Master.Body, false)

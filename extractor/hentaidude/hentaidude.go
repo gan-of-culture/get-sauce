@@ -2,7 +2,6 @@ package hentaidude
 
 import (
 	"encoding/json"
-	"errors"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -11,7 +10,6 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/gan-of-culture/go-hentai-scraper/config"
 	"github.com/gan-of-culture/go-hentai-scraper/request"
 	"github.com/gan-of-culture/go-hentai-scraper/static"
 	"github.com/gan-of-culture/go-hentai-scraper/utils"
@@ -83,26 +81,13 @@ func extractData(URL string) (static.Data, error) {
 	params.Add("id", matchedSourceReq[1])
 	params.Add("nonce", matchedSourceReq[2])
 
-	req, err := http.NewRequest(http.MethodPost, api, strings.NewReader(params.Encode()))
-	if err != nil {
-		return static.Data{}, errors.New("Request can't be created")
-	}
-
-	for k, v := range config.FakeHeaders {
-		req.Header.Set(k, v)
-	}
-	for k, v := range headers {
-		req.Header.Set(k, v)
-	}
-
-	client := &http.Client{}
-	resp, err := client.Do(req)
+	res, err := request.Request(http.MethodPost, api, headers, strings.NewReader(params.Encode()))
 	if err != nil {
 		return static.Data{}, err
 	}
-	defer resp.Body.Close()
+	defer res.Body.Close()
 
-	body, err := ioutil.ReadAll(resp.Body)
+	body, err := ioutil.ReadAll(res.Body)
 	if err != nil {
 		return static.Data{}, err
 	}

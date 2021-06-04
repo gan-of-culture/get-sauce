@@ -2,7 +2,6 @@ package downloader
 
 import (
 	"crypto/sha1"
-	"crypto/tls"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -16,6 +15,7 @@ import (
 	"time"
 
 	"github.com/gan-of-culture/go-hentai-scraper/config"
+	"github.com/gan-of-culture/go-hentai-scraper/request"
 	"github.com/gan-of-culture/go-hentai-scraper/static"
 	"github.com/gan-of-culture/go-hentai-scraper/utils"
 	"github.com/schollz/progressbar/v2"
@@ -52,17 +52,8 @@ func init() {
 
 func New(stream string, bar bool) *Downloader {
 	return &Downloader{
-		stream: stream,
-		client: &http.Client{
-			Transport: &http.Transport{
-				DisableCompression:  true,
-				TLSHandshakeTimeout: 10 * time.Second,
-				TLSClientConfig:     &tls.Config{InsecureSkipVerify: true},
-				IdleConnTimeout:     10 * time.Second,
-				//DisableKeepAlives:   true,
-			},
-			Timeout: 15 * time.Minute,
-		},
+		stream:   stream,
+		client:   request.DefaultClient(),
 		filePath: config.OutputPath,
 		bar:      bar,
 	}

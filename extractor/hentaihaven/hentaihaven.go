@@ -3,7 +3,6 @@ package hentaihaven
 import (
 	"bytes"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"io/ioutil"
 	"mime/multipart"
@@ -14,7 +13,6 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/gan-of-culture/go-hentai-scraper/config"
 	"github.com/gan-of-culture/go-hentai-scraper/request"
 	"github.com/gan-of-culture/go-hentai-scraper/static"
 	"github.com/gan-of-culture/go-hentai-scraper/utils"
@@ -132,25 +130,15 @@ func extractData(URL string) (static.Data, error) {
 	//RklZWG9ub0hiWnl5VUR2Y2tSYUpMdz09
 	//------WebKitFormBoundaryDyxVGG0MJMgqpBFh--
 
-	req, err := http.NewRequest(http.MethodPost, api, body)
-	if err != nil {
-		return static.Data{}, errors.New("Request can't be created")
-	}
-	req.Header.Set("Content-Type", writer.FormDataContentType())
-	//req.Write(os.Stdout)
-
-	for k, v := range config.FakeHeaders {
-		req.Header.Set(k, v)
-	}
-
-	client := &http.Client{}
-	resp, err := client.Do(req)
+	res, err := request.Request(http.MethodGet, api, map[string]string{
+		"Content-Type": writer.FormDataContentType(),
+	}, body)
 	if err != nil {
 		return static.Data{}, err
 	}
-	defer resp.Body.Close()
+	defer res.Body.Close()
 
-	respBody, err := ioutil.ReadAll(resp.Body)
+	respBody, err := ioutil.ReadAll(res.Body)
 	if err != nil {
 		return static.Data{}, err
 	}

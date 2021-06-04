@@ -32,6 +32,7 @@ import (
 	"github.com/gan-of-culture/go-hentai-scraper/extractor/miohentai"
 	"github.com/gan-of-culture/go-hentai-scraper/extractor/muchohentai"
 	"github.com/gan-of-culture/go-hentai-scraper/extractor/nhentai"
+	"github.com/gan-of-culture/go-hentai-scraper/extractor/ninehentai"
 	"github.com/gan-of-culture/go-hentai-scraper/extractor/pururin"
 	"github.com/gan-of-culture/go-hentai-scraper/extractor/rule34"
 	"github.com/gan-of-culture/go-hentai-scraper/extractor/universal"
@@ -61,6 +62,8 @@ func download(URL string) {
 	log.Printf("Identified site: %s", u.Host)
 
 	switch u.Host {
+	case "9hentai.to":
+		data, err = ninehentai.Extract(URL)
 	case "booru.io":
 		data, err = booru.Extract(URL)
 	case "www.damn.stream", "damn.stream":

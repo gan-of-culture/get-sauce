@@ -41,10 +41,9 @@ func (l LogRedirects) RoundTrip(req *http.Request) (resp *http.Response, err err
 	return
 }
 
-//Request http
-func Request(method string, url string, headers map[string]string) (*http.Response, error) {
-
-	client := &http.Client{
+//DefaultClient
+func DefaultClient() *http.Client {
+	return &http.Client{
 		Transport: LogRedirects{&http.Transport{
 			DisableCompression:  true,
 			TLSHandshakeTimeout: 10 * time.Second,
@@ -52,10 +51,16 @@ func Request(method string, url string, headers map[string]string) (*http.Respon
 			IdleConnTimeout:     5 * time.Second,
 			//DisableKeepAlives:   true,
 		}},
-		Timeout: 15 * time.Minute,
+		Timeout: 5 * time.Minute,
 	}
+}
 
-	req, err := http.NewRequest(method, url, nil)
+//Request http
+func Request(method string, url string, headers map[string]string, body io.Reader) (*http.Response, error) {
+
+	client := DefaultClient()
+
+	req, err := http.NewRequest(method, url, body)
 	if err != nil {
 		return nil, errors.New("Request can't be created")
 	}
@@ -80,7 +85,7 @@ func Request(method string, url string, headers map[string]string) (*http.Respon
 
 // Get content as string
 func Get(url string) (string, error) {
-	resp, err := Request(http.MethodGet, url, nil)
+	resp, err := Request(http.MethodGet, url, nil, nil)
 	if err != nil {
 		return "", err
 	}
@@ -101,20 +106,20 @@ func Headers(url, refer string) (http.Header, error) {
 	headers := map[string]string{
 		"Referer": refer,
 	}
-	res, err := Request(http.MethodHead, url, headers)
+	res, err := Request(http.MethodHead, url, headers, nil)
 	if err == nil {
 		return res.Header, nil
 	}
 	if res.StatusCode == 503 {
 		time.Sleep(200 * time.Millisecond)
-		res, err := Request(http.MethodHead, url, headers)
+		res, err := Request(http.MethodHead, url, headers, nil)
 		if err == nil {
 			return res.Header, nil
 		}
 	}
 
 	headers["Range"] = "bytes=0-1"
-	res, err = Request(http.MethodGet, url, headers)
+	res, err = Request(http.MethodGet, url, headers, nil)
 	if err != nil {
 		return nil, err
 	}
