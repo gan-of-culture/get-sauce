@@ -62,7 +62,7 @@ func download(URL string) {
 	log.Printf("Identified site: %s", u.Host)
 
 	switch u.Host {
-	case "9hentai.to":
+	case "9hentai.to", "www1.9hentai.ru":
 		data, err = ninehentai.Extract(URL)
 	case "booru.io":
 		data, err = booru.Extract(URL)

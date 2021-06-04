@@ -78,6 +78,7 @@ go run main.go ...
 
 | Site                                                                     | Images             | Videos           |
 | -------------------------------------------------------------------------|:------------------:|:----------------:|
+| [9hentai.to/ru](https://9hentai.to/)                                     | :heavy_check_mark: |        ?         |
 | [animeidhentai.com (1080p, 720p, 480p, 360p)](https://animeidhentai.com) |         ?          |:heavy_check_mark:|
 | [booruproject (ex. rule34, gelbooru)](https://booru.org/top)             | :heavy_check_mark: |:heavy_check_mark:|
 | [booru.io](https://booru.io/)                                            | :heavy_check_mark: |        ?         |

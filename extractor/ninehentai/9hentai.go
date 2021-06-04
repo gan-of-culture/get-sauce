@@ -77,7 +77,7 @@ const apiURLGetBookByID = "https://9hentai.to/api/getBookByID"
 const apiURLGetBook = "https://9hentai.to/api/getBook"
 
 func ParseURL(URL string) ([]gallery, error) {
-	re := regexp.MustCompile(fmt.Sprintf("%s([gt])/(\\d+)/", site)) //1=indicator g=gallery t=tag etc=searchQuery?
+	re := regexp.MustCompile(`/([gt])/(\d+)/`) //1=indicator g=gallery t=tag etc=searchQuery?
 	matchedURLParams := re.FindStringSubmatch(URL)
 	if len(matchedURLParams) < 2 {
 		return nil, fmt.Errorf("[9Hentai] URL parameters cannot be parsed: %s", URL)

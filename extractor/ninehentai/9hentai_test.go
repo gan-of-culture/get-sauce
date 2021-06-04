@@ -14,6 +14,11 @@ func TestParseURL(t *testing.T) {
 			in:   "https://9hentai.to/g/301/",
 			want: 1,
 		}, {
+			name: "Single Gallery .ru",
+			in:   "https://www1.9hentai.ru/g/71163/",
+			want: 1,
+		},
+		{
 			name: "Single Tag",
 			in:   "https://9hentai.to/t/71/",
 			want: 18,
