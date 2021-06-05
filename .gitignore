@@ -13,10 +13,10 @@ media
 *.png
 *.mp4
 *.mkv
+*.webm
 *.torrent
 *.ts
 *.txt
 
 *token
 *exhentai_test.go
-*hentai2read

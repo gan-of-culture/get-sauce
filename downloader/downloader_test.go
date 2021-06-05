@@ -10,12 +10,30 @@ import (
 func TestDownload(t *testing.T) {
 	tests := []struct {
 		name string
-		data static.Data
+		data *static.Data
 		want error
 	}{
 		{
+			name: "hentaistream.moe 4k episode concurWriter",
+			data: &static.Data{
+				Site:  "https://hentaistream.moe/",
+				Title: "Overflow 1",
+				Type:  "video",
+				Streams: map[string]static.Stream{
+					"0": {
+						URLs: []static.URL{
+							{
+								URL: "https://01cdn.hentaistream.moe/2021/02/Overflow/E01/av1.2160p.webm",
+								Ext: "webm",
+							},
+						},
+						Size: int64(96865295),
+					},
+				},
+			},
+		}, {
 			name: "rule34.xxx single img",
-			data: static.Data{
+			data: &static.Data{
 				Site:  "https://rule34.xxx",
 				Title: "4470590",
 				Type:  "image/jpg",
@@ -34,7 +52,7 @@ func TestDownload(t *testing.T) {
 			want: nil,
 		}, {
 			name: "danbooru single post",
-			data: static.Data{
+			data: &static.Data{
 				Site:  "https://danbooru.donmai.us/",
 				Title: " touhou konpaku youmu niwashi  yuyu ",
 				Type:  "image",
@@ -53,7 +71,7 @@ func TestDownload(t *testing.T) {
 			want: nil,
 		}, {
 			name: "rule 34 single post image",
-			data: static.Data{
+			data: &static.Data{
 				Site:  "https://rule34.paheal.net",
 				Title: "The_Dark_Mangaka tagme",
 				Type:  "image",
@@ -72,7 +90,7 @@ func TestDownload(t *testing.T) {
 			want: nil,
 		}, {
 			name: "nhentai single page",
-			data: static.Data{
+			data: &static.Data{
 				Site:  "https://nhentai.net",
 				Title: "(C97) [H@BREAK (Itose Ikuto)] Koe Dashicha Barechau kara! [English]",
 				Type:  "image",
@@ -107,7 +125,7 @@ func TestDownload(t *testing.T) {
 			},
 		},*/{
 			name: "m3u8 with aes-128 key",
-			data: static.Data{
+			data: &static.Data{
 				Site:  "https://hanime.tv/",
 				Title: "Toilet no Hanako-san vs Kukkyou Taimashi 2",
 				Type:  "application/x-mpegurl",
@@ -125,12 +143,11 @@ func TestDownload(t *testing.T) {
 			},
 		},
 	}
-
+	config.Workers = 5
+	downloader := New("0", false)
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			config.SelectStream = "0"
-			downloader := New(tt.data, "0", false)
-			err := downloader.Download()
+			err := downloader.Download(tt.data)
 			if err != tt.want {
 				t.Error(err)
 			}

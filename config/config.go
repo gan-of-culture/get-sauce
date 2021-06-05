@@ -15,8 +15,8 @@ var (
 	SelectStream string
 	// ShowInfo of all avaiable streams
 	ShowInfo bool
-	// Threads for downloading
-	Threads int
+	// Workers for downloading
+	Workers int
 	// Username for exhentai.org
 	Username string
 	// UserPassword for exhentai.org

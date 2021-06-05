@@ -57,9 +57,9 @@ go run main.go ...
 
 --------------------------------------------------------------------------------
 
- -t             Number of download threads (works if you download multiple files)
+ -t             Number of download workers
 
- go-hentai-scraper -t 4 http...
+ go-hentai-scraper -w 4 http...
 
 --------------------------------------------------------------------------------
 
@@ -78,6 +78,7 @@ go run main.go ...
 
 | Site                                                                     | Images             | Videos           |
 | -------------------------------------------------------------------------|:------------------:|:----------------:|
+| [9hentai.to/ru](https://9hentai.to/)                                     | :heavy_check_mark: |        ?         |
 | [animeidhentai.com (1080p, 720p, 480p, 360p)](https://animeidhentai.com) |         ?          |:heavy_check_mark:|
 | [booruproject (ex. rule34, gelbooru)](https://booru.org/top)             | :heavy_check_mark: |:heavy_check_mark:|
 | [booru.io](https://booru.io/)                                            | :heavy_check_mark: |        ?         |
@@ -86,6 +87,7 @@ go run main.go ...
 | [e-hentai.org](http://e-hentai.org/)                                     | :heavy_check_mark: |        ?         |
 | [exhentai.org*](http://exhentai.org/)                                    | :heavy_check_mark: |        ?         |
 | [hanime.tv(1080p, 720p, 480p, 360p)](https://hanime.tv)                  | :heavy_check_mark: |:heavy_check_mark:|
+| [hentai2read.com](https://hentai2read.com)                               | :heavy_check_mark: |         ?        |
 | [hentai2w.com(720p, 480p, 360p)](https://hentai2w.com)                   |         ?          |:heavy_check_mark:|
 | [hentaicloud.com(720p)](https://www.hentaicloud.com)                     |        :x:         |:heavy_check_mark:|
 | [hentaidude.com(720p, 480, 360p)](https://hentaidude.com/)               |         ?          |:heavy_check_mark:|
@@ -113,7 +115,6 @@ If your site is not listed - you can still try to use the universal downloader.
 
 ## TODO's
 
-- Implement concurrency for big single file downloads
 - Clean up coding and add more sites
 - Speed improvements
 
