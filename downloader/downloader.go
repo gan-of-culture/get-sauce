@@ -228,6 +228,7 @@ func (downloader *Downloader) concurWriteFile(URL string, file *os.File) error {
 					lock.Lock()
 					saveErr = err
 					lock.Unlock()
+
 				}
 				//fmt.Printf("Url: %s, Status: %s, Size: %d", url, res.Status, res.ContentLength)
 				if res.StatusCode != http.StatusPartialContent {
@@ -264,12 +265,15 @@ func (downloader *Downloader) concurWriteFile(URL string, file *os.File) error {
 		}()
 	}
 
-	downloader.progressBar = progressbar.NewOptions(
-		int(fileSize),
-		progressbar.OptionSetDescription(fmt.Sprintf("Downloading with workers %s ...", file.Name())),
-		progressbar.OptionSetPredictTime(true),
-		progressbar.OptionSetRenderBlankState(true),
-	)
+
+	if downloader.bar {
+		downloader.progressBar = progressbar.NewOptions(
+			int(fileSize),
+			progressbar.OptionSetDescription(fmt.Sprintf("Downloading with workers %s ...", file.Name())),
+			progressbar.OptionSetPredictTime(true),
+			progressbar.OptionSetRenderBlankState(true),
+		)
+	}
 
 	var offset int64
 	for ; fileSize > 0; fileSize -= pieceSize {
