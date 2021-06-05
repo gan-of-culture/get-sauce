@@ -228,6 +228,7 @@ func (downloader *Downloader) concurWriteFile(URL string, file *os.File) error {
 					lock.Lock()
 					saveErr = err
 					lock.Unlock()
+
 				}
 				//fmt.Printf("Url: %s, Status: %s, Size: %d", url, res.Status, res.ContentLength)
 				if res.StatusCode != http.StatusPartialContent {
@@ -263,6 +264,7 @@ func (downloader *Downloader) concurWriteFile(URL string, file *os.File) error {
 			}
 		}()
 	}
+
 
 	if downloader.bar {
 		downloader.progressBar = progressbar.NewOptions(
