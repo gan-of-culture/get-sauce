@@ -255,7 +255,9 @@ func (downloader *Downloader) concurWriteFile(URL string, file *os.File) error {
 				if err != nil {
 					saveErr = err
 				}
-				downloader.progressBar.Add(written)
+				if downloader.bar {
+					downloader.progressBar.Add(written)
+				}
 				lock.Unlock()
 
 				if saveErr != nil {
@@ -264,7 +266,6 @@ func (downloader *Downloader) concurWriteFile(URL string, file *os.File) error {
 			}
 		}()
 	}
-
 
 	if downloader.bar {
 		downloader.progressBar = progressbar.NewOptions(
