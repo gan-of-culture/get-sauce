@@ -22,7 +22,7 @@ func New() static.Extractor {
 func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 	data, err := imgboard.New().Extract(URL)
 	if len(data) > 0 && err == nil {
-		return data, err
+		return data, nil
 	}
 
 	u, _ := url.Parse(URL)
