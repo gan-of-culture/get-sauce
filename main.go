@@ -5,37 +5,11 @@ import (
 	"flag"
 	"fmt"
 	"log"
-	"net/url"
 	"sync"
 
 	"github.com/gan-of-culture/go-hentai-scraper/config"
 	"github.com/gan-of-culture/go-hentai-scraper/downloader"
-	"github.com/gan-of-culture/go-hentai-scraper/extractor/booru"
-	"github.com/gan-of-culture/go-hentai-scraper/extractor/damn"
-	"github.com/gan-of-culture/go-hentai-scraper/extractor/danbooru"
-	"github.com/gan-of-culture/go-hentai-scraper/extractor/ehentai"
-	"github.com/gan-of-culture/go-hentai-scraper/extractor/exhentai"
-	"github.com/gan-of-culture/go-hentai-scraper/extractor/hanime"
-	"github.com/gan-of-culture/go-hentai-scraper/extractor/hentai2read"
-	"github.com/gan-of-culture/go-hentai-scraper/extractor/hentai2w"
-	"github.com/gan-of-culture/go-hentai-scraper/extractor/hentaicloud"
-	"github.com/gan-of-culture/go-hentai-scraper/extractor/hentaidude"
-	"github.com/gan-of-culture/go-hentai-scraper/extractor/hentaihaven"
-	"github.com/gan-of-culture/go-hentai-scraper/extractor/hentaimama"
-	"github.com/gan-of-culture/go-hentai-scraper/extractor/hentais"
-	"github.com/gan-of-culture/go-hentai-scraper/extractor/hentaistream"
-	"github.com/gan-of-culture/go-hentai-scraper/extractor/hentaiworld"
-	"github.com/gan-of-culture/go-hentai-scraper/extractor/hentaiyes"
-	"github.com/gan-of-culture/go-hentai-scraper/extractor/hitomi"
-	"github.com/gan-of-culture/go-hentai-scraper/extractor/htstreaming"
-	"github.com/gan-of-culture/go-hentai-scraper/extractor/imgboard"
-	"github.com/gan-of-culture/go-hentai-scraper/extractor/miohentai"
-	"github.com/gan-of-culture/go-hentai-scraper/extractor/muchohentai"
-	"github.com/gan-of-culture/go-hentai-scraper/extractor/nhentai"
-	"github.com/gan-of-culture/go-hentai-scraper/extractor/ninehentai"
-	"github.com/gan-of-culture/go-hentai-scraper/extractor/pururin"
-	"github.com/gan-of-culture/go-hentai-scraper/extractor/rule34"
-	"github.com/gan-of-culture/go-hentai-scraper/extractor/universal"
+	"github.com/gan-of-culture/go-hentai-scraper/extractors"
 	"github.com/gan-of-culture/go-hentai-scraper/static"
 )
 
@@ -53,72 +27,11 @@ func init() {
 }
 
 func download(URL string) {
-	var err error
-	var data []static.Data
-	u, err := url.Parse(URL)
+	data, err := extractors.Extract(URL)
 	if err != nil {
 		log.Fatal(err)
 	}
-	log.Printf("Identified site: %s", u.Host)
 
-	switch u.Host {
-	case "9hentai.to", "www1.9hentai.ru":
-		data, err = ninehentai.Extract(URL)
-	case "booru.io":
-		data, err = booru.Extract(URL)
-	case "www.damn.stream", "damn.stream":
-		data, err = damn.Extract(URL)
-	case "danbooru.donmai.us":
-		data, err = danbooru.Extract(URL)
-	case "e-hentai.org":
-		data, err = ehentai.Extract(URL)
-	case "exhentai.org":
-		data, err = exhentai.Extract(URL)
-	case "hanime.tv":
-		data, err = hanime.Extract(URL)
-	case "hentai2w.com":
-		data, err = hentai2w.Extract(URL)
-	case "hentai2read.com":
-		data, err = hentai2read.Extract(URL)
-	case "www.hentaicloud.com":
-		data, err = hentaicloud.Extract(URL)
-	case "hentaidude.com":
-		data, err = hentaidude.Extract(URL)
-	case "hentaihaven.xxx":
-		data, err = hentaihaven.Extract(URL)
-	case "hentaimama.io":
-		data, err = hentaimama.Extract(URL)
-	case "www.hentais.tube":
-		data, err = hentais.Extract(URL)
-	case "hentaistream.moe":
-		data, err = hentaistream.Extract(URL)
-	case "hentaistream.xxx", "hentaihaven.red", "hentai.tv", "animeidhentai.com":
-		//all of them use the same cdn and nearly identical site structure
-		data, err = htstreaming.Extract(URL)
-	case "hentaiworld.tv":
-		data, err = hentaiworld.Extract(URL)
-	case "hentaiyes.com":
-		data, err = hentaiyes.Extract(URL)
-	case "hitomi.la":
-		data, err = hitomi.Extract(URL)
-	case "miohentai.com":
-		data, err = miohentai.Extract(URL)
-	case "muchohentai.com":
-		data, err = muchohentai.Extract(URL)
-	case "nhentai.net":
-		data, err = nhentai.Extract(URL)
-	case "pururin.io":
-		data, err = pururin.Extract(URL)
-	case "rule34.paheal.net":
-		data, err = rule34.Extract(URL)
-	case "rule34.xxx":
-		data, err = imgboard.Extract(URL)
-	default:
-		data, err = imgboard.Extract(URL)
-		if err != nil {
-			data, err = universal.Extract(URL, u.Host)
-		}
-	}
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -150,7 +63,7 @@ func download(URL string) {
 
 	var wg sync.WaitGroup
 	wg.Add(workers)
-	datachan := make(chan static.Data, lenOfData)
+	datachan := make(chan *static.Data, lenOfData)
 
 	downloader := downloader.New(config.SelectStream, true)
 	for i := 0; i < workers; i++ {

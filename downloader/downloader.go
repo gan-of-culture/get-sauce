@@ -37,7 +37,7 @@ type downloadInfo struct {
 }
 
 type Downloader struct {
-	data        static.Data
+	data        *static.Data
 	stream      string
 	client      *http.Client
 	filePath    string
@@ -59,7 +59,7 @@ func New(stream string, bar bool) *Downloader {
 	}
 }
 
-func (downloader *Downloader) Download(data static.Data) error {
+func (downloader *Downloader) Download(data *static.Data) error {
 	downloader.data = data
 
 	// select stream to download
