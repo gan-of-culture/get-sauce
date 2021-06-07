@@ -10,6 +10,7 @@ import (
 	"github.com/gan-of-culture/go-hentai-scraper/extractors/ehentai"
 	"github.com/gan-of-culture/go-hentai-scraper/extractors/exhentai"
 	"github.com/gan-of-culture/go-hentai-scraper/extractors/hanime"
+	"github.com/gan-of-culture/go-hentai-scraper/extractors/hentai2read"
 	"github.com/gan-of-culture/go-hentai-scraper/extractors/hentai2w"
 	"github.com/gan-of-culture/go-hentai-scraper/extractors/hentaicloud"
 	"github.com/gan-of-culture/go-hentai-scraper/extractors/hentaidude"
@@ -24,6 +25,7 @@ import (
 	"github.com/gan-of-culture/go-hentai-scraper/extractors/miohentai"
 	"github.com/gan-of-culture/go-hentai-scraper/extractors/muchohentai"
 	"github.com/gan-of-culture/go-hentai-scraper/extractors/nhentai"
+	"github.com/gan-of-culture/go-hentai-scraper/extractors/ninehentai"
 	"github.com/gan-of-culture/go-hentai-scraper/extractors/pururin"
 	"github.com/gan-of-culture/go-hentai-scraper/extractors/rule34"
 	"github.com/gan-of-culture/go-hentai-scraper/extractors/universal"
@@ -46,6 +48,7 @@ func init() {
 		"e-hentai.org":        ehentai.New(),
 		"exhentai.org":        exhentai.New(),
 		"hanime.tv":           hanime.New(),
+		"hentai2read.com":     hentai2read.New(),
 		"hentai2w.com":        hentai2w.New(),
 		"www.hentaicloud.com": hentaicloud.New(),
 		"hentaidude.com":      hentaidude.New(),
@@ -65,6 +68,7 @@ func init() {
 		"nhentai.net":         nhentai.New(),
 		"pururin.io":          pururin.New(),
 		"rule34.paheal.net":   rule34.New(),
+		"9hentai.to":          ninehentai.New(),
 	}
 }
 
@@ -77,5 +81,8 @@ func Extract(URL string) ([]*static.Data, error) {
 	log.Printf("Identified site: %s", u.Host)
 
 	extractor := extractorsMap[u.Host]
+	if extractor == nil {
+		extractor = extractorsMap[""]
+	}
 	return extractor.Extract(URL)
 }
