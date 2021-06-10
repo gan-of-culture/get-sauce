@@ -15,7 +15,6 @@ import (
 
 	"github.com/gan-of-culture/go-hentai-scraper/config"
 	"github.com/grafov/m3u8"
-	"github.com/schollz/progressbar/v2"
 )
 
 func (downloader *Downloader) parseSegments(URL string) ([]*m3u8.MediaSegment, error) {
@@ -106,14 +105,7 @@ func (downloader *Downloader) writeM3U(url string, file *os.File) error {
 		return err
 	}
 
-	if downloader.bar {
-		downloader.progressBar = progressbar.NewOptions(
-			len(segments),
-			progressbar.OptionSetDescription(fmt.Sprintf("Downloading segements of %s ...", file.Name())),
-			progressbar.OptionSetPredictTime(true),
-			progressbar.OptionSetRenderBlankState(true),
-		)
-	}
+	downloader.initPB(int64(len(segments)), fmt.Sprintf("Downloading segements of %s ...", file.Name()), false)
 
 	lenOfSegements := len(segments)
 	var saveErr error
@@ -231,14 +223,7 @@ func (downloader *Downloader) mergeSegments(file *os.File, segments []*m3u8.Medi
 		return segments[i].SeqId < segments[j].SeqId
 	})
 
-	if downloader.bar {
-		downloader.progressBar = progressbar.NewOptions(
-			len(segments),
-			progressbar.OptionSetDescription(fmt.Sprintf("Merging into %s ...", file.Name())),
-			progressbar.OptionSetPredictTime(true),
-			progressbar.OptionSetRenderBlankState(true),
-		)
-	}
+	downloader.initPB(int64(len(segments)), fmt.Sprintf("Merging into %s ...", file.Name()), false)
 
 	for _, seg := range segments {
 		d, err := decrypt(seg, filepath.Join(downloader.tmpFilePath, seg.Title+".ts"))

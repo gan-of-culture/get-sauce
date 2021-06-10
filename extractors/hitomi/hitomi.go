@@ -192,12 +192,13 @@ func subdomainFromURL(URL, base string) string {
 		return "a"
 	}
 
-	g, err := strconv.ParseInt(m[1], b, 0)
+	g, err := strconv.ParseInt(m[1], b, 64)
 	if err == nil {
-		if g < 0x30 {
+		// check these values if it doesn't work anymore
+		if g < 0x80 {
 			number_of_frontends = 2
 		}
-		if g < 0x09 {
+		if g < 0x59 {
 			g = 1
 		}
 		retval = subdomainFromGalleryid(g, int64(number_of_frontends)) + retval

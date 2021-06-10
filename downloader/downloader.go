@@ -170,7 +170,7 @@ func (downloader *Downloader) save(url static.URL, fileURI string) error {
 	defer file.Close()
 
 	//if stream size bigger than 10MB then use concurWrite
-	if downloader.data.Streams[downloader.stream].Size > 10000000 && config.Workers > 1 {
+	if downloader.data.Streams[downloader.stream].Size > 10_000_000 && config.Workers > 1 {
 
 		err = downloader.concurWriteFile(url.URL, file)
 		if err != nil {
@@ -267,14 +267,7 @@ func (downloader *Downloader) concurWriteFile(URL string, file *os.File) error {
 		}()
 	}
 
-	if downloader.bar {
-		downloader.progressBar = progressbar.NewOptions(
-			int(fileSize),
-			progressbar.OptionSetDescription(fmt.Sprintf("Downloading with workers %s ...", file.Name())),
-			progressbar.OptionSetPredictTime(true),
-			progressbar.OptionSetRenderBlankState(true),
-		)
-	}
+	downloader.initPB(fileSize, fmt.Sprintf("Downloading with workers %s ...", file.Name()), false)
 
 	var offset int64
 	for ; fileSize > 0; fileSize -= pieceSize {
@@ -320,17 +313,10 @@ func (downloader *Downloader) writeFile(URL string, file *os.File) error {
 
 	var writer io.Writer
 	writer = file
-	downloader.progressBar = nil
+	//some sites do not return "content-type" in http header
+	//it will render a blank progressbar
+	downloader.initPB(res.ContentLength, fmt.Sprintf("Downloading %s ...", file.Name()), true)
 	if downloader.bar {
-		//some sites do not return "content-type" in http header
-		//it will render a blank progressbar
-		downloader.progressBar = progressbar.NewOptions(
-			int(res.ContentLength),
-			progressbar.OptionSetBytes(int(res.ContentLength)),
-			progressbar.OptionSetDescription(fmt.Sprintf("Downloading %s ...", file.Name())),
-			progressbar.OptionSetPredictTime(true),
-			progressbar.OptionSetRenderBlankState(true),
-		)
 		writer = io.MultiWriter(file, downloader.progressBar)
 	}
 
@@ -341,4 +327,27 @@ func (downloader *Downloader) writeFile(URL string, file *os.File) error {
 		return fmt.Errorf("file copy error: %s", copyErr)
 	}
 	return nil
+}
+
+func (downloader *Downloader) initPB(len int64, descr string, asBytes bool) {
+	if !downloader.bar {
+		return
+	}
+	if asBytes {
+		downloader.progressBar = progressbar.NewOptions(
+			int(len),
+			progressbar.OptionSetBytes64(len),
+			progressbar.OptionSetDescription(descr),
+			progressbar.OptionSetPredictTime(true),
+			progressbar.OptionSetRenderBlankState(true),
+		)
+		return
+	}
+	downloader.progressBar = progressbar.NewOptions(
+		int(len),
+		progressbar.OptionSetDescription(descr),
+		progressbar.OptionSetPredictTime(true),
+		progressbar.OptionSetRenderBlankState(true),
+	)
+
 }
