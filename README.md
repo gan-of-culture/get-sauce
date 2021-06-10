@@ -57,7 +57,7 @@ go run main.go ...
 
 --------------------------------------------------------------------------------
 
- -t             Number of download workers
+ -w             Number of download workers
 
  go-hentai-scraper -w 4 http...
 
