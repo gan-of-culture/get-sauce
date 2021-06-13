@@ -83,10 +83,10 @@ func extractData(URL string) (static.Data, error) {
 	return static.Data{
 		Site:  site,
 		Title: title,
-		Type:  fmt.Sprintf("video/%s", srcMeta[2]),
-		Streams: map[string]static.Stream{
+		Type:  "video",
+		Streams: map[string]*static.Stream{
 			"0": {
-				URLs: []static.URL{
+				URLs: []*static.URL{
 					0: {
 						URL: srcMeta[1],
 						Ext: srcMeta[2],

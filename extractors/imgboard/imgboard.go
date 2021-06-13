@@ -187,9 +187,9 @@ func extractData(url string) (static.Data, error) {
 		Site:  siteURL,
 		Title: fmt.Sprintf("%s_%s", siteName, strings.ReplaceAll(id, "Id: ", "")),
 		Type:  utils.GetMediaType(matchedPostURL[2]),
-		Streams: map[string]static.Stream{
+		Streams: map[string]*static.Stream{
 			"0": {
-				URLs: []static.URL{
+				URLs: []*static.URL{
 					{
 						URL: matchedPostURL[1],
 						Ext: matchedPostURL[2],
@@ -215,9 +215,9 @@ func extractDataFromDirectLink(url string) (static.Data, error) {
 		Site:  siteURL,
 		Title: matchedURL[1],
 		Type:  utils.GetMediaType(matchedURL[2]),
-		Streams: map[string]static.Stream{
+		Streams: map[string]*static.Stream{
 			"0": {
-				URLs: []static.URL{
+				URLs: []*static.URL{
 					{
 						URL: url,
 						Ext: matchedURL[2],

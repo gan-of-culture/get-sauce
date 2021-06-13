@@ -2,7 +2,7 @@
 
 ![GitHub Workflow Status](https://img.shields.io/github/workflow/status/gan-of-culture/go-hentai-scraper/Go)
 
-Is a commandline tool to download hentai made in golang by me. This scraper is not using official APIs since some of them have limitations. Unfortunatly this also means that for some sites it might take longer to download content because the connection will be restricted.  
+This scraper is not using official APIs since some of them have limitations. Unfortunatly this also means that for some sites it might take longer to download content because the connection can be restricted.  
 You can see what site is supported to what extent [here](#supported-sites).
 
 ## Setup guide
@@ -57,7 +57,7 @@ go run main.go ...
 
 --------------------------------------------------------------------------------
 
- -t             Number of download workers
+ -w             Number of download workers
 
  go-hentai-scraper -w 4 http...
 

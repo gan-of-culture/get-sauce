@@ -11,7 +11,6 @@ import (
 	"github.com/gan-of-culture/go-hentai-scraper/request"
 	"github.com/gan-of-culture/go-hentai-scraper/static"
 	"github.com/gan-of-culture/go-hentai-scraper/utils"
-	"github.com/grafov/m3u8"
 )
 
 type m3u8File struct {
@@ -97,37 +96,30 @@ func extractData(URL string) (static.Data, error) {
 		return static.Data{}, err
 	}
 
-	p, listType, err := m3u8.DecodeFrom(strings.NewReader(m3u8String), true)
+	dummyStreams, err := utils.ParseM3UMaster(&m3u8String)
 	if err != nil {
-		return static.Data{}, err
-	}
-
-	master := m3u8.NewMasterPlaylist()
-	switch listType {
-	case m3u8.MEDIA:
+		URLs, key, err := request.GetM3UMeta(&m3u8String, masterURL, "ts")
+		if err != nil {
+			return static.Data{}, err
+		}
 		return static.Data{
 			Site:  site,
 			Title: title,
-			Type:  "application/x-mpegurl",
-			Streams: map[string]static.Stream{
+			Type:  "video",
+			Streams: map[string]*static.Stream{
 				"0": {
-					URLs: []static.URL{
-						{
-							URL: masterURL,
-							Ext: "ts",
-						},
-					},
+					URLs:    URLs,
 					Quality: "best",
 					Info:    masterURL,
+					Ext:     "ts",
+					Key:     key,
 				},
 			},
 			Url: URL,
 		}, nil
-	case m3u8.MASTER:
-		master = p.(*m3u8.MasterPlaylist)
 	}
 
-	streams := map[string]static.Stream{}
+	streams := map[string]*static.Stream{}
 	streamIdx := 0
 	vOLD := servers[0]
 	for _, v := range servers {
@@ -137,25 +129,29 @@ func extractData(URL string) (static.Data, error) {
 		if err != nil {
 			return static.Data{}, fmt.Errorf("[Muchohentai] Invalid m3u8 url %s", URL)
 		}
-		for _, variant := range master.Variants {
-			if variant.Iframe {
-				continue
-			}
-			mediaURL, err := baseURL.Parse(variant.URI)
+		for _, variant := range dummyStreams {
+			streamURL, err := baseURL.Parse(variant.URLs[0].URL)
 			if err != nil {
 				return static.Data{}, err
 			}
 
-			streams[strconv.Itoa(streamIdx)] = static.Stream{
-				URLs: []static.URL{
-					{
-						URL: mediaURL.String(),
-						Ext: "ts",
-					},
-				},
-				Quality: variant.Resolution,
-				Size:    int64(variant.Bandwidth),
-				Info:    variant.Codecs,
+			master, err := request.Get(streamURL.String())
+			if err != nil {
+				return static.Data{}, err
+			}
+
+			URLs, key, err := request.GetM3UMeta(&master, streamURL.String(), "ts")
+			if err != nil {
+				return static.Data{}, err
+			}
+
+			streams[strconv.Itoa(streamIdx)] = &static.Stream{
+				URLs:    URLs,
+				Quality: variant.Quality,
+				Size:    variant.Size,
+				Info:    variant.Info, //contains codec
+				Ext:     "ts",
+				Key:     key,
 			}
 			streamIdx++
 		}
@@ -164,7 +160,7 @@ func extractData(URL string) (static.Data, error) {
 	return static.Data{
 		Site:    site,
 		Title:   title,
-		Type:    "application/x-mpegurl",
+		Type:    "video",
 		Streams: streams,
 		Url:     URL,
 	}, nil

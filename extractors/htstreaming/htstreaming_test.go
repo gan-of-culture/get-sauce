@@ -11,7 +11,7 @@ func TestParseURL(t *testing.T) {
 		url  string
 		want int
 	}{
-		{
+		/*{
 			name: "Single Episode hentaistream.xxx",
 			url:  "https://hentaistream.xxx/watch/tonari-no-ie-no-anette-san-the-animation-episode-1_waYqxLSASjFPICZ.html",
 			want: 1,
@@ -19,7 +19,7 @@ func TestParseURL(t *testing.T) {
 			name: "Overview hentaistream.xxx",
 			url:  "https://hentaistream.xxx/videos/category/749",
 			want: 20,
-		}, {
+		},*/{
 			name: "Single Episode hentaihaven.red/",
 			url:  "https://hentaihaven.red/hentai/joshi-luck-episode-1/",
 			want: 1,
@@ -61,14 +61,14 @@ func TestExtract(t *testing.T) {
 		url  string
 		want int
 	}{
-		{
+		/*{
 			name: "Single Episode hentaistream.xxx",
-			url:  "https://hentaistream.xxx/watch/ecchi-na-onee-chan-ni-shiboraretai-episode-1-subbed_2v5zblbKJSynGJ6.html",
+			url:  "https://hentaistream.xxx/watch/netoshisu-episode-1_VpauMk84OoQXof3.html",
 			want: 1,
-		}, /*{
+		}, {
 			name: "Overview hentaistream.xxx",
 			url:  "https://hentaistream.xxx/videos/category/749",
-			want: 20,
+			want: 47,
 		},*/{
 			name: "Single Episode hentaihaven.red/",
 			url:  "https://hentaihaven.red/hentai/joshi-luck-episode-1/",

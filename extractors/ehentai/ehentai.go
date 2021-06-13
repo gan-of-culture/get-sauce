@@ -104,18 +104,18 @@ func extractData(URL string) ([]*static.Data, error) {
 	for _, idx := range utils.NeedDownloadList(len(imgURLs)) {
 		htmlString, err := request.Get(imgURLs[idx-1])
 		if err != nil {
-			return nil, errors.New("[E-Hentai] unvaild image URL")
+			return nil, errors.New("[E-Hentai] invaild image URL")
 		}
 
 		title := utils.GetH1(&htmlString, 0)
 		if title == "" {
-			return nil, errors.New("[E-Hentai] unvaild image title")
+			return nil, errors.New("[E-Hentai] invaild image title")
 		}
 
 		re := regexp.MustCompile(`<div>[^.]+\.([^::]+):: ([^::]+) :: ([^.]+.[0-9]+) ([A-Z]{2})`)
 		matchedFileInfo := re.FindAllStringSubmatch(htmlString, -1)
 		if len(matchedFileInfo) == 0 {
-			return nil, errors.New("[E-Hentai] unvaild image file info")
+			return nil, errors.New("[E-Hentai] invaild image file info")
 		}
 		fileInfo := matchedFileInfo[0]
 
@@ -123,7 +123,7 @@ func extractData(URL string) ([]*static.Data, error) {
 		re = regexp.MustCompile(`<img id="img" src="([^"]+)`)
 		matchedSrcURL := re.FindAllStringSubmatch(htmlString, -1)
 		if len(matchedSrcURL) != 1 {
-			return nil, errors.New("[E-Hentai] unvaild image src")
+			return nil, errors.New("[E-Hentai] invaild image src")
 		}
 
 		// size will be empty if err occurs
@@ -133,9 +133,9 @@ func extractData(URL string) ([]*static.Data, error) {
 			Site:  site,
 			Title: fmt.Sprintf("%s - %d", title, idx),
 			Type:  "image",
-			Streams: map[string]static.Stream{
+			Streams: map[string]*static.Stream{
 				"0": {
-					URLs: []static.URL{
+					URLs: []*static.URL{
 						{
 							URL: matchedSrcURL[0][1],
 							Ext: fileInfo[1],

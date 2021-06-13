@@ -137,26 +137,34 @@ func extractData(URL string) (static.Data, error) {
 		return static.Data{}, err
 	}
 
-	streams := map[string]static.Stream{}
+	streams := map[string]*static.Stream{}
 	for _, stream := range pData.VideosManifest.Servers[0].Streams {
+		streamURL := fmt.Sprintf(apiM3U8, stream.ID)
 
-		streams[fmt.Sprintf("%d", len(streams))] = static.Stream{
-			URLs: []static.URL{
-				{
-					URL: fmt.Sprintf(apiM3U8, stream.ID),
-					Ext: "ts",
-				},
-			},
+		media, err := request.Get(streamURL)
+		if err != nil {
+			return static.Data{}, err
+		}
+
+		URLs, key, err := request.GetM3UMeta(&media, streamURL, "ts")
+		if err != nil {
+			return static.Data{}, err
+		}
+
+		streams[fmt.Sprintf("%d", len(streams))] = &static.Stream{
+			URLs:    URLs,
 			Quality: fmt.Sprintf("%v x %s", stream.Width, stream.Height),
 			Size:    utils.CalcSizeInByte(stream.FileSizeInMBs, "MB"),
 			Info:    stream.Filename,
+			Ext:     "ts",
+			Key:     key,
 		}
 	}
 
 	return static.Data{
 		Site:    site,
 		Title:   pData.HentaiVideo.Name,
-		Type:    "application/x-mpegurl",
+		Type:    "video",
 		Streams: streams,
 		Url:     URL,
 	}, nil

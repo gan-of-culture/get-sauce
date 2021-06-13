@@ -90,10 +90,10 @@ func extractData(URL string) (static.Data, error) {
 	return static.Data{
 		Site:  site,
 		Title: strings.Split(utils.GetMeta(&htmlString, "og:title"), " | ")[0],
-		Type:  headers.Get("content-type"),
-		Streams: map[string]static.Stream{
+		Type:  utils.GetMediaType(headers.Get("content-type")),
+		Streams: map[string]*static.Stream{
 			"0": {
-				URLs: []static.URL{
+				URLs: []*static.URL{
 					{
 						URL: srcURL,
 						Ext: ext,

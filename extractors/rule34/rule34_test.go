@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/gan-of-culture/go-hentai-scraper/config"
+	"github.com/gan-of-culture/go-hentai-scraper/static"
 )
 
 func TestParseURL(t *testing.T) {
@@ -51,7 +52,7 @@ func TestParseURL(t *testing.T) {
 func TestExtract(t *testing.T) {
 	type want struct {
 		Title   string
-		Type    string
+		Type    static.DataType
 		DataLen int
 	}
 	tests := []struct {
@@ -64,7 +65,7 @@ func TestExtract(t *testing.T) {
 			url:  "https://rule34.paheal.net/post/view/3427635",
 			want: want{
 				Title:   "Magical_Sempai_(Series) Magician_Sempai skyfreedom 3427635",
-				Type:    "image",
+				Type:    static.DataTypeImage,
 				DataLen: 1,
 			},
 		}, {
@@ -72,7 +73,7 @@ func TestExtract(t *testing.T) {
 			url:  "https://rule34.paheal.net/post/view/3464181",
 			want: want{
 				Title:   "Hv54rDSL Nier Nier_Automata YoRHa_No.2_Type_B animated audiodude blender sound webm 3464181",
-				Type:    "video",
+				Type:    static.DataTypeVideo,
 				DataLen: 1,
 			},
 		}, {
@@ -80,7 +81,7 @@ func TestExtract(t *testing.T) {
 			url:  "https://rule34.paheal.net/post/view/3461411",
 			want: want{
 				Title:   "World_of_Warcraft animated blood_elf 3461411",
-				Type:    "gif",
+				Type:    static.DataTypeImage,
 				DataLen: 1,
 			},
 		},

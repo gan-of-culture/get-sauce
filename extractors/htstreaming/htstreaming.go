@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
-	"net/http"
 	"net/url"
 	"regexp"
 	"strings"
@@ -12,7 +11,6 @@ import (
 	"github.com/gan-of-culture/go-hentai-scraper/request"
 	"github.com/gan-of-culture/go-hentai-scraper/static"
 	"github.com/gan-of-culture/go-hentai-scraper/utils"
-	"github.com/grafov/m3u8"
 )
 
 type source struct {
@@ -148,39 +146,48 @@ func ExtractData(URL string) (static.Data, error) {
 
 	baseCDNURL := m3u8MasterURL[:len(m3u8MasterURL)-10] //remove master.txt
 
-	m3u8Master, err := request.Request(http.MethodGet, m3u8MasterURL, nil, nil)
+	m3u8Master, err := request.Get(m3u8MasterURL)
 	if err != nil {
 		return static.Data{}, err
 	}
-	defer m3u8Master.Body.Close()
 
-	p := m3u8.NewMasterPlaylist()
-	err = p.DecodeFrom(m3u8Master.Body, false)
+	dummyStreams, err := utils.ParseM3UMaster(&m3u8Master)
 	if err != nil {
-		fmt.Println(err)
+		return static.Data{}, err
 	}
 
-	streams := map[string]static.Stream{}
-	for i, stream := range p.Variants {
+	streams := map[string]*static.Stream{}
+	idx := 0
+	for _, stream := range dummyStreams {
+		streamURL := fmt.Sprintf("%s%s", baseCDNURL, stream.URLs[0].URL)
+
+		master, err := request.Get(streamURL)
+		if err != nil {
+			return static.Data{}, err
+		}
+
+		URLs, key, err := request.GetM3UMeta(&master, streamURL, ext)
+		if err != nil {
+			return static.Data{}, err
+		}
+
 		// len(p.Variants)-i-1 builds stream map in reverse order
 		// in order for the best quality stream to be on top
-		streams[fmt.Sprintf("%d", len(p.Variants)-i-1)] = static.Stream{
-			URLs: []static.URL{
-				{
-					URL: fmt.Sprintf("%s%s", baseCDNURL, stream.URI),
-					Ext: ext,
-				},
-			},
-			Quality: stream.Resolution,
-			Size:    int64(stream.Bandwidth),
+		streams[fmt.Sprintf("%d", len(dummyStreams)-idx-1)] = &static.Stream{
+			URLs:    URLs,
+			Quality: stream.Quality,
+			Size:    stream.Size,
 			Info:    pData.Title,
+			Ext:     ext,
+			Key:     key,
 		}
+		idx += 1
 	}
 
 	return static.Data{
 		Site:    site,
 		Title:   title,
-		Type:    "application/x-mpegurl",
+		Type:    "video",
 		Streams: streams,
 		Url:     URL,
 	}, nil

@@ -71,9 +71,9 @@ func extractData(URL string) (static.Data, error) {
 	matchedPageInfo := re.FindStringSubmatch(htmlString) //1=numPages
 	pages, _ := strconv.Atoi(matchedPageInfo[1])
 
-	URLs := []static.URL{}
+	URLs := []*static.URL{}
 	for _, pageNumber := range utils.NeedDownloadList(pages) {
-		URLs = append(URLs, static.URL{
+		URLs = append(URLs, &static.URL{
 			URL: fmt.Sprintf(cdn, ID, pageNumber),
 			Ext: "jpg",
 		})
@@ -83,7 +83,7 @@ func extractData(URL string) (static.Data, error) {
 		Site:  site,
 		Title: strings.Split(utils.GetMeta(&htmlString, "og:title"), "/")[0],
 		Type:  "image/jpg",
-		Streams: map[string]static.Stream{
+		Streams: map[string]*static.Stream{
 			"0": {
 				URLs:    URLs,
 				Quality: "unknown",

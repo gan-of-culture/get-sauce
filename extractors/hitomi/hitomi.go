@@ -143,7 +143,7 @@ func extractData(URL string) (static.Data, error) {
 	base := ""
 	u := ""
 	imgFile := img{}
-	URLs := []static.URL{}
+	URLs := []*static.URL{}
 	pages := utils.NeedDownloadList(len(galleryData.Files))
 	for _, pageIdx := range pages {
 		base = ""
@@ -152,7 +152,7 @@ func extractData(URL string) (static.Data, error) {
 			base = "a"
 		}
 		u = urlFromURL(urlFromHash(imgFile), base)
-		URLs = append(URLs, static.URL{
+		URLs = append(URLs, &static.URL{
 			URL: u,
 			Ext: utils.GetLastItemString(strings.Split(u, ".")),
 		})
@@ -162,7 +162,7 @@ func extractData(URL string) (static.Data, error) {
 		Site:  site,
 		Title: galleryData.Title,
 		Type:  "image",
-		Streams: map[string]static.Stream{
+		Streams: map[string]*static.Stream{
 			"0": {
 				URLs:    URLs,
 				Quality: "best",
@@ -192,12 +192,13 @@ func subdomainFromURL(URL, base string) string {
 		return "a"
 	}
 
-	g, err := strconv.ParseInt(m[1], b, 0)
+	g, err := strconv.ParseInt(m[1], b, 64)
 	if err == nil {
-		if g < 0x30 {
+		// check these values if it doesn't work anymore
+		if g < 0x80 {
 			number_of_frontends = 2
 		}
-		if g < 0x09 {
+		if g < 0x59 {
 			g = 1
 		}
 		retval = subdomainFromGalleryid(g, int64(number_of_frontends)) + retval

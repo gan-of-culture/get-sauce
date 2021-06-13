@@ -74,10 +74,10 @@ func extractData(URL string) (static.Data, error) {
 	return static.Data{
 		Site:  site,
 		Title: title,
-		Type:  utils.GetMediaType(srcTag[2]),
-		Streams: map[string]static.Stream{
+		Type:  "video",
+		Streams: map[string]*static.Stream{
 			"0": {
-				URLs: []static.URL{
+				URLs: []*static.URL{
 					{
 						URL: srcTag[1],
 						Ext: srcTag[2],

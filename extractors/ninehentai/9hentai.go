@@ -242,9 +242,9 @@ func getBook(s searchReq) ([]gallery, error) {
 }
 
 func extractData(g gallery) (static.Data, error) {
-	URLs := []static.URL{}
+	URLs := []*static.URL{}
 	for i := 1; i < int(g.TotalPage); i++ {
-		URLs = append(URLs, static.URL{
+		URLs = append(URLs, &static.URL{
 			URL: fmt.Sprintf("%s%d/%d.jpg", g.ImageServer, g.ID, i),
 			Ext: "jpg",
 		})
@@ -254,7 +254,7 @@ func extractData(g gallery) (static.Data, error) {
 		Site:  site,
 		Title: g.Title,
 		Type:  "image",
-		Streams: map[string]static.Stream{
+		Streams: map[string]*static.Stream{
 			"0": {
 				URLs:    URLs,
 				Quality: "best",
