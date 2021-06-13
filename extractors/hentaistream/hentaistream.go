@@ -4,7 +4,6 @@ import (
 	"encoding/base64"
 	"fmt"
 	"regexp"
-	"strconv"
 	"strings"
 	"time"
 
@@ -127,15 +126,15 @@ func extractData(URL string) (static.Data, error) {
 	}
 	baseDownloadURL := strings.Split(strings.TrimPrefix(strings.Trim(string(downloadURLBytes), `"`), "url="), ";")[0]
 
-	streams := make(map[string]static.Stream)
+	streams := make(map[string]*static.Stream)
 	for i, quality := range players[matchedBase64CDNURL[1]] {
 		size, err := request.Size(fmt.Sprintf("%s%s", baseDownloadURL, quality.codec), site)
 		if err != nil {
 			return static.Data{}, err
 		}
 
-		streams[strconv.Itoa(i)] = static.Stream{
-			URLs: []static.URL{
+		streams[fmt.Sprint(i)] = &static.Stream{
+			URLs: []*static.URL{
 				{
 					URL: fmt.Sprintf("%s%s", baseDownloadURL, quality.codec),
 					Ext: strings.Split(quality.vType, "/")[1],

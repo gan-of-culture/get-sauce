@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/gan-of-culture/go-hentai-scraper/config"
+	"github.com/gan-of-culture/go-hentai-scraper/static"
 )
 
 func TestParseURL(t *testing.T) {
@@ -80,7 +81,7 @@ func TestParseURL(t *testing.T) {
 func TestExtract(t *testing.T) {
 	type want struct {
 		Title   string
-		Type    string
+		Type    static.DataType
 		DataLen int
 	}
 	tests := []struct {
@@ -93,7 +94,7 @@ func TestExtract(t *testing.T) {
 			url:  "https://gelbooru.com/index.php?page=post&s=view&id=5888807",
 			want: want{
 				Title:   "gelbooru_5888807",
-				Type:    "image/png",
+				Type:    static.DataTypeImage,
 				DataLen: 1,
 			},
 		}, {
@@ -101,7 +102,7 @@ func TestExtract(t *testing.T) {
 			url:  "https://rule34.xxx/index.php?page=post&s=view&id=4470579",
 			want: want{
 				Title:   "rule34_4470579",
-				Type:    "video/mp4",
+				Type:    static.DataTypeVideo,
 				DataLen: 1,
 			},
 		}, {
@@ -109,7 +110,7 @@ func TestExtract(t *testing.T) {
 			url:  "https://konachan.com/post/show/323560/anthropomorphism-azur_lane-black_hair-blush-breast",
 			want: want{
 				Title:   "konachan_323560",
-				Type:    "image/jpg",
+				Type:    static.DataTypeImage,
 				DataLen: 1,
 			},
 		}, {
@@ -117,7 +118,7 @@ func TestExtract(t *testing.T) {
 			url:  "https://yande.re/post/show/745150",
 			want: want{
 				Title:   "yande_745150",
-				Type:    "image/png",
+				Type:    static.DataTypeImage,
 				DataLen: 1,
 			},
 		}, {
@@ -125,7 +126,7 @@ func TestExtract(t *testing.T) {
 			url:  "https://tbib.org/index.php?page=post&s=view&id=9022091",
 			want: want{
 				Title:   "tbib_9022091",
-				Type:    "image/jpg",
+				Type:    static.DataTypeImage,
 				DataLen: 1,
 			},
 		},

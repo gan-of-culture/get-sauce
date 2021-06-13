@@ -124,16 +124,13 @@ func extractData(URL string) (static.Data, error) {
 		}
 	}
 
-	dataType := "image"
-	if strings.HasSuffix(postSrcURL, ".gif") {
-		dataType = "gif"
-	}
+	dataType := static.DataTypeImage
 	if strings.Contains(htmlString, "#Videomain") {
-		dataType = "video"
+		dataType = static.DataTypeVideo
 	}
 
 	var quality string
-	if dataType == "video" {
+	if dataType == static.DataTypeVideo {
 		re := regexp.MustCompile(`id='main_image'.+\n[^0-9]+([0-9]+)[^0-9]+([0-9]+)`)
 		matchedQualityProperties := re.FindStringSubmatch(htmlString)
 		if len(matchedQualityProperties) != 3 {
@@ -154,9 +151,9 @@ func extractData(URL string) (static.Data, error) {
 		Site:  site,
 		Title: title,
 		Type:  dataType,
-		Streams: map[string]static.Stream{
+		Streams: map[string]*static.Stream{
 			"0": {
-				URLs: []static.URL{
+				URLs: []*static.URL{
 					{
 						URL: postSrcURL,
 						Ext: utils.GetLastItemString(strings.Split(postSrcURL, ".")),

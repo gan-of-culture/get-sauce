@@ -143,7 +143,7 @@ func extractData(URL string) (static.Data, error) {
 	base := ""
 	u := ""
 	imgFile := img{}
-	URLs := []static.URL{}
+	URLs := []*static.URL{}
 	pages := utils.NeedDownloadList(len(galleryData.Files))
 	for _, pageIdx := range pages {
 		base = ""
@@ -152,7 +152,7 @@ func extractData(URL string) (static.Data, error) {
 			base = "a"
 		}
 		u = urlFromURL(urlFromHash(imgFile), base)
-		URLs = append(URLs, static.URL{
+		URLs = append(URLs, &static.URL{
 			URL: u,
 			Ext: utils.GetLastItemString(strings.Split(u, ".")),
 		})
@@ -162,7 +162,7 @@ func extractData(URL string) (static.Data, error) {
 		Site:  site,
 		Title: galleryData.Title,
 		Type:  "image",
-		Streams: map[string]static.Stream{
+		Streams: map[string]*static.Stream{
 			"0": {
 				URLs:    URLs,
 				Quality: "best",

@@ -63,20 +63,25 @@ func (downloader *Downloader) Download(data *static.Data) error {
 	downloader.data = data
 
 	// select stream to download
-	var stream static.Stream
+	var stream *static.Stream
 	var ok bool
 	if stream, ok = downloader.data.Streams[downloader.stream]; !ok {
-		return fmt.Errorf("Stream %s not found", downloader.stream)
+		return fmt.Errorf("stream %s not found", downloader.stream)
 	}
+	lenOfUrls := len(stream.URLs)
 
-	if downloader.data.Type == "application/x-mpegurl" {
+	needsMerge := false
+	if downloader.data.Type == "video" && lenOfUrls > 1 {
 		// ensure a different tmpDir for each download so concurrent processes won't colide
 		h := sha1.New()
 		h.Write([]byte(downloader.data.Title))
 		downloader.tmpFilePath = filepath.Join(downloader.filePath, fmt.Sprintf("%x/", h.Sum(nil)[15:]))
+		err := os.MkdirAll(downloader.tmpFilePath, os.ModePerm)
+		if err != nil {
+			return err
+		}
+		needsMerge = true
 	}
-
-	lenOfUrls := len(stream.URLs)
 
 	appendEnum := false
 	if lenOfUrls > 1 {
@@ -133,14 +138,73 @@ func (downloader *Downloader) Download(data *static.Data) error {
 		fileURI = strings.TrimSpace(re.ReplaceAllString(fileURI, " "))
 
 		//build final file URI
-		fileURI = filepath.Join(downloader.filePath, fileURI+"."+URL.Ext)
+		if needsMerge {
+			fileURI = filepath.Join(downloader.tmpFilePath, fmt.Sprintf("%d.%s", pageNumbers[idx], URL.Ext))
+		} else {
+			fileURI = filepath.Join(downloader.filePath, fileURI+"."+URL.Ext)
+		}
 
-		URLchan <- downloadInfo{URL, fileURI}
+		URLchan <- downloadInfo{*URL, fileURI}
 	}
 	close(URLchan)
 	wg.Wait()
 	if saveErr != nil {
 		return saveErr
+	}
+
+	if !needsMerge {
+		return nil
+	}
+
+	fileURI = data.Title
+
+	if config.OutputName != "" {
+		fileURI = config.OutputName
+	}
+
+	//sanitize filename here
+	re := regexp.MustCompile(`["&|:?<>/*\\ ]+`)
+	fileURI = strings.TrimSpace(re.ReplaceAllString(fileURI, " "))
+
+	//build final file URI
+	fileURI = filepath.Join(downloader.filePath, fileURI+"."+stream.Ext)
+
+	file, err := os.OpenFile(fileURI, os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0644)
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+
+	downloader.initPB(int64(lenOfUrls), fmt.Sprintf("Merging into %s ...", file.Name()), false)
+
+	var d []byte
+	for i, u := range stream.URLs {
+		partURL := filepath.Join(downloader.tmpFilePath, fmt.Sprintf("%d.%s", pageNumbers[i], u.Ext))
+		if len(stream.Key) > 0 {
+			d, err = decrypt(stream.Key, partURL)
+			if err != nil {
+				return err
+			}
+		} else {
+			d, err = os.ReadFile(partURL)
+			if err != nil {
+				return err
+			}
+		}
+
+		if _, err := file.Write(d); err != nil {
+			return err
+		}
+
+		if downloader.bar {
+			downloader.progressBar.Add(1)
+		}
+
+	}
+
+	err = os.RemoveAll(downloader.tmpFilePath)
+	if err != nil {
+		return err
 	}
 
 	return nil
@@ -152,25 +216,10 @@ func (downloader *Downloader) save(url static.URL, fileURI string) error {
 	if err != nil {
 		return err
 	}
-
-	if downloader.data.Type == "application/x-mpegurl" {
-		file.Close()
-		file, err = os.OpenFile(fileURI, os.O_APPEND|os.O_WRONLY, 0644)
-		if err != nil {
-			return err
-		}
-		defer file.Close()
-
-		err = downloader.writeM3U(url.URL, file)
-		if err != nil {
-			return err
-		}
-		return nil
-	}
 	defer file.Close()
 
 	//if stream size bigger than 10MB then use concurWrite
-	if downloader.data.Streams[downloader.stream].Size > 10_000_000 && config.Workers > 1 {
+	if downloader.data.Streams[downloader.stream].Size > 10_000_000 && config.Workers > 1 && downloader.data.Streams[downloader.stream].Ext == "" {
 
 		err = downloader.concurWriteFile(url.URL, file)
 		if err != nil {

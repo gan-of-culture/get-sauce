@@ -3,15 +3,18 @@ package request
 import (
 	"crypto/tls"
 	"errors"
+	"fmt"
 	"io"
 	"io/ioutil"
 	"net/http"
 	"net/url"
+	"regexp"
 	"strconv"
 	"strings"
 	"time"
 
 	"github.com/gan-of-culture/go-hentai-scraper/config"
+	"github.com/gan-of-culture/go-hentai-scraper/static"
 	"github.com/gan-of-culture/go-hentai-scraper/utils"
 )
 
@@ -194,4 +197,66 @@ func (p *Myjar) Cookies(u *url.URL) []*http.Cookie {
 	//fmt.Printf("The URL is : %s\n", u.String())
 	//fmt.Printf("Cookie being returned is : %s\n", p.Jar[u.Host])
 	return p.Jar[u.Host]
+}
+
+// GetM3UMeta segment urls
+func GetM3UMeta(master *string, URL, Ext string) ([]*static.URL, []byte, error) {
+	re := regexp.MustCompile(`\s[^#]+\s`) // 1=segment URI
+	matchedSegmentURLs := re.FindAllString(*master, -1)
+	if len(matchedSegmentURLs) == 0 {
+		fmt.Println(*master)
+		return nil, nil, errors.New("no segements found")
+	}
+
+	baseURL, err := url.Parse(URL)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	segments := []*static.URL{}
+	segmentURI := ""
+	for _, v := range matchedSegmentURLs {
+		segmentURI = strings.TrimSpace(v)
+		if !strings.Contains(segmentURI, "http") {
+			segmentURL, err := baseURL.Parse(segmentURI)
+			if err != nil {
+				return nil, nil, err
+			}
+			segmentURI = segmentURL.String()
+		}
+		segments = append(segments, &static.URL{
+			URL: segmentURI,
+			Ext: Ext,
+		})
+	}
+
+	re = regexp.MustCompile(`#EXT-X-KEY:METHOD=([^,]*),URI="([^"]*)`) //1=HASH e.g. AES-128 2=KEYURI
+	matchedEncryptionMeta := re.FindStringSubmatch(*master)
+	if len(matchedEncryptionMeta) != 3 {
+		return segments, nil, nil
+	}
+
+	keyURL := matchedEncryptionMeta[2]
+	if !strings.HasPrefix(matchedEncryptionMeta[2], "http") {
+		keyURI, err := baseURL.Parse(matchedEncryptionMeta[2])
+		if err != nil {
+			return nil, nil, err
+		}
+		keyURL = keyURI.String()
+	}
+
+	res, err := Request(http.MethodGet, keyURL, map[string]string{
+		"Referer": URL,
+	}, nil)
+	if err != nil {
+		return nil, nil, err
+	}
+	defer res.Body.Close()
+
+	buffer, err := ioutil.ReadAll(res.Body)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	return segments, buffer, nil
 }

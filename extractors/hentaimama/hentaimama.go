@@ -4,7 +4,6 @@ import (
 	"encoding/base64"
 	"fmt"
 	"regexp"
-	"strconv"
 	"strings"
 
 	"github.com/gan-of-culture/go-hentai-scraper/request"
@@ -71,7 +70,7 @@ func extractData(URL string) (static.Data, error) {
 		return static.Data{}, fmt.Errorf("[Hentaimama] Error decoding string: %s ", err.Error())
 	}
 
-	streams := make(map[string]static.Stream)
+	streams := make(map[string]*static.Stream)
 	reSrc := regexp.MustCompile(fmt.Sprintf("[^\"']*/%s[^\"']*", string(b64Path)))
 	for i, u := range matchedMirrorURLs {
 		htmlString, err := request.Get(u[0])
@@ -92,8 +91,8 @@ func extractData(URL string) (static.Data, error) {
 			ext = strings.Split(re.FindString(srcURL), "/")[1]
 		}
 
-		streams[strconv.Itoa(i)] = static.Stream{
-			URLs: []static.URL{
+		streams[fmt.Sprint(i)] = &static.Stream{
+			URLs: []*static.URL{
 				{
 					URL: srcURL,
 					Ext: ext,

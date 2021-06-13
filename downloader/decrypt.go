@@ -1,17 +1,11 @@
 package downloader
 
 import (
-	"bytes"
 	"crypto/aes"
 	"crypto/cipher"
 	"encoding/binary"
-	"errors"
 	"io/ioutil"
-	"net/http"
 	"os"
-
-	"github.com/gan-of-culture/go-hentai-scraper/request"
-	"github.com/grafov/m3u8"
 )
 
 // thanks to https://github.com/canhlinh/hlsdl for creating to beautiful way to decrypt
@@ -34,11 +28,11 @@ func decryptAES128(crypted, key, iv []byte) ([]byte, error) {
 	return origData, nil
 }
 
-func pkcs5Padding(cipherText []byte, blockSize int) []byte {
+/*func pkcs5Padding(cipherText []byte, blockSize int) []byte {
 	padding := blockSize - len(cipherText)%blockSize
 	padText := bytes.Repeat([]byte{byte(padding)}, padding)
 	return append(cipherText, padText...)
-}
+}*/
 
 func pkcs5UnPadding(origData []byte) []byte {
 	length := len(origData)
@@ -47,7 +41,7 @@ func pkcs5UnPadding(origData []byte) []byte {
 }
 
 // Decrypt descryps a segment
-func decrypt(segment *m3u8.MediaSegment, fileName string) ([]byte, error) {
+func decrypt(key []byte, fileName string) ([]byte, error) {
 
 	file, err := os.Open(fileName)
 	if err != nil {
@@ -59,15 +53,14 @@ func decrypt(segment *m3u8.MediaSegment, fileName string) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
-	if segment.Key != nil {
-		key, iv, err := getKey(segment)
-		if err != nil {
-			return nil, err
-		}
-		data, err = decryptAES128(data, key, iv)
-		if err != nil {
-			return nil, err
-		}
+
+	iv := defaultIV(uint64(0))
+	if err != nil {
+		return nil, err
+	}
+	data, err = decryptAES128(data, key, iv)
+	if err != nil {
+		return nil, err
 	}
 
 	for j := 0; j < len(data); j++ {
@@ -78,37 +71,6 @@ func decrypt(segment *m3u8.MediaSegment, fileName string) ([]byte, error) {
 	}
 
 	return data, nil
-}
-
-func getKey(segment *m3u8.MediaSegment) (key []byte, iv []byte, err error) {
-
-	res, err := request.Request(http.MethodGet, segment.Key.URI, map[string]string{
-		"Accept":  "*/*",
-		"Referer": segment.Key.URI,
-	}, nil)
-	if err != nil {
-		return nil, nil, err
-	}
-	defer res.Body.Close()
-
-	if res.StatusCode != 200 {
-		return nil, nil, errors.New("Failed to get descryption key")
-	}
-
-	if res.ContentLength > 64 {
-		return nil, nil, errors.New("Invalid key content length for segment")
-	}
-
-	key, err = ioutil.ReadAll(res.Body)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	iv = []byte(segment.Key.IV)
-	if len(iv) == 0 {
-		iv = defaultIV(segment.SeqId)
-	}
-	return
 }
 
 func defaultIV(seqID uint64) []byte {

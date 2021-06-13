@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/gan-of-culture/go-hentai-scraper/config"
+	"github.com/gan-of-culture/go-hentai-scraper/static"
 )
 
 // GetLastItemString of slice
@@ -61,17 +62,15 @@ func NeedDownloadList(length int) []int {
 	return out
 }
 
-// GetMediaType e.x put in png get image/png, mp4 -> video/mp4
-func GetMediaType(t string) string {
+// GetMediaType e.g. put in png get image, mp4 -> video
+func GetMediaType(t string) static.DataType {
 	switch t {
-	case "jpg", "jpeg", "png", "gif", "webp":
-		return fmt.Sprintf("%s/%s", "image", t)
-	case "webm", "mp4", "mkv", "m4a":
-		return fmt.Sprintf("%s/%s", "video", t)
-	case "txt", "m3u8":
-		return fmt.Sprintf("%s/%s", "application", "x-mpegurl")
+	case "jpg", "jpeg", "png", "gif", "webp", "avif":
+		return static.DataTypeImage
+	case "webm", "mp4", "mkv", "m4a", "txt", "m3u8", "avi":
+		return static.DataTypeVideo
 	default:
-		return fmt.Sprintf("%s/%s", "unknown", t)
+		return static.DataTypeUnknown
 	}
 }
 
@@ -105,4 +104,55 @@ func GetMeta(htmlString *string, property string) string {
 		return fmt.Sprintf("No matches found for %s", property)
 	}
 	return metaTags[0][1]
+}
+
+// ParseM3UMaster into static.Stream to prefill the structure
+// returns a pre filled structure where URLs[0].URL is the media m3u URI
+func ParseM3UMaster(master *string) (map[string]*static.Stream, error) {
+	re := regexp.MustCompile(`#EXT-X-STREAM-INF:([^\n]*)\n([^\n]+)`) // 1=PARAMS 2=MEDIAURI
+	matchedStreams := re.FindAllStringSubmatch(*master, -1)
+	if len(matchedStreams) < 1 {
+		return nil, fmt.Errorf("unable to parse any stream in m3u master file: %s", *master)
+	}
+
+	out := map[string]*static.Stream{}
+	for i, stream := range matchedStreams {
+		s := &static.Stream{}
+
+		for _, v := range stream[1:] {
+
+			re = regexp.MustCompile(`([A-Z\-]+=(?:"[^"]*"|[^,]*))`) // 1=list of PARAMNAME=value,
+			matchedStreamParams := re.FindAllStringSubmatch(v, -1)
+			if len(matchedStreamParams) == 0 {
+				s.URLs = []*static.URL{
+					{
+						URL: strings.TrimSpace(v),
+						Ext: "",
+					},
+				}
+				continue
+			}
+
+			for _, streamParam := range matchedStreamParams[1:] {
+
+				splitParam := strings.Split(streamParam[1], "=")
+				splitParam[1] = strings.Trim(splitParam[1], `",`)
+				switch splitParam[0] {
+				case "BANDWIDTH":
+					size, err := strconv.ParseInt(splitParam[1], 10, 64)
+					if err != nil {
+						return nil, fmt.Errorf("unable to parse bandwidth in m3u master file: %s", *master)
+					}
+					s.Size = size
+				case "RESOLUTION":
+					s.Quality = splitParam[1]
+				case "CODECS":
+					s.Info = splitParam[1]
+				}
+			}
+		}
+		out[fmt.Sprint(i)] = s
+	}
+
+	return out, nil
 }

@@ -87,7 +87,7 @@ func extractData(URL string) (static.Data, error) {
 	u := ""
 	quality := ""
 	mimeType := ""
-	streams := map[string]static.Stream{}
+	streams := map[string]*static.Stream{}
 	for i, srcTag := range matchedSrcTag {
 		quality = ""
 		mimeType = ""
@@ -105,8 +105,8 @@ func extractData(URL string) (static.Data, error) {
 			quality = srcTag[3]
 		}
 		size, _ := request.Size(u, playerURL)
-		streams[fmt.Sprintf("%d", len(matchedSrcTag)-i-1)] = static.Stream{
-			URLs: []static.URL{
+		streams[fmt.Sprintf("%d", len(matchedSrcTag)-i-1)] = &static.Stream{
+			URLs: []*static.URL{
 				{
 					URL: u,
 					Ext: utils.GetLastItemString(strings.Split(mimeType, "/")),

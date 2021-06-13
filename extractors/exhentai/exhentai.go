@@ -29,6 +29,14 @@ type extractor struct {
 // login your user
 func (e *extractor) login() error {
 
+	if config.Username == "" {
+		return fmt.Errorf("[Exhentai] user name is missing. You need to supply a vaild user name to use this scraper")
+	}
+
+	if config.Username == "" {
+		return fmt.Errorf("[Exhentai] user password is missing. You need to supply a vaild user password to use this scraper")
+	}
+
 	headers := map[string]string{
 		"Accept":                    "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
 		"Accept-Encoding":           "gzip, deflate, br",
@@ -210,9 +218,9 @@ func (e *extractor) extractData(URLs []string) ([]*static.Data, error) {
 			Site:  site,
 			Title: fmt.Sprintf("%s - %d", title, idx+1),
 			Type:  "image",
-			Streams: map[string]static.Stream{
+			Streams: map[string]*static.Stream{
 				"0": {
-					URLs: []static.URL{
+					URLs: []*static.URL{
 						{
 							URL: srcURL[0],
 							Ext: fileInfo[1],

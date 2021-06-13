@@ -69,10 +69,10 @@ func extractData(URL string) (static.Data, error) {
 	return static.Data{
 		Site:  site,
 		Title: utils.GetMeta(&htmlString, "og:title"),
-		Type:  utils.GetMediaType(ext),
-		Streams: map[string]static.Stream{
+		Type:  "video",
+		Streams: map[string]*static.Stream{
 			"0": {
-				URLs: []static.URL{
+				URLs: []*static.URL{
 					{
 						URL: videoURL,
 						Ext: ext,

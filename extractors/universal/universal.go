@@ -36,9 +36,9 @@ func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 				Site:  u.Host,
 				Title: "unknown",
 				Type:  "unknown",
-				Streams: map[string]static.Stream{
+				Streams: map[string]*static.Stream{
 					"0": {
-						URLs: []static.URL{
+						URLs: []*static.URL{
 							0: {
 								URL: URL,
 								Ext: utils.GetLastItemString(strings.Split(URL, ".")),
@@ -63,10 +63,10 @@ func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 		0: {
 			Site:  u.Host,
 			Title: matches[1],
-			Type:  utils.GetMediaType(matches[2]),
-			Streams: map[string]static.Stream{
+			Type:  utils.GetMediaType(ext),
+			Streams: map[string]*static.Stream{
 				"0": {
-					URLs: []static.URL{
+					URLs: []*static.URL{
 						0: {
 							URL: URL,
 							Ext: ext,

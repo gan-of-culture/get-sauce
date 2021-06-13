@@ -93,9 +93,9 @@ func extractData(postURL string) (static.Data, error) {
 		Site:  site,
 		Title: matchedImgData[3],
 		Type:  "image",
-		Streams: map[string]static.Stream{
+		Streams: map[string]*static.Stream{
 			"0": {
-				URLs: []static.URL{
+				URLs: []*static.URL{
 					{
 						URL: matchedImgData[4],
 						Ext: utils.GetLastItemString(strings.Split(matchedImgData[4], ".")),

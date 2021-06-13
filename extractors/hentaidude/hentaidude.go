@@ -7,7 +7,6 @@ import (
 	"net/http"
 	"net/url"
 	"regexp"
-	"strconv"
 	"strings"
 
 	"github.com/gan-of-culture/go-hentai-scraper/request"
@@ -108,7 +107,7 @@ func extractData(URL string) (static.Data, error) {
 		return static.Data{}, fmt.Errorf("[Hentaidude] The api request for the streams did not return successful for %s", URL)
 	}
 
-	streams := make(map[string]static.Stream)
+	streams := make(map[string]*static.Stream)
 	for _, source := range sources.Sources {
 		headers, err := request.Headers(source, source)
 		if err != nil {
@@ -120,8 +119,8 @@ func extractData(URL string) (static.Data, error) {
 			return static.Data{}, err
 		}
 
-		streams[strconv.Itoa(len(streams))] = static.Stream{
-			URLs: []static.URL{
+		streams[fmt.Sprint(len(streams))] = &static.Stream{
+			URLs: []*static.URL{
 				{
 					URL: source,
 					Ext: strings.Split(headers.Get("content-type"), "/")[1],

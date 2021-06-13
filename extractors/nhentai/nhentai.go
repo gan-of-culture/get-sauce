@@ -150,13 +150,13 @@ func extractData(id string, page string) (static.Data, error) {
 		pages = []int{pageNo}
 	}
 
-	URLs := []static.URL{}
+	URLs := []*static.URL{}
 	for _, p := range pages {
 		ext := "jpg"
 		if gData.Images.Pages[p-1].T == "p" {
 			ext = "png"
 		}
-		URLs = append(URLs, static.URL{
+		URLs = append(URLs, &static.URL{
 			URL: fmt.Sprintf("%s%s/%d.%s", cdn, gData.MediaID, p, ext),
 			Ext: ext,
 		})
@@ -171,7 +171,7 @@ func extractData(id string, page string) (static.Data, error) {
 		Site:  site,
 		Title: title,
 		Type:  "image",
-		Streams: map[string]static.Stream{
+		Streams: map[string]*static.Stream{
 			"0": {
 				URLs:    URLs,
 				Quality: "best",

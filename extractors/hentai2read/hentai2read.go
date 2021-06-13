@@ -90,7 +90,7 @@ func extractData(URL string) (static.Data, error) {
 		Site:  site,
 		Title: title,
 		Type:  "image",
-		Streams: map[string]static.Stream{
+		Streams: map[string]*static.Stream{
 			"0": {
 				URLs:    buildFullImgURL(galleryData.Images),
 				Quality: "unkown",
@@ -101,10 +101,10 @@ func extractData(URL string) (static.Data, error) {
 	}, nil
 }
 
-func buildFullImgURL(URIParts []string) []static.URL {
-	out := []static.URL{}
+func buildFullImgURL(URIParts []string) []*static.URL {
+	out := []*static.URL{}
 	for _, URIPart := range URIParts {
-		out = append(out, static.URL{
+		out = append(out, &static.URL{
 			URL: cdn + URIPart,
 			Ext: utils.GetLastItemString(strings.Split(URIPart, ".")),
 		})

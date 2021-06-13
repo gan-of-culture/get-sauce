@@ -132,10 +132,10 @@ func extractData(queryURL string) ([]*static.Data, error) {
 		data = append(data, &static.Data{
 			Site:  site,
 			Title: e.Key,
-			Type:  e.ContentType,
-			Streams: map[string]static.Stream{
+			Type:  "image",
+			Streams: map[string]*static.Stream{
 				"0": {
-					URLs: []static.URL{
+					URLs: []*static.URL{
 						{
 							URL: fmt.Sprintf("%s%s", apiDataURL, tVal),
 							Ext: ext,

@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/gan-of-culture/go-hentai-scraper/config"
+	"github.com/gan-of-culture/go-hentai-scraper/static"
 )
 
 func TestGetLastItem(t *testing.T) {
@@ -111,41 +112,41 @@ func TestNeedDownloadList(t *testing.T) {
 func TestGetMediaType(t *testing.T) {
 	tests := []struct {
 		ext  string
-		want string
+		want static.DataType
 	}{
 		{
 			ext:  "jpg",
-			want: "image/jpg",
+			want: "image",
 		}, {
 			ext:  "jpeg",
-			want: "image/jpeg",
+			want: "image",
 		}, {
 			ext:  "png",
-			want: "image/png",
+			want: "image",
 		}, {
 			ext:  "gif",
-			want: "image/gif",
+			want: "image",
 		}, {
 			ext:  "webp",
-			want: "image/webp",
+			want: "image",
 		}, {
 			ext:  "webm",
-			want: "video/webm",
+			want: "video",
 		}, {
 			ext:  "mp4",
-			want: "video/mp4",
+			want: "video",
 		}, {
 			ext:  "mkv",
-			want: "video/mkv",
+			want: "video",
 		}, {
 			ext:  "m4a",
-			want: "video/m4a",
+			want: "video",
 		}, {
 			ext:  "txt",
-			want: "application/x-mpegurl",
+			want: "video",
 		}, {
 			ext:  "m3u8",
-			want: "application/x-mpegurl",
+			want: "video",
 		},
 	}
 	for _, tt := range tests {
@@ -224,6 +225,87 @@ func TestMeta(t *testing.T) {
 
 			if h1 != tt.want {
 				t.Errorf("Got: %v - want: %v", h1, tt.want)
+			}
+		})
+	}
+}
+
+func TestParseM3UMaster(t *testing.T) {
+	tests := []struct {
+		name   string
+		master string
+		want   map[string]*static.Stream
+	}{
+		{
+			name: "rich m3u master",
+			master: `
+			#EXTM3U
+			#EXT-X-VERSION:4
+			#EXT-X-MEDIA:TYPE=AUDIO,GROUP-ID="audio_aac",NAME="Japanese",LANGUAGE="ja",AUTOSELECT=YES,DEFAULT=YES,URI="audio/aac/ja/stream.m3u8"
+			
+			# Media Playlists
+			#EXT-X-STREAM-INF:AVERAGE-BANDWIDTH=3203863,BANDWIDTH=4634114,AUDIO="audio_aac"
+			media-1/stream.m3u8
+			#EXT-X-STREAM-INF:AVERAGE-BANDWIDTH=2189669,RESOLUTION=1280x720,AUDIO="audio_aac"
+			media-2/stream.m3u8
+			#EXT-X-STREAM-INF:AVERAGE-BANDWIDTH=1172227,BANDWIDTH=2479383,CODECS="avc1.42C01F,mp4a.40.2",RESOLUTION=864x486,AUDIO="audio_aac"
+			media-3/stream.m3u8
+			
+			# I-Frame Playlists
+			#EXT-X-I-FRAME-STREAM-INF:AVERAGE-BANDWIDTH=161759,BANDWIDTH=439418,CODECS="avc1.640032",RESOLUTION=1920x1080,URI="media-1/iframes.m3u8"
+			#EXT-X-I-FRAME-STREAM-INF:AVERAGE-BANDWIDTH=120390,BANDWIDTH=262949,CODECS="avc1.4D401F",RESOLUTION=1280x720,URI="media-2/iframes.m3u8"
+			#EXT-X-I-FRAME-STREAM-INF:AVERAGE-BANDWIDTH=53881,BANDWIDTH=146466,CODECS="avc1.42C01F",RESOLUTION=864x486,URI="media-3/iframes.m3u8"		
+			`,
+			want: map[string]*static.Stream{
+				"0": {
+					URLs: []*static.URL{
+						{
+							URL: "media-1/stream.m3u8",
+						},
+					},
+					Size: 4634114,
+				},
+				"1": {
+					URLs: []*static.URL{
+						{
+							URL: "media-2/stream.m3u8",
+						},
+					},
+					Quality: "1280x720",
+				},
+				"2": {
+					URLs: []*static.URL{
+						{
+							URL: "media-3/stream.m3u8",
+						},
+					},
+					Size:    2479383,
+					Quality: "864x486",
+					Info:    "avc1.42C01F,mp4a.40.2",
+				},
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			streams, err := ParseM3UMaster(&tt.master)
+			if err != nil {
+				t.Error(err)
+			}
+
+			for i := range streams {
+				if streams[i].Size != tt.want[i].Size {
+					t.Errorf("Got: %v - want: %v", streams[i].Size, tt.want[i].Size)
+				}
+				if streams[i].Quality != tt.want[i].Quality {
+					t.Errorf("Got: %v - want: %v", streams[i].Size, tt.want[i].Size)
+				}
+				if streams[i].Info != tt.want[i].Info {
+					t.Errorf("Got: %v - want: %v", streams[i].Info, tt.want[i].Info)
+				}
+				if streams[i].URLs[0].URL != tt.want[i].URLs[0].URL {
+					t.Errorf("Got: %v - want: %v", streams[i].URLs[0].URL, tt.want[i].URLs[0].URL)
+				}
 			}
 		})
 	}
