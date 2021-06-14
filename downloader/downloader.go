@@ -18,7 +18,7 @@ import (
 	"github.com/gan-of-culture/go-hentai-scraper/request"
 	"github.com/gan-of-culture/go-hentai-scraper/static"
 	"github.com/gan-of-culture/go-hentai-scraper/utils"
-	"github.com/schollz/progressbar/v2"
+	"github.com/schollz/progressbar/v3"
 )
 
 /*
@@ -342,7 +342,7 @@ func (downloader *Downloader) writeFile(URL string, file *os.File) error {
 	var writer io.Writer
 	writer = file
 	//some sites do not return "content-type" in http header
-	//it will render a blank progressbar
+	//it will render a spinner progressbar
 	downloader.initPB(res.ContentLength, fmt.Sprintf("Downloading %s ...", file.Name()), true)
 	if downloader.bar {
 		writer = io.MultiWriter(file, downloader.progressBar)
@@ -364,7 +364,7 @@ func (downloader *Downloader) initPB(len int64, descr string, asBytes bool) {
 	if asBytes {
 		downloader.progressBar = progressbar.NewOptions(
 			int(len),
-			progressbar.OptionSetBytes64(len),
+			progressbar.OptionShowBytes(true),
 			progressbar.OptionSetDescription(descr),
 			progressbar.OptionSetPredictTime(true),
 			progressbar.OptionSetRenderBlankState(true),
@@ -373,6 +373,7 @@ func (downloader *Downloader) initPB(len int64, descr string, asBytes bool) {
 	}
 	downloader.progressBar = progressbar.NewOptions(
 		int(len),
+		progressbar.OptionShowIts(),
 		progressbar.OptionSetDescription(descr),
 		progressbar.OptionSetPredictTime(true),
 		progressbar.OptionSetRenderBlankState(true),
