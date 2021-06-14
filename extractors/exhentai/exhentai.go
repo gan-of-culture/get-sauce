@@ -169,13 +169,13 @@ func (e *extractor) extractData(URLs []string) ([]*static.Data, error) {
 
 		title := utils.GetH1(&htmlString, 0)
 		if len(title) == 0 {
-			return nil, errors.New("[ExHentai] invaild image title")
+			return nil, errors.New("invaild image title")
 		}
 
 		re := regexp.MustCompile(`<div>[^.]+\.([^::]+):: ([^::]+) :: ([^.]+.[0-9]+) ([A-Z]{2})`)
 		matchedFileInfo := re.FindAllStringSubmatch(htmlString, -1)
 		if len(matchedFileInfo) == 0 {
-			return nil, errors.New("[ExHentai] invaild image file info")
+			return nil, errors.New("invaild image file info")
 		}
 		fileInfo := matchedFileInfo[0]
 
@@ -187,7 +187,7 @@ func (e *extractor) extractData(URLs []string) ([]*static.Data, error) {
 			re = regexp.MustCompile(`<img id="img" src="([^"]+)`)
 			matchedSrcURL := re.FindAllStringSubmatch(htmlString, -1)
 			if len(matchedSrcURL) != 1 {
-				return nil, errors.New("[ExHentai] invaild image src")
+				return nil, errors.New("invaild image src")
 			}
 			srcURL = []string{matchedSrcURL[0][1]}
 		}
@@ -205,7 +205,7 @@ func (e *extractor) extractData(URLs []string) ([]*static.Data, error) {
 			switch resp.StatusCode {
 			case http.StatusOK, http.StatusMovedPermanently, http.StatusFound, http.StatusSeeOther, http.StatusTemporaryRedirect:
 				if u, _ := resp.Location(); u.String() == "" {
-					return nil, errors.New("[Exhentai]Error 509 - Bandwidth Exceeded. Check https://ehwiki.org/wiki/Technical_Issues#509")
+					return nil, errors.New("error 509 - Bandwidth Exceeded. Check https://ehwiki.org/wiki/Technical_Issues#509")
 				}
 				l, _ := resp.Location()
 				srcURL[0] = l.String()
@@ -271,7 +271,7 @@ func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 
 	URLs := e.parseURL(URL)
 	if len(URLs) == 0 {
-		return nil, errors.New("[ExHentai] no vaild URL found")
+		return nil, errors.New("no vaild URL found")
 	}
 
 	//unpack galleries
@@ -279,17 +279,17 @@ func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 	for _, URL := range URLs {
 		htmlString, err := e.get(URL)
 		if err != nil {
-			return nil, errors.New("[ExHentai] invaild URL")
+			return nil, errors.New("invaild URL")
 		}
 
 		re := regexp.MustCompile(`([0-9]+) pages`)
 		htmlNumberOfPages := re.FindStringSubmatch(htmlString)
 		if len(htmlNumberOfPages) != 2 {
-			return nil, errors.New("[ExHentai] error while trying to access the gallery images")
+			return nil, errors.New("error while trying to access the gallery images")
 		}
 		numberOfPages, err := strconv.Atoi(htmlNumberOfPages[1])
 		if err != nil {
-			return nil, errors.New("[ExHentai] couldn't get number of pages")
+			return nil, errors.New("couldn't get number of pages")
 		}
 		pages := utils.NeedDownloadList(numberOfPages)
 
@@ -304,7 +304,7 @@ func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 		for page := 1; len(matchedImgURLs) < numberOfPages; page++ {
 			htmlString, err := e.get(fmt.Sprintf("%s?p=%d", URL, page))
 			if err != nil {
-				return nil, errors.New("[ExHentai] invaild page URL")
+				return nil, errors.New("invaild page URL")
 			}
 			matchedImgURLs = append(matchedImgURLs, re.FindAllString(htmlString, -1)...)
 		}

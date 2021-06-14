@@ -58,7 +58,7 @@ func New() static.Extractor {
 func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 	ids, page := parseURL(URL)
 	if len(ids) < 1 {
-		return nil, fmt.Errorf("This is not a vaild URL %s", URL)
+		return nil, fmt.Errorf("this is not a vaild URL %s", URL)
 	}
 	data := []*static.Data{}
 	for _, id := range ids {
@@ -129,7 +129,7 @@ func extractData(id string, page string) (static.Data, error) {
 	matchedJsonString := re.FindStringSubmatch(htmlString)
 	if len(matchedJsonString) < 2 {
 		fmt.Println(htmlString)
-		return static.Data{}, fmt.Errorf("[NHentai] invalid JSON %s", URL)
+		return static.Data{}, fmt.Errorf("invalid JSON %s", URL)
 	}
 	jsonString, _ := strconv.Unquote(matchedJsonString[1])
 
@@ -141,7 +141,7 @@ func extractData(id string, page string) (static.Data, error) {
 		return static.Data{}, err
 	}
 
-	pages := utils.NeedDownloadList(int(gData.NumPages))
+	pages := utils.NeedDownloadList(gData.NumPages)
 	if page != "" {
 		pageNo, err := strconv.Atoi(page)
 		if err != nil {
@@ -164,7 +164,7 @@ func extractData(id string, page string) (static.Data, error) {
 
 	title, ok := gData.Title["pretty"]
 	if !ok {
-		return static.Data{}, fmt.Errorf("[NHentai] Cannot find title for %s", URL)
+		return static.Data{}, fmt.Errorf("cannot find title for %s", URL)
 	}
 
 	return static.Data{

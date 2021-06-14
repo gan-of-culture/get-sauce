@@ -78,7 +78,7 @@ func New() static.Extractor {
 func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 	URLs := parseURL(URL)
 	if len(URLs) < 1 {
-		return nil, fmt.Errorf("[Hanime] No matching URL found")
+		return nil, fmt.Errorf("no matching URL found")
 	}
 
 	data := []*static.Data{}
@@ -121,7 +121,7 @@ func parseURL(URL string) []string {
 func extractData(URL string) (static.Data, error) {
 	slug := utils.GetLastItemString(strings.Split(URL, "/"))
 	if slug == "" {
-		return static.Data{}, fmt.Errorf("[Hanime] Slug for %s not parseable", URL)
+		return static.Data{}, fmt.Errorf("slug for %s not parseable", URL)
 	}
 
 	jsonString, err := request.Get(apiWithSlug + slug)

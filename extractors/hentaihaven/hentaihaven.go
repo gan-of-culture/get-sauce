@@ -97,7 +97,7 @@ func extractData(URL string) (static.Data, error) {
 	re := regexp.MustCompile(`[^"]*/player/[^"]*`)
 	playerURL := re.FindString(htmlString) // 1=id  2=nonce
 	if playerURL == "" {
-		return static.Data{}, fmt.Errorf("[Hentaihaven] Can't locate player URL: %s", URL)
+		return static.Data{}, fmt.Errorf("can't locate player URL: %s", URL)
 	}
 
 	htmlString, err = request.Get(playerURL)
@@ -156,7 +156,7 @@ func extractData(URL string) (static.Data, error) {
 		return static.Data{}, err
 	}
 	if !sources.Status {
-		return static.Data{}, fmt.Errorf("[Hentaihaven] The api request for the streams did not return successful for %s", URL)
+		return static.Data{}, fmt.Errorf("the api request for the streams did not return successful for %s", URL)
 	}
 
 	m3u8String, err := request.Get(sources.Data.Sources[0].Src)
@@ -166,7 +166,7 @@ func extractData(URL string) (static.Data, error) {
 
 	baseURL, err := url.Parse(sources.Data.Sources[0].Src)
 	if err != nil {
-		return static.Data{}, fmt.Errorf("[Hentaihaven] Invalid m3u8 url %s", URL)
+		return static.Data{}, fmt.Errorf("invalid m3u8 url %s", URL)
 	}
 
 	streams, err := utils.ParseM3UMaster(&m3u8String)

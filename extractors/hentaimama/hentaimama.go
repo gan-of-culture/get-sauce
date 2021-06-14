@@ -62,12 +62,12 @@ func extractData(URL string) (static.Data, error) {
 	re := regexp.MustCompile(`[^"]*new\d.php\?p=([^"]*)`)
 	matchedMirrorURLs := re.FindAllStringSubmatch(episodeHtmlString, -1)
 	if len(matchedMirrorURLs) < 1 {
-		return static.Data{}, fmt.Errorf("[Hentaimama] Can't locate video src URL for: %s", URL)
+		return static.Data{}, fmt.Errorf("can't locate video src URL for: %s", URL)
 	}
 
 	b64Path, err := base64.StdEncoding.DecodeString(matchedMirrorURLs[1][1])
 	if err != nil {
-		return static.Data{}, fmt.Errorf("[Hentaimama] Error decoding string: %s ", err.Error())
+		return static.Data{}, fmt.Errorf("error decoding string: %s ", err.Error())
 	}
 
 	streams := make(map[string]*static.Stream)
@@ -98,9 +98,8 @@ func extractData(URL string) (static.Data, error) {
 					Ext: ext,
 				},
 			},
-			Quality: "unknown",
-			Size:    size,
-			Info:    fmt.Sprintf("Mirror %d", i+1),
+			Size: size,
+			Info: fmt.Sprintf("Mirror %d", i+1),
 		}
 
 	}

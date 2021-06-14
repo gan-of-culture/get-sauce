@@ -24,7 +24,7 @@ func New() static.Extractor {
 func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 	URLs := parseURL(URL)
 	if len(URLs) == 0 {
-		return nil, fmt.Errorf("[Pururin] No scrapable URL found for %s", URL)
+		return nil, fmt.Errorf("no scrapable URL found for %s", URL)
 	}
 
 	data := []*static.Data{}
@@ -82,12 +82,11 @@ func extractData(URL string) (static.Data, error) {
 	return static.Data{
 		Site:  site,
 		Title: strings.Split(utils.GetMeta(&htmlString, "og:title"), "/")[0],
-		Type:  "image/jpg",
+		Type:  "image",
 		Streams: map[string]*static.Stream{
 			"0": {
-				URLs:    URLs,
-				Quality: "unknown",
-				Info:    ID,
+				URLs: URLs,
+				Info: ID,
 			},
 		},
 		Url: URL,

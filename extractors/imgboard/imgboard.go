@@ -1,6 +1,7 @@
 package imgboard
 
 import (
+	"errors"
 	"fmt"
 	"regexp"
 	"strconv"
@@ -30,7 +31,7 @@ func (e *extractor) Extract(url string) ([]*static.Data, error) {
 
 	urls := parseURL(url)
 	if len(urls) == 0 {
-		return nil, fmt.Errorf("Can't find a post for %s", url)
+		return nil, fmt.Errorf("can't find a post for %s", url)
 	}
 
 	var data []*static.Data
@@ -172,7 +173,7 @@ func extractData(url string) (static.Data, error) {
 	if config.Amount == 0 {
 		size, err = request.Size(matchedPostURL[1], url)
 		if err != nil {
-			return static.Data{}, fmt.Errorf("[%s]No image size not found", siteName)
+			return static.Data{}, errors.New("no image size not found")
 		}
 	}
 
@@ -208,7 +209,7 @@ func extractDataFromDirectLink(url string) (static.Data, error) {
 	re := regexp.MustCompile(`https://[^/]*/[^/]*/([^/]*)/[^.\s]*\.[^\.\s]*\..*(\w{3,4})$`) //1=title //2=ext
 	matchedURL := re.FindStringSubmatch(url)
 	if len(matchedURL) != 3 {
-		return static.Data{}, fmt.Errorf("[IMGBoard] direct download can't match URL %s", url)
+		return static.Data{}, fmt.Errorf("direct download can't match URL %s", url)
 	}
 
 	return static.Data{
@@ -223,8 +224,7 @@ func extractDataFromDirectLink(url string) (static.Data, error) {
 						Ext: matchedURL[2],
 					},
 				},
-				Quality: "best",
-				Size:    0,
+				Size: 0,
 			},
 		},
 		Url: url,
