@@ -86,7 +86,7 @@ func New() static.Extractor {
 func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 	galleries, err := parseURL(URL)
 	if err != nil {
-		return nil, fmt.Errorf("[9Hentai] No scrapable gallery id found for: %s", URL)
+		return nil, fmt.Errorf("no scrapable gallery id found for: %s", URL)
 	}
 
 	data := []*static.Data{}
@@ -105,7 +105,7 @@ func parseURL(URL string) ([]gallery, error) {
 	re := regexp.MustCompile(`/([gt])/(\d+)/`) //1=indicator g=gallery t=tag etc=searchQuery?
 	matchedURLParams := re.FindStringSubmatch(URL)
 	if len(matchedURLParams) < 2 {
-		return nil, fmt.Errorf("[9Hentai] URL parameters cannot be parsed: %s", URL)
+		return nil, fmt.Errorf("URL parameters cannot be parsed: %s", URL)
 	}
 
 	switch matchedURLParams[1] {
@@ -162,7 +162,7 @@ func parseURL(URL string) ([]gallery, error) {
 		return rGalleries, nil
 
 	default:
-		return nil, fmt.Errorf("[9Hentai] URL indicator cannot be parsed: %s. Expected t or g got %s", URL, matchedURLParams[1])
+		return nil, fmt.Errorf("URL indicator cannot be parsed: %s. Expected t or g got %s", URL, matchedURLParams[1])
 	}
 
 }
@@ -256,9 +256,8 @@ func extractData(g gallery) (static.Data, error) {
 		Type:  "image",
 		Streams: map[string]*static.Stream{
 			"0": {
-				URLs:    URLs,
-				Quality: "best",
-				Info:    fmt.Sprint(g.TotalPage),
+				URLs: URLs,
+				Info: fmt.Sprint(g.TotalPage),
 			},
 		},
 		Url: fmt.Sprintf("%sg/%d", site, g.ID),

@@ -2,6 +2,7 @@ package htstreaming
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"log"
 	"net/url"
@@ -51,14 +52,14 @@ func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 	URLs := parseURL(URL)
 	if len(URLs) < 1 {
 		log.Println(URL)
-		return nil, fmt.Errorf("[%s] No matching URL found", site)
+		return nil, errors.New("no matching URL found")
 	}
 
 	data := []*static.Data{}
 	for _, u := range URLs {
 		d, err := ExtractData(u)
 		if err != nil {
-			if strings.Contains(err.Error(), "Video not found") || strings.Contains(err.Error(), "PlayerURL not found") {
+			if strings.Contains(err.Error(), "video not found") || strings.Contains(err.Error(), "player URL not found") {
 				log.Println(err.Error())
 				continue
 			}
@@ -108,7 +109,7 @@ func ExtractData(URL string) (static.Data, error) {
 	re := regexp.MustCompile(`[^"]*index.php\?data[^"]*`)
 	playerURL := re.FindString(htmlString)
 	if playerURL == "" {
-		return static.Data{}, fmt.Errorf("[%s] PlayerURL not found %s", site, URL)
+		return static.Data{}, errors.New("player URL not found %s")
 	}
 
 	htmlString, err = request.Get(playerURL)
@@ -119,11 +120,11 @@ func ExtractData(URL string) (static.Data, error) {
 	re = regexp.MustCompile(`({"[\s\S]*?), false`)
 	jsonString := re.FindStringSubmatch(htmlString)
 	if len(jsonString) < 2 {
-		if strings.Contains(htmlString, "Video not found") {
-			return static.Data{}, fmt.Errorf("[%s] Video not found %s", site, URL)
+		if strings.Contains(htmlString, "video not found") {
+			return static.Data{}, errors.New("video not found %s")
 		}
 		fmt.Println(htmlString)
-		return static.Data{}, fmt.Errorf("[%s] JSON string no found %s", site, URL)
+		return static.Data{}, errors.New("JSON string no found %s")
 	}
 
 	pData := pageData{}

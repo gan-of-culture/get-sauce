@@ -46,12 +46,12 @@ func parseURL(url string) ([]string, error) {
 		if validEpisodeURL != "" {
 			return []string{url}, nil
 		}
-		return []string{}, fmt.Errorf("[HentaiWorld]Invalid URL %s", url)
+		return []string{}, fmt.Errorf("invalid URL %s", url)
 	}
 
 	massHTMLPage, err := request.Get(url)
 	if err != nil {
-		return []string{}, fmt.Errorf("[HentaiWorld]HTTP GET URL  error %v", err)
+		return []string{}, fmt.Errorf("http get URL error %v", err)
 	}
 
 	re = regexp.MustCompile(`"display-all-posts-background"><a href="([^"]*)`)
@@ -84,7 +84,7 @@ func extractData(url string) (static.Data, error) {
 		re = regexp.MustCompile(`src='(.*)\.(mp4*).*`)
 		infoAboutFile = re.FindStringSubmatch(postHTMLpage) // 1 = dlURL 2=ext
 		if len(infoAboutFile) != 3 {
-			return static.Data{}, fmt.Errorf("[HentaiWorld] Get scrape video info for URL %s", url)
+			return static.Data{}, fmt.Errorf("get scrape video info for URL %s", url)
 		}
 	}
 	infoAboutFile[1] = strings.ReplaceAll(infoAboutFile[1], " ", "%20")
@@ -102,8 +102,7 @@ func extractData(url string) (static.Data, error) {
 						Ext: infoAboutFile[2],
 					},
 				},
-				Quality: "best",
-				Size:    size,
+				Size: size,
 			},
 		},
 		Url: url,

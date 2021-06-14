@@ -63,7 +63,7 @@ func parseURL(url string) (string, error) {
 		re := regexp.MustCompile(`https://booru\.io/p/(.+)`)
 		matchedID := re.FindStringSubmatch(url)
 		if len(matchedID) > 2 {
-			return "", errors.New("Invalid URL")
+			return "", errors.New("invalid URL")
 		}
 		return fmt.Sprintf("%s%s", apiEntityURL, matchedID[1]), nil
 	}
@@ -124,10 +124,7 @@ func extractData(queryURL string) ([]*static.Data, error) {
 	for _, e := range entitySlice.Data {
 		tType, tVal := GetBestQualityImg(e.Transforms)
 		ext := GetFileExt(tType)
-		/*size, err := request.Size(fmt.Sprintf("%s%s", apiDataURL, tVal), site)
-		if err != nil {
-			fmt.Printf("[Booru] can't get file size for: %s with error %v\n", fmt.Sprintf("%s%s", apiDataURL, tVal), err)
-		}*/
+		size, _ := request.Size(fmt.Sprintf("%s%s", apiDataURL, tVal), site)
 
 		data = append(data, &static.Data{
 			Site:  site,
@@ -142,7 +139,7 @@ func extractData(queryURL string) ([]*static.Data, error) {
 						},
 					},
 					Quality: strings.Split(tType, ":")[0],
-					Size:    0,
+					Size:    size,
 				},
 			},
 			Url: fmt.Sprintf("%s%s", postURL, e.Key),

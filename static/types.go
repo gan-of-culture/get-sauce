@@ -31,7 +31,7 @@ const (
 	DataTypeVideo DataType = "video"
 	// DataTypeImage indicates the type of extracted data is the image.
 	DataTypeImage DataType = "image"
-	// DataTypeImage indicates the type of extracted data is the image.
+	// DataTypeImage indicates the type of extracted data is the unknown.
 	DataTypeUnknown DataType = "unknown"
 )
 

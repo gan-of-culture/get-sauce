@@ -58,7 +58,7 @@ func New() static.Extractor {
 func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 	URLs := parseURL(URL)
 	if len(URLs) == 0 {
-		return nil, fmt.Errorf("[Hitomi] No scrapable URL found for %s", URL)
+		return nil, fmt.Errorf("no scrapable URL found for %s", URL)
 	}
 
 	data := []*static.Data{}
@@ -130,7 +130,7 @@ func extractData(URL string) (static.Data, error) {
 
 	jsonStart := strings.Index(jsString, "{")
 	if err != nil {
-		return static.Data{}, fmt.Errorf("[Hitomi] No json string found for %s", URL)
+		return static.Data{}, fmt.Errorf("no json string found for %s", URL)
 	}
 
 	galleryData := gallery{}
@@ -164,8 +164,7 @@ func extractData(URL string) (static.Data, error) {
 		Type:  "image",
 		Streams: map[string]*static.Stream{
 			"0": {
-				URLs:    URLs,
-				Quality: "best",
+				URLs: URLs,
 			},
 		},
 		Url: URL,

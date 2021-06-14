@@ -21,7 +21,7 @@ func New() static.Extractor {
 func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 	URLs := parseURL(URL)
 	if len(URLs) == 0 {
-		return nil, fmt.Errorf("[Hentaicloud] No scrapable URL found for %s", URL)
+		return nil, fmt.Errorf("no scrapable URL found for %s", URL)
 	}
 
 	data := []*static.Data{}
@@ -66,7 +66,7 @@ func extractData(URL string) (static.Data, error) {
 	re := regexp.MustCompile(`(https://www.hentaicloud.com/media/videos/hd/\d*\.([^"]*)).+res="([^"]*)`)
 	srcTag := re.FindStringSubmatch(htmlString) //1=URL 2=ext 3=resolution
 	if len(srcTag) != 4 {
-		return static.Data{}, fmt.Errorf("[Hentaicloud] No scrapable source tag found for %s", URL)
+		return static.Data{}, fmt.Errorf("no scrapable source tag found for %s", URL)
 	}
 
 	size, _ := request.Size(srcTag[1], URL)

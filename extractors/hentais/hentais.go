@@ -46,7 +46,7 @@ func parseURL(URL string) ([]string, error) {
 	}
 
 	if !strings.HasPrefix(URL, site+"tvshows/") {
-		return nil, fmt.Errorf("[Hentais] Can't parse URL %s", URL)
+		return nil, fmt.Errorf("can't parse URL %s", URL)
 	}
 
 	htmlString, err := request.Get(URL)
@@ -69,7 +69,7 @@ func extractData(URL string) (static.Data, error) {
 	re := regexp.MustCompile(`player.php[^']*`)
 	playerURL := site + re.FindString(htmlString)
 	if playerURL == "" {
-		return static.Data{}, fmt.Errorf("[Hentais] Can't parse playerURL for %s", URL)
+		return static.Data{}, fmt.Errorf("can't parse playerURL for %s", URL)
 	}
 
 	htmlString, err = request.Get(playerURL)
@@ -81,7 +81,7 @@ func extractData(URL string) (static.Data, error) {
 	re = regexp.MustCompile(`src="([^"]*)" type="([^"]*)"(?: label="([^"]*)")?`) // 1=videoURL 2=mimeType 3=quality
 	matchedSrcTag := re.FindAllStringSubmatch(htmlString, -1)                    //<-- is basically the different streams
 	if len(matchedSrcTag) < 1 {
-		return static.Data{}, fmt.Errorf("[Hentais] No source tags found in %s", playerURL)
+		return static.Data{}, fmt.Errorf("no source tags found in %s", playerURL)
 	}
 
 	u := ""

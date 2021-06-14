@@ -25,7 +25,7 @@ func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 
 	urls := parseURL(URL)
 	if len(urls) == 0 {
-		return nil, errors.New("[Rule34] Can't parse URL")
+		return nil, errors.New("can't parse URL")
 	}
 
 	var data []*static.Data
@@ -101,7 +101,7 @@ func extractData(URL string) (static.Data, error) {
 		re = regexp.MustCompile(`<source src='([^']+)`)
 		matchedPostSrcURL = re.FindStringSubmatch(htmlString)
 		if len(matchedPostSrcURL) != 2 {
-			return static.Data{}, errors.New("[Rule34] src URL not found for post " + URL)
+			return static.Data{}, errors.New("src URL not found for post " + URL)
 		}
 	}
 
@@ -111,7 +111,7 @@ func extractData(URL string) (static.Data, error) {
 	matchedTagBox := re.FindStringSubmatch(htmlString)
 	if len(matchedTagBox) != 2 {
 		fmt.Println(htmlString)
-		return static.Data{}, errors.New("[Rule34] couldn't extract tags for post " + URL)
+		return static.Data{}, errors.New("couldn't extract tags for post " + URL)
 	}
 
 	title := fmt.Sprintf("%s %s", matchedTagBox[1], id[0])
@@ -120,7 +120,7 @@ func extractData(URL string) (static.Data, error) {
 	if config.Amount == 0 {
 		size, err = request.Size(postSrcURL, URL)
 		if err != nil {
-			return static.Data{}, errors.New("[Rule34]No image size not found")
+			return static.Data{}, errors.New("no image size not found")
 		}
 	}
 
@@ -134,14 +134,14 @@ func extractData(URL string) (static.Data, error) {
 		re := regexp.MustCompile(`id='main_image'.+\n[^0-9]+([0-9]+)[^0-9]+([0-9]+)`)
 		matchedQualityProperties := re.FindStringSubmatch(htmlString)
 		if len(matchedQualityProperties) != 3 {
-			return static.Data{}, errors.New("[Rule34] quality not found for post " + URL)
+			return static.Data{}, errors.New("quality not found for post " + URL)
 		}
 		quality = fmt.Sprintf("%s x %s", matchedQualityProperties[1], matchedQualityProperties[2])
 	} else {
 		re := regexp.MustCompile(`data-(width|height)='([0-9]+)`)
 		matchedQualityProperties := re.FindAllStringSubmatch(htmlString, -1)
 		if len(matchedQualityProperties) != 2 {
-			return static.Data{}, errors.New("[Rule34] quality not found for post " + URL)
+			return static.Data{}, errors.New("quality not found for post " + URL)
 		}
 
 		quality = fmt.Sprintf("%s x %s", matchedQualityProperties[1][2], matchedQualityProperties[0][2])

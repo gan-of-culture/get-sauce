@@ -73,7 +73,7 @@ func extractData(URL string) (static.Data, error) {
 	re := regexp.MustCompile(`id: '(\d*)',\s*nonce: '([^']*)`)
 	matchedSourceReq := re.FindStringSubmatch(htmlString) // 1=id  2=nonce
 	if len(matchedSourceReq) < 3 {
-		return static.Data{}, fmt.Errorf("[Hentaidude] Can't locate json params in URL: %s", URL)
+		return static.Data{}, fmt.Errorf("can't locate json params in URL: %s", URL)
 	}
 
 	headers := map[string]string{
@@ -104,7 +104,7 @@ func extractData(URL string) (static.Data, error) {
 		return static.Data{}, err
 	}
 	if !sources.Success {
-		return static.Data{}, fmt.Errorf("[Hentaidude] The api request for the streams did not return successful for %s", URL)
+		return static.Data{}, fmt.Errorf("the api request for the streams did not return successful for %s", URL)
 	}
 
 	streams := make(map[string]*static.Stream)
@@ -126,8 +126,7 @@ func extractData(URL string) (static.Data, error) {
 					Ext: strings.Split(headers.Get("content-type"), "/")[1],
 				},
 			},
-			Quality: "unknown",
-			Size:    size,
+			Size: size,
 		}
 	}
 

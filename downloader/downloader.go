@@ -62,16 +62,23 @@ func New(stream string, bar bool) *Downloader {
 func (downloader *Downloader) Download(data *static.Data) error {
 	downloader.data = data
 
+	if config.OutputName != "" {
+		downloader.data.Title = config.OutputName
+	}
+
+	//sanitize filename here
+	re := regexp.MustCompile(`["&|:?<>/*\\ ]+`)
+	downloader.data.Title = strings.TrimSpace(re.ReplaceAllString(downloader.data.Title, " "))
+
 	// select stream to download
 	var stream *static.Stream
 	var ok bool
 	if stream, ok = downloader.data.Streams[downloader.stream]; !ok {
 		return fmt.Errorf("stream %s not found", downloader.stream)
 	}
-	lenOfUrls := len(stream.URLs)
 
 	needsMerge := false
-	if downloader.data.Type == "video" && lenOfUrls > 1 {
+	if downloader.data.Streams[downloader.stream].Ext != "" {
 		// ensure a different tmpDir for each download so concurrent processes won't colide
 		h := sha1.New()
 		h.Write([]byte(downloader.data.Title))
@@ -83,6 +90,7 @@ func (downloader *Downloader) Download(data *static.Data) error {
 		needsMerge = true
 	}
 
+	lenOfUrls := len(stream.URLs)
 	appendEnum := false
 	if lenOfUrls > 1 {
 		appendEnum = true
@@ -129,19 +137,10 @@ func (downloader *Downloader) Download(data *static.Data) error {
 			fileURI = downloader.data.Title
 		}
 
-		if config.OutputName != "" && lenOfUrls == 1 {
-			fileURI = config.OutputName
-		}
-
-		//sanitize filename here
-		re := regexp.MustCompile(`["&|:?<>/*\\ ]+`)
-		fileURI = strings.TrimSpace(re.ReplaceAllString(fileURI, " "))
-
 		//build final file URI
+		fileURI = filepath.Join(downloader.filePath, fileURI+"."+URL.Ext)
 		if needsMerge {
 			fileURI = filepath.Join(downloader.tmpFilePath, fmt.Sprintf("%d.%s", pageNumbers[idx], URL.Ext))
-		} else {
-			fileURI = filepath.Join(downloader.filePath, fileURI+"."+URL.Ext)
 		}
 
 		URLchan <- downloadInfo{*URL, fileURI}
@@ -156,18 +155,8 @@ func (downloader *Downloader) Download(data *static.Data) error {
 		return nil
 	}
 
-	fileURI = data.Title
-
-	if config.OutputName != "" {
-		fileURI = config.OutputName
-	}
-
-	//sanitize filename here
-	re := regexp.MustCompile(`["&|:?<>/*\\ ]+`)
-	fileURI = strings.TrimSpace(re.ReplaceAllString(fileURI, " "))
-
 	//build final file URI
-	fileURI = filepath.Join(downloader.filePath, fileURI+"."+stream.Ext)
+	fileURI = filepath.Join(downloader.filePath, data.Title+"."+stream.Ext)
 
 	file, err := os.OpenFile(fileURI, os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0644)
 	if err != nil {
@@ -220,20 +209,10 @@ func (downloader *Downloader) save(url static.URL, fileURI string) error {
 
 	//if stream size bigger than 10MB then use concurWrite
 	if downloader.data.Streams[downloader.stream].Size > 10_000_000 && config.Workers > 1 && downloader.data.Streams[downloader.stream].Ext == "" {
-
-		err = downloader.concurWriteFile(url.URL, file)
-		if err != nil {
-			return err
-		}
-		return nil
+		return downloader.concurWriteFile(url.URL, file)
 	}
 
-	err = downloader.writeFile(url.URL, file)
-	if err != nil {
-		return err
-	}
-
-	return nil
+	return downloader.writeFile(url.URL, file)
 }
 
 func (downloader *Downloader) concurWriteFile(URL string, file *os.File) error {
@@ -300,12 +279,12 @@ func (downloader *Downloader) concurWriteFile(URL string, file *os.File) error {
 				}
 
 				lock.Lock()
-				written, err := file.WriteAt(buffer, d.offset)
+				_, err = file.WriteAt(buffer, d.offset)
 				if err != nil {
 					saveErr = err
 				}
 				if downloader.bar {
-					downloader.progressBar.Add(written)
+					downloader.progressBar.Add(1)
 				}
 				lock.Unlock()
 
@@ -398,5 +377,4 @@ func (downloader *Downloader) initPB(len int64, descr string, asBytes bool) {
 		progressbar.OptionSetPredictTime(true),
 		progressbar.OptionSetRenderBlankState(true),
 	)
-
 }

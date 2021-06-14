@@ -22,7 +22,7 @@ func New() static.Extractor {
 func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 	URLs := parseURL(URL)
 	if len(URLs) == 0 {
-		return nil, fmt.Errorf("[Miohentai] No scrapable URL found for %s", URL)
+		return nil, fmt.Errorf("no scrapable URL found for %s", URL)
 	}
 
 	data := []*static.Data{}
@@ -99,8 +99,7 @@ func extractData(URL string) (static.Data, error) {
 						Ext: ext,
 					},
 				},
-				Quality: "best",
-				Size:    size,
+				Size: size,
 			},
 		},
 		Url: URL,

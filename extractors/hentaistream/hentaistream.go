@@ -117,12 +117,12 @@ func extractData(URL string) (static.Data, error) {
 	re := regexp.MustCompile(`<iframe[\s\S]*?(player[^#]*)#([^"]*)`)
 	matchedBase64CDNURL := re.FindStringSubmatch(htmlString) // 1=player[4k].html  2 = "url=https://01cdn.hentaistream.moe/2021/02/Overflow/E08/"
 	if len(matchedBase64CDNURL) < 2 {
-		return static.Data{}, fmt.Errorf("[HentaiStream] Can't locate BASE64 string in video URL: %s", URL)
+		return static.Data{}, fmt.Errorf("can't locate BASE64 string in video URL: %s", URL)
 	}
 
 	downloadURLBytes, err := base64.StdEncoding.DecodeString(matchedBase64CDNURL[2])
 	if err != nil {
-		return static.Data{}, fmt.Errorf("[HentaiStream] Error decoding string: %s ", err.Error())
+		return static.Data{}, fmt.Errorf("error decoding string: %s ", err.Error())
 	}
 	baseDownloadURL := strings.Split(strings.TrimPrefix(strings.Trim(string(downloadURLBytes), `"`), "url="), ";")[0]
 

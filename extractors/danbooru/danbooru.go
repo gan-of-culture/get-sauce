@@ -40,22 +40,22 @@ func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 }
 
 // parseURL for danbooru pages
-func parseURL(url string) ([]string, error) {
+func parseURL(URL string) ([]string, error) {
 	re := regexp.MustCompile(`page=([0-9]+)`)
-	pageNo := re.FindAllString(url, -1)
+	pageNo := re.FindAllString(URL, -1)
 	// pageNo = url?page=number -> if it's there it means overview page otherwise single post or invalid
 	if len(pageNo) == 0 {
 
 		re := regexp.MustCompile(`/posts/[0-9]+`)
-		linkToPost := re.FindString(url)
+		linkToPost := re.FindString(URL)
 		if linkToPost == "" {
-			return nil, errors.New("[Danbooru]Invalid Url no post found")
+			return nil, errors.New("invalid URL no post found")
 		}
 
 		return []string{linkToPost}, nil
 	}
 
-	htmlString, err := request.Get(url)
+	htmlString, err := request.Get(URL)
 	if err != nil {
 		return nil, err
 	}
@@ -80,13 +80,13 @@ func extractData(postURL string) (static.Data, error) {
 	re := regexp.MustCompile(`data-width="([^"]+)"[ ]+data-height="([^"]+)".+alt="([^"]+)".+src="([^"]+)"`)
 	matchedImgData := re.FindStringSubmatch(htmlString)
 	if len(matchedImgData) != 5 {
-		return static.Data{}, errors.New("[Danbooru] Image parsing failed")
+		return static.Data{}, errors.New("image parsing failed")
 	}
 	// [1] = img original width [2] image original height [3] image name [4] src url
 
 	size, err := request.Size(matchedImgData[4], postURL)
 	if err != nil {
-		return static.Data{}, errors.New("[Danbooru]No image size not found")
+		return static.Data{}, errors.New("no image size not found")
 	}
 
 	return static.Data{

@@ -22,7 +22,7 @@ func New() static.Extractor {
 func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 	URLs := parseURL(URL)
 	if len(URLs) == 0 {
-		return nil, fmt.Errorf("[Hentai2w] No scrapable URL found for %s", URL)
+		return nil, fmt.Errorf("no scrapable URL found for %s", URL)
 	}
 
 	data := []*static.Data{}
@@ -60,7 +60,7 @@ func extractData(URL string) (static.Data, error) {
 	re := regexp.MustCompile(`<source src="([^"]+)"`)
 	videoURL := utils.GetLastItemString(re.FindStringSubmatch(htmlString))
 	if videoURL == "" || strings.HasPrefix(videoURL, "<") {
-		return static.Data{}, fmt.Errorf("[Hentai2w] No videoURL found for %s", URL)
+		return static.Data{}, fmt.Errorf("no video URL found for %s", URL)
 	}
 	ext := utils.GetLastItemString(strings.Split(videoURL, "."))
 
