@@ -11,7 +11,15 @@ func TestParseURL(t *testing.T) {
 		url  string
 		want int
 	}{
-		/*{
+		{
+			name: "Single Episode hentaistream.xxx",
+			url:  "https://hentai.pro/ova-youkoso-sukebe-elf-no-mori-e-episode-4/",
+			want: 1,
+		}, {
+			name: "Overview hentaistream.xxx",
+			url:  "https://hentai.pro/tag/breasts/",
+			want: 50,
+		}, {
 			name: "Single Episode hentaistream.xxx",
 			url:  "https://hentaistream.xxx/watch/tonari-no-ie-no-anette-san-the-animation-episode-1_waYqxLSASjFPICZ.html",
 			want: 1,
@@ -19,7 +27,7 @@ func TestParseURL(t *testing.T) {
 			name: "Overview hentaistream.xxx",
 			url:  "https://hentaistream.xxx/videos/category/749",
 			want: 20,
-		},*/{
+		}, {
 			name: "Single Episode hentaihaven.red/",
 			url:  "https://hentaihaven.red/hentai/joshi-luck-episode-1/",
 			want: 1,
@@ -61,11 +69,19 @@ func TestExtract(t *testing.T) {
 		url  string
 		want int
 	}{
-		/*{
+		{
+			name: "Single Episode hentai.pro",
+			url:  "https://hentai.pro/ova-youkoso-sukebe-elf-no-mori-e-episode-4/",
+			want: 1,
+		}, /*{
+			name: "Overview hentai.pro",
+			url:  "https://hentai.pro/tag/breasts/",
+			want: 50,
+		},*/{
 			name: "Single Episode hentaistream.xxx",
 			url:  "https://hentaistream.xxx/watch/netoshisu-episode-1_VpauMk84OoQXof3.html",
 			want: 1,
-		}, {
+		}, /* {
 			name: "Overview hentaistream.xxx",
 			url:  "https://hentaistream.xxx/videos/category/749",
 			want: 47,

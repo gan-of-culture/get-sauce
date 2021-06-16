@@ -93,7 +93,7 @@ func parseURL(URL string) []string {
 		matchedURLs = matchedURLs[:len(matchedURLs)-5]
 	}
 
-	return removeAdjDuplicates(matchedURLs)
+	return utils.RemoveAdjDuplicates(matchedURLs)
 }
 
 // ExtractData for a single episode that is hosted by the htstreaming network
@@ -192,17 +192,4 @@ func ExtractData(URL string) (static.Data, error) {
 		Streams: streams,
 		Url:     URL,
 	}, nil
-}
-
-func removeAdjDuplicates(slice []string) []string {
-	out := []string{}
-	var last string
-	for _, s := range slice {
-		if s != last {
-			out = append(out, s)
-		}
-		last = s
-	}
-
-	return out
 }

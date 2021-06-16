@@ -21,11 +21,6 @@ import (
 	"github.com/schollz/progressbar/v3"
 )
 
-/*
-TODO:
-1. Implement concurrency for m3u segement merging
-*/
-
 type filePiece struct {
 	offset int64
 	length int64
@@ -78,7 +73,7 @@ func (downloader *Downloader) Download(data *static.Data) error {
 	}
 
 	needsMerge := false
-	if downloader.data.Streams[downloader.stream].Ext != "" {
+	if stream.Ext != "" {
 		// ensure a different tmpDir for each download so concurrent processes won't colide
 		h := sha1.New()
 		h.Write([]byte(downloader.data.Title))

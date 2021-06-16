@@ -9,7 +9,7 @@ You can see what site is supported to what extent [here](#supported-sites).
 
 If you don't want to build the app yourself checkout the [releases page](https://github.com/gan-of-culture/go-hentai-scraper/releases).
 
-Otherwise you can clone this Repository yourself and download it. Then use [GO](https://golang.org/dl/) to build it yourself:
+Otherwise you can clone this repository yourself and download it. Then use [GO](https://golang.org/dl/) to build it yourself:
 
 ```bash
 go build
@@ -91,6 +91,7 @@ go run main.go ...
 | [hentai2w.com(720p, 480p, 360p)](https://hentai2w.com)                   |         ?          |:heavy_check_mark:|
 | [hentaicloud.com(720p)](https://www.hentaicloud.com)                     |        :x:         |:heavy_check_mark:|
 | [hentaidude.com(720p, 480, 360p)](https://hentaidude.com/)               |         ?          |:heavy_check_mark:|
+| [hentaifox.com](https://hentaifox.com)                                   | :heavy_check_mark: |         ?        |
 | [hentaihaven.red (1080p, 720p, 480p, 360p)](https://hentaihaven.red)     |         ?          |:heavy_check_mark:|
 | [hentaihaven.xxx (1080p, 720p, 480p, 360p)](https://hentaihaven.xxx)     |         ?          |:heavy_check_mark:|
 | [hentaimama.io(1080p, 720p)](https://hentaimama.io)                      |         ?          |:heavy_check_mark:|
@@ -99,6 +100,7 @@ go run main.go ...
 | [hentaistream.xxx (1080p, 720, 480p, 360p)](https://hentaistream.xxx/)   |         ?          |:heavy_check_mark:|
 | [hentaiworld.tv (1080p, 720p, 480p)](https://hentaiworld.tv/)            |         ?          |:heavy_check_mark:|
 | [hentai.tv (1080p, 720p, 480p, 360p)](https://hentai.tv/)                |         ?          |:heavy_check_mark:|
+| [hentai.pro (1080p, 720p, 480p, 360p)](https://hentai.pro/)              |         ?          |:heavy_check_mark:|
 | [hentaiyes.com (1080p, 720p, 480p, 360p)](https://hentaiyes.com/)        |         ?          |:heavy_check_mark:|
 | [hitomi.la](https://hitomi.la/)                                          | :heavy_check_mark: |        ?         |
 | [konachan.com](https://konachan.com/post?tags=)                          | :heavy_check_mark: |        ?         |
