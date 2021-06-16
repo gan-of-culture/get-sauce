@@ -17,6 +17,7 @@ import (
 	"github.com/gan-of-culture/go-hentai-scraper/extractors/hentaifox"
 	"github.com/gan-of-culture/go-hentai-scraper/extractors/hentaihaven"
 	"github.com/gan-of-culture/go-hentai-scraper/extractors/hentaimama"
+	"github.com/gan-of-culture/go-hentai-scraper/extractors/hentaimimi"
 	"github.com/gan-of-culture/go-hentai-scraper/extractors/hentais"
 	"github.com/gan-of-culture/go-hentai-scraper/extractors/hentaistream"
 	"github.com/gan-of-culture/go-hentai-scraper/extractors/hentaiworld"
@@ -59,6 +60,7 @@ func init() {
 		"hentaifox.com":       hentaifox.New(),
 		"hentaihaven.xxx":     hentaihaven.New(),
 		"hentaimama.io":       hentaimama.New(),
+		"hentaimimi.com":      hentaimimi.New(),
 		"www.hentais.tube":    hentais.New(),
 		"hentaistream.moe":    hentaistream.New(),
 		"hentaistream.xxx":    htstreamingExtactor,

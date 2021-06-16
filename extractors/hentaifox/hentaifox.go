@@ -14,14 +14,16 @@ import (
 const site = "https://hentaifox.com/"
 const cdn = "https://i.hentaifox.com/"
 
+var reTitle *regexp.Regexp
 var reJSONStr *regexp.Regexp
 var reImgDir *regexp.Regexp
-var reTitle *regexp.Regexp
+var reGalleryID *regexp.Regexp
 
 func init() {
+	reTitle = regexp.MustCompile(`<title>(.+)</title>`)
 	reJSONStr = regexp.MustCompile(`parseJSON\('[^']+`)
 	reImgDir = regexp.MustCompile(`image_dir" value="([^"]*)`)
-	reTitle = regexp.MustCompile(`<title>(.+)</title>`)
+	reGalleryID = regexp.MustCompile(`gallery_id" value="([^"]*)`)
 }
 
 type extractor struct{}
@@ -91,6 +93,11 @@ func extractData(ID string) (*static.Data, error) {
 		return &static.Data{}, fmt.Errorf("cannot find image_dir for: %s", ID)
 	}
 
+	gID := reGalleryID.FindStringSubmatch(htmlString)
+	if len(gID) < 1 {
+		return &static.Data{}, fmt.Errorf("cannot find gallery_id for: %s", ID)
+	}
+
 	noOfPages := len(imageData)
 	pages := utils.NeedDownloadList(noOfPages)
 
@@ -108,7 +115,7 @@ func extractData(ID string) (*static.Data, error) {
 			params[0] = "gif"
 		}
 		URLs = append(URLs, &static.URL{
-			URL: fmt.Sprintf("%s%s/%s/%d.%s", cdn, imageDir[1], ID, i, params[0]),
+			URL: fmt.Sprintf("%s%s/%s/%d.%s", cdn, imageDir[1], gID[1], i, params[0]),
 			Ext: params[0],
 		})
 	}
