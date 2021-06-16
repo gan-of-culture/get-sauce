@@ -95,6 +95,7 @@ go run main.go ...
 | [hentaihaven.red (1080p, 720p, 480p, 360p)](https://hentaihaven.red)     |         ?          |:heavy_check_mark:|
 | [hentaihaven.xxx (1080p, 720p, 480p, 360p)](https://hentaihaven.xxx)     |         ?          |:heavy_check_mark:|
 | [hentaimama.io(1080p, 720p)](https://hentaimama.io)                      |         ?          |:heavy_check_mark:|
+| [hentaimimi.com](https://hentaimimi.com)                                 | :heavy_check_mark: |         ?        |
 | [hentais.tube (720p, 480p, 360p)](https://www.hentais.tube/)             |         ?          |:heavy_check_mark:|
 | [hentaistream.moe (2160p, 1080p, 480p)](https://hentaistream.moe/)       |         ?          |:heavy_check_mark:|
 | [hentaistream.xxx (1080p, 720, 480p, 360p)](https://hentaistream.xxx/)   |         ?          |:heavy_check_mark:|
