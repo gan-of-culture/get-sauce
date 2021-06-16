@@ -230,6 +230,29 @@ func TestMeta(t *testing.T) {
 	}
 }
 
+func TestRemoveAdjDuplicates(t *testing.T) {
+	tests := []struct {
+		name string
+		in   []string
+		want []string
+	}{
+		{
+			name: "default",
+			in:   []string{"test", "test", "hello", "world"},
+			want: []string{"test", "hello", "world"},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			s := RemoveAdjDuplicates(tt.in)
+
+			if len(s) != len(tt.want) {
+				t.Errorf("Got: %v - want: %v", tt.in, tt.want)
+			}
+		})
+	}
+}
+
 func TestParseM3UMaster(t *testing.T) {
 	tests := []struct {
 		name   string

@@ -106,6 +106,20 @@ func GetMeta(htmlString *string, property string) string {
 	return metaTags[0][1]
 }
 
+// RemoveAdjDuplicates of string slice
+func RemoveAdjDuplicates(slice []string) []string {
+	out := []string{}
+	var last string
+	for _, s := range slice {
+		if s != last {
+			out = append(out, s)
+		}
+		last = s
+	}
+
+	return out
+}
+
 // ParseM3UMaster into static.Stream to prefill the structure
 // returns a pre filled structure where URLs[0].URL is the media m3u URI
 func ParseM3UMaster(master *string) (map[string]*static.Stream, error) {
