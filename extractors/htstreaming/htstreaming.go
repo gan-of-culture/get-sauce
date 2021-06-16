@@ -142,6 +142,11 @@ func ExtractData(URL string) (static.Data, error) {
 		ext = matchedExt[1]
 	}
 
+	// the meta tag contains bloat
+	if site == "hentai.pro" {
+		title = strings.TrimSuffix(pData.Title, "."+ext)
+	}
+
 	m3u8MasterURL := strings.Replace(pData.VideoData.VideoSources[0].File, pData.VideoServer, pData.HostList[pData.VideoServer][0], -1)
 	m3u8MasterURL = strings.Replace(m3u8MasterURL, "hls", "down", -1)
 
