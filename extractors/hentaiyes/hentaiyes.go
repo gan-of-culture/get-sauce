@@ -21,7 +21,7 @@ func New() static.Extractor {
 func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 	URLs := parseURL(URL)
 	if len(URLs) == 0 {
-		return nil, fmt.Errorf("no scrapable URL found for %s", URL)
+		return nil, static.ErrURLParseFailed
 	}
 
 	data := []*static.Data{}

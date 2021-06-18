@@ -56,12 +56,13 @@ func New() static.Extractor {
 }
 
 func (e *extractor) Extract(URL string) ([]*static.Data, error) {
-	ids, page := parseURL(URL)
-	if len(ids) < 1 {
-		return nil, fmt.Errorf("this is not a vaild URL %s", URL)
+	IDs, page := parseURL(URL)
+	if len(IDs) == 0 {
+		return nil, static.ErrURLParseFailed
 	}
+
 	data := []*static.Data{}
-	for _, id := range ids {
+	for _, id := range IDs {
 		d, err := extractData(id, page)
 		if err != nil {
 			return nil, err

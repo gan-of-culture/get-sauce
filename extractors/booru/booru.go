@@ -2,7 +2,6 @@ package booru
 
 import (
 	"encoding/json"
-	"errors"
 	"fmt"
 	"regexp"
 	"strconv"
@@ -63,7 +62,7 @@ func parseURL(url string) (string, error) {
 		re := regexp.MustCompile(`https://booru\.io/p/(.+)`)
 		matchedID := re.FindStringSubmatch(url)
 		if len(matchedID) > 2 {
-			return "", errors.New("invalid URL")
+			return "", static.ErrURLParseFailed
 		}
 		return fmt.Sprintf("%s%s", apiEntityURL, matchedID[1]), nil
 	}

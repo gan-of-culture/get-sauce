@@ -43,7 +43,7 @@ func parseURL(URL string) []string {
 func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 	URLs := parseURL(URL)
 	if len(URLs) < 1 {
-		return nil, fmt.Errorf("no matching URL found")
+		return nil, static.ErrURLParseFailed
 	}
 
 	data := []*static.Data{}

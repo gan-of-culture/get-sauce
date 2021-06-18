@@ -54,7 +54,7 @@ func New() static.Extractor {
 func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 	URLs := parseURL(URL)
 	if len(URLs) == 0 {
-		return nil, fmt.Errorf("[Hentaihaven] No scrapable URL found for %s", URL)
+		return nil, static.ErrURLParseFailed
 	}
 
 	data := []*static.Data{}
@@ -166,7 +166,7 @@ func extractData(URL string) (static.Data, error) {
 
 	baseURL, err := url.Parse(sources.Data.Sources[0].Src)
 	if err != nil {
-		return static.Data{}, fmt.Errorf("invalid m3u8 url %s", URL)
+		return static.Data{}, err
 	}
 
 	streams, err := utils.ParseM3UMaster(&m3u8String)

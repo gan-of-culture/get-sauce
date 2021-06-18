@@ -22,6 +22,9 @@ func New() static.Extractor {
 
 func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 	URLs := parseURL(URL)
+	if len(URLs) == 0 {
+		return nil, static.ErrURLParseFailed
+	}
 
 	data := []*static.Data{}
 	for _, u := range URLs {
@@ -62,12 +65,12 @@ func extractData(URL string) (static.Data, error) {
 	re := regexp.MustCompile(`[^"]*new\d.php\?p=([^"]*)`)
 	matchedMirrorURLs := re.FindAllStringSubmatch(episodeHtmlString, -1)
 	if len(matchedMirrorURLs) < 1 {
-		return static.Data{}, fmt.Errorf("can't locate video src URL for: %s", URL)
+		return static.Data{}, static.ErrDataSourceParseFailed
 	}
 
 	b64Path, err := base64.StdEncoding.DecodeString(matchedMirrorURLs[1][1])
 	if err != nil {
-		return static.Data{}, fmt.Errorf("error decoding string: %s ", err.Error())
+		return static.Data{}, err
 	}
 
 	streams := make(map[string]*static.Stream)

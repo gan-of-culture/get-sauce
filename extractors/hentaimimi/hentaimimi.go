@@ -32,6 +32,9 @@ func New() static.Extractor {
 
 func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 	IDs := parseURL(URL)
+	if len(IDs) == 0 {
+		return nil, static.ErrURLParseFailed
+	}
 
 	data := []*static.Data{}
 	for _, u := range IDs {

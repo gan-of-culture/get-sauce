@@ -26,7 +26,7 @@ func New() static.Extractor {
 func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 	URLs := parseURL(URL)
 	if len(URLs) == 0 {
-		return nil, errors.New("[E-Hentai] no vaild URL found")
+		return nil, static.ErrURLParseFailed
 	}
 
 	data := []*static.Data{}
@@ -68,7 +68,7 @@ func parseURL(URL string) []string {
 func extractData(URL string) ([]*static.Data, error) {
 	htmlString, err := request.Get(URL)
 	if err != nil {
-		return nil, errors.New("invaild URL")
+		return nil, err
 	}
 
 	if strings.Contains(htmlString, "<h1>Content Warning</h1>") {
@@ -95,7 +95,7 @@ func extractData(URL string) ([]*static.Data, error) {
 	for page := 1; len(imgURLs) < numberOfPages; page++ {
 		htmlString, err := request.Get(fmt.Sprintf("%s?p=%d", URL, page))
 		if err != nil {
-			return nil, errors.New("invaild page URL")
+			return nil, err
 		}
 		imgURLs = append(imgURLs, re.FindAllString(htmlString, -1)...)
 	}
@@ -104,7 +104,7 @@ func extractData(URL string) ([]*static.Data, error) {
 	for _, idx := range utils.NeedDownloadList(len(imgURLs)) {
 		htmlString, err := request.Get(imgURLs[idx-1])
 		if err != nil {
-			return nil, errors.New("invaild image URL")
+			return nil, err
 		}
 
 		title := utils.GetH1(&htmlString, 0)
@@ -123,7 +123,7 @@ func extractData(URL string) ([]*static.Data, error) {
 		re = regexp.MustCompile(`<img id="img" src="([^"]+)`)
 		matchedSrcURL := re.FindAllStringSubmatch(htmlString, -1)
 		if len(matchedSrcURL) != 1 {
-			return nil, errors.New("invaild image src")
+			return nil, static.ErrDataSourceParseFailed
 		}
 
 		// size will be empty if err occurs

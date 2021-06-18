@@ -1,7 +1,6 @@
 package hentai2w
 
 import (
-	"fmt"
 	"regexp"
 	"strings"
 
@@ -22,7 +21,7 @@ func New() static.Extractor {
 func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 	URLs := parseURL(URL)
 	if len(URLs) == 0 {
-		return nil, fmt.Errorf("no scrapable URL found for %s", URL)
+		return nil, static.ErrURLParseFailed
 	}
 
 	data := []*static.Data{}
@@ -60,7 +59,7 @@ func extractData(URL string) (static.Data, error) {
 	re := regexp.MustCompile(`<source src="([^"]+)"`)
 	videoURL := utils.GetLastItemString(re.FindStringSubmatch(htmlString))
 	if videoURL == "" || strings.HasPrefix(videoURL, "<") {
-		return static.Data{}, fmt.Errorf("no video URL found for %s", URL)
+		return static.Data{}, static.ErrDataSourceParseFailed
 	}
 	ext := utils.GetLastItemString(strings.Split(videoURL, "."))
 
@@ -78,8 +77,7 @@ func extractData(URL string) (static.Data, error) {
 						Ext: ext,
 					},
 				},
-				Quality: "unknown",
-				Size:    size,
+				Size: size,
 			},
 		},
 		Url: URL,

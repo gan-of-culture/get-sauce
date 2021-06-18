@@ -50,9 +50,9 @@ func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 	site = baseURL.Host
 
 	URLs := parseURL(URL)
-	if len(URLs) < 1 {
+	if len(URLs) == 0 {
 		log.Println(URL)
-		return nil, errors.New("no matching URL found")
+		return nil, static.ErrURLParseFailed
 	}
 
 	data := []*static.Data{}
