@@ -24,14 +24,14 @@ func New() static.Extractor {
 }
 
 // Extract post data
-func (e *extractor) Extract(url string) ([]*static.Data, error) {
+func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 	re := regexp.MustCompile(`https://[^/]*`)
-	siteURL = re.FindString(url)
+	siteURL = re.FindString(URL)
 	mass = false
 
-	urls := parseURL(url)
-	if len(urls) == 0 {
-		return nil, fmt.Errorf("can't find a post for %s", url)
+	URLs := parseURL(URL)
+	if len(URLs) == 0 {
+		return nil, static.ErrURLParseFailed
 	}
 
 	var data []*static.Data
@@ -41,7 +41,7 @@ func (e *extractor) Extract(url string) ([]*static.Data, error) {
 		extractDataFunc = extractDataFromDirectLink
 	}
 
-	for _, u := range urls {
+	for _, u := range URLs {
 		d, err := extractDataFunc(u)
 		if err != nil {
 			return nil, err
@@ -53,32 +53,32 @@ func (e *extractor) Extract(url string) ([]*static.Data, error) {
 }
 
 // parseURL of input
-func parseURL(url string) []string {
+func parseURL(URL string) []string {
 
 	re := regexp.MustCompile(`(?:show/|&id=)[0-9]*`)
-	if re.MatchString(url) {
-		return []string{url}
+	if re.MatchString(URL) {
+		return []string{URL}
 	}
 
 	re = regexp.MustCompile(`(?:s=list|post\?|page=[0-9]+)`)
-	if !re.MatchString(url) {
+	if !re.MatchString(URL) {
 		return []string{}
 	}
 
 	pageParam := ""
-	if strings.Contains(url, "index.php?") {
+	if strings.Contains(URL, "index.php?") {
 		pageParam = "&pid=%d"
 	}
-	if strings.Contains(url, "post?") {
+	if strings.Contains(URL, "post?") {
 		pageParam = "&page=%d"
 	}
 
 	re = regexp.MustCompile(`(.+(?:pid=|page=))([0-9]+)([^\s]+)?`) //1=basequeryurl 2=current page 3=parameters after the page parameter
-	matchedBaseQueryURL := re.FindStringSubmatch(url)
+	matchedBaseQueryURL := re.FindStringSubmatch(URL)
 	baseQueryURL := ""
 	switch len(matchedBaseQueryURL) {
 	case 0, 1:
-		baseQueryURL = fmt.Sprintf("%s%s", url, pageParam)
+		baseQueryURL = fmt.Sprintf("%s%s", URL, pageParam)
 	case 2:
 		baseQueryURL = fmt.Sprintf("%s%s", matchedBaseQueryURL[1], "%d")
 	case 4:
@@ -161,7 +161,7 @@ func extractData(url string) (static.Data, error) {
 		re = regexp.MustCompile(`<a.+href="([^"]+\.([^"?]+)).+>\s*(?:Original|View larger|Download PNG)`)
 		matchedPostURL = re.FindStringSubmatch(postHTML)
 		if len(matchedPostURL) != 3 {
-			return static.Data{}, err
+			return static.Data{}, static.ErrDataSourceParseFailed
 		}
 	}
 

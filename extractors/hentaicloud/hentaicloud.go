@@ -1,7 +1,6 @@
 package hentaicloud
 
 import (
-	"fmt"
 	"regexp"
 
 	"github.com/gan-of-culture/go-hentai-scraper/request"
@@ -21,7 +20,7 @@ func New() static.Extractor {
 func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 	URLs := parseURL(URL)
 	if len(URLs) == 0 {
-		return nil, fmt.Errorf("no scrapable URL found for %s", URL)
+		return nil, static.ErrURLParseFailed
 	}
 
 	data := []*static.Data{}
@@ -66,7 +65,7 @@ func extractData(URL string) (static.Data, error) {
 	re := regexp.MustCompile(`(https://www.hentaicloud.com/media/videos/hd/\d*\.([^"]*)).+res="([^"]*)`)
 	srcTag := re.FindStringSubmatch(htmlString) //1=URL 2=ext 3=resolution
 	if len(srcTag) != 4 {
-		return static.Data{}, fmt.Errorf("no scrapable source tag found for %s", URL)
+		return static.Data{}, static.ErrDataSourceParseFailed
 	}
 
 	size, _ := request.Size(srcTag[1], URL)

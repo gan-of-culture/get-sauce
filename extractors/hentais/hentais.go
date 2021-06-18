@@ -22,9 +22,9 @@ func New() static.Extractor {
 
 // Extract hentai data
 func (e *extractor) Extract(URL string) ([]*static.Data, error) {
-	URLs, err := parseURL(URL)
-	if err != nil {
-		return nil, err
+	URLs := parseURL(URL)
+	if len(URLs) == 0 {
+		return nil, static.ErrURLParseFailed
 	}
 
 	data := []*static.Data{}
@@ -40,22 +40,22 @@ func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 }
 
 // parseURL to extract hentai data
-func parseURL(URL string) ([]string, error) {
+func parseURL(URL string) []string {
 	if strings.HasPrefix(URL, site+"episodes/") {
-		return []string{URL}, nil
+		return []string{URL}
 	}
 
 	if !strings.HasPrefix(URL, site+"tvshows/") {
-		return nil, fmt.Errorf("can't parse URL %s", URL)
+		return nil
 	}
 
 	htmlString, err := request.Get(URL)
 	if err != nil {
-		return nil, err
+		return nil
 	}
 
 	re := regexp.MustCompile(`/episodes/[^"]*`)
-	return re.FindAllString(htmlString, -1), nil
+	return re.FindAllString(htmlString, -1)
 }
 
 func extractData(URL string) (static.Data, error) {
@@ -81,7 +81,7 @@ func extractData(URL string) (static.Data, error) {
 	re = regexp.MustCompile(`src="([^"]*)" type="([^"]*)"(?: label="([^"]*)")?`) // 1=videoURL 2=mimeType 3=quality
 	matchedSrcTag := re.FindAllStringSubmatch(htmlString, -1)                    //<-- is basically the different streams
 	if len(matchedSrcTag) < 1 {
-		return static.Data{}, fmt.Errorf("no source tags found in %s", playerURL)
+		return static.Data{}, static.ErrDataSourceParseFailed
 	}
 
 	u := ""

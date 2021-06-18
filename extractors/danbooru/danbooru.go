@@ -49,7 +49,7 @@ func parseURL(URL string) ([]string, error) {
 		re := regexp.MustCompile(`/posts/[0-9]+`)
 		linkToPost := re.FindString(URL)
 		if linkToPost == "" {
-			return nil, errors.New("invalid URL no post found")
+			return nil, static.ErrURLParseFailed
 		}
 
 		return []string{linkToPost}, nil
@@ -80,7 +80,7 @@ func extractData(postURL string) (static.Data, error) {
 	re := regexp.MustCompile(`data-width="([^"]+)"[ ]+data-height="([^"]+)".+alt="([^"]+)".+src="([^"]+)"`)
 	matchedImgData := re.FindStringSubmatch(htmlString)
 	if len(matchedImgData) != 5 {
-		return static.Data{}, errors.New("image parsing failed")
+		return static.Data{}, static.ErrDataSourceParseFailed
 	}
 	// [1] = img original width [2] image original height [3] image name [4] src url
 

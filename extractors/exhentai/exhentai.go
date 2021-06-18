@@ -29,12 +29,8 @@ type extractor struct {
 // login your user
 func (e *extractor) login() error {
 
-	if config.Username == "" {
-		return fmt.Errorf("[Exhentai] user name is missing. You need to supply a vaild user name to use this scraper")
-	}
-
-	if config.Username == "" {
-		return fmt.Errorf("[Exhentai] user password is missing. You need to supply a vaild user password to use this scraper")
+	if config.Username == "" || config.UserPassword == "" {
+		return static.ErrLoginRequired
 	}
 
 	headers := map[string]string{
@@ -83,7 +79,7 @@ func (e *extractor) login() error {
 		}
 	}
 
-	return fmt.Errorf("[Exhentai]No login possible for User: %s and Password: %s", config.Username, config.UserPassword)
+	return fmt.Errorf("no login possible for user: %s and password: %s", config.Username, config.UserPassword)
 
 }
 
@@ -92,7 +88,7 @@ func (e *extractor) Request(method string, url string, headers map[string]string
 
 	req, err := http.NewRequest(method, url, nil)
 	if err != nil {
-		return nil, errors.New("Request can't be created")
+		return nil, err
 	}
 
 	for k, v := range config.FakeHeaders {
@@ -187,7 +183,7 @@ func (e *extractor) extractData(URLs []string) ([]*static.Data, error) {
 			re = regexp.MustCompile(`<img id="img" src="([^"]+)`)
 			matchedSrcURL := re.FindAllStringSubmatch(htmlString, -1)
 			if len(matchedSrcURL) != 1 {
-				return nil, errors.New("invaild image src")
+				return nil, static.ErrDataSourceParseFailed
 			}
 			srcURL = []string{matchedSrcURL[0][1]}
 		}
@@ -271,7 +267,7 @@ func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 
 	URLs := e.parseURL(URL)
 	if len(URLs) == 0 {
-		return nil, errors.New("no vaild URL found")
+		return nil, static.ErrURLParseFailed
 	}
 
 	//unpack galleries
@@ -279,7 +275,7 @@ func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 	for _, URL := range URLs {
 		htmlString, err := e.get(URL)
 		if err != nil {
-			return nil, errors.New("invaild URL")
+			return nil, err
 		}
 
 		re := regexp.MustCompile(`([0-9]+) pages`)
@@ -304,7 +300,7 @@ func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 		for page := 1; len(matchedImgURLs) < numberOfPages; page++ {
 			htmlString, err := e.get(fmt.Sprintf("%s?p=%d", URL, page))
 			if err != nil {
-				return nil, errors.New("invaild page URL")
+				return nil, err
 			}
 			matchedImgURLs = append(matchedImgURLs, re.FindAllString(htmlString, -1)...)
 		}

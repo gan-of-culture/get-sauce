@@ -22,14 +22,13 @@ func New() static.Extractor {
 }
 
 func (e *extractor) Extract(URL string) ([]*static.Data, error) {
-
-	urls := parseURL(URL)
-	if len(urls) == 0 {
-		return nil, errors.New("can't parse URL")
+	URLs := parseURL(URL)
+	if len(URLs) == 0 {
+		return nil, static.ErrURLParseFailed
 	}
 
 	var data []*static.Data
-	for _, u := range urls {
+	for _, u := range URLs {
 		d, err := extractData(u)
 		if err != nil {
 			return nil, err
@@ -101,7 +100,7 @@ func extractData(URL string) (static.Data, error) {
 		re = regexp.MustCompile(`<source src='([^']+)`)
 		matchedPostSrcURL = re.FindStringSubmatch(htmlString)
 		if len(matchedPostSrcURL) != 2 {
-			return static.Data{}, errors.New("src URL not found for post " + URL)
+			return static.Data{}, static.ErrDataSourceParseFailed
 		}
 	}
 

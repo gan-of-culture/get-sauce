@@ -29,7 +29,7 @@ func New() static.Extractor {
 func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 	URLs := parseURL(URL)
 	if len(URLs) == 0 {
-		return nil, fmt.Errorf("no scrapable URL found for %s", URL)
+		return nil, static.ErrURLParseFailed
 	}
 
 	data := []*static.Data{}
@@ -127,7 +127,7 @@ func extractData(URL string) (static.Data, error) {
 		vOLD = v
 		baseURL, err := url.Parse(masterURL)
 		if err != nil {
-			return static.Data{}, fmt.Errorf("invalid m3u8 url %s", URL)
+			return static.Data{}, err
 		}
 		for _, variant := range dummyStreams {
 			streamURL, err := baseURL.Parse(variant.URLs[0].URL)

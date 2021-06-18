@@ -2,7 +2,6 @@ package hentai2read
 
 import (
 	"encoding/json"
-	"fmt"
 	"html"
 	"regexp"
 	"strings"
@@ -33,7 +32,7 @@ func New() static.Extractor {
 func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 	URLs := parseURL(URL)
 	if len(URLs) == 0 {
-		return nil, fmt.Errorf("no scrapable URL found for %s", URL)
+		return nil, static.ErrURLParseFailed
 	}
 
 	data := []*static.Data{}
@@ -92,9 +91,8 @@ func extractData(URL string) (static.Data, error) {
 		Type:  "image",
 		Streams: map[string]*static.Stream{
 			"0": {
-				URLs:    buildFullImgURL(galleryData.Images),
-				Quality: "unknown",
-				Size:    0,
+				URLs: buildFullImgURL(galleryData.Images),
+				Size: 0,
 			},
 		},
 		Url: URL,

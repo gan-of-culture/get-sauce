@@ -101,7 +101,7 @@ func GetMeta(htmlString *string, property string) string {
 	re := regexp.MustCompile(fmt.Sprintf("<meta property=[\"']%s[\"'] content=[\"']([^\"']*)", property))
 	metaTags := re.FindAllStringSubmatch(*htmlString, -1)
 	if len(metaTags) < 1 {
-		return fmt.Sprintf("No matches found for %s", property)
+		return fmt.Sprintf("no matches found for %s", property)
 	}
 	return metaTags[0][1]
 }
@@ -155,7 +155,7 @@ func ParseM3UMaster(master *string) (map[string]*static.Stream, error) {
 				case "BANDWIDTH":
 					size, err := strconv.ParseInt(splitParam[1], 10, 64)
 					if err != nil {
-						return nil, fmt.Errorf("unable to parse bandwidth in m3u master file: %s", *master)
+						return nil, err
 					}
 					s.Size = size
 				case "RESOLUTION":

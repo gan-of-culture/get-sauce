@@ -1,7 +1,6 @@
 package hentaiworld
 
 import (
-	"fmt"
 	"regexp"
 	"strings"
 
@@ -21,12 +20,13 @@ func New() static.Extractor {
 
 // Extract data of provided url
 func (e *extractor) Extract(url string) ([]*static.Data, error) {
-	urls, err := parseURL(url)
-	if err != nil {
-		return nil, err
+	URLs := parseURL(url)
+	if len(URLs) == 0 {
+		return nil, static.ErrURLParseFailed
 	}
+
 	data := []*static.Data{}
-	for _, u := range urls {
+	for _, u := range URLs {
 		d, err := extractData(u)
 		if err != nil {
 			return nil, err
@@ -37,21 +37,21 @@ func (e *extractor) Extract(url string) ([]*static.Data, error) {
 }
 
 // parseURL for data extraction
-func parseURL(url string) ([]string, error) {
+func parseURL(URL string) []string {
 	re := regexp.MustCompile(`(?:https://hentaiworld.tv/)(?:all-episodes|uncensored|3d|hentai-videos/category|hentai-videos/tag)/`)
-	validMassURL := re.FindString(url)
+	validMassURL := re.FindString(URL)
 	if validMassURL == "" {
 		re := regexp.MustCompile(`hentai-videos/(?:3d/)?(?:.+episode-[0-9]*)?`)
-		validEpisodeURL := re.FindString(url)
+		validEpisodeURL := re.FindString(URL)
 		if validEpisodeURL != "" {
-			return []string{url}, nil
+			return []string{URL}
 		}
-		return []string{}, fmt.Errorf("invalid URL %s", url)
+		return []string{}
 	}
 
-	massHTMLPage, err := request.Get(url)
+	massHTMLPage, err := request.Get(URL)
 	if err != nil {
-		return []string{}, fmt.Errorf("http get URL error %v", err)
+		return []string{}
 	}
 
 	re = regexp.MustCompile(`"display-all-posts-background"><a href="([^"]*)`)
@@ -61,12 +61,12 @@ func parseURL(url string) ([]string, error) {
 		urls = append(urls, matchedURL[1])
 	}
 
-	return urls, nil
+	return urls
 }
 
 //extractData of hentai
-func extractData(url string) (static.Data, error) {
-	postHTMLpage, err := request.Get(url)
+func extractData(URL string) (static.Data, error) {
+	postHTMLpage, err := request.Get(URL)
 	if err != nil {
 		return static.Data{}, nil
 	}
@@ -84,7 +84,7 @@ func extractData(url string) (static.Data, error) {
 		re = regexp.MustCompile(`src='(.*)\.(mp4*).*`)
 		infoAboutFile = re.FindStringSubmatch(postHTMLpage) // 1 = dlURL 2=ext
 		if len(infoAboutFile) != 3 {
-			return static.Data{}, fmt.Errorf("get scrape video info for URL %s", url)
+			return static.Data{}, static.ErrDataSourceParseFailed
 		}
 	}
 	infoAboutFile[1] = strings.ReplaceAll(infoAboutFile[1], " ", "%20")
@@ -105,6 +105,6 @@ func extractData(url string) (static.Data, error) {
 				Size: size,
 			},
 		},
-		Url: url,
+		Url: URL,
 	}, nil
 }
