@@ -92,5 +92,11 @@ func download(URL string) {
 func main() {
 	flag.Parse()
 	args := flag.Args()
+	if len(args) < 1 {
+		fmt.Println("Too few arguments")
+		fmt.Println("Usage: go-hentai-scraper [args] URLs...")
+		flag.PrintDefaults()
+		return
+	}
 	download(args[0])
 }
