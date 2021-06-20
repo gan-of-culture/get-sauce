@@ -20,6 +20,7 @@ func init() {
 	flag.StringVar(&config.Pages, "p", "", "Enter pages like 1,2,3-4,6,7,8-9 for doujins")
 	flag.BoolVar(&config.RestrictContent, "r", false, "Don't scrape Restricted Content")
 	flag.StringVar(&config.SelectStream, "s", "0", "Select a stream")
+	flag.BoolVar(&config.ShowExtractedData, "j", false, "Show extracted data")
 	flag.BoolVar(&config.ShowInfo, "i", false, "Show info")
 	flag.IntVar(&config.Workers, "w", 1, "Number of workers used for downloading")
 	flag.StringVar(&config.Username, "un", "", "Username for exhentai/forum e hentai")
@@ -36,7 +37,7 @@ func download(URL string) {
 		log.Fatal(err)
 	}
 
-	if config.ShowInfo {
+	if config.ShowExtractedData {
 		for _, singleData := range data {
 			jsonData, _ := json.MarshalIndent(singleData, "", "    ")
 			fmt.Printf("%s\n", jsonData)
@@ -65,7 +66,7 @@ func download(URL string) {
 	wg.Add(workers)
 	datachan := make(chan *static.Data, lenOfData)
 
-	downloader := downloader.New(config.SelectStream, true)
+	downloader := downloader.New(true)
 	for i := 0; i < workers; i++ {
 		go func() {
 			defer wg.Done()
@@ -98,5 +99,7 @@ func main() {
 		flag.PrintDefaults()
 		return
 	}
-	download(args[0])
+	for _, a := range args {
+		download(a)
+	}
 }

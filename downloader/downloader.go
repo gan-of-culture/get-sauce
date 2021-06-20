@@ -33,7 +33,6 @@ type downloadInfo struct {
 
 type Downloader struct {
 	data        *static.Data
-	stream      string
 	client      *http.Client
 	filePath    string
 	tmpFilePath string
@@ -45,9 +44,8 @@ func init() {
 	runtime.GOMAXPROCS(runtime.NumCPU())
 }
 
-func New(stream string, bar bool) *Downloader {
+func New(bar bool) *Downloader {
 	return &Downloader{
-		stream:   stream,
 		client:   request.DefaultClient(),
 		filePath: config.OutputPath,
 		bar:      bar,
@@ -55,28 +53,33 @@ func New(stream string, bar bool) *Downloader {
 }
 
 func (downloader *Downloader) Download(data *static.Data) error {
+	if config.ShowInfo {
+		printInfo(data)
+		return nil
+	}
 	downloader.data = data
 
 	if config.OutputName != "" {
-		downloader.data.Title = config.OutputName
+		data.Title = config.OutputName
 	}
 
 	//sanitize filename here
 	re := regexp.MustCompile(`["&|:?<>/*\\ ]+`)
-	downloader.data.Title = strings.TrimSpace(re.ReplaceAllString(downloader.data.Title, " "))
+	data.Title = strings.TrimSpace(re.ReplaceAllString(data.Title, " "))
 
 	// select stream to download
 	var stream *static.Stream
 	var ok bool
-	if stream, ok = downloader.data.Streams[downloader.stream]; !ok {
-		return fmt.Errorf("stream %s not found", downloader.stream)
+	if stream, ok = data.Streams[config.SelectStream]; !ok {
+		return fmt.Errorf("stream %s not found", config.SelectStream)
 	}
+	printStreamInfo(data, config.SelectStream)
 
 	needsMerge := false
 	if stream.Ext != "" {
 		// ensure a different tmpDir for each download so concurrent processes won't colide
 		h := sha1.New()
-		h.Write([]byte(downloader.data.Title))
+		h.Write([]byte(data.Title))
 		downloader.tmpFilePath = filepath.Join(downloader.filePath, fmt.Sprintf("%x/", h.Sum(nil)[15:]))
 		err := os.MkdirAll(downloader.tmpFilePath, os.ModePerm)
 		if err != nil {
@@ -127,9 +130,9 @@ func (downloader *Downloader) Download(data *static.Data) error {
 	var fileURI string
 	for idx, URL := range stream.URLs {
 		if appendEnum {
-			fileURI = fmt.Sprintf("%s_%d", downloader.data.Title, pageNumbers[idx])
+			fileURI = fmt.Sprintf("%s_%d", data.Title, pageNumbers[idx])
 		} else {
-			fileURI = downloader.data.Title
+			fileURI = data.Title
 		}
 
 		//build final file URI
@@ -203,7 +206,7 @@ func (downloader *Downloader) save(url static.URL, fileURI string) error {
 	defer file.Close()
 
 	//if stream size bigger than 10MB then use concurWrite
-	if downloader.data.Streams[downloader.stream].Size > 10_000_000 && config.Workers > 1 && downloader.data.Streams[downloader.stream].Ext == "" {
+	if downloader.data.Streams[config.SelectStream].Size > 10_000_000 && config.Workers > 1 && downloader.data.Streams[config.SelectStream].Ext == "" {
 		return downloader.concurWriteFile(url.URL, file)
 	}
 
@@ -211,7 +214,7 @@ func (downloader *Downloader) save(url static.URL, fileURI string) error {
 }
 
 func (downloader *Downloader) concurWriteFile(URL string, file *os.File) error {
-	fileSize := downloader.data.Streams[downloader.stream].Size
+	fileSize := downloader.data.Streams[config.SelectStream].Size
 	pieceSize := int64(10_000_000)
 
 	var saveErr error

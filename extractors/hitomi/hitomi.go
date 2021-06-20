@@ -3,6 +3,7 @@ package hitomi
 import (
 	"encoding/binary"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -65,7 +66,7 @@ func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 	for _, u := range URLs {
 		d, err := extractData(u)
 		if err != nil {
-			return nil, err
+			return nil, utils.Wrap(err, u)
 		}
 		data = append(data, &d)
 	}
@@ -130,7 +131,7 @@ func extractData(URL string) (static.Data, error) {
 
 	jsonStart := strings.Index(jsString, "{")
 	if err != nil {
-		return static.Data{}, fmt.Errorf("no json string found for %s", URL)
+		return static.Data{}, errors.New("no json string found for")
 	}
 
 	galleryData := gallery{}

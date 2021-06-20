@@ -19,8 +19,8 @@ func New() static.Extractor {
 }
 
 // Extract data of provided url
-func (e *extractor) Extract(url string) ([]*static.Data, error) {
-	URLs := parseURL(url)
+func (e *extractor) Extract(URL string) ([]*static.Data, error) {
+	URLs := parseURL(URL)
 	if len(URLs) == 0 {
 		return nil, static.ErrURLParseFailed
 	}
@@ -29,7 +29,7 @@ func (e *extractor) Extract(url string) ([]*static.Data, error) {
 	for _, u := range URLs {
 		d, err := extractData(u)
 		if err != nil {
-			return nil, err
+			return nil, utils.Wrap(err, u)
 		}
 		data = append(data, &d)
 	}

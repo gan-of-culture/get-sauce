@@ -2,6 +2,7 @@ package nhentai
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"log"
 	"regexp"
@@ -65,7 +66,7 @@ func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 	for _, id := range IDs {
 		d, err := extractData(id, page)
 		if err != nil {
-			return nil, err
+			return nil, utils.Wrap(err, id)
 		}
 		data = append(data, &d)
 	}
@@ -130,7 +131,7 @@ func extractData(id string, page string) (static.Data, error) {
 	matchedJsonString := re.FindStringSubmatch(htmlString)
 	if len(matchedJsonString) < 2 {
 		fmt.Println(htmlString)
-		return static.Data{}, fmt.Errorf("invalid JSON %s", URL)
+		return static.Data{}, errors.New("invalid JSON for")
 	}
 	jsonString, _ := strconv.Unquote(matchedJsonString[1])
 
@@ -165,7 +166,7 @@ func extractData(id string, page string) (static.Data, error) {
 
 	title, ok := gData.Title["pretty"]
 	if !ok {
-		return static.Data{}, fmt.Errorf("cannot find title for %s", URL)
+		return static.Data{}, errors.New("cannot find title for")
 	}
 
 	return static.Data{
@@ -174,10 +175,9 @@ func extractData(id string, page string) (static.Data, error) {
 		Type:  "image",
 		Streams: map[string]*static.Stream{
 			"0": {
-				URLs:    URLs,
-				Quality: "best",
-				Size:    0,
-				Info:    fmt.Sprintf("Has %d pages", gData.NumPages),
+				URLs: URLs,
+				Size: 0,
+				Info: fmt.Sprintf("Has %d pages", gData.NumPages),
 			},
 		},
 		Url: URL,

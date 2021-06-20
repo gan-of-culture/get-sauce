@@ -30,10 +30,10 @@ func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 	}
 
 	data := []*static.Data{}
-	for _, URL := range URLs {
-		rData, err := extractData(URL)
+	for _, u := range URLs {
+		rData, err := extractData(u)
 		if err != nil {
-			return nil, err
+			return nil, utils.Wrap(err, u)
 		}
 		data = append(data, rData...)
 	}

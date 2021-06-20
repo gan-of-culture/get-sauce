@@ -1,6 +1,7 @@
 package hentais
 
 import (
+	"errors"
 	"fmt"
 	"log"
 	"regexp"
@@ -31,7 +32,7 @@ func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 	for _, u := range URLs {
 		d, err := extractData(u)
 		if err != nil {
-			return nil, err
+			return nil, utils.Wrap(err, u)
 		}
 		data = append(data, &d)
 	}
@@ -69,7 +70,7 @@ func extractData(URL string) (static.Data, error) {
 	re := regexp.MustCompile(`player.php[^']*`)
 	playerURL := site + re.FindString(htmlString)
 	if playerURL == "" {
-		return static.Data{}, fmt.Errorf("can't parse playerURL for %s", URL)
+		return static.Data{}, errors.New("can't parse playerURL for")
 	}
 
 	htmlString, err = request.Get(playerURL)

@@ -60,11 +60,10 @@ func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 		d, err := ExtractData(u)
 		if err != nil {
 			if strings.Contains(err.Error(), "video not found") || strings.Contains(err.Error(), "player URL not found") {
-				log.Println(err.Error())
+				log.Println(utils.Wrap(err, u).Error())
 				continue
 			}
-			log.Println(u)
-			return nil, err
+			return nil, utils.Wrap(err, u)
 		}
 		data = append(data, &d)
 	}

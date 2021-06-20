@@ -3,6 +3,7 @@ package ninehentai
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -11,6 +12,7 @@ import (
 
 	"github.com/gan-of-culture/go-hentai-scraper/request"
 	"github.com/gan-of-culture/go-hentai-scraper/static"
+	"github.com/gan-of-culture/go-hentai-scraper/utils"
 	"github.com/gan-of-culture/jsurl"
 )
 
@@ -86,14 +88,14 @@ func New() static.Extractor {
 func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 	galleries, err := parseURL(URL)
 	if err != nil {
-		return nil, fmt.Errorf("no scrapable gallery id found for: %s", URL)
+		return nil, errors.New("no scrapable gallery id found for")
 	}
 
 	data := []*static.Data{}
 	for _, g := range galleries {
 		d, err := extractData(g)
 		if err != nil {
-			return nil, err
+			return nil, utils.Wrap(err, fmt.Sprint(g.ID))
 		}
 		data = append(data, &d)
 	}
@@ -105,7 +107,7 @@ func parseURL(URL string) ([]gallery, error) {
 	re := regexp.MustCompile(`/([gt])/(\d+)/`) //1=indicator g=gallery t=tag etc=searchQuery?
 	matchedURLParams := re.FindStringSubmatch(URL)
 	if len(matchedURLParams) < 2 {
-		return nil, fmt.Errorf("URL parameters cannot be parsed: %s", URL)
+		return nil, errors.New("URL parameters cannot be parsed")
 	}
 
 	switch matchedURLParams[1] {

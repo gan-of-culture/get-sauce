@@ -2,6 +2,7 @@ package hentaifox
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"regexp"
 	"strings"
@@ -43,7 +44,7 @@ func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 	for _, u := range IDs {
 		d, err := extractData(u)
 		if err != nil {
-			return nil, err
+			return nil, utils.Wrap(err, u)
 		}
 		data = append(data, d)
 	}
@@ -80,7 +81,7 @@ func extractData(ID string) (*static.Data, error) {
 
 	jsonStr := reJSONStr.FindString(htmlString)
 	if jsonStr == "" {
-		return &static.Data{}, fmt.Errorf("JSON string not found for: %s", ID)
+		return &static.Data{}, errors.New("JSON string not found for")
 	}
 	//cut of the beginning
 	jsonStr = jsonStr[11:]
@@ -93,12 +94,12 @@ func extractData(ID string) (*static.Data, error) {
 
 	imageDir := reImgDir.FindStringSubmatch(htmlString)
 	if len(imageDir) < 1 {
-		return &static.Data{}, fmt.Errorf("cannot find image_dir for: %s", ID)
+		return &static.Data{}, errors.New("cannot find image_dir for")
 	}
 
 	gID := reGalleryID.FindStringSubmatch(htmlString)
 	if len(gID) < 1 {
-		return &static.Data{}, fmt.Errorf("cannot find gallery_id for: %s", ID)
+		return &static.Data{}, errors.New("cannot find gallery_id for")
 	}
 
 	noOfPages := len(imageData)

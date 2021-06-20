@@ -3,6 +3,7 @@ package hentaihaven
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"mime/multipart"
@@ -61,7 +62,7 @@ func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 	for _, u := range URLs {
 		d, err := extractData(u)
 		if err != nil {
-			return nil, err
+			return nil, utils.Wrap(err, u)
 		}
 		data = append(data, &d)
 	}
@@ -97,7 +98,7 @@ func extractData(URL string) (static.Data, error) {
 	re := regexp.MustCompile(`[^"]*/player/[^"]*`)
 	playerURL := re.FindString(htmlString) // 1=id  2=nonce
 	if playerURL == "" {
-		return static.Data{}, fmt.Errorf("can't locate player URL: %s", URL)
+		return static.Data{}, errors.New("can't locate player URL")
 	}
 
 	htmlString, err = request.Get(playerURL)
@@ -156,7 +157,7 @@ func extractData(URL string) (static.Data, error) {
 		return static.Data{}, err
 	}
 	if !sources.Status {
-		return static.Data{}, fmt.Errorf("the api request for the streams did not return successful for %s", URL)
+		return static.Data{}, errors.New("the api request for the streams did not return successful for")
 	}
 
 	m3u8String, err := request.Get(sources.Data.Sources[0].Src)

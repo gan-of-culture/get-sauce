@@ -2,6 +2,7 @@ package hanime
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"regexp"
 	"strings"
@@ -85,7 +86,7 @@ func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 	for _, u := range URLs {
 		d, err := extractData(u)
 		if err != nil {
-			return nil, err
+			return nil, utils.Wrap(err, u)
 		}
 		data = append(data, &d)
 	}
@@ -121,7 +122,7 @@ func parseURL(URL string) []string {
 func extractData(URL string) (static.Data, error) {
 	slug := utils.GetLastItemString(strings.Split(URL, "/"))
 	if slug == "" {
-		return static.Data{}, fmt.Errorf("slug for %s not parseable", URL)
+		return static.Data{}, errors.New("slug not parseable for")
 	}
 
 	jsonString, err := request.Get(apiWithSlug + slug)
@@ -156,7 +157,7 @@ func extractData(URL string) (static.Data, error) {
 			Quality: fmt.Sprintf("%v x %s", stream.Width, stream.Height),
 			Size:    utils.CalcSizeInByte(stream.FileSizeInMBs, "MB"),
 			Info:    stream.Filename,
-			Ext:     "ts",
+			Ext:     "mp4",
 			Key:     key,
 		}
 	}
