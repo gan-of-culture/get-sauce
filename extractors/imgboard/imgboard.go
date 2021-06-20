@@ -44,7 +44,7 @@ func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 	for _, u := range URLs {
 		d, err := extractDataFunc(u)
 		if err != nil {
-			return nil, err
+			return nil, utils.Wrap(err, u)
 		}
 		data = append(data, &d)
 	}
@@ -209,7 +209,7 @@ func extractDataFromDirectLink(url string) (static.Data, error) {
 	re := regexp.MustCompile(`https://[^/]*/[^/]*/([^/]*)/[^.\s]*\.[^\.\s]*\..*(\w{3,4})$`) //1=title //2=ext
 	matchedURL := re.FindStringSubmatch(url)
 	if len(matchedURL) != 3 {
-		return static.Data{}, fmt.Errorf("direct download can't match URL %s", url)
+		return static.Data{}, errors.New("direct download can't match URL")
 	}
 
 	return static.Data{

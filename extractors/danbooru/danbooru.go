@@ -31,7 +31,7 @@ func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 	for _, post := range posts {
 		contentData, err := extractData(site + post)
 		if err != nil {
-			return nil, err
+			return nil, utils.Wrap(err, site+post)
 		}
 		data = append(data, &contentData)
 	}

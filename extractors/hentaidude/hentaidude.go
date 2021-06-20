@@ -2,6 +2,7 @@ package hentaidude
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -40,7 +41,7 @@ func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 	for _, u := range URLs {
 		d, err := extractData(u)
 		if err != nil {
-			return nil, err
+			return nil, utils.Wrap(err, u)
 		}
 		data = append(data, &d)
 	}
@@ -76,7 +77,7 @@ func extractData(URL string) (static.Data, error) {
 	re := regexp.MustCompile(`id: '(\d*)',\s*nonce: '([^']*)`)
 	matchedSourceReq := re.FindStringSubmatch(htmlString) // 1=id  2=nonce
 	if len(matchedSourceReq) < 3 {
-		return static.Data{}, fmt.Errorf("can't locate json params in URL: %s", URL)
+		return static.Data{}, errors.New("can't locate json params in URL")
 	}
 
 	headers := map[string]string{
@@ -107,7 +108,7 @@ func extractData(URL string) (static.Data, error) {
 		return static.Data{}, err
 	}
 	if !sources.Success {
-		return static.Data{}, fmt.Errorf("the api request for the streams did not return successful for %s", URL)
+		return static.Data{}, errors.New("the api request for the streams did not return successful for")
 	}
 
 	streams := make(map[string]*static.Stream)

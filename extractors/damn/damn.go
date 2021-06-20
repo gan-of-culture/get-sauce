@@ -22,6 +22,24 @@ func New() static.Extractor {
 	return &extractor{}
 }
 
+func (e *extractor) Extract(URL string) ([]*static.Data, error) {
+	URLs := parseURL(URL)
+	if len(URLs) < 1 {
+		return nil, static.ErrURLParseFailed
+	}
+
+	data := []*static.Data{}
+	for _, u := range URLs {
+		d, err := extractData(u)
+		if err != nil {
+			return nil, utils.Wrap(err, u)
+		}
+		data = append(data, &d)
+	}
+
+	return data, nil
+}
+
 func parseURL(URL string) []string {
 	if strings.HasPrefix(URL, "https://www.damn.stream/watch/hentai/") {
 		return []string{URL}
@@ -38,24 +56,6 @@ func parseURL(URL string) []string {
 
 	re := regexp.MustCompile(`[^"]*watch/hentai[^"]*`)
 	return re.FindAllString(htmlString, -1)
-}
-
-func (e *extractor) Extract(URL string) ([]*static.Data, error) {
-	URLs := parseURL(URL)
-	if len(URLs) < 1 {
-		return nil, static.ErrURLParseFailed
-	}
-
-	data := []*static.Data{}
-	for _, u := range URLs {
-		d, err := extractData(u)
-		if err != nil {
-			return nil, err
-		}
-		data = append(data, &d)
-	}
-
-	return data, nil
 }
 
 func extractData(URL string) (static.Data, error) {
@@ -92,8 +92,7 @@ func extractData(URL string) (static.Data, error) {
 						Ext: srcMeta[2],
 					},
 				},
-				Quality: "best",
-				Size:    size,
+				Size: size,
 			},
 		},
 		Url: URL,

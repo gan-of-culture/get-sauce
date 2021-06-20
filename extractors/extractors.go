@@ -85,7 +85,6 @@ func Extract(URL string) ([]*static.Data, error) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	log.Printf("Identified site: %s", u.Host)
 
 	extractor := extractorsMap[u.Host]
 	if extractor == nil {

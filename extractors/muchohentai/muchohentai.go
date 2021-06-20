@@ -2,7 +2,7 @@ package muchohentai
 
 import (
 	"encoding/json"
-	"fmt"
+	"errors"
 	"net/url"
 	"regexp"
 	"strconv"
@@ -36,7 +36,7 @@ func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 	for _, u := range URLs {
 		d, err := extractData(u)
 		if err != nil {
-			return nil, err
+			return nil, utils.Wrap(err, u)
 		}
 		data = append(data, &d)
 	}
@@ -78,7 +78,7 @@ func extractData(URL string) (static.Data, error) {
 	re := regexp.MustCompile(`var servers=\[([^\]]*).*?var server="([^;]*)";var files=\[([^\]]*)`)
 	serverInfo := re.FindStringSubmatch(htmlString) //1=servers ('va01','va02','va03','va04') 2=server URL template https://"+servers[choice-1]+"-edge.tmncdn.io" 3=master file URL {"file":"\/wp-content\/uploads\/Soshite_Watashi\/episode_3\/ja.m3u8"}
 	if len(serverInfo) < 4 {
-		return static.Data{}, fmt.Errorf("cannot extract server info for %s", URL)
+		return static.Data{}, errors.New("cannot extract server info for")
 	}
 
 	//va01 maybe honeypot? logs ip in response header? doesn't resolve to a segment key?
@@ -87,7 +87,7 @@ func extractData(URL string) (static.Data, error) {
 	m3u8FileJson := &m3u8File{}
 	err = json.Unmarshal([]byte(serverInfo[3]), m3u8FileJson)
 	if err != nil {
-		return static.Data{}, fmt.Errorf("cannot extract file URL for %s", URL)
+		return static.Data{}, errors.New("cannot extract file URL for")
 	}
 
 	masterURL := strings.Replace(serverInfo[2], "\"+servers[choice-1]+\"", servers[0], 1) + m3u8FileJson.URL
@@ -108,11 +108,10 @@ func extractData(URL string) (static.Data, error) {
 			Type:  "video",
 			Streams: map[string]*static.Stream{
 				"0": {
-					URLs:    URLs,
-					Quality: "best",
-					Info:    masterURL,
-					Ext:     "ts",
-					Key:     key,
+					URLs: URLs,
+					Info: masterURL,
+					Ext:  "ts",
+					Key:  key,
 				},
 			},
 			Url: URL,

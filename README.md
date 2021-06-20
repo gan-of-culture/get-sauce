@@ -1,17 +1,27 @@
-# go-hentai-scraper
+# go-hentai-scraper <!-- omit in toc --> 
 
 ![GitHub Workflow Status](https://img.shields.io/github/workflow/status/gan-of-culture/go-hentai-scraper/Go)
 
 This scraper is not using official APIs since some of them have limitations. Unfortunatly this also means that for some sites it might take longer to download content because the connection can be restricted.  
 You can see what site is supported to what extent [here](#supported-sites).
 
-## Setup guide
+- [Installation](#installation)
+- [Getting started](#getting-started)
+  - [Download example](#download-example)
+  - [Multiple inputs](#multiple-inputs)
+- [Options](#options)
+- [Supported sites](#supported-sites)
+- [Credit](#credit)
+- [Donate](#donate)
+- [Licencse](#licencse)
+
+## Installation
 
 If you don't want to build the app yourself checkout the [releases page](https://github.com/gan-of-culture/go-hentai-scraper/releases).
 
 Otherwise you can clone this repository yourself and download it. Then use [GO](https://golang.org/dl/) to build it yourself:
 
-```bash
+```console
 go build
 ```
 
@@ -19,9 +29,75 @@ After that you should be provided with an **executable**.
 
 Or you can just do
 
-```bash
+```console
 go run main.go ...
 ```
+
+## Getting started
+
+Usage:
+
+```console
+go-hentai-scraper [OPTIONS] URL [URLs...]
+```
+
+### Download example
+
+```console
+go-hentai-scraper https://hanime.tv/videos/hentai/kuro-gal-ni-natta-kara-shin-yuu-to-shite-mita-season-1
+```
+
+> Note: wrap the URL(s) in quotation marks if it contains special characters.  
+> ```go-hentai-scraper "https://..."```
+
+The ```-i``` option displays all available quality of video without downloading.
+
+```console
+go-hentai-scraper https://hanime.tv/videos/hentai/kuro-gal-ni-natta-kara-shin-yuu-to-shite-mita-season-1
+
+ Site:      https://hanime.tv/
+ Title:     Kuro Gal ni Natta kara Shin`yuu to Shite Mita Season 1
+ Type:      video Stream:
+
+     [0]  -------------------
+     Info:            kuro-gal-ni-natta-kara-shin-yuu-to-shite-mita-season-1-1080p-v1x.mp4-v1x.m3u8
+     Quality:         1920 x 1080
+     Parts:           139
+     Size:            510.00 MB (510000000 Bytes)
+     # download with: go-hentai-scraper -s 0 ...
+
+Merging into Kuro Gal ni Natta kara Shin`yuu to Shite Mita Season 1.mp4 ... 100% |████████████████████████████████████████| (85 it/s)
+```
+
+### Multiple inputs
+
+You can also download multiple URLs at once:
+
+```console
+go-hentai-scraper -i https://rule34.paheal.net/post/view/4406218 https://rule34.paheal.net/post/view/4406235
+
+ Site:      https://rule34.paheal.net
+ Title:     MrTaxman Void_Elf Worgen World_of_Warcraft 4406218
+ Type:      image
+ Streams:   # All available qualities
+     [0]  -------------------
+     Quality:         2142 x 1536
+     Size:            0.28 MB (279941 Bytes)
+     # download with: go-hentai-scraper -s 0 ...
+
+
+ Site:      https://rule34.paheal.net
+ Title:     MrTaxman World_of_Warcraft human night_elf 4406235
+ Type:      image
+ Streams:   # All available qualities
+     [0]  -------------------
+     Quality:         1080 x 1675
+     Size:            0.14 MB (136134 Bytes)
+     # download with: go-hentai-scraper -s 0 ...
+
+```
+
+The URLs will be downloaded one by one.
 
 ## Options
 
@@ -42,6 +118,12 @@ go run main.go ...
  -r             Restrict content -> don't download senisble content (e-hentai.org only)
 
  go-hentai-scraper -r http...
+
+--------------------------------------------------------------------------------
+
+ -j             Show extracted data for the provided URL
+
+ go-hentai-scraper -j http...
 
 --------------------------------------------------------------------------------
 
@@ -116,10 +198,9 @@ go run main.go ...
 
 If your site is not listed - you can still try to use the universal downloader.
 
-## TODO's
+## Credit
 
-- Clean up coding and add more sites
-- Speed improvements
+- Thanks to [annie](https://github.com/iawia002/annie) for the great template
 
 ## Donate
 

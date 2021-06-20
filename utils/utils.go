@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"errors"
 	"fmt"
 	"regexp"
 	"strconv"
@@ -169,4 +170,9 @@ func ParseM3UMaster(master *string) (map[string]*static.Stream, error) {
 	}
 
 	return out, nil
+}
+
+// Wrap error with context
+func Wrap(err error, ctx string) error {
+	return errors.New(err.Error() + ": " + ctx)
 }

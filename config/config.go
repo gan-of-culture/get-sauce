@@ -13,6 +13,8 @@ var (
 	RestrictContent bool
 	// SelectStream to download
 	SelectStream string
+	// ShowExtractedData of URL(s)
+	ShowExtractedData bool
 	// ShowInfo of all avaiable streams
 	ShowInfo bool
 	// Workers for downloading

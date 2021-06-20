@@ -2,6 +2,7 @@ package hentaimimi
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"html"
 	"regexp"
@@ -40,7 +41,7 @@ func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 	for _, u := range IDs {
 		d, err := extractData(u)
 		if err != nil {
-			return nil, err
+			return nil, utils.Wrap(err, u)
 		}
 		data = append(data, d)
 	}
@@ -77,12 +78,12 @@ func extractData(ID string) (*static.Data, error) {
 
 	title := reTitle.FindStringSubmatch(htmlString)
 	if len(title) < 1 {
-		return &static.Data{}, fmt.Errorf("no title found for: %s", URL)
+		return &static.Data{}, errors.New("no title found for")
 	}
 
 	jsonStr := reImgData.FindString(htmlString)
 	if jsonStr == "" {
-		return &static.Data{}, fmt.Errorf("no image links found for: %s", URL)
+		return &static.Data{}, errors.New("no image links found for")
 	}
 
 	imgURLs := []string{}

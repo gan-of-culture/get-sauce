@@ -333,3 +333,35 @@ func TestParseM3UMaster(t *testing.T) {
 		})
 	}
 }
+
+func TestWrap(t *testing.T) {
+	tests := []struct {
+		name string
+		pair struct {
+			err error
+			ctx string
+		}
+		want string
+	}{
+		{
+			name: "String slice",
+			pair: struct {
+				err error
+				ctx string
+			}{
+				static.ErrURLParseFailed,
+				"https://google.com",
+			},
+			want: static.ErrURLParseFailed.Error() + ": " + "https://google.com",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			err := Wrap(tt.pair.err, tt.pair.ctx)
+
+			if err.Error() != tt.want {
+				t.Errorf("Got: %v - want: %v", err.Error(), tt.want)
+			}
+		})
+	}
+}
