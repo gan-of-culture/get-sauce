@@ -176,8 +176,6 @@ func extractData(id string, page string) (static.Data, error) {
 		Streams: map[string]*static.Stream{
 			"0": {
 				URLs: URLs,
-				Size: 0,
-				Info: fmt.Sprintf("Has %d pages", gData.NumPages),
 			},
 		},
 		Url: URL,

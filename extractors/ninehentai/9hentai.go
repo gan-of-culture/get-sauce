@@ -88,7 +88,7 @@ func New() static.Extractor {
 func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 	galleries, err := parseURL(URL)
 	if err != nil {
-		return nil, errors.New("no scrapable gallery id found for")
+		return nil, utils.Wrap(static.ErrURLParseFailed, URL)
 	}
 
 	data := []*static.Data{}

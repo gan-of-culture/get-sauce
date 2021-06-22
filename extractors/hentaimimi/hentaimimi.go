@@ -14,15 +14,9 @@ import (
 
 const site = "https://hentaimimi.com/"
 
-var reTitle *regexp.Regexp
-var reImgData *regexp.Regexp
-var reImgExt *regexp.Regexp
-
-func init() {
-	reTitle = regexp.MustCompile(`<meta name="title" content="([^"]*)`)
-	reImgData = regexp.MustCompile(`\["uploads.*?]`)
-	reImgExt = regexp.MustCompile(`\w+$`)
-}
+var reTitle = regexp.MustCompile(`<meta name="title" content="([^"]*)`)
+var reImgData = regexp.MustCompile(`\["uploads.*?]`)
+var reImgExt = regexp.MustCompile(`\w+$`)
 
 type extractor struct{}
 
@@ -109,7 +103,6 @@ func extractData(ID string) (*static.Data, error) {
 		Streams: map[string]*static.Stream{
 			"0": {
 				URLs: URLs,
-				Info: fmt.Sprintf("Pages: %d", len(imgURLs)),
 			},
 		},
 		Url: URL,

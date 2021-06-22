@@ -1,6 +1,7 @@
 package universal
 
 import (
+	"errors"
 	"net/url"
 	"regexp"
 	"strings"
@@ -53,22 +54,21 @@ func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 	}
 
 	size, _ := request.Size(URL, URL)
-	ext := matches[2]
-	if ext == "m3u8" || ext == "txt" {
-		ext = "ts"
+	if matches[2] == "m3u8" || matches[2] == "txt" {
+		return nil, errors.New("m3u format for universal download is not supported")
 	}
 
 	return []*static.Data{
 		0: {
 			Site:  u.Host,
 			Title: matches[1],
-			Type:  utils.GetMediaType(ext),
+			Type:  utils.GetMediaType(matches[2]),
 			Streams: map[string]*static.Stream{
 				"0": {
 					URLs: []*static.URL{
 						0: {
 							URL: URL,
-							Ext: ext,
+							Ext: matches[2],
 						},
 					},
 					Size: size,

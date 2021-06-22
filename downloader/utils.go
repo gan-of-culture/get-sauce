@@ -10,7 +10,7 @@ import (
 
 func genSortedStreams(streams map[string]*static.Stream) []*static.Stream {
 	index := make([]int64, 0, len(streams))
-	for k, _ := range streams {
+	for k := range streams {
 		idx, _ := strconv.ParseInt(k, 10, 0)
 		index = append(index, idx)
 	}
@@ -65,6 +65,6 @@ func printInfo(data *static.Data) {
 func printStreamInfo(data *static.Data, streamKey string) {
 	printHeader(data)
 
-	fmt.Println(" Stream:   ")
+	fmt.Println("\n Stream:   ")
 	printStream(streamKey, data.Streams[streamKey])
 }
