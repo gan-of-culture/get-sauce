@@ -15,17 +15,10 @@ import (
 const site = "https://hentaifox.com/"
 const cdn = "https://i.hentaifox.com/"
 
-var reTitle *regexp.Regexp
-var reJSONStr *regexp.Regexp
-var reImgDir *regexp.Regexp
-var reGalleryID *regexp.Regexp
-
-func init() {
-	reTitle = regexp.MustCompile(`<title>(.+)</title>`)
-	reJSONStr = regexp.MustCompile(`parseJSON\('[^']+`)
-	reImgDir = regexp.MustCompile(`image_dir" value="([^"]*)`)
-	reGalleryID = regexp.MustCompile(`gallery_id" value="([^"]*)`)
-}
+var reTitle *regexp.Regexp = regexp.MustCompile(`<title>(.+)</title>`)
+var reJSONStr *regexp.Regexp = regexp.MustCompile(`parseJSON\('[^']+`)
+var reImgDir *regexp.Regexp = regexp.MustCompile(`image_dir" value="([^"]*)`)
+var reGalleryID *regexp.Regexp = regexp.MustCompile(`gallery_id" value="([^"]*)`)
 
 type extractor struct{}
 
@@ -131,7 +124,6 @@ func extractData(ID string) (*static.Data, error) {
 		Streams: map[string]*static.Stream{
 			"0": {
 				URLs: URLs,
-				Info: fmt.Sprintf("Pages: %d", noOfPages),
 			},
 		},
 		Url: fmt.Sprintf("%sgallery/%s/", site, ID),

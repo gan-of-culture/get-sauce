@@ -110,7 +110,7 @@ func extractData(URL string) (static.Data, error) {
 	matchedTagBox := re.FindStringSubmatch(htmlString)
 	if len(matchedTagBox) != 2 {
 		fmt.Println(htmlString)
-		return static.Data{}, errors.New("couldn't extract tags for post " + URL)
+		return static.Data{}, errors.New("couldn't extract tags for post")
 	}
 
 	title := fmt.Sprintf("%s %s", matchedTagBox[1], id[0])
@@ -133,14 +133,14 @@ func extractData(URL string) (static.Data, error) {
 		re := regexp.MustCompile(`id='main_image'.+\n[^0-9]+([0-9]+)[^0-9]+([0-9]+)`)
 		matchedQualityProperties := re.FindStringSubmatch(htmlString)
 		if len(matchedQualityProperties) != 3 {
-			return static.Data{}, errors.New("quality not found for post " + URL)
+			return static.Data{}, errors.New("quality not found for post ")
 		}
 		quality = fmt.Sprintf("%s x %s", matchedQualityProperties[1], matchedQualityProperties[2])
 	} else {
 		re := regexp.MustCompile(`data-(width|height)='([0-9]+)`)
 		matchedQualityProperties := re.FindAllStringSubmatch(htmlString, -1)
 		if len(matchedQualityProperties) != 2 {
-			return static.Data{}, errors.New("quality not found for post " + URL)
+			return static.Data{}, errors.New("quality not found for post ")
 		}
 
 		quality = fmt.Sprintf("%s x %s", matchedQualityProperties[1][2], matchedQualityProperties[0][2])
