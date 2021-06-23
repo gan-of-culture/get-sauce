@@ -167,6 +167,7 @@ The URLs will be downloaded one by one.
 | [comicporn.xxx](https://comicporn.xxx)                                   | :heavy_check_mark: |         ?        |
 | [damn.stream](https://www.damn.stream)                                   |         ?          |:heavy_check_mark:|
 | [danbooru.donmai.us](https://danbooru.donmai.us)                         | :heavy_check_mark: |        ?         |
+| [doujin.sexy](https://doujin.sexy)                                       | :heavy_check_mark: |         ?        |
 | [e-hentai.org](http://e-hentai.org/)                                     | :heavy_check_mark: |        ?         |
 | [exhentai.org*](http://exhentai.org/)                                    | :heavy_check_mark: |        ?         |
 | [hanime.tv(1080p, 720p, 480p, 360p)](https://hanime.tv)                  | :heavy_check_mark: |:heavy_check_mark:|
@@ -194,6 +195,7 @@ The URLs will be downloaded one by one.
 | [nhentai.net](https://nhentai.net)                                       | :heavy_check_mark: |        ?         |
 | [pururin.io](https://pururin.io)                                         | :heavy_check_mark: |        ?         |
 | [rule34.paheal.net](https://rule34.paheal.net)                           | :heavy_check_mark: |:heavy_check_mark:|
+| [www.simply-hentai.com](https://www.simply-hentai.com)                           | :heavy_check_mark: |         ?        |
 | [yandere.re](https://yande.re/post)                                      | :heavy_check_mark: |        ?         |
 
 *you need a login for this site. You can supply it via the parameters -un and -up

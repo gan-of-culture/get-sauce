@@ -54,7 +54,7 @@ var reGalleryID *regexp.Regexp = regexp.MustCompile(`gallery_id" value="([^"]*)`
 
 type extractor struct{}
 
-// New returns a imhentai extractor.
+// New returns a htdoujin extractor.
 func New() static.Extractor {
 	return &extractor{}
 }
