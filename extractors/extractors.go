@@ -14,7 +14,6 @@ import (
 	"github.com/gan-of-culture/go-hentai-scraper/extractors/hentai2w"
 	"github.com/gan-of-culture/go-hentai-scraper/extractors/hentaicloud"
 	"github.com/gan-of-culture/go-hentai-scraper/extractors/hentaidude"
-	"github.com/gan-of-culture/go-hentai-scraper/extractors/hentaifox"
 	"github.com/gan-of-culture/go-hentai-scraper/extractors/hentaihaven"
 	"github.com/gan-of-culture/go-hentai-scraper/extractors/hentaimama"
 	"github.com/gan-of-culture/go-hentai-scraper/extractors/hentais"
@@ -22,6 +21,7 @@ import (
 	"github.com/gan-of-culture/go-hentai-scraper/extractors/hentaiworld"
 	"github.com/gan-of-culture/go-hentai-scraper/extractors/hentaiyes"
 	"github.com/gan-of-culture/go-hentai-scraper/extractors/hitomi"
+	"github.com/gan-of-culture/go-hentai-scraper/extractors/htdoujin"
 	"github.com/gan-of-culture/go-hentai-scraper/extractors/htstreaming"
 	"github.com/gan-of-culture/go-hentai-scraper/extractors/miohentai"
 	"github.com/gan-of-culture/go-hentai-scraper/extractors/muchohentai"
@@ -38,6 +38,7 @@ var extractorsMap map[string]static.Extractor
 func init() {
 	damnExtractor := damn.New()
 	htstreamingExtactor := htstreaming.New()
+	htdoujinExtractor := htdoujin.New()
 	ninehentaiExtractor := ninehentai.New()
 
 	extractorsMap = map[string]static.Extractor{
@@ -46,6 +47,7 @@ func init() {
 		"9hentai.to":          ninehentaiExtractor,
 		"www1.9hentai.ru":     ninehentaiExtractor,
 		"booru.io":            booru.New(),
+		"comicporn.xxx":       htdoujinExtractor,
 		"www.damn.stream":     damnExtractor,
 		"damn.stream":         damnExtractor,
 		"danbooru.donmai.us":  danbooru.New(),
@@ -56,7 +58,8 @@ func init() {
 		"hentai2w.com":        hentai2w.New(),
 		"www.hentaicloud.com": hentaicloud.New(),
 		"hentaidude.com":      hentaidude.New(),
-		"hentaifox.com":       hentaifox.New(),
+		"hentaiera.com":       htdoujinExtractor,
+		"hentaifox.com":       htdoujinExtractor,
 		"hentaihaven.xxx":     hentaihaven.New(),
 		"hentaimama.io":       hentaimama.New(),
 		"www.hentais.tube":    hentais.New(),
@@ -69,6 +72,7 @@ func init() {
 		"hentaiworld.tv":      hentaiworld.New(),
 		"hentaiyes.com":       hentaiyes.New(),
 		"hitomi.la":           hitomi.New(),
+		"imhentai.xxx":        htdoujinExtractor,
 		"miohentai.com":       miohentai.New(),
 		"muchohentai.com":     muchohentai.New(),
 		"nhentai.net":         nhentai.New(),
