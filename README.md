@@ -164,6 +164,7 @@ The URLs will be downloaded one by one.
 | [animeidhentai.com (1080p, 720p, 480p, 360p)](https://animeidhentai.com) |         ?          |:heavy_check_mark:|
 | [booruproject (ex. rule34, gelbooru)](https://booru.org/top)             | :heavy_check_mark: |:heavy_check_mark:|
 | [booru.io](https://booru.io/)                                            | :heavy_check_mark: |        ?         |
+| [comicporn.xxx](https://comicporn.xxx)                                   | :heavy_check_mark: |         ?        |
 | [damn.stream](https://www.damn.stream)                                   |         ?          |:heavy_check_mark:|
 | [danbooru.donmai.us](https://danbooru.donmai.us)                         | :heavy_check_mark: |        ?         |
 | [e-hentai.org](http://e-hentai.org/)                                     | :heavy_check_mark: |        ?         |
@@ -173,6 +174,7 @@ The URLs will be downloaded one by one.
 | [hentai2w.com(720p, 480p, 360p)](https://hentai2w.com)                   |         ?          |:heavy_check_mark:|
 | [hentaicloud.com(720p)](https://www.hentaicloud.com)                     |        :x:         |:heavy_check_mark:|
 | [hentaidude.com(720p, 480, 360p)](https://hentaidude.com/)               |         ?          |:heavy_check_mark:|
+| [hentaiera.com](https://hentaiera.com)                                   | :heavy_check_mark: |         ?        |
 | [hentaifox.com](https://hentaifox.com)                                   | :heavy_check_mark: |         ?        |
 | [hentaihaven.red (1080p, 720p, 480p, 360p)](https://hentaihaven.red)     |         ?          |:heavy_check_mark:|
 | [hentaihaven.xxx (1080p, 720p, 480p, 360p)](https://hentaihaven.xxx)     |         ?          |:heavy_check_mark:|
@@ -185,6 +187,7 @@ The URLs will be downloaded one by one.
 | [hentai.pro (1080p, 720p, 480p, 360p)](https://hentai.pro/)              |         ?          |:heavy_check_mark:|
 | [hentaiyes.com (1080p, 720p, 480p, 360p)](https://hentaiyes.com/)        |         ?          |:heavy_check_mark:|
 | [hitomi.la](https://hitomi.la/)                                          | :heavy_check_mark: |        ?         |
+| [imhentai.com](https://imhentai.xxx)                                     | :heavy_check_mark: |         ?        |
 | [konachan.com](https://konachan.com/post?tags=)                          | :heavy_check_mark: |        ?         |
 | [miohentai.com (1080p, 720p, 480p)](https://miohentai.com/)              | :heavy_check_mark: |:heavy_check_mark:|
 | [muchohentai.com (1080p, 720p, 480p, 360p)](https://muchohentai.com/)    |         ?          |:heavy_check_mark:|
