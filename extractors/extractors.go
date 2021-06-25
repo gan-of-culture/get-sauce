@@ -30,6 +30,7 @@ import (
 	"github.com/gan-of-culture/go-hentai-scraper/extractors/pururin"
 	"github.com/gan-of-culture/go-hentai-scraper/extractors/rule34"
 	"github.com/gan-of-culture/go-hentai-scraper/extractors/simplyhentai"
+	"github.com/gan-of-culture/go-hentai-scraper/extractors/thehentaiworld"
 	"github.com/gan-of-culture/go-hentai-scraper/extractors/universal"
 	"github.com/gan-of-culture/go-hentai-scraper/static"
 )
@@ -46,15 +47,16 @@ func init() {
 	extractorsMap = map[string]static.Extractor{
 		"": universal.New(),
 
-		"9hentai.to":            ninehentaiExtractor,
-		"www1.9hentai.ru":       ninehentaiExtractor,
-		"booru.io":              booru.New(),
-		"comicporn.xxx":         htdoujinExtractor,
-		"www.damn.stream":       damnExtractor,
-		"damn.stream":           damnExtractor,
-		"danbooru.donmai.us":    danbooru.New(),
-		"doujin.sexy":           simplyhentaiExtractor,
-		"e-hentai.org":          ehentai.New(),
+		"9hentai.to":         ninehentaiExtractor,
+		"www1.9hentai.ru":    ninehentaiExtractor,
+		"booru.io":           booru.New(),
+		"comicporn.xxx":      htdoujinExtractor,
+		"www.damn.stream":    damnExtractor,
+		"damn.stream":        damnExtractor,
+		"danbooru.donmai.us": danbooru.New(),
+		"doujin.sexy":        simplyhentaiExtractor,
+		"e-hentai.org":       ehentai.New(),
+		//ecchi.iwara.tv/
 		"exhentai.org":          exhentai.New(),
 		"hanime.tv":             hanime.New(),
 		"hentai2read.com":       hentai2read.New(),
@@ -82,6 +84,7 @@ func init() {
 		"pururin.io":            pururin.New(),
 		"rule34.paheal.net":     rule34.New(),
 		"www.simply-hentai.com": simplyhentaiExtractor,
+		"thehentaiworld.com":    thehentaiworld.New(),
 	}
 }
 

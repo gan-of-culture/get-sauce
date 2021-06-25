@@ -73,7 +73,10 @@ func (downloader *Downloader) Download(data *static.Data) error {
 	if stream, ok = data.Streams[config.SelectStream]; !ok {
 		return fmt.Errorf("stream %s not found", config.SelectStream)
 	}
-	printStreamInfo(data, config.SelectStream)
+
+	if config.Workers > 0 {
+		printStreamInfo(data, config.SelectStream)
+	}
 
 	needsMerge := false
 	if stream.Ext != "" {
