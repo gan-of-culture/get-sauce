@@ -154,7 +154,7 @@ func extractData(URL string) (static.Data, error) {
 
 		streams[fmt.Sprintf("%d", len(streams))] = &static.Stream{
 			URLs:    URLs,
-			Quality: fmt.Sprintf("%v x %s", stream.Width, stream.Height),
+			Quality: fmt.Sprintf("%sp; %v x %s", stream.Height, stream.Width, stream.Height),
 			Size:    utils.CalcSizeInByte(stream.FileSizeInMBs, "MB"),
 			Info:    stream.Filename,
 			Ext:     "mp4",

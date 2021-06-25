@@ -23,6 +23,7 @@ import (
 	"github.com/gan-of-culture/go-hentai-scraper/extractors/hitomi"
 	"github.com/gan-of-culture/go-hentai-scraper/extractors/htdoujin"
 	"github.com/gan-of-culture/go-hentai-scraper/extractors/htstreaming"
+	"github.com/gan-of-culture/go-hentai-scraper/extractors/iwara"
 	"github.com/gan-of-culture/go-hentai-scraper/extractors/miohentai"
 	"github.com/gan-of-culture/go-hentai-scraper/extractors/muchohentai"
 	"github.com/gan-of-culture/go-hentai-scraper/extractors/nhentai"
@@ -47,16 +48,16 @@ func init() {
 	extractorsMap = map[string]static.Extractor{
 		"": universal.New(),
 
-		"9hentai.to":         ninehentaiExtractor,
-		"www1.9hentai.ru":    ninehentaiExtractor,
-		"booru.io":           booru.New(),
-		"comicporn.xxx":      htdoujinExtractor,
-		"www.damn.stream":    damnExtractor,
-		"damn.stream":        damnExtractor,
-		"danbooru.donmai.us": danbooru.New(),
-		"doujin.sexy":        simplyhentaiExtractor,
-		"e-hentai.org":       ehentai.New(),
-		//ecchi.iwara.tv/
+		"9hentai.to":            ninehentaiExtractor,
+		"www1.9hentai.ru":       ninehentaiExtractor,
+		"booru.io":              booru.New(),
+		"comicporn.xxx":         htdoujinExtractor,
+		"www.damn.stream":       damnExtractor,
+		"damn.stream":           damnExtractor,
+		"danbooru.donmai.us":    danbooru.New(),
+		"doujin.sexy":           simplyhentaiExtractor,
+		"e-hentai.org":          ehentai.New(),
+		"ecchi.iwara.tv":        iwara.New(),
 		"exhentai.org":          exhentai.New(),
 		"hanime.tv":             hanime.New(),
 		"hentai2read.com":       hentai2read.New(),
