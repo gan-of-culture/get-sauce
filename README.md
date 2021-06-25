@@ -167,7 +167,7 @@ The URLs will be downloaded one by one.
 | [booruproject (ex. rule34, gelbooru)](https://booru.org/top)             | :heavy_check_mark: |:heavy_check_mark:|
 | [booru.io](https://booru.io/)                                            | :heavy_check_mark: |        ?         |
 | [comicporn.xxx](https://comicporn.xxx)                                   | :heavy_check_mark: |        ?         |
-| [damn.stream](https://www.damn.stream)                                   |         ?          |:heavy_check_mark:|
+| [damn.stream(720p, 480p, 360p)](https://www.damn.stream)                 |         ?          |:heavy_check_mark:|
 | [danbooru.donmai.us](https://danbooru.donmai.us)                         | :heavy_check_mark: |        ?         |
 | [doujin.sexy](https://doujin.sexy)                                       | :heavy_check_mark: |        ?         |
 | [e-hentai.org](http://e-hentai.org/)                                     | :heavy_check_mark: |        ?         |
