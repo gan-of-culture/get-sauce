@@ -113,7 +113,7 @@ func Headers(url, refer string) (http.Header, error) {
 	if err == nil {
 		return res.Header, nil
 	}
-	if res.StatusCode == 503 {
+	if res != nil && res.StatusCode == 503 {
 		time.Sleep(200 * time.Millisecond)
 		res, err := Request(http.MethodHead, url, headers, nil)
 		if err == nil {

@@ -11,7 +11,11 @@ import (
 )
 
 const site = "https://www.damn.stream/"
-const embed = "https://www.damn.stream/video/"
+const embed = "https://www.damn.stream/embed/"
+
+var reVideoID *regexp.Regexp = regexp.MustCompile(`"/embed/([^"]*)`)
+var reSrcMeta *regexp.Regexp = regexp.MustCompile(`<source\s[^=]*="([^"]+)"(?:[\s\S]*?size="([^"]*))?`)
+var reExt *regexp.Regexp = regexp.MustCompile(`\w+$`)
 
 //const cdn = "https://server-one.damn.stream"
 
@@ -41,7 +45,7 @@ func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 }
 
 func parseURL(URL string) []string {
-	if strings.HasPrefix(URL, "https://www.damn.stream/watch/hentai/") {
+	if strings.HasPrefix(URL, "https://www.damn.stream/watch/") {
 		return []string{URL}
 	}
 
@@ -54,8 +58,8 @@ func parseURL(URL string) []string {
 		return []string{}
 	}
 
-	re := regexp.MustCompile(`[^"]*watch/hentai[^"]*`)
-	return re.FindAllString(htmlString, -1)
+	re := regexp.MustCompile(`https://www.damn.stream/watch/[^"]*`)
+	return utils.RemoveAdjDuplicates(re.FindAllString(htmlString, -1))
 }
 
 func extractData(URL string) (static.Data, error) {
@@ -64,19 +68,20 @@ func extractData(URL string) (static.Data, error) {
 		return static.Data{}, err
 	}
 
-	title := strings.TrimSuffix(utils.GetMeta(&htmlString, "og:title"), " - Damnstream")
-	re := regexp.MustCompile(`"/video/([^"]*)`)
-	videoID := re.FindStringSubmatch(htmlString)[1]
+	title := strings.Trim(utils.GetH1(&htmlString, -1), "\n- ")
+	videoID := reVideoID.FindStringSubmatch(htmlString)[1]
 
 	htmlString, err = request.Get(fmt.Sprintf("%s%s", embed, videoID))
 	if err != nil {
 		return static.Data{}, err
 	}
 
-	re = regexp.MustCompile(`<source\s[^=]*="([^"]*\.([^"]*))"`)
-	srcMeta := re.FindStringSubmatch(htmlString) //1=URL 2=ext
+	srcMeta := reSrcMeta.FindStringSubmatch(htmlString) //1=URL 2=ext
 
-	srcMeta[1] = fmt.Sprintf("%s%s", "https:", srcMeta[1])
+	quality := ""
+	if len(srcMeta) > 2 {
+		quality = srcMeta[2]
+	}
 
 	size, _ := request.Size(srcMeta[1], site)
 
@@ -89,10 +94,11 @@ func extractData(URL string) (static.Data, error) {
 				URLs: []*static.URL{
 					0: {
 						URL: srcMeta[1],
-						Ext: srcMeta[2],
+						Ext: reExt.FindString(srcMeta[1]),
 					},
 				},
-				Size: size,
+				Quality: quality + "p",
+				Size:    size,
 			},
 		},
 		Url: URL,
