@@ -68,7 +68,7 @@ var reExt *regexp.Regexp = regexp.MustCompile(`\w+$`)
 
 type extractor struct{}
 
-// New returns a htdoujin extractor.
+// New returns a simply-hentai extractor.
 func New() static.Extractor {
 	return &extractor{}
 }
@@ -141,7 +141,6 @@ func extractData(URL string) (*static.Data, error) {
 	if len(matchedAppState) < 2 {
 		return &static.Data{}, errors.New("app state not found for URL")
 	}
-	fmt.Println(matchedAppState[1])
 
 	appStat := appState{}
 	err = json.Unmarshal([]byte(matchedAppState[1]), &appStat)
