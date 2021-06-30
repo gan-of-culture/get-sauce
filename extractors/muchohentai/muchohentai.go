@@ -110,7 +110,7 @@ func extractData(URL string) (static.Data, error) {
 				"0": {
 					URLs: URLs,
 					Info: masterURL,
-					Ext:  "ts",
+					Ext:  "mp4",
 					Key:  key,
 				},
 			},
@@ -149,7 +149,7 @@ func extractData(URL string) (static.Data, error) {
 				Quality: variant.Quality,
 				Size:    variant.Size,
 				Info:    variant.Info, //contains codec
-				Ext:     "ts",
+				Ext:     "mp4",
 				Key:     key,
 			}
 			streamIdx++
