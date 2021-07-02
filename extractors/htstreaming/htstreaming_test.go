@@ -45,11 +45,11 @@ func TestParseURL(t *testing.T) {
 			want: 24,
 		},*/{
 			name: "Single Episode animeidhentai.com",
-			url:  "https://animeidhentai.com/31577/doukyuusei-natsu-no-owari-ni-episode-1/",
+			url:  "https://animeidhentai.com/31678/mako-chan-kaihatsu-nikki-episode-1/",
 			want: 1,
 		}, {
 			name: "Series animeidhentai.com",
-			url:  "https://animeidhentai.com/hentai/doukyuusei-natsu-no-owari-ni/",
+			url:  "https://animeidhentai.com/hentai/mako-chan-kaihatsu-nikki/",
 			want: 4,
 		},
 	}
