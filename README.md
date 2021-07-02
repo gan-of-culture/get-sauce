@@ -52,21 +52,42 @@ go-hentai-scraper https://hanime.tv/videos/hentai/kuro-gal-ni-natta-kara-shin-yu
 The ```-i``` option displays all available quality of video without downloading.
 
 ```console
-go-hentai-scraper https://hanime.tv/videos/hentai/kuro-gal-ni-natta-kara-shin-yuu-to-shite-mita-season-1
+go-hentai-scraper -i https://hanime.tv/videos/hentai/netosis-1
 
  Site:      https://hanime.tv/
- Title:     Kuro Gal ni Natta kara Shin`yuu to Shite Mita Season 1
+ Title:     Netosis 1
  Type:      video
- Stream:
-
+ Streams:   # All available qualities
      [0]  -------------------
-     Info:            kuro-gal-ni-natta-kara-shin-yuu-to-shite-mita-season-1-1080p-v1x.mp4-v1x.m3u8
-     Quality:         1920 x 1080
-     Parts:           139
-     Size:            510.00 MB (510000000 Bytes)
+     Info:            netosis-1-1080p-v1x.mp4-v1x.m3u8
+     Quality:         1080p; 1920 x 1080
+     Parts:           55
+     Size:            276.00 MB (276000000 Bytes)
      # download with: go-hentai-scraper -s 0 ...
 
-Merging into Kuro Gal ni Natta kara Shin`yuu to Shite Mita Season 1.mp4 ... 100% |████████████████████████████████████████| (85 it/s)
+
+     [1]  -------------------
+     Info:            netosis-1-720p-v1x.mp4-v1x.m3u8
+     Quality:         720p; 1280 x 720
+     Parts:           55
+     Size:            141.00 MB (141000000 Bytes)
+     # download with: go-hentai-scraper -s 1 ...
+
+
+     [2]  -------------------
+     Info:            netosis-1-480p-v1x.mp4-v1x.m3u8
+     Quality:         480p; 854 x 480
+     Parts:           56
+     Size:            69.00 MB (69000000 Bytes)
+     # download with: go-hentai-scraper -s 2 ...
+
+
+     [3]  -------------------
+     Info:            netosis-1-360p-v1x.mp4-v1x.m3u8
+     Quality:         360p; 640 x 360
+     Parts:           56
+     Size:            49.00 MB (49000000 Bytes)
+     # download with: go-hentai-scraper -s 3 ...
 ```
 
 The default stream is 0 and it also offers the best available quality. If you want to download a different quality or from a mirrored server you can manually choose a stream with ```-s```.
@@ -76,25 +97,27 @@ The default stream is 0 and it also offers the best available quality. If you wa
 You can also download multiple URLs at once:
 
 ```console
-go-hentai-scraper -i https://rule34.paheal.net/post/view/4406218 https://rule34.paheal.net/post/view/4406235
+go-hentai-scraper -i https://nhentai.net/g/364616/ https://nhentai.net/g/364591/
 
- Site:      https://rule34.paheal.net
- Title:     MrTaxman Void_Elf Worgen World_of_Warcraft 4406218
+ Site:      https://nhentai.net
+ Title:     Matsuri tte Iina
  Type:      image
  Streams:   # All available qualities
      [0]  -------------------
-     Quality:         2142 x 1536
-     Size:            0.28 MB (279941 Bytes)
+     Quality:         unknown
+     Parts:           31
+     Size:            0.00 MB (0 Bytes)
      # download with: go-hentai-scraper -s 0 ...
 
 
- Site:      https://rule34.paheal.net
- Title:     MrTaxman World_of_Warcraft human night_elf 4406235
+ Site:      https://nhentai.net
+ Title:     ASSTROLOGIC
  Type:      image
  Streams:   # All available qualities
      [0]  -------------------
-     Quality:         1080 x 1675
-     Size:            0.14 MB (136134 Bytes)
+     Quality:         unknown
+     Parts:           36
+     Size:            0.00 MB (0 Bytes)
      # download with: go-hentai-scraper -s 0 ...
 
 ```
@@ -198,7 +221,7 @@ The URLs will be downloaded one by one.
 | [nhentai.net](https://nhentai.net)                                       | :heavy_check_mark: |        ?         |
 | [pururin.io](https://pururin.io)                                         | :heavy_check_mark: |        ?         |
 | [rule34.paheal.net](https://rule34.paheal.net)                           | :heavy_check_mark: |:heavy_check_mark:|
-| [www.simply-hentai.com](https://www.simply-hentai.com)                   | :heavy_check_mark: |        ?         |
+| [simply-hentai.com](https://www.simply-hentai.com)                       | :heavy_check_mark: |        ?         |
 | [thehentaiworld.com](https://thehentaiworld.com)                         | :heavy_check_mark: |:heavy_check_mark:|
 | [yandere.re](https://yande.re/post)                                      | :heavy_check_mark: |        ?         |
 
