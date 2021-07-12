@@ -32,3 +32,18 @@ func TestGet(t *testing.T) {
 		}
 	})
 }
+
+func TestGetWReferer(t *testing.T) {
+	t.Run("Default test", func(t *testing.T) {
+		htmlString, err := GetWithHeaders("https://github.com/", map[string]string{
+			"referer": "https://github.com/",
+		})
+		if err != nil {
+			t.Error(err)
+		}
+
+		if htmlString == "" {
+			t.Errorf("Got: %v - want: %v", htmlString, "a string")
+		}
+	})
+}

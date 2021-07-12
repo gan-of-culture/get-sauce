@@ -28,14 +28,6 @@ type videoData struct {
 	DownloadLinks []source `json:"downloadLinks"`
 }
 
-type pageData struct {
-	HostList    map[string][]string `json:"hostList"`
-	VideoURL    string              `json:"videoUrl"`
-	VideoServer string              `json:"videoServer"`
-	Title       string              `json:"title"`
-	VideoData   videoData           `json:"videoData"`
-}
-
 var site string
 
 type extractor struct{}
@@ -140,21 +132,13 @@ func ExtractData(URL string) (static.Data, error) {
 		return static.Data{}, err
 	}
 
-	m3u8MasterRes, err := request.Request(http.MethodGet, pData.VideoSource, map[string]string{
+	m3u8Master, err := request.GetWithHeaders(pData.VideoSource, map[string]string{
 		"referer": playerURL,
 		"accept":  "*/*",
-	}, nil)
+	})
 	if err != nil {
 		return static.Data{}, err
 	}
-	defer m3u8MasterRes.Body.Close()
-
-	buffer, err = ioutil.ReadAll(m3u8MasterRes.Body)
-	if err != nil {
-		return static.Data{}, err
-	}
-
-	m3u8Master := string(buffer)
 
 	dummyStreams, err := utils.ParseM3UMaster(&m3u8Master)
 	if err != nil {
@@ -165,21 +149,13 @@ func ExtractData(URL string) (static.Data, error) {
 	streams := map[string]*static.Stream{}
 	idx := 0
 	for _, stream := range dummyStreams {
-		masterRes, err := request.Request(http.MethodGet, stream.URLs[0].URL, map[string]string{
+		master, err := request.GetWithHeaders(stream.URLs[0].URL, map[string]string{
 			"referer": playerURL,
 			"accept":  "*/*",
-		}, nil)
+		})
 		if err != nil {
 			return static.Data{}, err
 		}
-		defer masterRes.Body.Close()
-
-		buffer, err = ioutil.ReadAll(masterRes.Body)
-		if err != nil {
-			return static.Data{}, err
-		}
-
-		master := string(buffer)
 
 		URLs, key, err := request.GetM3UMeta(&master, stream.URLs[0].URL, ext)
 		if err != nil {
