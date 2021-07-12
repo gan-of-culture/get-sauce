@@ -44,7 +44,7 @@ func TestExtract(t *testing.T) {
 			want: 24,
 		}, {
 			name: "Single Episode Single Stream",
-			url:  "https://muchohentai.com/aBo4Rk/141131/",
+			url:  "https://muchohentai.com/aBo4Rk/161377/",
 			want: 1,
 		},
 	}
