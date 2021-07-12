@@ -71,9 +71,9 @@ func TestExtract(t *testing.T) {
 	}{
 		{
 			name: "Single Episode hentai.pro",
-			url:  "https://hentai.pro/ova-youkoso-sukebe-elf-no-mori-e-episode-4/",
+			url:  "https://hentai.pro/bitch-na-inane-sama-episode-2/",
 			want: 1,
-		}, /*{
+		}, /* {
 			name: "Overview hentai.pro",
 			url:  "https://hentai.pro/tag/breasts/",
 			want: 50,
@@ -89,12 +89,12 @@ func TestExtract(t *testing.T) {
 			name: "Single Episode hentaihaven.red/",
 			url:  "https://hentaihaven.red/hentai/joshi-luck-episode-1/",
 			want: 1,
-		}, {
+		}, /* {
 			name: "Overview hentaihaven.red/",
 			url:  "https://hentaihaven.red/genre/2019-english/",
 			want: 4,
 			//can be more videos at the time when I am adding this it was only 4 -> normally it is 30 per site but that would be too much for testing
-		}, /*{
+		}, {
 			name: "Single Episode hentai.tv",
 			url:  "https://hentai.tv/hentai/chiisana-tsubomi-no-sono-oku-ni-episode-1/",
 			want: 1,
@@ -104,11 +104,11 @@ func TestExtract(t *testing.T) {
 			want: 24,
 		},*/{
 			name: "Single Episode animeidhentai.com",
-			url:  "https://animeidhentai.com/31577/doukyuusei-natsu-no-owari-ni-episode-1/",
+			url:  "https://animeidhentai.com/31680/mako-chan-kaihatsu-nikki-episode-2/",
 			want: 1,
 		}, {
 			name: "Series animeidhentai.com",
-			url:  "https://animeidhentai.com/hentai/doukyuusei-natsu-no-owari-ni/",
+			url:  "https://animeidhentai.com/hentai/mako-chan-kaihatsu-nikki/",
 			want: 4,
 		},
 	}

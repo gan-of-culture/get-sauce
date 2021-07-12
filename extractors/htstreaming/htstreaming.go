@@ -4,7 +4,9 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"io/ioutil"
 	"log"
+	"net/http"
 	"net/url"
 	"regexp"
 	"strings"
@@ -17,12 +19,13 @@ import (
 type source struct {
 	File  string `json:"file"`
 	Label string `json:"label"`
-	Type  string `json:"type"`
+	Size  string `json:"size"`
 }
 
 type videoData struct {
-	VideoImage   string   `json:"videoImage"`
-	VideoSources []source `json:"videoSources"`
+	VideoImage    string   `json:"videoImage"`
+	VideoSource   string   `json:"videoSource"`
+	DownloadLinks []source `json:"downloadLinks"`
 }
 
 type pageData struct {
@@ -103,7 +106,8 @@ func ExtractData(URL string) (static.Data, error) {
 		return static.Data{}, err
 	}
 
-	title := utils.GetMeta(&htmlString, "og:title")
+	title := strings.Split(utils.GetMeta(&htmlString, "og:title"), " - ")[0]
+	title = strings.Split(title, " | ")[0]
 
 	re := regexp.MustCompile(`[^"]*index.php\?data[^"]*`)
 	playerURL := re.FindString(htmlString)
@@ -111,69 +115,79 @@ func ExtractData(URL string) (static.Data, error) {
 		return static.Data{}, errors.New("player URL not found %s")
 	}
 
-	htmlString, err = request.Get(playerURL)
+	URLValues := url.Values{}
+	URLValues.Add("hash", strings.Split(playerURL, "data=")[1])
+
+	res, err := request.Request(http.MethodPost, playerURL+"&do=getVideo", map[string]string{
+		"Referer":          playerURL,
+		"x-requested-with": "XMLHttpRequest",
+	}, strings.NewReader(URLValues.Encode()))
+	if err != nil {
+		return static.Data{}, err
+	}
+	defer res.Body.Close()
+
+	buffer, err := ioutil.ReadAll(res.Body)
 	if err != nil {
 		return static.Data{}, err
 	}
 
-	re = regexp.MustCompile(`({"[\s\S]*?), false`)
-	jsonString := re.FindStringSubmatch(htmlString)
-	if len(jsonString) < 2 {
-		if strings.Contains(htmlString, "video not found") {
-			return static.Data{}, errors.New("video not found %s")
-		}
-		fmt.Println(htmlString)
-		return static.Data{}, errors.New("JSON string no found %s")
-	}
-
-	pData := pageData{}
-	err = json.Unmarshal([]byte(jsonString[1]), &pData)
+	pData := videoData{}
+	err = json.Unmarshal(buffer, &pData)
 	if err != nil {
-		log.Println(jsonString)
+		log.Println(string(buffer))
 		log.Println(htmlString)
 		return static.Data{}, err
 	}
 
-	ext := "ts"
-	re = regexp.MustCompile(`\.([\d\w]*)$`)
-	matchedExt := re.FindStringSubmatch(pData.Title)
-	if len(matchedExt) >= 2 {
-		ext = matchedExt[1]
-	}
-
-	// the meta tag contains bloat
-	if site == "hentai.pro" {
-		title = strings.TrimSuffix(pData.Title, "."+ext)
-	}
-
-	m3u8MasterURL := strings.Replace(pData.VideoData.VideoSources[0].File, pData.VideoServer, pData.HostList[pData.VideoServer][0], -1)
-	m3u8MasterURL = strings.Replace(m3u8MasterURL, "hls", "down", -1)
-
-	baseCDNURL := m3u8MasterURL[:len(m3u8MasterURL)-10] //remove master.txt
-
-	m3u8Master, err := request.Get(m3u8MasterURL)
+	m3u8MasterRes, err := request.Request(http.MethodGet, pData.VideoSource, map[string]string{
+		"referer": playerURL,
+		"accept":  "*/*",
+	}, nil)
 	if err != nil {
 		return static.Data{}, err
 	}
+	defer m3u8MasterRes.Body.Close()
+
+	buffer, err = ioutil.ReadAll(m3u8MasterRes.Body)
+	if err != nil {
+		return static.Data{}, err
+	}
+
+	m3u8Master := string(buffer)
 
 	dummyStreams, err := utils.ParseM3UMaster(&m3u8Master)
 	if err != nil {
 		return static.Data{}, err
 	}
 
+	ext := "ts"
 	streams := map[string]*static.Stream{}
 	idx := 0
 	for _, stream := range dummyStreams {
-		streamURL := fmt.Sprintf("%s%s", baseCDNURL, stream.URLs[0].URL)
+		masterRes, err := request.Request(http.MethodGet, stream.URLs[0].URL, map[string]string{
+			"referer": playerURL,
+			"accept":  "*/*",
+		}, nil)
+		if err != nil {
+			return static.Data{}, err
+		}
+		defer masterRes.Body.Close()
 
-		master, err := request.Get(streamURL)
+		buffer, err = ioutil.ReadAll(masterRes.Body)
 		if err != nil {
 			return static.Data{}, err
 		}
 
-		URLs, key, err := request.GetM3UMeta(&master, streamURL, ext)
+		master := string(buffer)
+
+		URLs, key, err := request.GetM3UMeta(&master, stream.URLs[0].URL, ext)
 		if err != nil {
 			return static.Data{}, err
+		}
+
+		if strings.Contains(stream.Info, "mp4a") {
+			ext = "mp4"
 		}
 
 		// len(p.Variants)-i-1 builds stream map in reverse order
@@ -182,7 +196,6 @@ func ExtractData(URL string) (static.Data, error) {
 			URLs:    URLs,
 			Quality: stream.Quality,
 			Size:    stream.Size,
-			Info:    pData.Title,
 			Ext:     ext,
 			Key:     key,
 		}
