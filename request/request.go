@@ -104,6 +104,24 @@ func Get(url string) (string, error) {
 	return string(body), nil
 }
 
+// GetWithHeaders content as string
+func GetWithHeaders(url string, headers map[string]string) (string, error) {
+	resp, err := Request(http.MethodGet, url, headers, nil)
+	if err != nil {
+		return "", err
+	}
+	defer resp.Body.Close()
+
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		if err != io.ErrUnexpectedEOF {
+			return "", err
+		}
+	}
+
+	return string(body), nil
+}
+
 // Headers return the HTTP Headers of the url
 func Headers(url, refer string) (http.Header, error) {
 	headers := map[string]string{
