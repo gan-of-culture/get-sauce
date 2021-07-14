@@ -28,6 +28,7 @@ import (
 	"github.com/gan-of-culture/go-hentai-scraper/extractors/muchohentai"
 	"github.com/gan-of-culture/go-hentai-scraper/extractors/nhentai"
 	"github.com/gan-of-culture/go-hentai-scraper/extractors/ninehentai"
+	"github.com/gan-of-culture/go-hentai-scraper/extractors/ohentai"
 	"github.com/gan-of-culture/go-hentai-scraper/extractors/pururin"
 	"github.com/gan-of-culture/go-hentai-scraper/extractors/rule34"
 	"github.com/gan-of-culture/go-hentai-scraper/extractors/simplyhentai"
@@ -82,6 +83,7 @@ func init() {
 		"miohentai.com":         miohentai.New(),
 		"muchohentai.com":       muchohentai.New(),
 		"nhentai.net":           nhentai.New(),
+		"ohentai.org":           ohentai.New(),
 		"pururin.io":            pururin.New(),
 		"rule34.paheal.net":     rule34.New(),
 		"www.simply-hentai.com": simplyhentaiExtractor,
