@@ -50,7 +50,7 @@ func parseURL(URL string) []string {
 	re := regexp.MustCompile(`detail.php\?vid=[^\s']+`)
 	URLPart := re.FindString(URL)
 	if URLPart != "" {
-		return []string{site + URLPart}
+		return []string{URLPart}
 	}
 
 	htmlString, err := request.Get(URL)
@@ -64,6 +64,7 @@ func parseURL(URL string) []string {
 
 // extractData of URL
 func extractData(URL string) (static.Data, error) {
+	URL = site + URL
 	htmlString, err := request.Get(URL)
 	if err != nil {
 		return static.Data{}, err

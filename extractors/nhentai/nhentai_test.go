@@ -37,7 +37,7 @@ func TestParseURL(t *testing.T) {
 			name: "Doujin collection",
 			url:  "https://nhentai.net/search/?q=dragon",
 			want: want{
-				magicNumbers: 25,
+				magicNumbers: 24,
 				page:         "",
 			},
 		},
