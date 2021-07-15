@@ -88,6 +88,7 @@ func init() {
 		"rule34.paheal.net":     rule34.New(),
 		"www.simply-hentai.com": simplyhentaiExtractor,
 		"thehentaiworld.com":    thehentaiworld.New(),
+		//"www.tsumino.com":       tsumino.New(),
 	}
 }
 

@@ -29,7 +29,7 @@ func TestParseURL(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			urls := parseURL(tt.url)
-			if len(urls) > tt.want {
+			if len(urls) > tt.want && tt.want != 0 {
 				t.Errorf("Got: %v - want: %v", len(urls), tt.want)
 			}
 		})
