@@ -77,7 +77,7 @@ func parseURL(URL string) []string {
 		return []string{}
 	}
 
-	re := regexp.MustCompile(`https[^"\s]*?episode-\d*[/_]?[^"]*`)
+	re := regexp.MustCompile(`https[^"\s]*?episode-\d*[/_]?[^">]*`)
 	if strings.HasPrefix(URL, "https://hentaihaven.red") {
 		re = regexp.MustCompile(`[^"]*red/hentai[^"]*`) //this sites URLs are built diff
 	}

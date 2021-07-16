@@ -43,7 +43,7 @@ func TestParseURL(t *testing.T) {
 			name: "Overview hentai.tv",
 			url:  "https://hentai.tv/trending/",
 			want: 24,
-		},*/{
+		}, */{
 			name: "Single Episode animeidhentai.com",
 			url:  "https://animeidhentai.com/31678/mako-chan-kaihatsu-nikki-episode-1/",
 			want: 1,

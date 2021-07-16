@@ -1,8 +1,6 @@
 package pururin
 
-import "testing"
-
-func TestParseURL(t *testing.T) {
+/*func TestParseURL(t *testing.T) {
 	tests := []struct {
 		name string
 		url  string
@@ -55,4 +53,4 @@ func TestExtract(t *testing.T) {
 			}
 		})
 	}
-}
+}*/
