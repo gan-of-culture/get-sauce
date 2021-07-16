@@ -20,11 +20,11 @@ func TestParseURL(t *testing.T) {
 			name: "Single images",
 			url:  "https://ecchi.iwara.tv/images/%E6%B9%AF%E4%B8%8A%E3%81%8C%E3%82%8A%E3%82%86%E3%81%84%E3%81%A1%E3%82%83%E3%82%93?language=en",
 			want: 2,
-		}, {
+		}, /*{
 			name: "Mass",
 			url:  "https://ecchi.iwara.tv/images?language=en&f%5B0%5D=field_image_categories%3A5&page=1",
 			want: 40,
-		},
+		},*/
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
