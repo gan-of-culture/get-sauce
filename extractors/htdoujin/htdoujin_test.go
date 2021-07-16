@@ -13,6 +13,14 @@ func TestParseURL(t *testing.T) {
 		want int
 	}{
 		{
+			name: "Single Gallery HentaiEra",
+			url:  "https://hentaiera.com/gallery/150354/",
+			want: 1,
+		}, {
+			name: "Tag HentaiEra",
+			url:  "https://hentaiera.com/tag/ahegao/",
+			want: 25,
+		}, {
 			name: "Single Gallery IMHentai",
 			url:  "https://imhentai.xxx/gallery/684976/",
 			want: 1,

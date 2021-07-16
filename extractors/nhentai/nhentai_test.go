@@ -46,11 +46,11 @@ func TestParseURL(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			magicNumber, page := parseURL(tt.url)
 			if len(magicNumber) != tt.want.magicNumbers {
-				t.Errorf("Got: %v - want: %v", magicNumber, tt.want)
+				t.Errorf("Got: %v - want: %v", len(magicNumber), tt.want)
 			}
 
 			if page != tt.want.page {
-				t.Errorf("Got: %v - want: %v", magicNumber, tt.want)
+				t.Errorf("Got: %v - want: %v", len(magicNumber), tt.want)
 			}
 		})
 	}
