@@ -12,7 +12,7 @@ func TestParseURL(t *testing.T) {
 		url  string
 		want int
 	}{
-		{
+		/*{
 			name: "Single video",
 			url:  "https://thehentaiworld.com/videos/shiranui-mai-akiyamaryo-king-of-fighters-5/",
 			want: 1,
@@ -42,7 +42,11 @@ func TestParseURL(t *testing.T) {
 			want: 24,
 		}, {
 			name: "Specific Page",
-			url:  "https://thehentaiworld.com/page/2/?s=ahri",
+			url:  "https://thehentaiworld.com/page/4/?s=cyberpunk",
+			want: 24,
+		}, */{
+			name: "Tag",
+			url:  "https://thehentaiworld.com/tag/cyberpunk-2077/page/4/",
 			want: 24,
 		}, {
 			name: "Mass",
@@ -50,6 +54,7 @@ func TestParseURL(t *testing.T) {
 			want: 30,
 		},
 	}
+	config.Amount = 500
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			if tt.name == "Mass" {

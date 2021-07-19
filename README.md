@@ -220,7 +220,7 @@ The URLs will be downloaded one by one.
 | [muchohentai.com (1080p, 720p, 480p, 360p)](https://muchohentai.com/)    |         ?          |:heavy_check_mark:|
 | [nhentai.net](https://nhentai.net)                                       | :heavy_check_mark: |        ?         |
 | [ohentai.org (1080p, 720p, 480p)](https://ohentai.org/)                  |         ?          |:heavy_check_mark:|
-| [pururin.io](https://pururin.io)                                         | :heavy_check_mark: |        ?         |
+| [pururin.to](https://pururin.to)                                         | :heavy_check_mark: |        ?         |
 | [rule34.paheal.net](https://rule34.paheal.net)                           | :heavy_check_mark: |:heavy_check_mark:|
 | [simply-hentai.com](https://www.simply-hentai.com)                       | :heavy_check_mark: |        ?         |
 | [thehentaiworld.com](https://thehentaiworld.com)                         | :heavy_check_mark: |:heavy_check_mark:|
