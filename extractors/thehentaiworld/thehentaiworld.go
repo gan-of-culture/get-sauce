@@ -15,6 +15,10 @@ import (
 	"github.com/gan-of-culture/go-hentai-scraper/utils"
 )
 
+type tag struct {
+	ID uint `json:"id"`
+}
+
 type post struct {
 	ID   uint   `json:"id"`
 	Link string `json:"Link"`
@@ -86,11 +90,12 @@ type media struct {
 const site = "https://thehentaiworld.com/"
 const postPerPage = "24"
 const postsAPI = "https://thehentaiworld.com/wp-json/wp/v2/posts?"
+const tagsAPI = "https://thehentaiworld.com/wp-json/wp/v2/tags?slug="
 const mediaAPI = "https://thehentaiworld.com/wp-json/wp/v2/media?parent="
 
 // https://thehentaiworld.com/wp-json/wp/v2/categories
 var rePost *regexp.Regexp = regexp.MustCompile(`https://thehentaiworld.com/(?:3d-cgi-hentai-images|gif-animated-hentai-images|hentai-cosplay-images|hentai-doujinshi|flash-hentai|hentai-images|videos)/([^/]+)`)
-var rePage *regexp.Regexp = regexp.MustCompile(`https://thehentaiworld.com/(?:page/(\d+)/)?\?(s=[^&\n]+)?`)
+var rePage *regexp.Regexp = regexp.MustCompile(`https://thehentaiworld.com/(?:tag/([^/]+)/)?(?:page/(\d+)/)?(\?s=[^&\n]+)?`)
 
 // downloading large amount of content with -a might take a while
 // the api call is quite slow
@@ -145,7 +150,7 @@ func parseURL(URL string) []string {
 	if len(matchedPage) < 2 {
 		matchedPage = []string{"0", "1"}
 	}
-	currentPage, _ := strconv.ParseInt(matchedPage[1], 10, 0)
+	currentPage, _ := strconv.ParseInt(matchedPage[2], 10, 0)
 
 	if currentPage < 1 {
 		currentPage = 1
@@ -153,12 +158,17 @@ func parseURL(URL string) []string {
 
 	tmpURL := postsAPI + "per_page=" + postPerPage + "&page=%d"
 
-	if len(matchedPage) == 3 {
-		search := strings.Split(matchedPage[2], "=")
+	if len(matchedPage) == 4 {
+		search := strings.Split(matchedPage[3], "=")
 		if len(search) == 2 {
 			tmpURL += "&search=" + search[1]
 		}
+		if matchedPage[1] != "" {
+			tmpURL += "&tags=" + get_tagID_from_slug(matchedPage[1])
+		}
 	}
+
+	fmt.Println(tmpURL)
 
 	out := []string{}
 	count := 0
@@ -172,10 +182,7 @@ func parseURL(URL string) []string {
 		}
 
 		posts := []post{}
-		err = json.Unmarshal([]byte(htmlString), &posts)
-		if err != nil {
-			return nil
-		}
+		json.Unmarshal([]byte(htmlString), &posts)
 
 		for _, v := range posts {
 			out = append(out, fmt.Sprint(v.ID))
@@ -279,4 +286,19 @@ func genSortedStreams(sizes map[string]size) []size {
 func remove(s []media, i int) []media {
 	s[len(s)-1], s[i] = s[i], s[len(s)-1]
 	return s[:len(s)-1]
+}
+
+func get_tagID_from_slug(slug string) string {
+	jsonStr, err := request.Get(tagsAPI + slug)
+	if err != nil {
+		return ""
+	}
+
+	tags := []tag{}
+	err = json.Unmarshal([]byte(jsonStr), &tags)
+	if err != nil {
+		return ""
+	}
+
+	return fmt.Sprint(tags[0].ID)
 }

@@ -84,7 +84,7 @@ func init() {
 		"muchohentai.com":       muchohentai.New(),
 		"nhentai.net":           nhentai.New(),
 		"ohentai.org":           ohentai.New(),
-		"pururin.io":            pururin.New(),
+		"pururin.to":            pururin.New(),
 		"rule34.paheal.net":     rule34.New(),
 		"www.simply-hentai.com": simplyhentaiExtractor,
 		"thehentaiworld.com":    thehentaiworld.New(),
