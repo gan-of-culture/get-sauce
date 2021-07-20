@@ -31,6 +31,7 @@ type downloadInfo struct {
 	Title string
 }
 
+// Downloader instance
 type Downloader struct {
 	stream      *static.Stream
 	client      *http.Client
@@ -52,6 +53,7 @@ func New(bar bool) *Downloader {
 	}
 }
 
+// Download extracted data
 func (downloader *Downloader) Download(data *static.Data) error {
 	if config.ShowInfo {
 		printInfo(data)

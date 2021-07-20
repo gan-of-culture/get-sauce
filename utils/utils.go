@@ -75,7 +75,7 @@ func GetMediaType(t string) static.DataType {
 	}
 }
 
-// GetH1s of html file
+// GetH1 of html file
 // idx -1 = last h1 found
 // if index out of range set to last h1
 func GetH1(htmlString *string, idx int) string {
