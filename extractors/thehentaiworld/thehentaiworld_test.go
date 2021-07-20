@@ -54,7 +54,6 @@ func TestParseURL(t *testing.T) {
 			want: 30,
 		},
 	}
-	config.Amount = 500
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			if tt.name == "Mass" {

@@ -15,7 +15,7 @@ var (
 	SelectStream string
 	// ShowExtractedData of URL(s)
 	ShowExtractedData bool
-	// ShowInfo of all avaiable streams
+	// ShowInfo of all available streams
 	ShowInfo bool
 	// Workers for downloading
 	Workers int
