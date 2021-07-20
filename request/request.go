@@ -44,7 +44,7 @@ func (l LogRedirects) RoundTrip(req *http.Request) (resp *http.Response, err err
 	return
 }
 
-//DefaultClient
+//DefaultClient to use in the scraper
 func DefaultClient() *http.Client {
 	return &http.Client{
 		Transport: LogRedirects{&http.Transport{
@@ -197,10 +197,10 @@ func (p *Myjar) SetCookies(u *url.URL, cookies []*http.Cookie) {
 	isInJar := false
 	for k, cookie := range cookies {
 		isInJar = false
-		for k_old, cookieInJar := range p.Jar[u.Host] {
+		for keyOld, cookieInJar := range p.Jar[u.Host] {
 			if cookie.Name == cookieInJar.Name && !isInJar {
 				isInJar = true
-				p.Jar[u.Host][k_old] = cookies[k]
+				p.Jar[u.Host][keyOld] = cookies[k]
 			}
 		}
 		if !isInJar {

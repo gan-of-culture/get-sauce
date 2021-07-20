@@ -100,9 +100,9 @@ func parseURL(URL string) []string {
 	}
 
 	startByte := (pageNumber - 1) * galleriesPerPage * 4
-	end_byte := startByte + galleriesPerPage*4 - 1
+	endByte := startByte + galleriesPerPage*4 - 1
 	resp, err := request.Request(http.MethodGet, nozomiURL, map[string]string{
-		"Range": fmt.Sprintf("bytes=%d-%d", startByte, end_byte),
+		"Range": fmt.Sprintf("bytes=%d-%d", startByte, endByte),
 	}, nil)
 	if err != nil {
 		return []string{}
@@ -183,7 +183,7 @@ func subdomainFromURL(URL, base string) string {
 		retval = base
 	}
 
-	number_of_frontends := 3
+	numberOfFrontends := 3
 	b := 16
 
 	re := regexp.MustCompile(`\/[0-9a-f]\/([0-9a-f]{2})\/`)
@@ -196,12 +196,12 @@ func subdomainFromURL(URL, base string) string {
 	if err == nil {
 		// check these values if it doesn't work anymore
 		if g < 0x80 {
-			number_of_frontends = 2
+			numberOfFrontends = 2
 		}
 		if g < 0x59 {
 			g = 1
 		}
-		retval = subdomainFromGalleryid(g, int64(number_of_frontends)) + retval
+		retval = subdomainFromGalleryid(g, int64(numberOfFrontends)) + retval
 	}
 
 	return retval
@@ -225,10 +225,10 @@ func urlFromHash(imgFile img) string {
 		ext = strings.Split(imgFile.Name, ".")[1]
 	}
 
-	return "https://a.hitomi.la/" + dir + "/" + full_path_from_hash(imgFile.Hash) + "." + ext
+	return "https://a.hitomi.la/" + dir + "/" + fullPathFromHash(imgFile.Hash) + "." + ext
 }
 
-func full_path_from_hash(hash string) string {
+func fullPathFromHash(hash string) string {
 	if len(hash) < 3 {
 		return hash
 	}

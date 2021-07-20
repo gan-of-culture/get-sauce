@@ -31,7 +31,7 @@ const (
 	DataTypeVideo DataType = "video"
 	// DataTypeImage indicates the type of extracted data is the image.
 	DataTypeImage DataType = "image"
-	// DataTypeImage indicates the type of extracted data is the unknown.
+	// DataTypeUnknown indicates the type of extracted data is the unknown.
 	DataTypeUnknown DataType = "unknown"
 )
 
@@ -51,6 +51,7 @@ type Data struct {
 	Url string `json:"sourceUrl"`
 }
 
+// Extractor template
 type Extractor interface {
 	Extract(URL string) ([]*Data, error)
 }

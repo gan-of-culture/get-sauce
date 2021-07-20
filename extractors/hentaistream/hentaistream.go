@@ -18,7 +18,6 @@ type quality struct {
 }
 
 const site = "https://hentaistream.moe/"
-const CDN = "https://01cdn.hentaistream.moe/"
 
 var players = map[string][]quality{
 	"player.html": {
