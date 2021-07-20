@@ -23,7 +23,7 @@ type LogRedirects struct {
 	Transport http.RoundTripper
 }
 
-//RoundTrip implementaion
+//RoundTrip implementation
 func (l LogRedirects) RoundTrip(req *http.Request) (resp *http.Response, err error) {
 	t := l.Transport
 	if t == nil {

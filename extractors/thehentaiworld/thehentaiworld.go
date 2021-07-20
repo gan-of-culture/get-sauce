@@ -168,8 +168,6 @@ func parseURL(URL string) []string {
 		}
 	}
 
-	fmt.Println(tmpURL)
-
 	out := []string{}
 	count := 0
 	for i := int(currentPage); ; {
@@ -255,7 +253,7 @@ func extractData(pID string) ([]*static.Data, error) {
 				streams[fmt.Sprint(i)].Info = m.MediaDetails.Audio.string()
 			}
 		}
-		// need to append m.ID becuase neither title or Post + title is a unique file name
+		// need to append m.ID because neither title or Post + title is a unique file name
 		data = append(data, &static.Data{
 			Site:    site,
 			Title:   fmt.Sprintf("%d – %s", m.ID, html.UnescapeString(m.Title.Rendered)),

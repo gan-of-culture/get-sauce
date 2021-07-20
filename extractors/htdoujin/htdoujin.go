@@ -14,7 +14,7 @@ import (
 )
 
 /*
-I have noticed there there are some doujin sites with the same site design just diffrent branding
+I have noticed there there are some doujin sites with the same site design just different branding
 because they linked to some of the htstreaming sites I called this extractor htdoujin this might change in the future
 */
 

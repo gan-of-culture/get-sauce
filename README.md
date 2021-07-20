@@ -1,6 +1,7 @@
-# go-hentai-scraper <!-- omit in toc --> 
+# get-sauce <!-- omit in toc --> 
 
-![GitHub Workflow Status](https://img.shields.io/github/workflow/status/gan-of-culture/go-hentai-scraper/Go)
+[![GitHub Workflow Status](https://img.shields.io/github/workflow/status/gan-of-culture/get-sauce/Go)](https://github.com/gan-of-culture/go-hentai-scraper/actions/workflows/go.yml)
+[![Go Report Card](https://goreportcard.com/badge/github.com/gan-of-culture/get-sauce)](https://goreportcard.com/report/github.com/gan-of-culture/get-sauce)
 
 This scraper is not using official APIs since some of them have limitations. Unfortunatly this also means that for some sites it might take longer to download content because the connection can be restricted. Also some sites only provide single downloads, downloads to lesser qualities or no downloads at all. This scraper will always give you the opportunity to download the best available quality from each site.  
 
@@ -16,7 +17,7 @@ This scraper is not using official APIs since some of them have limitations. Unf
 
 ## Installation
 
-If you don't want to build the app yourself checkout the [releases page](https://github.com/gan-of-culture/go-hentai-scraper/releases).
+If you don't want to build the app yourself checkout the [releases page](https://github.com/gan-of-culture/get-sauce/releases).
 
 Otherwise you can clone this repository yourself and download it. Then use [Golang](https://golang.org/dl/) to build it yourself:
 
@@ -37,22 +38,22 @@ go run main.go ...
 Usage:
 
 ```console
-go-hentai-scraper [OPTIONS] URL [URLs...]
+get-sauce [OPTIONS] URL [URLs...]
 ```
 
 ### Download example
 
 ```console
-go-hentai-scraper https://hanime.tv/videos/hentai/kuro-gal-ni-natta-kara-shin-yuu-to-shite-mita-season-1
+get-sauce https://hanime.tv/videos/hentai/kuro-gal-ni-natta-kara-shin-yuu-to-shite-mita-season-1
 ```
 
 > Note: wrap the URL(s) in quotation marks if it contains special characters.  
-> ```go-hentai-scraper "https://..."```
+> ```get-sauce "https://..."```
 
 The ```-i``` option displays all available quality of video without downloading.
 
 ```console
-go-hentai-scraper -i https://hanime.tv/videos/hentai/netosis-1
+get-sauce -i https://hanime.tv/videos/hentai/netosis-1
 
  Site:      https://hanime.tv/
  Title:     Netosis 1
@@ -63,7 +64,7 @@ go-hentai-scraper -i https://hanime.tv/videos/hentai/netosis-1
      Quality:         1080p; 1920 x 1080
      Parts:           55
      Size:            276.00 MB (276000000 Bytes)
-     # download with: go-hentai-scraper -s 0 ...
+     # download with: get-sauce -s 0 ...
 
 
      [1]  -------------------
@@ -71,7 +72,7 @@ go-hentai-scraper -i https://hanime.tv/videos/hentai/netosis-1
      Quality:         720p; 1280 x 720
      Parts:           55
      Size:            141.00 MB (141000000 Bytes)
-     # download with: go-hentai-scraper -s 1 ...
+     # download with: get-sauce -s 1 ...
 
 
      [2]  -------------------
@@ -79,7 +80,7 @@ go-hentai-scraper -i https://hanime.tv/videos/hentai/netosis-1
      Quality:         480p; 854 x 480
      Parts:           56
      Size:            69.00 MB (69000000 Bytes)
-     # download with: go-hentai-scraper -s 2 ...
+     # download with: get-sauce -s 2 ...
 
 
      [3]  -------------------
@@ -87,7 +88,7 @@ go-hentai-scraper -i https://hanime.tv/videos/hentai/netosis-1
      Quality:         360p; 640 x 360
      Parts:           56
      Size:            49.00 MB (49000000 Bytes)
-     # download with: go-hentai-scraper -s 3 ...
+     # download with: get-sauce -s 3 ...
 ```
 
 The default stream is 0 and it also offers the best available quality. If you want to download a different quality or from a mirrored server you can manually choose a stream with ```-s```.
@@ -97,7 +98,7 @@ The default stream is 0 and it also offers the best available quality. If you wa
 You can also download multiple URLs at once:
 
 ```console
-go-hentai-scraper -i https://nhentai.net/g/364616/ https://nhentai.net/g/364591/
+get-sauce -i https://nhentai.net/g/364616/ https://nhentai.net/g/364591/
 
  Site:      https://nhentai.net
  Title:     Matsuri tte Iina
@@ -107,7 +108,7 @@ go-hentai-scraper -i https://nhentai.net/g/364616/ https://nhentai.net/g/364591/
      Quality:         unknown
      Parts:           31
      Size:            0.00 MB (0 Bytes)
-     # download with: go-hentai-scraper -s 0 ...
+     # download with: get-sauce -s 0 ...
 
 
  Site:      https://nhentai.net
@@ -118,7 +119,7 @@ go-hentai-scraper -i https://nhentai.net/g/364616/ https://nhentai.net/g/364591/
      Quality:         unknown
      Parts:           36
      Size:            0.00 MB (0 Bytes)
-     # download with: go-hentai-scraper -s 0 ...
+     # download with: get-sauce -s 0 ...
 
 ```
 
@@ -130,55 +131,55 @@ The URLs will be downloaded one by one.
 
  -o             Output name of the file
 
- go-hentai-scraper -o myfilename http...
+ get-sauce -o myfilename http...
 
 --------------------------------------------------------------------------------
 
  -O             Output path of the files
 
- go-hentai-scraper -O C://Users//User//Downloads// http...
+ get-sauce -O C://Users//User//Downloads// http...
 
 --------------------------------------------------------------------------------
 
  -r             Restrict content -> don't download senisble content (e-hentai.org only)
 
- go-hentai-scraper -r http...
+ get-sauce -r http...
 
 --------------------------------------------------------------------------------
 
  -j             Show extracted data for the provided URL
 
- go-hentai-scraper -j http...
+ get-sauce -j http...
 
 --------------------------------------------------------------------------------
 
  -i             Show info for the provided URL
 
- go-hentai-scraper -i http...
+ get-sauce -i http...
 
 --------------------------------------------------------------------------------
 
  -s             Select a specific stream | 0 is default and the best quality of that stream
 
- go-hentai-scraper -s 0 http...
+ get-sauce -s 0 http...
 
 --------------------------------------------------------------------------------
 
  -w             Number of download workers
 
- go-hentai-scraper -w 4 http...
+ get-sauce -w 4 http...
 
 --------------------------------------------------------------------------------
 
  -a              Amount of files (image boards only)
 
- go-hentai-scraper -a 5000 http...
+ get-sauce -a 5000 http...
 
 --------------------------------------------------------------------------------
 
  -p              Enter pages like 1,2,3-4,6,7,8-9 for doujins
 
- go-hentai-scraper -p 1,2,3-4 http...
+ get-sauce -p 1,2,3-4 http...
 ```
 
 ## Supported sites
