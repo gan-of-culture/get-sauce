@@ -13,9 +13,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/gan-of-culture/go-hentai-scraper/config"
-	"github.com/gan-of-culture/go-hentai-scraper/static"
-	"github.com/gan-of-culture/go-hentai-scraper/utils"
+	"github.com/gan-of-culture/get-sauce/config"
+	"github.com/gan-of-culture/get-sauce/static"
+	"github.com/gan-of-culture/get-sauce/utils"
 )
 
 // LogRedirects to sanitize "Location" URLs

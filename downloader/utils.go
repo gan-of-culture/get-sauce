@@ -5,7 +5,7 @@ import (
 	"sort"
 	"strconv"
 
-	"github.com/gan-of-culture/go-hentai-scraper/static"
+	"github.com/gan-of-culture/get-sauce/static"
 )
 
 func genSortedStreams(streams map[string]*static.Stream) []*static.Stream {

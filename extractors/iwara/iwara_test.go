@@ -3,7 +3,7 @@ package iwara
 import (
 	"testing"
 
-	"github.com/gan-of-culture/go-hentai-scraper/config"
+	"github.com/gan-of-culture/get-sauce/config"
 )
 
 func TestParseURL(t *testing.T) {
