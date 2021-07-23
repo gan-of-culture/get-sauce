@@ -164,7 +164,7 @@ func parseURL(URL string) []string {
 			tmpURL += "&search=" + search[1]
 		}
 		if matchedPage[1] != "" {
-			tmpURL += "&tags=" + get_tagID_from_slug(matchedPage[1])
+			tmpURL += "&tags=" + getTagIDFromSlug(matchedPage[1])
 		}
 	}
 
@@ -286,7 +286,7 @@ func remove(s []media, i int) []media {
 	return s[:len(s)-1]
 }
 
-func get_tagID_from_slug(slug string) string {
+func getTagIDFromSlug(slug string) string {
 	jsonStr, err := request.Get(tagsAPI + slug)
 	if err != nil {
 		return ""

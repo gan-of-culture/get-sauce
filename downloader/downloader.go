@@ -45,6 +45,7 @@ func init() {
 	runtime.GOMAXPROCS(runtime.NumCPU())
 }
 
+// New instance of Downloader
 func New(bar bool) *Downloader {
 	return &Downloader{
 		client:   request.DefaultClient(),

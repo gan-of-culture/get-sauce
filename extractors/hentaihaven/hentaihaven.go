@@ -156,6 +156,9 @@ func extractData(URL string) (static.Data, error) {
 	if err != nil {
 		return static.Data{}, err
 	}
+	if !sources.Status {
+		return static.Data{}, errors.New("the api request for the streams did not return successful for")
+	}
 
 	m3u8String, err := request.Get(sources.Data.Sources[0].Src)
 	if err != nil {
