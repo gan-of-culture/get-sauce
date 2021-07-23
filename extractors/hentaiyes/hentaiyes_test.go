@@ -40,7 +40,7 @@ func TestExtract(t *testing.T) {
 	}{
 		{
 			name: "Single Episode",
-			url:  "https://hentaiyes.com/watch/shikijou-kyoudan-episode-01/",
+			url:  "https://hentaiyes.com/watch/kanpeki-ojou-sama-no-watakushi-ga-dogeza-de-mazo-ochisuru-choroin-na-wakenai-desu-wa-episode-03/",
 			want: 1,
 		}, {
 			name: "Series",

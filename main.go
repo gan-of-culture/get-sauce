@@ -7,10 +7,10 @@ import (
 	"log"
 	"sync"
 
-	"github.com/gan-of-culture/go-hentai-scraper/config"
-	"github.com/gan-of-culture/go-hentai-scraper/downloader"
-	"github.com/gan-of-culture/go-hentai-scraper/extractors"
-	"github.com/gan-of-culture/go-hentai-scraper/static"
+	"github.com/gan-of-culture/get-sauce/config"
+	"github.com/gan-of-culture/get-sauce/downloader"
+	"github.com/gan-of-culture/get-sauce/extractors"
+	"github.com/gan-of-culture/get-sauce/static"
 )
 
 func init() {

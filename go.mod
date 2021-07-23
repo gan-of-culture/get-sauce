@@ -1,4 +1,4 @@
-module github.com/gan-of-culture/go-hentai-scraper
+module github.com/gan-of-culture/get-sauce
 
 go 1.16
 

@@ -6,10 +6,10 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/gan-of-culture/go-hentai-scraper/config"
-	"github.com/gan-of-culture/go-hentai-scraper/request"
-	"github.com/gan-of-culture/go-hentai-scraper/static"
-	"github.com/gan-of-culture/go-hentai-scraper/utils"
+	"github.com/gan-of-culture/get-sauce/config"
+	"github.com/gan-of-culture/get-sauce/request"
+	"github.com/gan-of-culture/get-sauce/static"
+	"github.com/gan-of-culture/get-sauce/utils"
 )
 
 type stream struct {

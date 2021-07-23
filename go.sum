@@ -1,6 +1,8 @@
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
+github.com/gan-of-culture/go-hentai-scraper v1.0.15 h1:u6qqR0AVhzsappX2zkzazogUyowgMvBNRneqql3FtGM=
+github.com/gan-of-culture/go-hentai-scraper v1.0.15/go.mod h1:P+h0UTe5pWZ/wVHDNjzg+8jcX2zvt+rBQhyftmVyRpo=
 github.com/gan-of-culture/jsurl v0.0.0-20210607074323-b483d15c44d8 h1:9O5zdaiIQRwWqrMbgqr5YagxrSm2C6r7D2YFvm/qZBk=
 github.com/gan-of-culture/jsurl v0.0.0-20210607074323-b483d15c44d8/go.mod h1:2cT4Y46i0jdInrUftQvudioJAkCZAhuLbHK9cL1v51s=
 github.com/k0kubun/go-ansi v0.0.0-20180517002512-3bf9e2903213/go.mod h1:vNUNkEQ1e29fT/6vq2aBdFsgNPmy8qMdSay1npru+Sw=
