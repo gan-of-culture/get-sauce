@@ -1,3 +1,4 @@
+// for image viewing limits please checkout this article: https://github.com/8qwe24657913/E-Hentai-Downloader-NW.js/wiki/E%E2%88%92Hentai-Image-Viewing-Limits
 package ehentai
 
 import "testing"
