@@ -16,6 +16,7 @@ import (
 	"github.com/gan-of-culture/get-sauce/extractors/hentaidude"
 	"github.com/gan-of-culture/get-sauce/extractors/hentaihaven"
 	"github.com/gan-of-culture/get-sauce/extractors/hentaimama"
+	"github.com/gan-of-culture/get-sauce/extractors/hentaipulse"
 	"github.com/gan-of-culture/get-sauce/extractors/hentais"
 	"github.com/gan-of-culture/get-sauce/extractors/hentaistream"
 	"github.com/gan-of-culture/get-sauce/extractors/hentaiworld"
@@ -75,6 +76,7 @@ func init() {
 		"hentai.tv":           htstreamingExtactor,
 		"animeidhentai.com":   htstreamingExtactor,
 		"hentai.pro":          htstreamingExtactor,
+		"hentaipulse.com":     hentaipulse.New(),
 		"hentaiworld.tv":      hentaiworld.New(),
 		"hentaiyes.com":       hentaiyes.New(),
 		"hitomi.la":           hitomi.New(),
