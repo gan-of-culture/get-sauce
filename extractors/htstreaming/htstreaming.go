@@ -11,6 +11,7 @@ import (
 	"regexp"
 	"strings"
 
+	"github.com/gan-of-culture/get-sauce/downloader"
 	"github.com/gan-of-culture/get-sauce/request"
 	"github.com/gan-of-culture/get-sauce/static"
 	"github.com/gan-of-culture/get-sauce/utils"
@@ -78,33 +79,41 @@ func parseURL(URL string) []string {
 	}
 
 	re := regexp.MustCompile(`https[^"\s]*?episode-\d*[/_]?[^">]*`)
-	if strings.HasPrefix(URL, "https://hentaihaven.red") {
-		re = regexp.MustCompile(`[^"]*red/hentai[^"]*`) //this sites URLs are built diff
-	}
 	matchedURLs := re.FindAllString(htmlString, -1)
-	if strings.HasPrefix(URL, "https://hentaihaven.red") {
-		//remove the five popular hentai on the side bar
-		matchedURLs = matchedURLs[:len(matchedURLs)-5]
-	}
 
 	return utils.RemoveAdjDuplicates(matchedURLs)
 }
 
 // ExtractData for a single episode that is hosted by the htstreaming network
 func ExtractData(URL string) (static.Data, error) {
-	htmlString, err := request.Get(URL)
-	if err != nil {
-		log.Println(htmlString)
-		return static.Data{}, err
-	}
-
-	title := strings.Split(utils.GetMeta(&htmlString, "og:title"), " - ")[0]
-	title = strings.Split(title, " | ")[0]
+	title := ""
 
 	re := regexp.MustCompile(`[^"]*index.php\?data[^"]*`)
-	playerURL := re.FindString(htmlString)
+	playerURL := re.FindString(URL)
 	if playerURL == "" {
-		return static.Data{}, errors.New("player URL not found %s")
+
+		htmlString, err := request.Get(URL)
+		if err != nil {
+			log.Println(htmlString)
+			return static.Data{}, err
+		}
+
+		re = regexp.MustCompile(`[^"]*index.php\?data[^"]*`)
+		playerURL = re.FindString(htmlString)
+		if playerURL == "" {
+			re = regexp.MustCompile(`https://htstreaming.com/video/([^"]*)`)
+			hash := utils.GetLastItemString(re.FindStringSubmatch(htmlString))
+			if hash != "" {
+				playerURL = "https://htstreaming.com/player/index.php?data=" + hash
+			}
+		}
+		if playerURL == "" {
+			return static.Data{}, errors.New("player URL not found")
+		}
+
+		title = strings.Split(utils.GetMeta(&htmlString, "og:title"), " - ")[0]
+		title = strings.Split(title, " | ")[0]
+
 	}
 
 	URLValues := url.Values{}
@@ -128,7 +137,6 @@ func ExtractData(URL string) (static.Data, error) {
 	err = json.Unmarshal(buffer, &pData)
 	if err != nil {
 		log.Println(string(buffer))
-		log.Println(htmlString)
 		return static.Data{}, err
 	}
 
@@ -145,10 +153,11 @@ func ExtractData(URL string) (static.Data, error) {
 		return static.Data{}, err
 	}
 
+	sortedStreams := downloader.GenSortedStreams(dummyStreams)
+
 	ext := "ts"
 	streams := map[string]*static.Stream{}
-	idx := 0
-	for _, stream := range dummyStreams {
+	for idx, stream := range sortedStreams {
 		master, err := request.GetWithHeaders(stream.URLs[0].URL, map[string]string{
 			"referer": playerURL,
 			"accept":  "*/*",
@@ -168,14 +177,13 @@ func ExtractData(URL string) (static.Data, error) {
 
 		// len(p.Variants)-i-1 builds stream map in reverse order
 		// in order for the best quality stream to be on top
-		streams[fmt.Sprintf("%d", len(dummyStreams)-idx-1)] = &static.Stream{
+		streams[fmt.Sprint(len(sortedStreams)-idx-1)] = &static.Stream{
 			URLs:    URLs,
 			Quality: stream.Quality,
 			Size:    stream.Size,
 			Ext:     ext,
 			Key:     key,
 		}
-		idx += 1
 	}
 
 	return static.Data{

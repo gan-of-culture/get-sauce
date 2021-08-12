@@ -204,15 +204,15 @@ The URLs will be downloaded one by one.
 | [hentaidude.com(720p, 480, 360p)](https://hentaidude.com/)               |         ?          |:heavy_check_mark:|
 | [hentaiera.com](https://hentaiera.com)                                   | :heavy_check_mark: |         ?        |
 | [hentaifox.com](https://hentaifox.com)                                   | :heavy_check_mark: |         ?        |
-| [hentaihaven.red (1080p, 720p, 480p, 360p)](https://hentaihaven.red)     |         ?          |       :x:        |
+| [hentaihaven.red (1080p, 720p, 480p, 360p)](https://hentaihaven.red)     |         ?          |:heavy_check_mark:|
 | [hentaihaven.xxx (1080p, 720p, 480p, 360p)](https://hentaihaven.xxx)     |         ?          |:heavy_check_mark:|
 | [hentaimama.io(1080p, 720p)](https://hentaimama.io)                      |         ?          |:heavy_check_mark:|
 | [hentais.tube (720p, 480p, 360p)](https://www.hentais.tube/)             |         ?          |:heavy_check_mark:|
 | [hentaistream.moe (2160p, 1080p, 480p)](https://hentaistream.moe/)       |         ?          |:heavy_check_mark:|
-| [hentaistream.xxx (1080p, 720, 480p, 360p)](https://hentaistream.xxx/)   |         ?          |       :x:        |
+| [hentaistream.xxx (1080p, 720, 480p, 360p)](https://hentaistream.xxx/)   |         ?          |:heavy_check_mark:|
 | [hentaiworld.tv (1080p, 720p, 480p)](https://hentaiworld.tv/)            |         ?          |:heavy_check_mark:|
-| [hentai.tv (1080p, 720p, 480p, 360p)](https://hentai.tv/)                |         ?          |       :x:        |
-| [hentai.pro (1080p, 720p, 480p, 360p)](https://hentai.pro/)              |         ?          |       :x:        |
+| [hentai.tv (1080p, 720p, 480p, 360p)](https://hentai.tv/)                |         ?          |:heavy_check_mark:|
+| [hentai.pro (1080p, 720p, 480p, 360p)](https://hentai.pro/)              |         ?          |:heavy_check_mark:|
 | [hentaiyes.com (1080p, 720p, 480p, 360p)](https://hentaiyes.com/)        |         ?          |:heavy_check_mark:|
 | [hitomi.la](https://hitomi.la/)                                          | :heavy_check_mark: |        ?         |
 | [imhentai.com](https://imhentai.xxx)                                     | :heavy_check_mark: |        ?         |

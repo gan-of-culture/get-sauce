@@ -15,6 +15,7 @@ import (
 	"github.com/gan-of-culture/get-sauce/extractors/hentaicloud"
 	"github.com/gan-of-culture/get-sauce/extractors/hentaidude"
 	"github.com/gan-of-culture/get-sauce/extractors/hentaihaven"
+	"github.com/gan-of-culture/get-sauce/extractors/hentaihavenred"
 	"github.com/gan-of-culture/get-sauce/extractors/hentaimama"
 	"github.com/gan-of-culture/get-sauce/extractors/hentaipulse"
 	"github.com/gan-of-culture/get-sauce/extractors/hentais"
@@ -71,17 +72,17 @@ func init() {
 		"hentaimama.io":       hentaimama.New(),
 		"www.hentais.tube":    hentais.New(),
 		"hentaistream.moe":    hentaistream.New(),
-		//"hentaistream.xxx":    htstreamingExtactor,
-		//"hentaihaven.red":     htstreamingExtactor,
-		//"hentai.tv":           htstreamingExtactor,
-		"animeidhentai.com": htstreamingExtactor,
-		//"hentai.pro":          htstreamingExtactor,
-		"hentaipulse.com": hentaipulse.New(),
-		"hentaiworld.tv":  hentaiworld.New(),
-		"hentaiyes.com":   hentaiyes.New(),
-		"hitomi.la":       hitomi.New(),
-		"imhentai.xxx":    htdoujinExtractor,
-		"miohentai.com":   miohentai.New(),
+		"hentaistream.xxx":    htstreamingExtactor,
+		"hentaihaven.red":     hentaihavenred.New(),
+		"hentai.tv":           htstreamingExtactor,
+		"animeidhentai.com":   htstreamingExtactor,
+		"hentai.pro":          htstreamingExtactor,
+		"hentaipulse.com":     hentaipulse.New(),
+		"hentaiworld.tv":      hentaiworld.New(),
+		"hentaiyes.com":       hentaiyes.New(),
+		"hitomi.la":           hitomi.New(),
+		"imhentai.xxx":        htdoujinExtractor,
+		"miohentai.com":       miohentai.New(),
 		//"muchohentai.com":       muchohentai.New(),
 		"nhentai.net":           nhentai.New(),
 		"ohentai.org":           ohentai.New(),
