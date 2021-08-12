@@ -176,3 +176,9 @@ func ParseM3UMaster(master *string) (map[string]*static.Stream, error) {
 func Wrap(err error, ctx string) error {
 	return errors.New(err.Error() + ": " + ctx)
 }
+
+// GetFileExt from simple string
+func GetFileExt(str string) string {
+	re := regexp.MustCompile(`\w+$`)
+	return re.FindString(str)
+}

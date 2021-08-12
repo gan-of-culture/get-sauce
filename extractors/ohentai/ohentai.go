@@ -16,8 +16,6 @@ type source struct {
 	File string
 }
 
-var reExt *regexp.Regexp = regexp.MustCompile(`\w+$`)
-
 const site = "https://ohentai.org/"
 
 type extractor struct{}
@@ -94,7 +92,7 @@ func extractData(URL string) (static.Data, error) {
 			URLs: []*static.URL{
 				{
 					URL: s.File,
-					Ext: reExt.FindString(u.Path),
+					Ext: utils.GetFileExt(u.Path),
 				},
 			},
 			Size: size,

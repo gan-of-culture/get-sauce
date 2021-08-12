@@ -365,3 +365,27 @@ func TestWrap(t *testing.T) {
 		})
 	}
 }
+
+func TestGetFileExt(t *testing.T) {
+	tests := []struct {
+		in   string
+		want string
+	}{
+		{
+			in:   "https://longurl.demo?fileext=mp4",
+			want: "mp4",
+		}, {
+			in:   "filename.mkv",
+			want: "mkv",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.in, func(t *testing.T) {
+			ext := GetFileExt(tt.in)
+
+			if ext != tt.want {
+				t.Errorf("Got: %v - want: %v", ext, tt.want)
+			}
+		})
+	}
+}

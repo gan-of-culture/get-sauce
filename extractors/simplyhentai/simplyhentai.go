@@ -64,7 +64,6 @@ type appState struct {
 var site string
 
 var reAppState *regexp.Regexp = regexp.MustCompile(`__SERVER_APP_STATE__ =  ({[^<]+)`)
-var reExt *regexp.Regexp = regexp.MustCompile(`\w+$`)
 
 type extractor struct{}
 
@@ -161,7 +160,7 @@ func extractData(URL string) (*static.Data, error) {
 
 	URLs := []*static.URL{}
 	for _, p := range pages {
-		ext := reExt.FindString(images[p-1].Sizes.Full)
+		ext := utils.GetFileExt(images[p-1].Sizes.Full)
 		URLs = append(URLs, &static.URL{
 			URL: images[p-1].Sizes.Full,
 			Ext: ext,
