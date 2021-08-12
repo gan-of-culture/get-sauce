@@ -12,6 +12,14 @@ func TestParseURL(t *testing.T) {
 		want int
 	}{
 		{
+			name: "Single Episode uncensoredhentai.xxx",
+			url:  "https://uncensoredhentai.xxx/watch/mako-chan-kaihatsu-nikki-episode-1/",
+			want: 1,
+		}, {
+			name: "Overview uncensoredhentai.xxx",
+			url:  "https://uncensoredhentai.xxx/genres/ahegao/",
+			want: 18,
+		}, {
 			name: "Single Episode hentai.pro",
 			url:  "https://hentai.pro/knight-of-erin-episode-2/",
 			want: 1,
@@ -62,6 +70,10 @@ func TestExtract(t *testing.T) {
 		want int
 	}{
 		{
+			name: "Single Episode uncensoredhentai.xxx",
+			url:  "https://uncensoredhentai.xxx/watch/mako-chan-kaihatsu-nikki-episode-1/",
+			want: 1,
+		}, {
 			name: "Single Episode hentai.pro",
 			url:  "https://hentai.pro/imaizumin-chi-wa-douyara-gal-no-tamariba-ni-natteru-rashii-episode-2/",
 			want: 1,
