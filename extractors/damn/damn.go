@@ -16,7 +16,6 @@ const embed = "https://www.damn.stream/embed/"
 var reVideoID *regexp.Regexp = regexp.MustCompile(`"/embed/([^"]*)`)
 var reSrcMeta *regexp.Regexp = regexp.MustCompile(`<source\s[^=]*="([^"]+)"(?:[\s\S]*?size="([^"]*))?`)
 var reVideoMeta *regexp.Regexp = regexp.MustCompile(`[^"]+/v/hentai[^"]+`)
-var reExt *regexp.Regexp = regexp.MustCompile(`\w+$`)
 
 //const cdn = "https://server-one.damn.stream"
 
@@ -99,7 +98,7 @@ func extractData(URL string) (static.Data, error) {
 				URLs: []*static.URL{
 					0: {
 						URL: srcMeta[1],
-						Ext: reExt.FindString(srcMeta[1]),
+						Ext: utils.GetFileExt(srcMeta[1]),
 					},
 				},
 				Quality: quality + "p",
