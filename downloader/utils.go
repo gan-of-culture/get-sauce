@@ -8,7 +8,8 @@ import (
 	"github.com/gan-of-culture/get-sauce/static"
 )
 
-func genSortedStreams(streams map[string]*static.Stream) []*static.Stream {
+// GenSortedStreams for stream map
+func GenSortedStreams(streams map[string]*static.Stream) []*static.Stream {
 	index := make([]int64, 0, len(streams))
 	for k := range streams {
 		idx, _ := strconv.ParseInt(k, 10, 0)
@@ -55,7 +56,7 @@ func printStream(key string, stream *static.Stream) {
 func printInfo(data *static.Data) {
 	printHeader(data)
 
-	sortedStreams := genSortedStreams(data.Streams)
+	sortedStreams := GenSortedStreams(data.Streams)
 	fmt.Print("\n Streams:   # All available qualities")
 	for i, stream := range sortedStreams {
 		printStream(fmt.Sprint(i), stream)

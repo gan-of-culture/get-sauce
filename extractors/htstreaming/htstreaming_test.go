@@ -11,9 +11,9 @@ func TestParseURL(t *testing.T) {
 		url  string
 		want int
 	}{
-		/*{
+		{
 			name: "Single Episode hentai.pro",
-			url:  "https://hentai.pro/ova-youkoso-sukebe-elf-no-mori-e-episode-4/",
+			url:  "https://hentai.pro/knight-of-erin-episode-2/",
 			want: 1,
 		}, {
 			name: "Overview hentai.pro",
@@ -21,21 +21,13 @@ func TestParseURL(t *testing.T) {
 			want: 50,
 		}, {
 			name: "Single Episode hentaistream.xxx",
-			url:  "https://hentaistream.xxx/watch/tonari-no-ie-no-anette-san-the-animation-episode-1_waYqxLSASjFPICZ.html",
+			url:  "https://hentaistream.xxx/watch/ijirare-fukushuu-saimin-episode-1/",
 			want: 1,
 		}, {
 			name: "Overview hentaistream.xxx",
-			url:  "https://hentaistream.xxx/videos/category/749",
-			want: 20,
-		},{
-			name: "Single Episode hentaihaven.red/",
-			url:  "https://hentaihaven.red/hentai/joshi-luck-episode-1/",
-			want: 1,
-		}, {
-			name: "Overview hentaihaven.red/",
-			url:  "https://hentaihaven.red/ratings/",
-			want: 35,
-		}, {
+			url:  "https://hentaistream.xxx/genres/ahegao/",
+			want: 18,
+		}, /*{
 			name: "Single Episode hentai.tv",
 			url:  "https://hentai.tv/hentai/chiisana-tsubomi-no-sono-oku-ni-episode-1/",
 			want: 1,
@@ -69,40 +61,19 @@ func TestExtract(t *testing.T) {
 		url  string
 		want int
 	}{
-		/*{
+		{
 			name: "Single Episode hentai.pro",
-			url:  "https://hentai.pro/bitch-na-inane-sama-episode-2/",
+			url:  "https://hentai.pro/imaizumin-chi-wa-douyara-gal-no-tamariba-ni-natteru-rashii-episode-2/",
 			want: 1,
 		}, {
-			name: "Overview hentai.pro",
-			url:  "https://hentai.pro/tag/breasts/",
-			want: 50,
-		},{
 			name: "Single Episode hentaistream.xxx",
-			url:  "https://hentaistream.xxx/watch/netoshisu-episode-1_VpauMk84OoQXof3.html",
+			url:  "https://hentaistream.xxx/watch/mako-chan-kaihatsu-nikki-episode-1/",
 			want: 1,
-		},{
-			name: "Overview hentaistream.xxx",
-			url:  "https://hentaistream.xxx/videos/category/749",
-			want: 47,
-		},{
-			name: "Single Episode hentaihaven.red/",
-			url:  "https://hentaihaven.red/hentai/joshi-luck-episode-1/",
-			want: 1,
-		},{
-			name: "Overview hentaihaven.red/",
-			url:  "https://hentaihaven.red/genre/2019-english/",
-			want: 4,
-			//can be more videos at the time when I am adding this it was only 4 -> normally it is 30 per site but that would be too much for testing
-		}, {
+		}, /* {
 			name: "Single Episode hentai.tv",
 			url:  "https://hentai.tv/hentai/chiisana-tsubomi-no-sono-oku-ni-episode-1/",
 			want: 1,
-		}, {
-			name: "Overview hentai.tv",
-			url:  "https://hentai.tv/trending/",
-			want: 24,
-		},*/{
+		}, */{
 			name: "Single Episode animeidhentai.com",
 			url:  "https://animeidhentai.com/31680/mako-chan-kaihatsu-nikki-episode-2/",
 			want: 1,
