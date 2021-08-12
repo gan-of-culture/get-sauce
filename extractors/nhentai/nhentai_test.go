@@ -45,7 +45,7 @@ func TestParseURL(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			magicNumber, page := parseURL(tt.url)
-			if len(magicNumber) < tt.want.magicNumbers || len(magicNumber) == 0 {
+			if len(magicNumber) < tt.want.magicNumbers {
 				t.Errorf("Got: %v - want: %v", len(magicNumber), tt.want)
 			}
 
