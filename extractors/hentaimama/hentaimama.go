@@ -3,6 +3,7 @@ package hentaimama
 import (
 	"encoding/base64"
 	"fmt"
+	"net/url"
 	"regexp"
 	"strings"
 
@@ -68,41 +69,93 @@ func extractData(URL string) (static.Data, error) {
 		return static.Data{}, static.ErrDataSourceParseFailed
 	}
 
-	b64Path, err := base64.StdEncoding.DecodeString(matchedMirrorURLs[1][1])
-	if err != nil {
-		return static.Data{}, err
-	}
-
+	idx := 0
 	streams := make(map[string]*static.Stream)
-	reSrc := regexp.MustCompile(fmt.Sprintf("[^\"']*/%s[^\"']*", string(b64Path)))
 	for i, u := range matchedMirrorURLs {
+		idx += 1
+		b64Path, err := base64.StdEncoding.DecodeString(u[1])
+		if err != nil {
+			return static.Data{}, err
+		}
+		b64Paths := strings.Split(string(b64Path), "?")
+
 		htmlString, err := request.Get(u[0])
 		if err != nil {
 			return static.Data{}, err
 		}
+
+		reSrc := regexp.MustCompile(fmt.Sprintf(`[^"']*/%s[^"']*`, string(b64Paths[0])))
 		srcURL := reSrc.FindString(htmlString)
-		size, err := request.Size(srcURL, site)
+
+		re = regexp.MustCompile(`([a-z][\w]*)(?:\?|$)`)
+		ext := strings.TrimSuffix(utils.GetLastItemString(re.FindStringSubmatch(srcURL)), "?")
+		if ext != "m3u8" {
+			size, err := request.Size(srcURL, site)
+			if err != nil {
+				return static.Data{}, err
+			}
+
+			if ext == "" {
+				re = regexp.MustCompile(`video/[^']*`)
+				ext = strings.Split(re.FindString(srcURL), "/")[1]
+			}
+
+			streams[fmt.Sprint(idx)] = &static.Stream{
+				URLs: []*static.URL{
+					{
+						URL: srcURL,
+						Ext: ext,
+					},
+				},
+				Size: size,
+				Info: fmt.Sprintf("Mirror %d", i+1),
+			}
+			continue
+		}
+		idx -= 1
+
+		master, err := request.GetWithHeaders(srcURL, map[string]string{"Referer": srcURL})
 		if err != nil {
 			return static.Data{}, err
 		}
 
-		re = regexp.MustCompile(`\.([\d\w]*)\?`)
-		ext := strings.TrimSuffix(re.FindStringSubmatch(srcURL)[1], "?")
-
-		if ext == "" {
-			re = regexp.MustCompile(`video/[^']*`)
-			ext = strings.Split(re.FindString(srcURL), "/")[1]
+		baseURL, err := url.Parse(srcURL)
+		if err != nil {
+			return static.Data{}, err
 		}
 
-		streams[fmt.Sprint(i)] = &static.Stream{
-			URLs: []*static.URL{
-				{
-					URL: srcURL,
-					Ext: ext,
-				},
-			},
-			Size: size,
-			Info: fmt.Sprintf("Mirror %d", i+1),
+		streamsTmp, err := utils.ParseM3UMaster(&master)
+		if err != nil {
+			return static.Data{}, err
+		}
+
+		for j := len(streamsTmp) - 1; j > -1; j-- {
+			idx += 1
+
+			streamTmp := streamsTmp[fmt.Sprint(j)]
+			mediaURL, err := baseURL.Parse(streamTmp.URLs[0].URL)
+			if err != nil {
+				return static.Data{}, err
+			}
+
+			mediaStr, err := request.Get(mediaURL.String())
+			if err != nil {
+				return static.Data{}, err
+			}
+
+			URLs, key, err := request.GetM3UMeta(&mediaStr, mediaURL.String(), "ts")
+			if err != nil {
+				return static.Data{}, err
+			}
+
+			streams[fmt.Sprint(idx)] = &static.Stream{
+				URLs:    URLs,
+				Quality: streamTmp.Quality,
+				Size:    streamTmp.Size,
+				Ext:     "mp4",
+				Key:     key,
+				Info:    fmt.Sprintf("Mirror %d", i+1),
+			}
 		}
 
 	}
