@@ -14,7 +14,6 @@ const site = "https://hentaipulse.com"
 var reTitle = regexp.MustCompile(`<link rel="canonical" href="https://hentaipulse.com/([^/]+)`)
 var reEpisodes = regexp.MustCompile(`post-\d+"`)
 var reSourceURL = regexp.MustCompile(`main_video_url"[^"]+"([^"]+)`)
-var reExt *regexp.Regexp = regexp.MustCompile(`\w+$`)
 
 type extractor struct{}
 
@@ -83,7 +82,7 @@ func extractData(URL string) (static.Data, error) {
 				URLs: []*static.URL{
 					{
 						URL: sourceURL,
-						Ext: reExt.FindString(sourceURL),
+						Ext: utils.GetFileExt(sourceURL),
 					},
 				},
 				Size: size,
