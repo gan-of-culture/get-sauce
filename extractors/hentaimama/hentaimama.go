@@ -69,7 +69,7 @@ func extractData(URL string) (static.Data, error) {
 		return static.Data{}, static.ErrDataSourceParseFailed
 	}
 
-	idx := 0
+	idx := -1
 	streams := make(map[string]*static.Stream)
 	for i, u := range matchedMirrorURLs {
 		idx += 1
