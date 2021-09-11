@@ -78,10 +78,15 @@ func parseURL(URL string) []string {
 		return []string{}
 	}
 
-	re := regexp.MustCompile(`https[^"\s]*?episode-\d*[/_]?[^">]*`)
+	re := regexp.MustCompile(`https[^"\s]*?episode-\d*/*"`)
 	matchedURLs := re.FindAllString(htmlString, -1)
 
-	return utils.RemoveAdjDuplicates(matchedURLs)
+	out := []string{}
+	for _, u := range matchedURLs {
+		out = append(out, strings.Trim(u, `"`))
+	}
+
+	return utils.RemoveAdjDuplicates(out)
 }
 
 // ExtractData for a single episode that is hosted by the htstreaming network
