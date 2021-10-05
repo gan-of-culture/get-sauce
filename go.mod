@@ -1,6 +1,6 @@
 module github.com/gan-of-culture/get-sauce
 
-go 1.16
+go 1.17
 
 require (
 	github.com/gan-of-culture/jsurl v0.0.0-20210607074323-b483d15c44d8
