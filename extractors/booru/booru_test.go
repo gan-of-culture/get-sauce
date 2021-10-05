@@ -14,11 +14,11 @@ func TestParseURL(t *testing.T) {
 		{
 			name: "Tag query",
 			url:  "https://booru.io/q/1girl%20nude%20animal_ears%20cat%20solo",
-			want: "https://booru.io/api/query/entity?query=1girl%20nude%20animal_ears%20cat%20solo",
+			want: "https://booru.io/api/legacy/query/entity?query=1girl%20nude%20animal_ears%20cat%20solo",
 		}, {
 			name: "Example Post",
 			url:  "https://booru.io/p/YoZR3jurfVNOXD4vjCNn",
-			want: "https://booru.io/api/entity/YoZR3jurfVNOXD4vjCNn",
+			want: "https://booru.io/api/legacy/entity/YoZR3jurfVNOXD4vjCNn",
 		},
 	}
 	for _, tt := range tests {
@@ -43,12 +43,12 @@ func TestExtractData(t *testing.T) {
 	}{
 		{
 			name: "Default extraction",
-			url:  "https://booru.io/api/entity/YoZR3jurfVNOXD4vjCNn",
+			url:  "https://booru.io/api/legacy/entity/YoZR3jurfVNOXD4vjCNn",
 			want: 1,
 		},
 		{
 			name: "Query extraction",
-			url:  "https://booru.io/api/query/entity?query=1girl%20nude%20animal_ears%20cat%20solo",
+			url:  "https://booru.io/api/legacy/query/entity?query=1girl%20nude%20animal_ears%20cat%20solo",
 			want: 100,
 		},
 	}

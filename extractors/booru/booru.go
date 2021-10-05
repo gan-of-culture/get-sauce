@@ -15,17 +15,20 @@ import (
 
 const site = "https://booru.io/"
 const postURL = "https://booru.io/p/"
-const apiDataURL = "https://booru.io/api/data/"
-const apiEntityURL = "https://booru.io/api/entity/"
-const apiQueryURL = "https://booru.io/api/query/entity?query="
+const apiDataURL = "https://booru.io/api/legacy/data/"
+const apiEntityURL = "https://booru.io/api/legacy/entity/"
+const apiQueryURL = "https://booru.io/api/legacy/query/entity?query="
 
 // Entity JSON type
 type Entity struct {
-	Key         string             `json:"key"`
-	ContentType string             `json:"contentType"`
-	Attributes  map[string]float32 `json:"attributes"`
-	Tags        map[string]int     `json:"tags"`
-	Transforms  map[string]string  `json:"transforms"`
+	Key         string `json:"key"`
+	ContentType string `json:"contentType"`
+	Attributes  struct {
+		Width  int `json:"width"`
+		Height int `json:"height"`
+	} `json:"attributes"`
+	Tags       map[string]int    `json:"tags"`
+	Transforms map[string]string `json:"transforms"`
 }
 
 // EntitySlice JSON type
@@ -137,7 +140,7 @@ func extractData(queryURL string) ([]*static.Data, error) {
 							Ext: ext,
 						},
 					},
-					Quality: strings.Split(tType, ":")[0],
+					Quality: fmt.Sprintf("%d x %d", e.Attributes.Width, e.Attributes.Height),
 					Size:    size,
 				},
 			},
