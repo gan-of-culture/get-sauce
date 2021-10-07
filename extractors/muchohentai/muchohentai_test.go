@@ -1,6 +1,9 @@
 package muchohentai
 
-/*func TestParseURL(t *testing.T) {
+// disabled because of stronger cloudflare protection
+
+/*
+func TestParseURL(t *testing.T) {
 	tests := []struct {
 		name string
 		url  string
@@ -29,6 +32,7 @@ package muchohentai
 		})
 	}
 }
+
 
 func TestExtract(t *testing.T) {
 	tests := []struct {
