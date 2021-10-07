@@ -226,7 +226,7 @@ The URLs will be downloaded one by one.
 | [thehentaiworld.com](https://thehentaiworld.com)                                | :heavy_check_mark: |:heavy_check_mark:|
 | [uncensoredhentai.xxx (1080p, 720p, 480p, 360p)](https://uncensoredhentai.xxx/) |         ?          |:heavy_check_mark:|
 | [yandere.re](https://yande.re/post)                                             | :heavy_check_mark: |        ?         |
-| [zhentube.com](https://zhentube.com)                                            |                    |:heavy_check_mark:|
+| [zhentube.com](https://zhentube.com)                                            |         ?          |:heavy_check_mark:|
 
 *you need a login for this site. You can supply it via the parameters -un and -up
 
