@@ -35,6 +35,7 @@ import (
 	"github.com/gan-of-culture/get-sauce/extractors/simplyhentai"
 	"github.com/gan-of-culture/get-sauce/extractors/thehentaiworld"
 	"github.com/gan-of-culture/get-sauce/extractors/universal"
+	"github.com/gan-of-culture/get-sauce/extractors/zhentube"
 	"github.com/gan-of-culture/get-sauce/static"
 )
 
@@ -92,6 +93,7 @@ func init() {
 		"www.simply-hentai.com": simplyhentaiExtractor,
 		"thehentaiworld.com":    thehentaiworld.New(),
 		//"www.tsumino.com":       tsumino.New(),
+		"zhentube.com": zhentube.New(),
 	}
 }
 
