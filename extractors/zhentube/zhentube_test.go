@@ -1,8 +1,7 @@
-package muchohentai
+package zhentube
 
-// disabled because of stronger cloudflare protection
+import "testing"
 
-/*
 func TestParseURL(t *testing.T) {
 	tests := []struct {
 		name string
@@ -11,16 +10,20 @@ func TestParseURL(t *testing.T) {
 	}{
 		{
 			name: "Single Episode",
-			url:  "https://muchohentai.com/aBo4Rk/158393/",
+			url:  "https://zhentube.com/soshite-watashi-wa-ojisan-ni-episode-4/",
 			want: 1,
 		}, {
-			name: "Genre",
-			url:  "https://muchohentai.com/g/1080p/",
-			want: 24,
+			name: "Category",
+			url:  "https://zhentube.com/category/2021/",
+			want: 30,
 		}, {
-			name: "Series",
-			url:  "https://muchohentai.com/s/overflow/",
-			want: 24,
+			name: "Tag",
+			url:  "https://zhentube.com/tag/new-hentai-stream/",
+			want: 30,
+		}, {
+			name: "Actor",
+			url:  "https://zhentube.com/actor/kotomi/",
+			want: 3,
 		},
 	}
 	for _, tt := range tests {
@@ -33,7 +36,6 @@ func TestParseURL(t *testing.T) {
 	}
 }
 
-
 func TestExtract(t *testing.T) {
 	tests := []struct {
 		name string
@@ -42,13 +44,13 @@ func TestExtract(t *testing.T) {
 	}{
 		{
 			name: "Single Episode",
-			url:  "https://muchohentai.com/aBo4Rk/158393/",
-			want: 24,
-		}, {
-			name: "Single Episode Single Stream",
-			url:  "https://muchohentai.com/aBo4Rk/161377/",
+			url:  "https://zhentube.com/torokase-orgasm-episode-1/",
 			want: 1,
-		},
+		}, /*{
+			name: "Category",
+			url:  "https://zhentube.com/category/censored-hentai/",
+			want: 30,
+		},*/
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -61,4 +63,4 @@ func TestExtract(t *testing.T) {
 			}
 		})
 	}
-}*/
+}
