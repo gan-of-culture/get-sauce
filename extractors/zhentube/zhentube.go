@@ -91,6 +91,8 @@ func parseURL(URL string) []string {
 	if err != nil {
 		return nil
 	}
+	// remove rest of site's html including the sidebar that contains videos we don't want
+	htmlString = strings.Split(htmlString, "<aside")[0]
 
 	return regexp.MustCompile(site+`[^"]+episode-[^/]+/"`).FindAllString(htmlString, -1)
 }
