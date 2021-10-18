@@ -75,7 +75,7 @@ func (downloader *Downloader) Download(data *static.Data) error {
 		return fmt.Errorf("stream %s not found", config.SelectStream)
 	}
 
-	if config.Workers > 0 {
+	if config.Workers > 0 && !config.Quiet {
 		printStreamInfo(data, config.SelectStream)
 	}
 
