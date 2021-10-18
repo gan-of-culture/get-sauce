@@ -141,6 +141,11 @@ The URLs will be downloaded one by one.
 
 --------------------------------------------------------------------------------
 
+ -q             Quiet mode - show minimal information 
+
+ get-sauce -q http...
+
+--------------------------------------------------------------------------------
  -r             Restrict content -> don't download senisble content (e-hentai.org only)
 
  get-sauce -r http...
