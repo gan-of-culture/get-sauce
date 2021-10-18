@@ -9,6 +9,8 @@ var (
 	OutputName string
 	// Pages of doujinshi
 	Pages string
+	// Quiet mode - show minimal information
+	Quiet bool
 	// RestrictContent for e-hentai
 	RestrictContent bool
 	// SelectStream to download
