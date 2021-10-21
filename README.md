@@ -3,7 +3,7 @@
 [![GitHub Workflow Status](https://img.shields.io/github/workflow/status/gan-of-culture/get-sauce/Go)](https://github.com/gan-of-culture/get-sauce/actions/workflows/go.yml)
 [![Go Report Card](https://goreportcard.com/badge/github.com/gan-of-culture/get-sauce)](https://goreportcard.com/report/github.com/gan-of-culture/get-sauce)
 
-Is a scraper that is not using official APIs if they are restrictive. This also means that for some sites it might take longer to download content, because the connection can be restricted. Some sites only provide single downloads, downloads to lesser qualities or no downloads at all. This scraper will always give you the opportunity to download the best available quality from each site.  
+Is a hentai scraper that is not using official APIs if they are restrictive. This also means that for some sites it might take longer to download content, because the connection can be restricted. Some sites only provide single downloads, downloads to lesser qualities or no downloads at all. This scraper will always give you the opportunity to download the best available quality from each site.  
 
 - [Installation](#installation)
 - [Getting started](#getting-started)

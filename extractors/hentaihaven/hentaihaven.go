@@ -43,7 +43,7 @@ type pData struct {
 }
 
 const site = "https://hentaihaven.xxx/"
-const api = "https://hentaihaven.xxx/wp-admin/admin-ajax.php"
+const api = "https://hentaihaven.xxx/wp-content/plugins/player-logic/api.php"
 
 type extractor struct{}
 
@@ -95,7 +95,7 @@ func extractData(URL string) (static.Data, error) {
 	}
 	title := strings.Trim(utils.GetH1(&htmlString, -1), " \n\t")
 
-	re := regexp.MustCompile(`[^"]*/player/[^"]*`)
+	re := regexp.MustCompile(`[^"]*/player\.php\?[^"]*`)
 	playerURL := re.FindString(htmlString) // 1=id  2=nonce
 	if playerURL == "" {
 		return static.Data{}, errors.New("can't locate player URL")
@@ -152,7 +152,7 @@ func extractData(URL string) (static.Data, error) {
 
 	sources := &pData{}
 	//there are 3 weird bytes at the beginning that can't be interpreted so I removed them
-	err = json.Unmarshal(respBody[3:], &sources)
+	err = json.Unmarshal(respBody, &sources)
 	if err != nil {
 		return static.Data{}, err
 	}
@@ -197,7 +197,7 @@ func extractData(URL string) (static.Data, error) {
 			URLs:    URLs,
 			Quality: variant.Quality,
 			Size:    variant.Size,
-			Ext:     "ts",
+			Ext:     "mp4",
 			Key:     key,
 		}
 		idx += 1
