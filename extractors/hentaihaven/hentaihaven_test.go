@@ -1,6 +1,5 @@
 package hentaihaven
 
-/*
 import "testing"
 
 func TestParseURL(t *testing.T) {
@@ -37,7 +36,7 @@ func TestExtract(t *testing.T) {
 	}{
 		{
 			name: "Single Episode",
-			url:  "https://hentaihaven.xxx/watch/ero-konbini-tenchou/episode-4/",
+			url:  "https://hentaihaven.xxx/watch/showtime-uta-no-onee-san-datte-shitai/episode-3/",
 			want: 1,
 		}, {
 			name: "Series",
@@ -56,4 +55,4 @@ func TestExtract(t *testing.T) {
 			}
 		})
 	}
-}*/
+}
