@@ -27,7 +27,7 @@ go build
 
 After that you should be provided with an **executable**.
 
-Or if you got Golang already installed you can download the source code and replace the executable with this:
+Or if you got Golang already installed you can download the source code and run the program from the source code this:
 
 ```console
 go run main.go ...
