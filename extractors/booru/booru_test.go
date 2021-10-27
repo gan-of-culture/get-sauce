@@ -16,6 +16,10 @@ func TestParseURL(t *testing.T) {
 			url:  "https://booru.io/q/1girl%20nude%20animal_ears%20cat%20solo",
 			want: "https://booru.io/api/legacy/query/entity?query=1girl%20nude%20animal_ears%20cat%20solo",
 		}, {
+			name: "Single Tag query",
+			url:  "https://booru.io/q/1girl",
+			want: "https://booru.io/api/legacy/query/entity?query=1girl",
+		}, {
 			name: "Example Post",
 			url:  "https://booru.io/p/YoZR3jurfVNOXD4vjCNn",
 			want: "https://booru.io/api/legacy/entity/YoZR3jurfVNOXD4vjCNn",
