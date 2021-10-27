@@ -203,7 +203,7 @@ The URLs will be downloaded one by one.
 | [e-hentai.org](http://e-hentai.org/)                                            | :heavy_check_mark: |        ?         |
 | [ecchi.iwara.tv](https://ecchi.iwara.tv/)                                       | :heavy_check_mark: |:heavy_check_mark:|
 | [exhentai.org*](http://exhentai.org/)                                           | :heavy_check_mark: |        ?         |
-| [hanime.tv(1080p, 720p, 480p, 360p)](https://hanime.tv)                         | :heavy_check_mark: |:heavy_check_mark:|
+| [hanime.tv(1080p, 720p, 480p, 360p)](https://hanime.tv)                         |        :x:         |:heavy_check_mark:|
 | [hentai2read.com](https://hentai2read.com)                                      | :heavy_check_mark: |        ?         |
 | [hentai2w.com(720p, 480p, 360p)](https://hentai2w.com)                          |         ?          |:heavy_check_mark:|
 | [hentaicloud.com(720p)](https://www.hentaicloud.com)                            |        :x:         |:heavy_check_mark:|
