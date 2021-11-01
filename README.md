@@ -44,7 +44,7 @@ get-sauce [OPTIONS] URL [URLs...]
 ### Download example
 
 ```console
-get-sauce https://hanime.tv/videos/hentai/kuro-gal-ni-natta-kara-shin-yuu-to-shite-mita-season-1
+get-sauce https://hentaimama.io/episodes/torokase-orgasm-animation-episode-1/
 ```
 
 > Note: wrap the URL(s) in quotation marks if it contains special characters.  
@@ -53,42 +53,48 @@ get-sauce https://hanime.tv/videos/hentai/kuro-gal-ni-natta-kara-shin-yuu-to-shi
 The ```-i``` option displays all available quality of video without downloading.
 
 ```console
-get-sauce -i https://hanime.tv/videos/hentai/netosis-1
+get-sauce -i https://hentaimama.io/episodes/torokase-orgasm-animation-episode-1/
 
- Site:      https://hanime.tv/
- Title:     Netosis 1
+ Site:      https://hentaimama.io/
+ Title:     Torokase Orgasm The Animation Episode 1
  Type:      video
  Streams:   # All available qualities
      [0]  -------------------
-     Info:            netosis-1-1080p-v1x.mp4-v1x.m3u8
-     Quality:         1080p; 1920 x 1080
-     Parts:           55
-     Size:            276.00 MB (276000000 Bytes)
-     # download with: get-sauce -s 0 ...
+     Info:            Mirror 1
+     Quality:         unknown
+     Size:            186.26 MB (186261816 Bytes)
+     # download with: go-hentai-scraper -s 0 ...
 
 
      [1]  -------------------
-     Info:            netosis-1-720p-v1x.mp4-v1x.m3u8
-     Quality:         720p; 1280 x 720
-     Parts:           55
-     Size:            141.00 MB (141000000 Bytes)
-     # download with: get-sauce -s 1 ...
+     Info:            Mirror 2
+     Quality:         unknown
+     Size:            186.26 MB (186261816 Bytes)
+     # download with: go-hentai-scraper -s 1 ...
 
 
      [2]  -------------------
-     Info:            netosis-1-480p-v1x.mp4-v1x.m3u8
-     Quality:         480p; 854 x 480
-     Parts:           56
-     Size:            69.00 MB (69000000 Bytes)
-     # download with: get-sauce -s 2 ...
+     Info:            Mirror 3
+     Quality:         1280x720
+     Parts:           562
+     Size:            0.00 MB (0 Bytes)
+     # download with: go-hentai-scraper -s 2 ...
 
 
      [3]  -------------------
-     Info:            netosis-1-360p-v1x.mp4-v1x.m3u8
-     Quality:         360p; 640 x 360
-     Parts:           56
-     Size:            49.00 MB (49000000 Bytes)
-     # download with: get-sauce -s 3 ...
+     Info:            Mirror 3
+     Quality:         842x480
+     Parts:           562
+     Size:            0.00 MB (0 Bytes)
+     # download with: go-hentai-scraper -s 3 ...
+
+
+     [4]  -------------------
+     Info:            Mirror 3
+     Quality:         640x360
+     Parts:           562
+     Size:            0.00 MB (0 Bytes)
+     # download with: go-hentai-scraper -s 4 ...
 ```
 
 The default stream is 0 and it also offers the best available quality. If you want to download a different quality or from a mirrored server you can manually choose a stream with ```-s```.
@@ -203,7 +209,6 @@ The URLs will be downloaded one by one.
 | [e-hentai.org](http://e-hentai.org/)                                            | :heavy_check_mark: |        ?         |
 | [ecchi.iwara.tv](https://ecchi.iwara.tv/)                                       | :heavy_check_mark: |:heavy_check_mark:|
 | [exhentai.org*](http://exhentai.org/)                                           | :heavy_check_mark: |        ?         |
-| [hanime.tv(1080p, 720p, 480p, 360p)](https://hanime.tv)                         |        :x:         |:heavy_check_mark:|
 | [hentai2read.com](https://hentai2read.com)                                      | :heavy_check_mark: |        ?         |
 | [hentai2w.com(720p, 480p, 360p)](https://hentai2w.com)                          |         ?          |:heavy_check_mark:|
 | [hentaicloud.com(720p)](https://www.hentaicloud.com)                            |        :x:         |:heavy_check_mark:|
