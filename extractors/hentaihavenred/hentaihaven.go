@@ -24,6 +24,7 @@ const site = "https://hentaihaven.red"
 const api = "https://hentaihaven.red/wp-admin/admin-ajax.php"
 
 var rePostID = regexp.MustCompile(site + `/\?p=(\d+)`)
+var rePlayer = regexp.MustCompile(`https://htstreaming.com/player/index.php\?data=[^"]+`)
 
 type extractor struct{}
 
@@ -106,9 +107,7 @@ func extractData(URL string) (static.Data, error) {
 		return static.Data{}, err
 	}
 
-	re := regexp.MustCompile(`https://htstreaming.com/player/index.php\?data=[^"]+`)
-
-	data, err := htstreaming.ExtractData(re.FindString(embedData.EmbedURL))
+	data, err := htstreaming.ExtractData(rePlayer.FindString(embedData.EmbedURL))
 	if err != nil {
 		return static.Data{}, err
 	}

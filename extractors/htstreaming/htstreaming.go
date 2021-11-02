@@ -103,6 +103,8 @@ func ExtractData(URL string) (static.Data, error) {
 			return static.Data{}, err
 		}
 
+		htmlString = strings.ReplaceAll(htmlString, `\`, ``)
+
 		re = regexp.MustCompile(`[^"]*index.php\?data[^"]*`)
 		playerURL = re.FindString(htmlString)
 		if playerURL == "" {
