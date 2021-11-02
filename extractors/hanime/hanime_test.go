@@ -1,8 +1,7 @@
-package muchohentai
+package hanime
 
-// disabled because of stronger cloudflare protection
+import "testing"
 
-/*
 func TestParseURL(t *testing.T) {
 	tests := []struct {
 		name string
@@ -10,17 +9,13 @@ func TestParseURL(t *testing.T) {
 		want int
 	}{
 		{
-			name: "Single Episode",
-			url:  "https://muchohentai.com/aBo4Rk/158393/",
+			name: "Single Episode hanime.io/",
+			url:  "https://hanime.io/hentai/torokase-orgasm-1/",
 			want: 1,
 		}, {
-			name: "Genre",
-			url:  "https://muchohentai.com/g/1080p/",
-			want: 24,
-		}, {
-			name: "Series",
-			url:  "https://muchohentai.com/s/overflow/",
-			want: 24,
+			name: "Overview hanime.io/",
+			url:  "https://hanime.io/genre/adventure/",
+			want: 35,
 		},
 	}
 	for _, tt := range tests {
@@ -33,7 +28,6 @@ func TestParseURL(t *testing.T) {
 	}
 }
 
-
 func TestExtract(t *testing.T) {
 	tests := []struct {
 		name string
@@ -41,13 +35,13 @@ func TestExtract(t *testing.T) {
 		want int
 	}{
 		{
-			name: "Single Episode",
-			url:  "https://muchohentai.com/aBo4Rk/158393/",
-			want: 24,
-		}, {
-			name: "Single Episode Single Stream",
-			url:  "https://muchohentai.com/aBo4Rk/161377/",
+			name: "Single Episode hanime.io/",
+			url:  "https://hanime.io/hentai/torokase-orgasm-1/",
 			want: 1,
+		}, {
+			name: "Overview hanime.io/",
+			url:  "https://hanime.io/genre/adventure/",
+			want: 2,
 		},
 	}
 	for _, tt := range tests {
@@ -56,9 +50,9 @@ func TestExtract(t *testing.T) {
 			if err != nil {
 				t.Error(err)
 			}
-			if len(data) > tt.want {
+			if len(data) > tt.want || len(data) == 0 {
 				t.Errorf("Got: %v - want: %v", len(data), tt.want)
 			}
 		})
 	}
-}*/
+}

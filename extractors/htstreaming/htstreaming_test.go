@@ -12,6 +12,10 @@ func TestParseURL(t *testing.T) {
 		want int
 	}{
 		{
+			name: "Single Episode hentaihaven.com",
+			url:  "https://hentaihaven.com/soshite-watashi-wa-sensei-ni-episode-1/",
+			want: 1,
+		}, {
 			name: "Single Episode uncensoredhentai.xxx",
 			url:  "https://uncensoredhentai.xxx/watch/mako-chan-kaihatsu-nikki-episode-1/",
 			want: 1,
@@ -70,6 +74,10 @@ func TestExtract(t *testing.T) {
 		want int
 	}{
 		{
+			name: "Single Episode hentaihaven.com",
+			url:  "https://hentaihaven.com/soshite-watashi-wa-sensei-ni-episode-1/",
+			want: 1,
+		}, {
 			name: "Single Episode uncensoredhentai.xxx",
 			url:  "https://uncensoredhentai.xxx/watch/mako-chan-kaihatsu-nikki-episode-1/",
 			want: 1,
