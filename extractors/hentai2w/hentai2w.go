@@ -56,7 +56,7 @@ func extractData(URL string) (static.Data, error) {
 		return static.Data{}, err
 	}
 
-	re := regexp.MustCompile(`<source src="([^"]+)"`)
+	re := regexp.MustCompile(`<source.*src="([^"]+)"`)
 	videoURL := utils.GetLastItemString(re.FindStringSubmatch(htmlString))
 	if videoURL == "" || strings.HasPrefix(videoURL, "<") {
 		return static.Data{}, static.ErrDataSourceParseFailed
