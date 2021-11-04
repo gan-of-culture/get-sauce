@@ -149,6 +149,12 @@ func Headers(url, refer string) (http.Header, error) {
 
 // Size get size of the url
 func Size(url, refer string) (int64, error) {
+	// if you are trying to scrape more than one thing
+	// sending size request just make it slower thinking of image boards etc.
+	if config.Amount != 0 {
+		return 0, nil
+	}
+
 	headers, err := Headers(url, refer)
 	if err != nil {
 		return 0, err
