@@ -33,6 +33,19 @@ func TestGet(t *testing.T) {
 	})
 }
 
+func TestPost(t *testing.T) {
+	t.Run("Default test", func(t *testing.T) {
+		data, err := PostAsBytesWithHeaders("https://www.google.com/", map[string]string{"Referer": "https://google.com"})
+		if err != nil {
+			t.Error(err)
+		}
+
+		if len(data) < 1 {
+			t.Errorf("Got: %v - want: %v", data, "some bytes")
+		}
+	})
+}
+
 func TestGetWReferer(t *testing.T) {
 	t.Run("Default test", func(t *testing.T) {
 		htmlString, err := GetWithHeaders("https://github.com/", map[string]string{

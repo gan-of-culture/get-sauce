@@ -128,13 +128,13 @@ func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 func parseURL(URL string) []string {
 	slug := rePost.FindStringSubmatch(URL)
 	if len(slug) == 2 {
-		htmlString, err := request.Get(postsAPI + "slug=" + slug[1])
+		jsonData, err := request.GetAsBytes(postsAPI + "slug=" + slug[1])
 		if err != nil {
 			return nil
 		}
 
 		posts := []post{}
-		err = json.Unmarshal([]byte(htmlString), &posts)
+		err = json.Unmarshal(jsonData, &posts)
 		if err != nil {
 			return nil
 		}
@@ -171,7 +171,7 @@ func parseURL(URL string) []string {
 	out := []string{}
 	count := 0
 	for i := int(currentPage); ; {
-		htmlString, err := request.Get(fmt.Sprintf(tmpURL, i))
+		jsonData, err := request.GetAsBytes(fmt.Sprintf(tmpURL, i))
 		if err != nil {
 			return nil
 		}
@@ -180,7 +180,10 @@ func parseURL(URL string) []string {
 		}
 
 		posts := []post{}
-		json.Unmarshal([]byte(htmlString), &posts)
+		err = json.Unmarshal(jsonData, &posts)
+		if err != nil {
+			return nil
+		}
 
 		for _, v := range posts {
 			out = append(out, fmt.Sprint(v.ID))
@@ -201,13 +204,13 @@ func parseURL(URL string) []string {
 
 func extractData(pID string) ([]*static.Data, error) {
 	//set per_page value to max (100) I have seen posts that contain 20+ images
-	mediaJSON, err := request.Get(mediaAPI + pID + "&per_page=100")
+	mediaJSON, err := request.GetAsBytes(mediaAPI + pID + "&per_page=100")
 	if err != nil {
 		return nil, err
 	}
 
 	mS := []media{}
-	err = json.Unmarshal([]byte(mediaJSON), &mS)
+	err = json.Unmarshal(mediaJSON, &mS)
 	if err != nil {
 		return nil, err
 	}
@@ -287,13 +290,13 @@ func remove(s []media, i int) []media {
 }
 
 func getTagIDFromSlug(slug string) string {
-	jsonStr, err := request.Get(tagsAPI + slug)
+	jsonData, err := request.GetAsBytes(tagsAPI + slug)
 	if err != nil {
 		return ""
 	}
 
 	tags := []tag{}
-	err = json.Unmarshal([]byte(jsonStr), &tags)
+	err = json.Unmarshal(jsonData, &tags)
 	if err != nil {
 		return ""
 	}

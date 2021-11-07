@@ -54,7 +54,7 @@ func DefaultClient() *http.Client {
 			IdleConnTimeout:     5 * time.Second,
 			//DisableKeepAlives:   true,
 		}},
-		Timeout: 5 * time.Minute,
+		Timeout: 10 * time.Minute,
 	}
 }
 
@@ -88,38 +88,94 @@ func Request(method string, url string, headers map[string]string, body io.Reade
 
 // Get content as string
 func Get(url string) (string, error) {
-	resp, err := Request(http.MethodGet, url, nil, nil)
+	body, err := GetAsBytes(url)
 	if err != nil {
 		return "", err
-	}
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		if err != io.ErrUnexpectedEOF {
-			return "", err
-		}
 	}
 
 	return string(body), nil
 }
 
-// GetWithHeaders content as string
-func GetWithHeaders(url string, headers map[string]string) (string, error) {
-	resp, err := Request(http.MethodGet, url, headers, nil)
+// GetAsBytes content as string
+func GetAsBytes(url string) ([]byte, error) {
+	resp, err := Request(http.MethodGet, url, nil, nil)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 	defer resp.Body.Close()
 
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		if err != io.ErrUnexpectedEOF {
-			return "", err
+			return nil, err
 		}
 	}
 
+	return body, nil
+}
+
+// PostAsBytes content as string
+func PostAsBytes(url string) ([]byte, error) {
+	resp, err := Request(http.MethodPost, url, nil, nil)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		if err != io.ErrUnexpectedEOF {
+			return nil, err
+		}
+	}
+
+	return body, nil
+}
+
+// GetWithHeaders content as string
+func GetWithHeaders(url string, headers map[string]string) (string, error) {
+	body, err := GetAsBytesWithHeaders(url, headers)
+	if err != nil {
+		return "", err
+	}
+
 	return string(body), nil
+}
+
+// GetAsBytesWithHeaders content as string
+func GetAsBytesWithHeaders(url string, headers map[string]string) ([]byte, error) {
+	resp, err := Request(http.MethodGet, url, headers, nil)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		if err != io.ErrUnexpectedEOF {
+			return nil, err
+		}
+	}
+
+	return body, nil
+}
+
+// PostAsBytesWithHeaders content as string
+func PostAsBytesWithHeaders(url string, headers map[string]string) ([]byte, error) {
+	resp, err := Request(http.MethodPost, url, headers, nil)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		if err != io.ErrUnexpectedEOF {
+			return nil, err
+		}
+	}
+
+	return body, nil
 }
 
 // Headers return the HTTP Headers of the url
