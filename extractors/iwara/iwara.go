@@ -143,13 +143,13 @@ func extractData(URL string) ([]*static.Data, error) {
 		return nil, static.ErrURLParseFailed
 	}
 
-	jsonString, err := request.Get(videoAPI + videoID)
+	jsonData, err := request.GetAsBytes(videoAPI + videoID)
 	if err != nil {
 		return nil, err
 	}
 
 	vStreams := []stream{}
-	err = json.Unmarshal([]byte(jsonString), &vStreams)
+	err = json.Unmarshal(jsonData, &vStreams)
 	if err != nil {
 		return nil, err
 	}

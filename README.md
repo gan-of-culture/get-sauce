@@ -196,6 +196,8 @@ The URLs will be downloaded one by one.
 
 ## Supported sites
 
+The following links will direct you to adult content. Please keep that in mind!
+
 | Site                                                                     | Images             | Videos           |
 | --------------------------------------------------------------------------------|:------------------:|:----------------:|
 | [9hentai.to/ru](https://9hentai.to/)                                            | :heavy_check_mark: |        ?         |
@@ -215,6 +217,7 @@ The URLs will be downloaded one by one.
 | [hentaicloud.com(720p)](https://www.hentaicloud.com)                            |        :x:         |:heavy_check_mark:|
 | [hentaidude.com(720p, 480, 360p)](https://hentaidude.com/)                      |         ?          |:heavy_check_mark:|
 | [hentaiera.com](https://hentaiera.com)                                          | :heavy_check_mark: |         ?        |
+| [hentaiff.com (1080p, 720p, 480p)](https://hentaiff.com)                        |         ?          |:heavy_check_mark:|
 | [hentaifox.com](https://hentaifox.com)                                          | :heavy_check_mark: |         ?        |
 | [hentaihaven.com (1080p, 720p, 480p, 360p)](https://hentaihaven.com)            |         ?          |:heavy_check_mark:|
 | [hentaihaven.red (1080p, 720p, 480p, 360p)](https://hentaihaven.red)            |         ?          |:heavy_check_mark:|

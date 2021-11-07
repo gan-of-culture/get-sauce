@@ -76,7 +76,7 @@ func parseURL(url string) (string, error) {
 }
 
 func extractData(queryURL string) ([]*static.Data, error) {
-	jsonString, err := request.Get(queryURL)
+	jsonData, err := request.GetAsBytes(queryURL)
 	if err != nil {
 		fmt.Println(queryURL)
 		return nil, err
@@ -86,7 +86,7 @@ func extractData(queryURL string) ([]*static.Data, error) {
 	//single post
 	if !strings.Contains(queryURL, "=") {
 		entity := Entity{}
-		err := json.Unmarshal([]byte(jsonString), &entity)
+		err := json.Unmarshal(jsonData, &entity)
 		if err != nil {
 			fmt.Println(queryURL)
 			return nil, err
@@ -102,18 +102,18 @@ func extractData(queryURL string) ([]*static.Data, error) {
 				break
 			}
 			entitySliceTmp := EntitySlice{}
-			err = json.Unmarshal([]byte(jsonString), &entitySliceTmp)
+			err = json.Unmarshal(jsonData, &entitySliceTmp)
 			if err != nil {
 				fmt.Println(queryURL)
 				fmt.Println("Cursor", cursor)
-				fmt.Println(jsonString)
+				fmt.Println(jsonData)
 			}
 			if len(entitySliceTmp.Data) == 0 && err == nil {
 				break
 			}
 			entitySlice.Data = append(entitySlice.Data, entitySliceTmp.Data...)
 			cursor += 50
-			jsonString, err = request.Get(fmt.Sprintf("%s&cursor=%d", queryURL, cursor))
+			jsonData, err = request.GetAsBytes(fmt.Sprintf("%s&cursor=%d", queryURL, cursor))
 			fmt.Printf("%s&cursor=%d", queryURL, cursor)
 			if err != nil {
 				return nil, err
