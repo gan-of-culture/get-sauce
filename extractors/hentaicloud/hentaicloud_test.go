@@ -36,7 +36,7 @@ func TestExtract(t *testing.T) {
 	}{
 		{
 			name: "Single Episode",
-			url:  "https://www.hentaicloud.com/video/3366/rikujoubu-joshi-wa-ore-no-nama-onaho-the-animation/episode2/english",
+			url:  "https://www.hentaicloud.com/video/750/boy-meets-harem-the-animation/episode1",
 			want: 1,
 		}, {
 			name: "Group",
