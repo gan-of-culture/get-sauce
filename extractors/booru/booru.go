@@ -118,14 +118,14 @@ func extractData(queryURL string) ([]*static.Data, error) {
 			if err != nil {
 				return nil, err
 			}
-			time.Sleep(100 * time.Millisecond)
+			time.Sleep(50 * time.Millisecond)
 		}
 	}
 
 	data := []*static.Data{}
 	for _, e := range entitySlice.Data {
-		tType, tVal := GetBestQualityImg(e.Transforms)
-		ext := GetFileExt(tType)
+		tType, tVal := getBestQualityImg(e.Transforms)
+		ext := getFileExt(tType)
 		size, _ := request.Size(fmt.Sprintf("%s%s", apiDataURL, tVal), site)
 
 		data = append(data, &static.Data{
@@ -151,8 +151,7 @@ func extractData(queryURL string) ([]*static.Data, error) {
 	return data, nil
 }
 
-// GetBestQualityImg of transformation
-func GetBestQualityImg(transformations map[string]string) (string, string) {
+func getBestQualityImg(transformations map[string]string) (string, string) {
 	re := regexp.MustCompile(`[0-9]+`)
 	transformationType := ""
 	transformationValue := ""
@@ -173,8 +172,7 @@ func GetBestQualityImg(transformations map[string]string) (string, string) {
 	return transformationType, transformationValue
 }
 
-// GetFileExt of transformation
-func GetFileExt(tranformation string) string {
+func getFileExt(tranformation string) string {
 	transSplit := strings.Split(tranformation, "/")
 	if len(transSplit) > 1 {
 		if transSplit[1] == "jpeg" {

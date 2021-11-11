@@ -36,7 +36,7 @@ func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 }
 
 func parseURL(URL string) []string {
-	if ok, _ := regexp.MatchString(`https://www.hentaicloud.com/video/\d*/[^/]*/episode\d*/`, URL); ok {
+	if ok, _ := regexp.MatchString(`https://www.hentaicloud.com/video/\d*/[^/]*/episode\d*/*`, URL); ok {
 		return []string{URL}
 	}
 
