@@ -11,7 +11,7 @@ import (
 	"github.com/gan-of-culture/get-sauce/utils"
 )
 
-type PlayerData struct {
+type playerData struct {
 	HostList struct {
 		Num1 []string `json:"1"`
 	} `json:"hostList"`
@@ -63,6 +63,7 @@ func New() static.Extractor {
 	return &extractor{}
 }
 
+// Extract data from URL
 func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 	URLs := parseURL(URL)
 	if len(URLs) == 0 {
@@ -124,7 +125,7 @@ func extractData(URL string) (static.Data, error) {
 	//remove trailing js ", false);"
 	matchedPlayerData = matchedPlayerData[:len(matchedPlayerData)-10]
 
-	playerData := PlayerData{}
+	playerData := playerData{}
 	err = json.Unmarshal([]byte(matchedPlayerData), &playerData)
 	if err != nil {
 		return static.Data{}, err

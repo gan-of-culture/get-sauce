@@ -31,8 +31,8 @@ type downloadInfo struct {
 	Title string
 }
 
-// Downloader instance
-type Downloader struct {
+// downloaderStruct instance
+type downloaderStruct struct {
 	stream      *static.Stream
 	client      *http.Client
 	filePath    string
@@ -46,8 +46,8 @@ func init() {
 }
 
 // New instance of Downloader
-func New(bar bool) *Downloader {
-	return &Downloader{
+func New(bar bool) *downloaderStruct {
+	return &downloaderStruct{
 		client:   request.DefaultClient(),
 		filePath: config.OutputPath,
 		bar:      bar,
@@ -55,7 +55,7 @@ func New(bar bool) *Downloader {
 }
 
 // Download extracted data
-func (downloader *Downloader) Download(data *static.Data) error {
+func (downloader *downloaderStruct) Download(data *static.Data) error {
 	if config.ShowInfo {
 		printInfo(data)
 		return nil
@@ -201,7 +201,7 @@ func (downloader *Downloader) Download(data *static.Data) error {
 	return nil
 }
 
-func (downloader *Downloader) save(url static.URL, fileURI string) error {
+func (downloader *downloaderStruct) save(url static.URL, fileURI string) error {
 
 	file, err := os.Create(fileURI)
 	if err != nil {
@@ -217,7 +217,7 @@ func (downloader *Downloader) save(url static.URL, fileURI string) error {
 	return downloader.writeFile(url.URL, file)
 }
 
-func (downloader *Downloader) concurWriteFile(URL string, file *os.File) error {
+func (downloader *downloaderStruct) concurWriteFile(URL string, file *os.File) error {
 	fileSize := downloader.stream.Size
 	pieceSize := int64(10_000_000)
 
@@ -315,7 +315,7 @@ func (downloader *Downloader) concurWriteFile(URL string, file *os.File) error {
 	return nil
 }
 
-func (downloader *Downloader) writeFile(URL string, file *os.File) error {
+func (downloader *downloaderStruct) writeFile(URL string, file *os.File) error {
 	// Supply http request with headers to ensure a higher possibility of success
 	req, err := http.NewRequest(http.MethodGet, URL, nil)
 	if err != nil {
@@ -359,7 +359,7 @@ func (downloader *Downloader) writeFile(URL string, file *os.File) error {
 	return nil
 }
 
-func (downloader *Downloader) initPB(len int64, descr string, asBytes bool) {
+func (downloader *downloaderStruct) initPB(len int64, descr string, asBytes bool) {
 	if !downloader.bar {
 		return
 	}

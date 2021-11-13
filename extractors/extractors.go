@@ -12,12 +12,14 @@ import (
 	"github.com/gan-of-culture/get-sauce/extractors/hanime"
 	"github.com/gan-of-culture/get-sauce/extractors/hentai2read"
 	"github.com/gan-of-culture/get-sauce/extractors/hentai2w"
+	"github.com/gan-of-culture/get-sauce/extractors/hentaibar"
 	"github.com/gan-of-culture/get-sauce/extractors/hentaicloud"
 	"github.com/gan-of-culture/get-sauce/extractors/hentaidude"
 	"github.com/gan-of-culture/get-sauce/extractors/hentaiff"
 	"github.com/gan-of-culture/get-sauce/extractors/hentaihaven"
 	"github.com/gan-of-culture/get-sauce/extractors/hentaihavenred"
 	"github.com/gan-of-culture/get-sauce/extractors/hentaimama"
+	"github.com/gan-of-culture/get-sauce/extractors/hentaimoon"
 	"github.com/gan-of-culture/get-sauce/extractors/hentaipulse"
 	"github.com/gan-of-culture/get-sauce/extractors/hentais"
 	"github.com/gan-of-culture/get-sauce/extractors/hentaistream"
@@ -52,51 +54,51 @@ func init() {
 	extractorsMap = map[string]static.Extractor{
 		"": universal.New(),
 
-		"9hentai.to":           ninehentaiExtractor,
-		"www1.9hentai.ru":      ninehentaiExtractor,
-		"booru.io":             booru.New(),
-		"comicporn.xxx":        htdoujinExtractor,
-		"www.damn.stream":      damnExtractor,
-		"damn.stream":          damnExtractor,
-		"danbooru.donmai.us":   danbooru.New(),
-		"doujin.sexy":          simplyhentaiExtractor,
-		"e-hentai.org":         ehentai.New(),
-		"ecchi.iwara.tv":       iwara.New(),
-		"exhentai.org":         exhentai.New(),
-		"hanime.io":            hanime.New(),
-		"hentai2read.com":      hentai2read.New(),
-		"hentai2w.com":         hentai2w.New(),
-		"www.hentaicloud.com":  hentaicloud.New(),
-		"hentaidude.com":       hentaidude.New(),
-		"hentaiera.com":        htdoujinExtractor,
-		"hentaiff.com":         hentaiff.New(),
-		"hentaifox.com":        htdoujinExtractor,
-		"hentaihaven.xxx":      hentaihaven.New(),
-		"hentaimama.io":        hentaimama.New(),
-		"www.hentais.tube":     hentais.New(),
-		"hentaistream.moe":     hentaistream.New(),
-		"hentaihaven.com":      htstreamingExtactor,
-		"hentaistream.xxx":     htstreamingExtactor,
-		"hentaihaven.red":      hentaihavenred.New(),
-		"hentai.tv":            htstreamingExtactor,
-		"animeidhentai.com":    htstreamingExtactor,
-		"hentai.pro":           htstreamingExtactor,
-		"uncensoredhentai.xxx": htstreamingExtactor,
-		"hentaipulse.com":      hentaipulse.New(),
-		"hentaiworld.tv":       hentaiworld.New(),
-		"hentaiyes.com":        hentaiyes.New(),
-		"hitomi.la":            hitomi.New(),
-		"imhentai.xxx":         htdoujinExtractor,
-		"miohentai.com":        miohentai.New(),
-		//"muchohentai.com":       muchohentai.New(),
+		"9hentai.to":            ninehentaiExtractor,
+		"www1.9hentai.ru":       ninehentaiExtractor,
+		"booru.io":              booru.New(),
+		"comicporn.xxx":         htdoujinExtractor,
+		"www.damn.stream":       damnExtractor,
+		"damn.stream":           damnExtractor,
+		"danbooru.donmai.us":    danbooru.New(),
+		"doujin.sexy":           simplyhentaiExtractor,
+		"e-hentai.org":          ehentai.New(),
+		"ecchi.iwara.tv":        iwara.New(),
+		"exhentai.org":          exhentai.New(),
+		"hanime.io":             hanime.New(),
+		"hentai-moon.com":       hentaimoon.New(),
+		"hentai2read.com":       hentai2read.New(),
+		"hentai2w.com":          hentai2w.New(),
+		"hentaibar.com":         hentaibar.New(),
+		"www.hentaicloud.com":   hentaicloud.New(),
+		"hentaidude.com":        hentaidude.New(),
+		"hentaiera.com":         htdoujinExtractor,
+		"hentaiff.com":          hentaiff.New(),
+		"hentaifox.com":         htdoujinExtractor,
+		"hentaihaven.xxx":       hentaihaven.New(),
+		"hentaimama.io":         hentaimama.New(),
+		"www.hentais.tube":      hentais.New(),
+		"hentaistream.moe":      hentaistream.New(),
+		"hentaihaven.com":       htstreamingExtactor,
+		"hentaistream.xxx":      htstreamingExtactor,
+		"hentaihaven.red":       hentaihavenred.New(),
+		"hentai.tv":             htstreamingExtactor,
+		"animeidhentai.com":     htstreamingExtactor,
+		"hentai.pro":            htstreamingExtactor,
+		"uncensoredhentai.xxx":  htstreamingExtactor,
+		"hentaipulse.com":       hentaipulse.New(),
+		"hentaiworld.tv":        hentaiworld.New(),
+		"hentaiyes.com":         hentaiyes.New(),
+		"hitomi.la":             hitomi.New(),
+		"imhentai.xxx":          htdoujinExtractor,
+		"miohentai.com":         miohentai.New(),
 		"nhentai.net":           nhentai.New(),
 		"ohentai.org":           ohentai.New(),
 		"pururin.to":            pururin.New(),
 		"rule34.paheal.net":     rule34.New(),
 		"www.simply-hentai.com": simplyhentaiExtractor,
 		"thehentaiworld.com":    thehentaiworld.New(),
-		//"www.tsumino.com":       tsumino.New(),
-		"zhentube.com": zhentube.New(),
+		"zhentube.com":          zhentube.New(),
 	}
 }
 
