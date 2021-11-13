@@ -1,6 +1,7 @@
 package hentaicloud
 
 import (
+	"fmt"
 	"regexp"
 
 	"github.com/gan-of-culture/get-sauce/request"
@@ -17,6 +18,7 @@ func New() static.Extractor {
 	return &extractor{}
 }
 
+// Extract data from URL
 func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 	URLs := parseURL(URL)
 	if len(URLs) == 0 {
@@ -62,30 +64,38 @@ func extractData(URL string) (static.Data, error) {
 	}
 	title := utils.GetMeta(&htmlString, "og:title")
 
-	re := regexp.MustCompile(`(https://www.hentaicloud.com/media/videos/hd/\d*\.([^"]*)).+res="([^"]*)`)
-	srcTag := re.FindStringSubmatch(htmlString) //1=URL 2=ext 3=resolution
-	if len(srcTag) != 4 {
+	re := regexp.MustCompile(`source src="(https://www.hentaicloud.com/media/videos/[^.]+([^"]+)).+res="([^"]*)`)
+	srcTags := re.FindAllStringSubmatch(htmlString, -1) //1=URL 2=ext 3=resolution
+	if len(srcTags) < 1 {
 		return static.Data{}, static.ErrDataSourceParseFailed
 	}
 
-	size, _ := request.Size(srcTag[1], URL)
+	streams := map[string]*static.Stream{}
+	dataLen := len(srcTags)
+	for i, source := range srcTags {
+		if len(source) != 4 {
+			return static.Data{}, static.ErrDataSourceParseFailed
+		}
+
+		size, _ := request.Size(source[1], URL)
+
+		streams[fmt.Sprint(dataLen-i-1)] = &static.Stream{
+			URLs: []*static.URL{
+				{
+					URL: source[1],
+					Ext: source[2],
+				},
+			},
+			Quality: source[3] + "p",
+			Size:    size,
+		}
+	}
 
 	return static.Data{
-		Site:  site,
-		Title: title,
-		Type:  "video",
-		Streams: map[string]*static.Stream{
-			"0": {
-				URLs: []*static.URL{
-					{
-						URL: srcTag[1],
-						Ext: srcTag[2],
-					},
-				},
-				Quality: srcTag[3],
-				Size:    size,
-			},
-		},
-		Url: URL,
+		Site:    site,
+		Title:   title,
+		Type:    "video",
+		Streams: streams,
+		Url:     URL,
 	}, nil
 }

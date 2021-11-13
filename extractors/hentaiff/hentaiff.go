@@ -41,6 +41,7 @@ func New() static.Extractor {
 	return &extractor{}
 }
 
+// Extract data from URL
 func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 	URLs := parseURL(URL)
 	if len(URLs) == 0 {
