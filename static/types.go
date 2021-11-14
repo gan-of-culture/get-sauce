@@ -47,6 +47,9 @@ type Data struct {
 	// Streams of different quality or mirrors
 	Streams map[string]*Stream `json:"streams"`
 
+	// Caption this includes (CC, OC or Subtitles)
+	Caption *URL
+
 	// Url that was supplied to the scraper
 	Url string `json:"sourceUrl"`
 }

@@ -10,6 +10,7 @@ import (
 )
 
 var reSingleURL = regexp.MustCompile(`https://hentai-moon.com/videos/\d+/[^/]+`)
+var reSubtitles = regexp.MustCompile(`//.*?\.vtt`)
 
 const site = "https://hentai-moon.com"
 
@@ -63,6 +64,15 @@ func extractData(URL string) (static.Data, error) {
 
 	data[0].Site = site
 	data[0].Title = utils.GetH1(&htmlString, -1)
+
+	subtitleURL := reSubtitles.FindString(htmlString)
+	if subtitleURL != "" {
+		data[0].Caption = &static.URL{
+			URL: "https:" + subtitleURL,
+			Ext: utils.GetFileExt(subtitleURL),
+		}
+	}
+
 	data[0].Url = URL
 
 	return *data[0], nil

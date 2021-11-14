@@ -33,6 +33,10 @@ func printHeader(data *static.Data) {
 	fmt.Printf("\n Site:      %s", data.Site)
 	fmt.Printf("\n Title:     %s", data.Title)
 	fmt.Printf("\n Type:      %s", data.Type)
+
+	if data.Caption.URL != "" {
+		fmt.Println("\n Caption:   has to be downloaded separately with the option -c")
+	}
 }
 
 func printStream(key string, stream *static.Stream) {

@@ -9,6 +9,7 @@ Is a hentai scraper that is not using official APIs if they are restrictive. Thi
 - [Getting started](#getting-started)
   - [Download example](#download-example)
   - [Multiple inputs](#multiple-inputs)
+  - [Captions](#captions)
 - [Options](#options)
 - [Supported sites](#supported-sites)
 - [Credit](#credit)
@@ -131,10 +132,56 @@ get-sauce -i https://nhentai.net/g/364616/ https://nhentai.net/g/364591/
 
 The URLs will be downloaded one by one.
 
+### Captions
+
+For most of the sites the captions (CC, OC or Subtitles) are hard encoded into the video file and can't be downloaded separately. If it is not encoded into the video and a Caption file was found you can download it with the option ```-c```.
+
+To see if the caption will be downloaded into an extra file you can look at your data's information with the option ```-i```. You'll see extra information if the option ```-c ``` can be used:
+```
+console
+
+get-sauce -i "https://hentai-moon.com/videos/285/isekai-harem-monogatari-ep-1/"                                                                                                                   (base) 
+
+ Site:      https://hentai-moon.com
+ Title:     Isekai Harem Monogatari Ep.1
+ Type:      video
+ Caption:   has to be downloaded separately with the option -c
+
+ Streams:   # All available qualities
+     [0]  -------------------
+     Quality:         unknown
+     Size:            78.44 MB (78441598 Bytes)
+     # download with: go-hentai-scraper -s 0 ...
+
+```
+
 ## Options
 
 ```console
 
+ -a              Amount of files (image boards only)
+
+ get-sauce -a 5000 http...
+
+--------------------------------------------------------------------------------
+
+ -c              Download caption if separate to a extra file
+
+ get-sauce -c http...
+
+--------------------------------------------------------------------------------
+ 
+ -i             Show info for the provided URL
+
+ get-sauce -i http...
+
+--------------------------------------------------------------------------------
+
+ -j             Show extracted data for the provided URL
+
+ get-sauce -j http...
+
+--------------------------------------------------------------------------------
  -o             Output name of the file
 
  get-sauce -o myfilename http...
@@ -147,27 +194,21 @@ The URLs will be downloaded one by one.
 
 --------------------------------------------------------------------------------
 
+ -p              Enter pages like 1,2,3-4,6,7,8-9 for doujins
+
+ get-sauce -p 1,2,3-4 http...
+
+--------------------------------------------------------------------------------
+
  -q             Quiet mode - show minimal information 
 
  get-sauce -q http...
 
 --------------------------------------------------------------------------------
 
--r             Restrict content -> don't download senisble content (e-hentai.org only)
+ -r             Restrict content -> don't download senisble content (e-hentai.org only)
 
  get-sauce -r http...
-
---------------------------------------------------------------------------------
-
- -j             Show extracted data for the provided URL
-
- get-sauce -j http...
-
---------------------------------------------------------------------------------
-
- -i             Show info for the provided URL
-
- get-sauce -i http...
 
 --------------------------------------------------------------------------------
 
@@ -181,24 +222,14 @@ The URLs will be downloaded one by one.
 
  get-sauce -w 4 http...
 
---------------------------------------------------------------------------------
 
- -a              Amount of files (image boards only)
-
- get-sauce -a 5000 http...
-
---------------------------------------------------------------------------------
-
- -p              Enter pages like 1,2,3-4,6,7,8-9 for doujins
-
- get-sauce -p 1,2,3-4 http...
 ```
 
 ## Supported sites
 
 The following links will direct you to adult content. Please keep that in mind!
 
-| Site                                                                     | Images             | Videos           |
+| Site                                                                            | Images             | Videos           |
 | --------------------------------------------------------------------------------|:------------------:|:----------------:|
 | [9hentai.to/ru](https://9hentai.to/)                                            | :heavy_check_mark: |        ?         |
 | [animeidhentai.com (1080p, 720p, 480p, 360p)](https://animeidhentai.com)        |         ?          |:heavy_check_mark:|

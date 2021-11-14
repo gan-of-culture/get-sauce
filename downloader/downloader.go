@@ -153,6 +153,12 @@ func (downloader *downloaderStruct) Download(data *static.Data) error {
 		return saveErr
 	}
 
+	// download captions
+	if data.Caption.URL != "" {
+		fileURI = filepath.Join(downloader.filePath, data.Title+"_caption."+data.Caption.Ext)
+		downloader.save(*data.Caption, fileURI)
+	}
+
 	if !needsMerge {
 		return nil
 	}
