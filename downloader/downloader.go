@@ -154,9 +154,9 @@ func (downloader *downloaderStruct) Download(data *static.Data) error {
 	}
 
 	// download captions
-	if data.Caption.URL != "" {
-		fileURI = filepath.Join(downloader.filePath, data.Title+"_caption."+data.Caption.Ext)
-		downloader.save(*data.Caption, fileURI)
+	if len(data.Captions) > config.Caption {
+		fileURI = filepath.Join(downloader.filePath, fmt.Sprintf("%s_caption_%s.%s", data.Title, data.Captions[config.Caption].Language, data.Captions[config.Caption].URL.Ext))
+		downloader.save(data.Captions[config.Caption].URL, fileURI)
 	}
 
 	if !needsMerge {

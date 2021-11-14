@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"net/url"
 	"regexp"
+	"strconv"
 	"strings"
 
 	"github.com/gan-of-culture/get-sauce/downloader"
@@ -28,6 +29,9 @@ type videoData struct {
 	VideoSource   string   `json:"videoSource"`
 	DownloadLinks []source `json:"downloadLinks"`
 }
+
+var reTitle = regexp.MustCompile(`"title":"[^"]+`)
+var reVideoURL = regexp.MustCompile(`https://htstreaming.com/video/([^"]*)`)
 
 var site string
 
@@ -91,10 +95,16 @@ func parseURL(URL string) []string {
 
 // ExtractData for a single episode that is hosted by the htstreaming network
 func ExtractData(URL string) (static.Data, error) {
-	title := ""
 
 	re := regexp.MustCompile(`[^"]*index.php\?data[^"]*`)
 	playerURL := re.FindString(URL)
+	if playerURL == "" {
+		hash := utils.GetLastItemString(reVideoURL.FindStringSubmatch(URL))
+		if hash != "" {
+			playerURL = "https://htstreaming.com/player/index.php?data=" + hash
+		}
+	}
+
 	if playerURL == "" {
 
 		htmlString, err := request.Get(URL)
@@ -108,8 +118,7 @@ func ExtractData(URL string) (static.Data, error) {
 		re = regexp.MustCompile(`[^"]*index.php\?data[^"]*`)
 		playerURL = re.FindString(htmlString)
 		if playerURL == "" {
-			re = regexp.MustCompile(`https://htstreaming.com/video/([^"]*)`)
-			hash := utils.GetLastItemString(re.FindStringSubmatch(htmlString))
+			hash := utils.GetLastItemString(reVideoURL.FindStringSubmatch(htmlString))
 			if hash != "" {
 				playerURL = "https://htstreaming.com/player/index.php?data=" + hash
 			}
@@ -117,9 +126,6 @@ func ExtractData(URL string) (static.Data, error) {
 		if playerURL == "" {
 			return static.Data{}, errors.New("player URL not found")
 		}
-
-		title = strings.Split(utils.GetMeta(&htmlString, "og:title"), " - ")[0]
-		title = strings.Split(title, " | ")[0]
 
 	}
 
@@ -193,11 +199,33 @@ func ExtractData(URL string) (static.Data, error) {
 		}
 	}
 
+	htmlString, err := request.Get(playerURL)
+	if err != nil {
+		return static.Data{}, err
+	}
+
+	matchedSubtitleParams := reSubtitleParams.FindStringSubmatch(htmlString) //1=jsTemplate 2=a 3=c 4=keywords
+	if len(matchedSubtitleParams) < 5 {
+		return static.Data{}, static.ErrDataSourceParseFailed
+	}
+
+	a, err := strconv.Atoi(matchedSubtitleParams[2])
+	if err != nil {
+		return static.Data{}, err
+	}
+	c, err := strconv.Atoi(matchedSubtitleParams[3])
+	if err != nil {
+		return static.Data{}, err
+	}
+
+	jsParams := parseFirePlayerParams(matchedSubtitleParams[1], a, c, strings.Split(matchedSubtitleParams[4], "|"))
+
 	return static.Data{
-		Site:    site,
-		Title:   title,
-		Type:    "video",
-		Streams: streams,
-		Url:     URL,
+		Site:     site,
+		Title:    utils.GetLastItemString(strings.Split(reTitle.FindString(jsParams), `"`)),
+		Type:     "video",
+		Streams:  streams,
+		Captions: parseCaptions(jsParams),
+		Url:      URL,
 	}, nil
 }

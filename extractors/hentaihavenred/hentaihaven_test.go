@@ -35,11 +35,15 @@ func TestExtract(t *testing.T) {
 		want int
 	}{
 		{
-			name: "Single Episode hentaihaven.red/",
+			name: "Single Episode hentaihaven.red",
+			url:  "https://hentaihaven.red/hentai/bitch-na-inane-sama-episode-4/",
+			want: 1,
+		}, {
+			name: "[OLD] Single Episode hentaihaven.red",
 			url:  "https://hentaihaven.red/hentai/mako-chan-kaihatsu-nikki-episode-2/",
 			want: 1,
 		}, {
-			name: "Overview hentaihaven.red/",
+			name: "Overview hentaihaven.red",
 			url:  "https://hentaihaven.red/genre/2019-english/",
 			want: 4,
 			//can be more videos at the time when I am adding this it was only 4 -> normally it is 30 per site but that would be too much for testing

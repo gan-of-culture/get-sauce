@@ -10,6 +10,7 @@ type URL struct {
 
 // Stream Struct of stream
 type Stream struct {
+	// URLs that together are the stream
 	URLs []*URL `json:"url"`
 	// Quality e.g. 2160p, 1080p, 720p ... or 1050x1200 or codec
 	Quality string `json:"quality"`
@@ -21,6 +22,14 @@ type Stream struct {
 	Ext string `json:"ext"`
 	// Key that is needed to decrypt this stream
 	Key []byte `json:"key"`
+}
+
+// Caption this includes (CC, OC or Subtitles)
+type Caption struct {
+	// URL to the subtitles
+	URL URL `json:"url"`
+	// Language of the caption
+	Language string `json:"language"`
 }
 
 // DataType indicates the type of extracted data, e.g. video or image.
@@ -48,7 +57,7 @@ type Data struct {
 	Streams map[string]*Stream `json:"streams"`
 
 	// Caption this includes (CC, OC or Subtitles)
-	Caption *URL
+	Captions []*Caption
 
 	// Url that was supplied to the scraper
 	Url string `json:"sourceUrl"`

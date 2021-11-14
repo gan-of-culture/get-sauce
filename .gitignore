@@ -17,6 +17,8 @@ media
 *.torrent
 *.ts
 *.txt
+*.vtt
+*.srt
 
 *token
 *exhentai_test.go

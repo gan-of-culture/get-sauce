@@ -93,7 +93,7 @@ func extractData(URL string) (static.Data, error) {
 	if err != nil {
 		return static.Data{}, err
 	}
-	title := strings.Trim(utils.GetH1(&htmlString, -1), " \n\t")
+	title := strings.TrimSpace(utils.GetH1(&htmlString, -1))
 
 	re := regexp.MustCompile(`[^"]*/player\.php\?[^"]*`)
 	playerURL := re.FindString(htmlString) // 1=id  2=nonce
