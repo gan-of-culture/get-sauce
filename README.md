@@ -127,7 +127,6 @@ get-sauce -i https://nhentai.net/g/364616/ https://nhentai.net/g/364591/
      Parts:           36
      Size:            0.00 MB (0 Bytes)
      # download with: get-sauce -s 0 ...
-
 ```
 
 The URLs will be downloaded one by one.
@@ -137,10 +136,8 @@ The URLs will be downloaded one by one.
 For most of the sites the captions (CC, OC or Subtitles) are hard encoded into the video file and can't be downloaded separately. If it is not encoded into the video and a Caption file was found you can download it with the option ```-c```.
 
 To see if the caption will be downloaded into an extra file you can look at your data's information with the option ```-i```. You'll see extra information if the option ```-c ``` can be used:
-```
-console
-
-get-sauce -i "https://hentai-moon.com/videos/285/isekai-harem-monogatari-ep-1/"                                                                                                                   (base) 
+```console
+get-sauce -i "https://hentai-moon.com/videos/285/isekai-harem-monogatari-ep-1/"                                                                                                                    
 
  Site:      https://hentai-moon.com
  Title:     Isekai Harem Monogatari Ep.1
@@ -152,7 +149,6 @@ get-sauce -i "https://hentai-moon.com/videos/285/isekai-harem-monogatari-ep-1/" 
      Quality:         unknown
      Size:            78.44 MB (78441598 Bytes)
      # download with: go-hentai-scraper -s 0 ...
-
 ```
 
 ## Options
@@ -221,7 +217,6 @@ get-sauce -i "https://hentai-moon.com/videos/285/isekai-harem-monogatari-ep-1/" 
  -w             Number of download workers
 
  get-sauce -w 4 http...
-
 
 ```
 
