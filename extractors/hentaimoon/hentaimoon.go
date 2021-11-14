@@ -67,10 +67,13 @@ func extractData(URL string) (static.Data, error) {
 
 	subtitleURL := reSubtitles.FindString(htmlString)
 	if subtitleURL != "" {
-		data[0].Caption = &static.URL{
-			URL: "https:" + subtitleURL,
-			Ext: utils.GetFileExt(subtitleURL),
-		}
+		data[0].Captions = append(data[0].Captions, &static.Caption{
+			URL: static.URL{
+				URL: "https:" + subtitleURL,
+				Ext: utils.GetFileExt(subtitleURL),
+			},
+			Language: "English",
+		})
 	}
 
 	data[0].Url = URL

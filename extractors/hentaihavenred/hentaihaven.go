@@ -24,7 +24,7 @@ const site = "https://hentaihaven.red"
 const api = "https://hentaihaven.red/wp-admin/admin-ajax.php"
 
 var rePostID = regexp.MustCompile(site + `/\?p=(\d+)`)
-var rePlayer = regexp.MustCompile(`https://htstreaming.com/player/index.php\?data=[^"]+`)
+var rePlayer = regexp.MustCompile(`https://htstreaming.com/(?:(?:player/index.php\?data=[^\\"]+)|(?:video/[^\\"]+))`)
 
 type extractor struct{}
 

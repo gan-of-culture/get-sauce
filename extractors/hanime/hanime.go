@@ -53,16 +53,10 @@ func parseURL(URL string) []string {
 
 func extractData(URL string) (static.Data, error) {
 
-	htmlString, err := request.Get(URL)
-	if err != nil {
-		return static.Data{}, err
-	}
-
 	data, err := htstreaming.ExtractData(URL)
 	if err != nil {
 		return static.Data{}, err
 	}
 	data.Site = site
-	data.Title = utils.GetH1(&htmlString, -1)
 	return data, nil
 }

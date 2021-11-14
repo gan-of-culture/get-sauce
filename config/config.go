@@ -3,8 +3,8 @@ package config
 var (
 	//Amount of files to download
 	Amount int
-	// Caption download captions if available
-	Caption bool
+	// Caption to download if available
+	Caption int
 	// OutputPath for files
 	OutputPath string
 	// OutputName for file

@@ -34,9 +34,13 @@ func printHeader(data *static.Data) {
 	fmt.Printf("\n Title:     %s", data.Title)
 	fmt.Printf("\n Type:      %s", data.Type)
 
-	if data.Caption.URL != "" {
-		fmt.Println("\n Caption:   has to be downloaded separately with the option -c")
-	}
+}
+
+func printCaption(i int, caption *static.Caption) {
+	fmt.Printf("\n     [%d]  -------------------", i)
+	fmt.Printf("\n     Language:            %s\n", caption.Language)
+	fmt.Printf("     # download with: ")
+	fmt.Printf("get-sauce -s %d ...\n\n", i)
 }
 
 func printStream(key string, stream *static.Stream) {
@@ -54,11 +58,18 @@ func printStream(key string, stream *static.Stream) {
 	fmt.Printf("\n     Size:            ")
 	fmt.Printf("%.2f MB (%d Bytes)\n", float64(stream.Size)/(1_000_000), stream.Size)
 	fmt.Printf("     # download with: ")
-	fmt.Printf("go-hentai-scraper -s %s ...\n\n", key)
+	fmt.Printf("get-sauce -s %s ...\n\n", key)
 }
 
 func printInfo(data *static.Data) {
 	printHeader(data)
+
+	if len(data.Captions) > 0 {
+		fmt.Println("\n Captions:  has to be downloaded separately with the option -c")
+	}
+	for i, caption := range data.Captions {
+		printCaption(i, caption)
+	}
 
 	sortedStreams := GenSortedStreams(data.Streams)
 	fmt.Print("\n Streams:   # All available qualities")

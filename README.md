@@ -64,14 +64,14 @@ get-sauce -i https://hentaimama.io/episodes/torokase-orgasm-animation-episode-1/
      Info:            Mirror 1
      Quality:         unknown
      Size:            186.26 MB (186261816 Bytes)
-     # download with: go-hentai-scraper -s 0 ...
+     # download with: get-sauce -s 0 ...
 
 
      [1]  -------------------
      Info:            Mirror 2
      Quality:         unknown
      Size:            186.26 MB (186261816 Bytes)
-     # download with: go-hentai-scraper -s 1 ...
+     # download with: get-sauce -s 1 ...
 
 
      [2]  -------------------
@@ -79,7 +79,7 @@ get-sauce -i https://hentaimama.io/episodes/torokase-orgasm-animation-episode-1/
      Quality:         1280x720
      Parts:           562
      Size:            0.00 MB (0 Bytes)
-     # download with: go-hentai-scraper -s 2 ...
+     # download with: get-sauce -s 2 ...
 
 
      [3]  -------------------
@@ -87,7 +87,7 @@ get-sauce -i https://hentaimama.io/episodes/torokase-orgasm-animation-episode-1/
      Quality:         842x480
      Parts:           562
      Size:            0.00 MB (0 Bytes)
-     # download with: go-hentai-scraper -s 3 ...
+     # download with: get-sauce -s 3 ...
 
 
      [4]  -------------------
@@ -95,7 +95,7 @@ get-sauce -i https://hentaimama.io/episodes/torokase-orgasm-animation-episode-1/
      Quality:         640x360
      Parts:           562
      Size:            0.00 MB (0 Bytes)
-     # download with: go-hentai-scraper -s 4 ...
+     # download with: get-sauce -s 4 ...
 ```
 
 The default stream is 0 and it also offers the best available quality. If you want to download a different quality or from a mirrored server you can manually choose a stream with ```-s```.
@@ -148,7 +148,7 @@ get-sauce -i "https://hentai-moon.com/videos/285/isekai-harem-monogatari-ep-1/"
      [0]  -------------------
      Quality:         unknown
      Size:            78.44 MB (78441598 Bytes)
-     # download with: go-hentai-scraper -s 0 ...
+     # download with: get-sauce -s 0 ...
 ```
 
 ## Options
@@ -163,7 +163,7 @@ get-sauce -i "https://hentai-moon.com/videos/285/isekai-harem-monogatari-ep-1/"
 
  -c              Download caption if separate to a extra file
 
- get-sauce -c http...
+ get-sauce -c 0 http...
 
 --------------------------------------------------------------------------------
  
