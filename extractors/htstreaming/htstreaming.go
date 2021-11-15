@@ -12,10 +12,10 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/gan-of-culture/get-sauce/v2/downloader"
-	"github.com/gan-of-culture/get-sauce/v2/request"
-	"github.com/gan-of-culture/get-sauce/v2/static"
-	"github.com/gan-of-culture/get-sauce/v2/utils"
+	"github.com/gan-of-culture/get-sauce/downloader"
+	"github.com/gan-of-culture/get-sauce/request"
+	"github.com/gan-of-culture/get-sauce/static"
+	"github.com/gan-of-culture/get-sauce/utils"
 )
 
 type source struct {

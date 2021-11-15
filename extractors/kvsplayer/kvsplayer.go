@@ -8,8 +8,8 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/gan-of-culture/get-sauce/v2/request"
-	"github.com/gan-of-culture/get-sauce/v2/static"
+	"github.com/gan-of-culture/get-sauce/request"
+	"github.com/gan-of-culture/get-sauce/static"
 )
 
 /*
