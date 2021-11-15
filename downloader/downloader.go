@@ -14,10 +14,10 @@ import (
 	"sync"
 	"time"
 
-	"github.com/gan-of-culture/get-sauce/v2/config"
-	"github.com/gan-of-culture/get-sauce/v2/request"
-	"github.com/gan-of-culture/get-sauce/v2/static"
-	"github.com/gan-of-culture/get-sauce/v2/utils"
+	"github.com/gan-of-culture/get-sauce/config"
+	"github.com/gan-of-culture/get-sauce/request"
+	"github.com/gan-of-culture/get-sauce/static"
+	"github.com/gan-of-culture/get-sauce/utils"
 	"github.com/schollz/progressbar/v3"
 )
 

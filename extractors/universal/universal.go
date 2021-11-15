@@ -6,10 +6,10 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/gan-of-culture/get-sauce/v2/extractors/imgboard"
-	"github.com/gan-of-culture/get-sauce/v2/request"
-	"github.com/gan-of-culture/get-sauce/v2/static"
-	"github.com/gan-of-culture/get-sauce/v2/utils"
+	"github.com/gan-of-culture/get-sauce/extractors/imgboard"
+	"github.com/gan-of-culture/get-sauce/request"
+	"github.com/gan-of-culture/get-sauce/static"
+	"github.com/gan-of-culture/get-sauce/utils"
 )
 
 type extractor struct{}
