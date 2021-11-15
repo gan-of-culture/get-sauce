@@ -3,7 +3,7 @@ package iwara
 import (
 	"testing"
 
-	"github.com/gan-of-culture/get-sauce/config"
+	"github.com/gan-of-culture/get-sauce/v2/config"
 )
 
 func TestParseURL(t *testing.T) {

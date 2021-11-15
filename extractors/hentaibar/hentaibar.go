@@ -3,10 +3,10 @@ package hentaibar
 import (
 	"regexp"
 
-	"github.com/gan-of-culture/get-sauce/extractors/kvsplayer"
-	"github.com/gan-of-culture/get-sauce/request"
-	"github.com/gan-of-culture/get-sauce/static"
-	"github.com/gan-of-culture/get-sauce/utils"
+	"github.com/gan-of-culture/get-sauce/v2/extractors/kvsplayer"
+	"github.com/gan-of-culture/get-sauce/v2/request"
+	"github.com/gan-of-culture/get-sauce/v2/static"
+	"github.com/gan-of-culture/get-sauce/v2/utils"
 )
 
 var reSingleURL = regexp.MustCompile(`https://hentaibar.com/videos/\d+/[^/]+`)

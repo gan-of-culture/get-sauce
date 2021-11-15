@@ -8,10 +8,10 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/gan-of-culture/get-sauce/config"
-	"github.com/gan-of-culture/get-sauce/downloader"
-	"github.com/gan-of-culture/get-sauce/extractors"
-	"github.com/gan-of-culture/get-sauce/static"
+	"github.com/gan-of-culture/get-sauce/v2/config"
+	"github.com/gan-of-culture/get-sauce/v2/downloader"
+	"github.com/gan-of-culture/get-sauce/v2/extractors"
+	"github.com/gan-of-culture/get-sauce/v2/static"
 )
 
 func init() {
