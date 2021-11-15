@@ -5,7 +5,7 @@ import (
 	"sort"
 	"strconv"
 
-	"github.com/gan-of-culture/get-sauce/static"
+	"github.com/gan-of-culture/get-sauce/v2/static"
 )
 
 // GenSortedStreams for stream map

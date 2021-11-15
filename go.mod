@@ -1,4 +1,4 @@
-module github.com/gan-of-culture/get-sauce
+module github.com/gan-of-culture/get-sauce/v2
 
 go 1.17
 

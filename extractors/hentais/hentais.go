@@ -7,9 +7,9 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/gan-of-culture/get-sauce/request"
-	"github.com/gan-of-culture/get-sauce/static"
-	"github.com/gan-of-culture/get-sauce/utils"
+	"github.com/gan-of-culture/get-sauce/v2/request"
+	"github.com/gan-of-culture/get-sauce/v2/static"
+	"github.com/gan-of-culture/get-sauce/v2/utils"
 )
 
 const site = "https://www.hentais.tube/"
