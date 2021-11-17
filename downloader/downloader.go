@@ -154,7 +154,7 @@ func (downloader *downloaderStruct) Download(data *static.Data) error {
 	}
 
 	// download captions
-	if len(data.Captions) > config.Caption {
+	if len(data.Captions) > config.Caption && config.Caption > -1 {
 		fileURI = filepath.Join(downloader.filePath, fmt.Sprintf("%s_caption_%s.%s", data.Title, data.Captions[config.Caption].Language, data.Captions[config.Caption].URL.Ext))
 		downloader.save(data.Captions[config.Caption].URL, fileURI)
 	}

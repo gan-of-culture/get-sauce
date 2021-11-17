@@ -16,7 +16,7 @@ import (
 
 func init() {
 	flag.IntVar(&config.Amount, "a", 0, "Amount of files to download")
-	flag.IntVar(&config.Caption, "c", 0, "Download caption if separate to a extra file")
+	flag.IntVar(&config.Caption, "c", -1, "Download caption if separate to a extra file")
 	flag.StringVar(&config.OutputName, "o", "", "Output name")
 	flag.StringVar(&config.OutputPath, "O", "", "Output path (include ending slash)")
 	flag.StringVar(&config.Pages, "p", "", "Enter pages like 1,2,3-4,6,7,8-9 for doujins")
