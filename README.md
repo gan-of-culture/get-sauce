@@ -20,10 +20,10 @@ Is a hentai scraper that is not using official APIs if they are restrictive. Thi
 
 If you don't want to build the app yourself checkout the [releases page](https://github.com/gan-of-culture/get-sauce/releases).
 
-Otherwise you can clone this repository yourself and download it. Then use [Golang](https://golang.org/dl/) to build it yourself:
+Otherwise you can use [Golang](https://golang.org/dl/) to build and install it:
 
 ```console
-go build
+go install github.com/gan-of-culture/get-sauce@latest
 ```
 
 After that you should be provided with an **executable**.

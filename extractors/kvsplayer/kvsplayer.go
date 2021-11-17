@@ -135,7 +135,7 @@ func ExtractFromHTML(htmlString *string) ([]*static.Data, error) {
 	}, nil
 }
 
-func getRealURL(videoURL, license_code string) (string, error) {
+func getRealURL(videoURL, licenseCode string) (string, error) {
 	if !strings.HasPrefix(videoURL, "function/0/") {
 		return videoURL, nil //not obfuscated
 	}
@@ -149,7 +149,7 @@ func getRealURL(videoURL, license_code string) (string, error) {
 		URLQuery = splitURL[1]
 	}
 	URLParts := strings.Split(URLPath, "/")[2:]
-	license := getLicenseToken(license_code)
+	license := getLicenseToken(licenseCode)
 	newMagic := URLParts[5][:32]
 
 	for o := len(newMagic) - 1; o > -1; o-- {
@@ -195,7 +195,7 @@ func getLicenseToken(license string) string {
 	modlicense = fmt.Sprint(4 * int(math.Abs(float64(fronthalf-backhalf))))
 	retVal := ""
 	val1 := 0
-	val2 := 1
+	val2 := 0
 	for o := 0; o < center+1; o++ {
 		for i := 1; i < 5; i++ {
 			val1, _ = strconv.Atoi(string(license[o+i]))

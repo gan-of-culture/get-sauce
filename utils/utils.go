@@ -75,9 +75,7 @@ func GetMediaType(t string) static.DataType {
 	}
 }
 
-/* GetH1 of html file
-   idx -1 = last h1 found
-   if index out of range set to last h1 */
+// GetH1 of html - file idx -1 = last h1 found - if index out of range set to last h1
 func GetH1(htmlString *string, idx int) string {
 	re := regexp.MustCompile(`[^>]*</h1>`)
 	h1s := re.FindAllString(*htmlString, -1)
