@@ -137,7 +137,7 @@ For most of the sites the captions (CC, OC or Subtitles) are hard encoded into t
 
 To see if the caption will be downloaded into an extra file you can look at your data's information with the option ```-i```. You'll see extra information if the option ```-c``` can be used:
 ```console
-get-sauce -i "https://hentai-moon.com/videos/285/isekai-harem-monogatari-ep-1/"                                                                                                                    
+get-sauce -i https://hentai-moon.com/videos/285/isekai-harem-monogatari-ep-1/
 
  Site:      https://hentai-moon.com
  Title:     Isekai Harem Monogatari - Ep.1

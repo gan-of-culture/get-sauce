@@ -5,6 +5,7 @@ import (
 	"sort"
 	"strconv"
 
+	"github.com/gan-of-culture/get-sauce/config"
 	"github.com/gan-of-culture/get-sauce/static"
 )
 
@@ -80,6 +81,11 @@ func printInfo(data *static.Data) {
 
 func printStreamInfo(data *static.Data, streamKey string) {
 	printHeader(data)
+
+	if len(data.Captions) > config.Caption && config.Caption > -1 {
+		fmt.Println("\n Caption:   ")
+		printCaption(config.Caption, data.Captions[config.Caption])
+	}
 
 	fmt.Println("\n Stream:   ")
 	printStream(streamKey, data.Streams[streamKey])
