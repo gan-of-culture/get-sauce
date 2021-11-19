@@ -3,7 +3,7 @@
 [![GitHub Workflow Status](https://img.shields.io/github/workflow/status/gan-of-culture/get-sauce/Go)](https://github.com/gan-of-culture/get-sauce/actions/workflows/go.yml)
 [![Go Report Card](https://goreportcard.com/badge/github.com/gan-of-culture/get-sauce)](https://goreportcard.com/report/github.com/gan-of-culture/get-sauce)
 
-Is a hentai scraper that is not using official APIs if they are restrictive. This also means that for some sites it might take longer to download content, because the connection can be restricted. Some sites only provide single downloads, downloads to lesser qualities or no downloads at all. This scraper will always give you the opportunity to download the best available quality from each site.  
+Is a hentai scraper that is not using official APIs if they are restrictive. This also means that for some sites it might take longer to download content, because the download speed might be limited. Some sites only provide single downloads, downloads to lesser qualities or no downloads at all, but this scraper will always give you the opportunity to download the best available quality from each site. It's also possible to input links to a category and get-sauce will download all media under said category.
 
 - [Installation](#installation)
 - [Getting started](#getting-started)
@@ -257,6 +257,7 @@ The following links will direct you to adult content. Please keep that in mind!
 | [hentaihaven.xxx (1080p, 720p, 480p, 360p)](https://hentaihaven.xxx)            |         ?          |:heavy_check_mark:|
 | [hentaimama.io(1080p, 720p)](https://hentaimama.io)                             |         ?          |:heavy_check_mark:|
 | [hentaipulse.com(720p, 420p)](https://hentaipulse.com)                          |         ?          |:heavy_check_mark:|
+| [hentairox.com](https://hentairox.com)                                          | :heavy_check_mark: |         ?        |
 | [hentais.tube (720p, 480p, 360p)](https://www.hentais.tube/)                    |         ?          |:heavy_check_mark:|
 | [hentaistream.moe (2160p, 1080p, 480p)](https://hentaistream.moe/)              |         ?          |:heavy_check_mark:|
 | [hentaistream.xxx (1080p, 720, 480p, 360p)](https://hentaistream.xxx/)          |         ?          |:heavy_check_mark:|

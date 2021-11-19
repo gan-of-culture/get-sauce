@@ -44,6 +44,14 @@ func TestParseURL(t *testing.T) {
 			name: "Tag HentaiEra",
 			url:  "https://hentaiera.com/tag/ahegao/",
 			want: 25,
+		}, {
+			name: "Single Gallery HentaiRox",
+			url:  "https://hentairox.com/gallery/397913/",
+			want: 1,
+		}, {
+			name: "Tag HentaiEra",
+			url:  "https://hentairox.com/tag/mosaic-censorship/",
+			want: 20,
 		},
 	}
 	for _, tt := range tests {
@@ -83,6 +91,10 @@ func TestExtract(t *testing.T) {
 		}, {
 			name: "Single Gallery HentaiEra",
 			url:  "https://hentaiera.com/gallery/488946/",
+			want: 1,
+		}, {
+			name: "Single Gallery HentaiRox",
+			url:  "https://hentairox.com/gallery/397913/",
 			want: 1,
 		},
 	}
