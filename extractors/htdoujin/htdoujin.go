@@ -41,7 +41,7 @@ var sites map[string]siteConfig = map[string]siteConfig{
 		ReaderURLPrefix: "g",
 	},
 	"hentairox.com": {
-		CDNPrefix: "m5",
+		CDNPrefix:       "m5",
 		ReaderURLPrefix: "view",
 	},
 }
@@ -69,15 +69,12 @@ func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 		return nil, err
 	}
 
-	if siteConfig, ok := sites[u.Host]; ok {
-		site = "https://" + u.Host + "/"
-		cdn = fmt.Sprintf("https://%s.%s/", siteConfig.CDNPrefix, u.Host)
-		readerURLPrefix = siteConfig.ReaderURLPrefix
-	}
-
-	if cdn == "" {
+	if _, ok := sites[u.Host]; !ok {
 		return nil, errors.New("site not configured for htdoujin extractor")
 	}
+	site = "https://" + u.Host + "/"
+	cdn = fmt.Sprintf("https://%s.%s/", sites[u.Host].CDNPrefix, u.Host)
+	readerURLPrefix = sites[u.Host].ReaderURLPrefix
 
 	IDs := parseURL(URL)
 	if len(IDs) == 0 {
@@ -96,7 +93,6 @@ func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 	return data, nil
 }
 
-// parseURL data
 func parseURL(URL string) []string {
 	if strings.HasPrefix(URL, site+"gallery/") {
 		return []string{URL[len(site+"gallery/") : len(URL)-1]}

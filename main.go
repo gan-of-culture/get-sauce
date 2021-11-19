@@ -5,7 +5,6 @@ import (
 	"flag"
 	"fmt"
 	"log"
-	"strings"
 	"sync"
 
 	"github.com/gan-of-culture/get-sauce/config"
@@ -101,10 +100,6 @@ func main() {
 		fmt.Println("Usage: go-hentai-scraper [args] URLs...")
 		flag.PrintDefaults()
 		return
-	}
-
-	if config.OutputPath != "" && !strings.HasSuffix(config.OutputPath, "/") {
-		config.OutputPath += "/"
 	}
 
 	for _, a := range args {
