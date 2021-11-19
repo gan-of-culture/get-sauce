@@ -40,6 +40,10 @@ var sites map[string]siteConfig = map[string]siteConfig{
 		CDNPrefix:       "i",
 		ReaderURLPrefix: "g",
 	},
+	"hentairox.com": {
+		CDNPrefix: "m5",
+		ReaderURLPrefix: "view",
+	},
 }
 
 var site string
@@ -120,7 +124,7 @@ func extractData(ID string) (*static.Data, error) {
 	title := strings.Split(reTitle.FindStringSubmatch(htmlString)[1], " - Page 1 - ")[0]
 
 	jsonString := strings.Trim(reJSONData.FindString(htmlString), "'")
-	fmt.Println(jsonString)
+	//fmt.Println(jsonString)
 
 	gData := map[string]string{}
 	err = json.Unmarshal([]byte(jsonString), &gData)
