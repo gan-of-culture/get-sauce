@@ -132,7 +132,7 @@ func extractData(URL string) (static.Data, error) {
 		for j := len(streamsTmp) - 1; j > -1; j-- {
 			idx += 1
 
-			streamTmp := streamsTmp[fmt.Sprint(j)]
+			streamTmp := streamsTmp[j]
 			mediaURL, err := baseURL.Parse(streamTmp.URLs[0].URL)
 			if err != nil {
 				return static.Data{}, err

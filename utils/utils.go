@@ -121,15 +121,15 @@ func RemoveAdjDuplicates(slice []string) []string {
 
 // ParseM3UMaster into static.Stream to prefill the structure
 // returns a pre filled structure where URLs[0].URL is the media m3u URI
-func ParseM3UMaster(master *string) (map[string]*static.Stream, error) {
+func ParseM3UMaster(master *string) ([]*static.Stream, error) {
 	re := regexp.MustCompile(`#EXT-X-STREAM-INF:([^\n]*)\n([^\n]+)`) // 1=PARAMS 2=MEDIAURI
 	matchedStreams := re.FindAllStringSubmatch(*master, -1)
 	if len(matchedStreams) < 1 {
 		return nil, fmt.Errorf("unable to parse any stream in m3u master file: %s", *master)
 	}
 
-	out := map[string]*static.Stream{}
-	for i, stream := range matchedStreams {
+	out := []*static.Stream{}
+	for _, stream := range matchedStreams {
 		s := &static.Stream{}
 
 		for _, v := range stream[1:] {
@@ -146,17 +146,11 @@ func ParseM3UMaster(master *string) (map[string]*static.Stream, error) {
 				continue
 			}
 
-			for _, streamParam := range matchedStreamParams[1:] {
+			for _, streamParam := range matchedStreamParams {
 
 				splitParam := strings.Split(streamParam[1], "=")
 				splitParam[1] = strings.Trim(splitParam[1], `",`)
 				switch splitParam[0] {
-				case "BANDWIDTH":
-					size, err := strconv.ParseInt(splitParam[1], 10, 64)
-					if err != nil {
-						return nil, err
-					}
-					s.Size = size
 				case "RESOLUTION":
 					s.Quality = splitParam[1]
 				case "CODECS":
@@ -164,7 +158,7 @@ func ParseM3UMaster(master *string) (map[string]*static.Stream, error) {
 				}
 			}
 		}
-		out[fmt.Sprint(i)] = s
+		out = append(out, s)
 	}
 
 	return out, nil

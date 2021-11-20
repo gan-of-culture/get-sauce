@@ -257,7 +257,7 @@ func TestParseM3UMaster(t *testing.T) {
 	tests := []struct {
 		name   string
 		master string
-		want   map[string]*static.Stream
+		want   []*static.Stream
 	}{
 		{
 			name: "rich m3u master",
@@ -279,30 +279,26 @@ func TestParseM3UMaster(t *testing.T) {
 			#EXT-X-I-FRAME-STREAM-INF:AVERAGE-BANDWIDTH=120390,BANDWIDTH=262949,CODECS="avc1.4D401F",RESOLUTION=1280x720,URI="media-2/iframes.m3u8"
 			#EXT-X-I-FRAME-STREAM-INF:AVERAGE-BANDWIDTH=53881,BANDWIDTH=146466,CODECS="avc1.42C01F",RESOLUTION=864x486,URI="media-3/iframes.m3u8"		
 			`,
-			want: map[string]*static.Stream{
-				"0": {
+			want: []*static.Stream{
+				{
 					URLs: []*static.URL{
 						{
 							URL: "media-1/stream.m3u8",
 						},
 					},
-					Size: 4634114,
-				},
-				"1": {
+				}, {
 					URLs: []*static.URL{
 						{
 							URL: "media-2/stream.m3u8",
 						},
 					},
 					Quality: "1280x720",
-				},
-				"2": {
+				}, {
 					URLs: []*static.URL{
 						{
 							URL: "media-3/stream.m3u8",
 						},
 					},
-					Size:    2479383,
 					Quality: "864x486",
 					Info:    "avc1.42C01F,mp4a.40.2",
 				},

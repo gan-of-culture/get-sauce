@@ -12,7 +12,6 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/gan-of-culture/get-sauce/downloader"
 	"github.com/gan-of-culture/get-sauce/request"
 	"github.com/gan-of-culture/get-sauce/static"
 	"github.com/gan-of-culture/get-sauce/utils"
@@ -166,11 +165,9 @@ func ExtractData(URL string) (static.Data, error) {
 		return static.Data{}, err
 	}
 
-	sortedStreams := downloader.GenSortedStreams(dummyStreams)
-
 	ext := "ts"
 	streams := map[string]*static.Stream{}
-	for idx, stream := range sortedStreams {
+	for idx, stream := range dummyStreams {
 		master, err := request.GetWithHeaders(stream.URLs[0].URL, map[string]string{
 			"referer": playerURL,
 			"accept":  "*/*",
@@ -188,9 +185,7 @@ func ExtractData(URL string) (static.Data, error) {
 			ext = "mp4"
 		}
 
-		// len(p.Variants)-i-1 builds stream map in reverse order
-		// in order for the best quality stream to be on top
-		streams[fmt.Sprint(len(sortedStreams)-idx-1)] = &static.Stream{
+		streams[fmt.Sprint(len(dummyStreams)-idx-1)] = &static.Stream{
 			URLs:    URLs,
 			Quality: stream.Quality,
 			Size:    stream.Size,
