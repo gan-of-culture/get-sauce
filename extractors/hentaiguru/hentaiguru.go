@@ -1,9 +1,7 @@
-package hentaihaven
+package hentaiguru
 
 import (
-	"fmt"
 	"regexp"
-	"strings"
 
 	"github.com/gan-of-culture/get-sauce/extractors/jwplayer"
 	"github.com/gan-of-culture/get-sauce/request"
@@ -11,15 +9,19 @@ import (
 	"github.com/gan-of-culture/get-sauce/utils"
 )
 
-const site = "https://hentaihaven.xxx/"
+var reEpisodeURL = regexp.MustCompile(`https://hentai\.guru/hentai/[^/]+/episode-\d+`)
+var reSeriesURL = regexp.MustCompile(`https://hentai\.guru/hentai/[^/]+`)
+
+const site = "https://hentai.guru"
 
 type extractor struct{}
 
-// New returns a hentaihaven.xxx extractor.
+// New returns a hentai.guru extractor.
 func New() static.Extractor {
 	return &extractor{}
 }
 
+// Extract data from URL
 func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 	URLs := parseURL(URL)
 	if len(URLs) == 0 {
@@ -39,21 +41,25 @@ func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 }
 
 func parseURL(URL string) []string {
-	if ok, _ := regexp.MatchString(`/episode-\d*/?$`, URL); ok {
+	if ok := reEpisodeURL.MatchString(URL); ok {
 		return []string{URL}
-	}
-
-	if !strings.Contains(URL, "https://hentaihaven.xxx/watch/") {
-		return []string{}
 	}
 
 	htmlString, err := request.Get(URL)
 	if err != nil {
-		return []string{}
+		return nil
 	}
-	slug := strings.Split(URL, "watch/")[1]
-	re := regexp.MustCompile(fmt.Sprintf("[^\"]*%sepisode-\\d*", slug))
-	return re.FindAllString(htmlString, -1)
+
+	if episodes := reEpisodeURL.FindAllString(htmlString, -1); len(episodes) > 0 {
+		return episodes
+	}
+
+	out := []string{}
+	for _, seriesURL := range reSeriesURL.FindAllString(htmlString, -1) {
+		out = append(out, parseURL(seriesURL)...)
+	}
+
+	return out
 }
 
 func extractData(URL string) (static.Data, error) {
@@ -61,7 +67,8 @@ func extractData(URL string) (static.Data, error) {
 	if err != nil {
 		return static.Data{}, err
 	}
-	title := strings.TrimSpace(utils.GetH1(&htmlString, -1))
+
+	title := utils.GetH1(&htmlString, -1)
 
 	data, err := jwplayer.New().Extract(jwplayer.FindJWPlayerURL(&htmlString))
 	if err != nil {
@@ -78,5 +85,4 @@ func extractData(URL string) (static.Data, error) {
 	video.Url = URL
 
 	return *video, nil
-
 }

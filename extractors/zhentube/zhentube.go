@@ -150,10 +150,8 @@ func extractData(URL string) (static.Data, error) {
 		return static.Data{}, err
 	}
 
-	idx := 0
 	streams := map[string]*static.Stream{}
-	for _, s := range dummyStreams {
-		idx += 1
+	for idx, s := range dummyStreams {
 		m3u8Media, err := request.GetWithHeaders(s.URLs[0].URL, map[string]string{
 			"referer": matchedEmbedURL[1],
 			"accept":  "*/*",
@@ -167,7 +165,7 @@ func extractData(URL string) (static.Data, error) {
 			return static.Data{}, err
 		}
 
-		streams[fmt.Sprint(len(dummyStreams)-idx)] = &static.Stream{
+		streams[fmt.Sprint(len(dummyStreams)-idx-1)] = &static.Stream{
 			URLs:    URLs,
 			Quality: s.Quality,
 			Size:    s.Size,
