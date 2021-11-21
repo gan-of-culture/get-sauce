@@ -26,8 +26,6 @@ Otherwise you can use [Golang](https://golang.org/dl/) to build and install it:
 go install github.com/gan-of-culture/get-sauce@latest
 ```
 
-After that you should be provided with an **executable**.
-
 Or if you got Golang already installed you can download the source code and run the program from the source code this:
 
 ```console
