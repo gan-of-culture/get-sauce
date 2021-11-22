@@ -73,19 +73,19 @@ func TestDownload(t *testing.T) {
 			Name: "rule 34 single post image",
 			data: &static.Data{
 				Site:  "https://rule34.paheal.net",
-				Title: "The_Dark_Mangaka tagme",
+				Title: "Ahri Cian_Yo League_of_Legends",
 				Type:  "image",
 				Streams: map[string]*static.Stream{
 					"0": {
 						URLs: []*static.URL{
 							{
-								URL: "https://lotus.paheal.net/_images/886fc1aeb1e67fedbbc2f1a40431fdc8/4322498%20-%20The_Dark_Mangaka%20tagme.png",
-								Ext: "png",
+								URL: "https://peach.paheal.net/_images/cf21c36b64db166b1e1aac9f3243d3ec/4698365%20-%20Ahri%20Cian_Yo%20League_of_Legends.jpg",
+								Ext: "jpg",
 							},
 						},
 					},
 				},
-				URL: "https://rule34.paheal.net/post/view/4322498",
+				URL: "https://rule34.paheal.net/post/view/4698365",
 			},
 			Want: nil,
 		}, {
