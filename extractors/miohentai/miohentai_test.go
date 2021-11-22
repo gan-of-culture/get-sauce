@@ -4,29 +4,29 @@ import "testing"
 
 func TestParseURL(t *testing.T) {
 	tests := []struct {
-		name string
-		url  string
-		want int
+		Name string
+		URL  string
+		Want int
 	}{
 		{
-			name: "Single Episode",
-			url:  "https://miohentai.com/video/enjo-kouhai-episode-2/",
-			want: 1,
+			Name: "Single Episode",
+			URL:  "https://miohentai.com/video/enjo-kouhai-episode-2/",
+			Want: 1,
 		}, {
-			name: "Tag",
-			url:  "https://miohentai.com/tag/1080p/",
-			want: 22,
+			Name: "Tag",
+			URL:  "https://miohentai.com/tag/1080p/",
+			Want: 22,
 		}, {
-			name: "Image",
-			url:  "https://miohentai.com/image-library/the-latest-influencers-2020-dress/",
-			want: 1,
+			Name: "Image",
+			URL:  "https://miohentai.com/image-library/the-latest-influencers-2020-dress/",
+			Want: 1,
 		},
 	}
 	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			urls := parseURL(tt.url)
-			if len(urls) > tt.want || len(urls) == 0 {
-				t.Errorf("Got: %v - want: %v", len(urls), tt.want)
+		t.Run(tt.Name, func(t *testing.T) {
+			URLs := parseURL(tt.URL)
+			if len(URLs) > tt.Want || len(URLs) == 0 {
+				t.Errorf("Got: %v - Want: %v", len(URLs), tt.Want)
 			}
 		})
 	}
@@ -34,32 +34,32 @@ func TestParseURL(t *testing.T) {
 
 func TestExtract(t *testing.T) {
 	tests := []struct {
-		name string
-		url  string
-		want int
+		Name string
+		URL  string
+		Want int
 	}{
 		{
-			name: "Single Episode",
-			url:  "https://miohentai.com/video/enjo-kouhai-episode-2/",
-			want: 1,
+			Name: "Single Episode",
+			URL:  "https://miohentai.com/video/enjo-kouhai-episode-2/",
+			Want: 1,
 		}, {
-			name: "Tag",
-			url:  "https://miohentai.com/tag/1080p/",
-			want: 22,
+			Name: "Tag",
+			URL:  "https://miohentai.com/tag/1080p/",
+			Want: 22,
 		}, {
-			name: "Image",
-			url:  "https://miohentai.com/image-library/the-latest-influencers-2020-dress/",
-			want: 1,
+			Name: "Image",
+			URL:  "https://miohentai.com/image-library/the-latest-influencers-2020-dress/",
+			Want: 1,
 		},
 	}
 	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			data, err := New().Extract(tt.url)
+		t.Run(tt.Name, func(t *testing.T) {
+			data, err := New().Extract(tt.URL)
 			if err != nil {
 				t.Error(err)
 			}
-			if len(data) > tt.want {
-				t.Errorf("Got: %v - want: %v", len(data), tt.want)
+			if len(data) > tt.Want {
+				t.Errorf("Got: %v - Want: %v", len(data), tt.Want)
 			}
 		})
 	}

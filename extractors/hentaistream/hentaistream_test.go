@@ -4,33 +4,33 @@ import "testing"
 
 func TestParseURL(t *testing.T) {
 	tests := []struct {
-		name string
-		url  string
-		want int
+		Name string
+		URL  string
+		Want int
 	}{
 		{
-			name: "Single Episode",
-			url:  "https://hentaistream.moe/593/kateikyoushi-no-oneesan-2-the-animation-1/",
-			want: 1,
+			Name: "Single Episode",
+			URL:  "https://hentaistream.moe/593/kateikyoushi-no-oneesan-2-the-animation-1/",
+			Want: 1,
 		}, {
-			name: "Series",
-			url:  "https://hentaistream.moe/anime/kateikyoushi-no-oneesan-2-the-animation/",
-			want: 2,
+			Name: "Series",
+			URL:  "https://hentaistream.moe/anime/kateikyoushi-no-oneesan-2-the-animation/",
+			Want: 2,
 		}, {
-			name: "Single Episode 4k",
-			url:  "https://hentaistream.moe/515/overflow-1/",
-			want: 1,
+			Name: "Single Episode 4k",
+			URL:  "https://hentaistream.moe/515/overflow-1/",
+			Want: 1,
 		}, {
-			name: "Series 4k",
-			url:  "https://hentaistream.moe/anime/overflow/",
-			want: 8,
+			Name: "Series 4k",
+			URL:  "https://hentaistream.moe/anime/overflow/",
+			Want: 8,
 		},
 	}
 	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			urls := parseURL(tt.url)
-			if len(urls) > tt.want && tt.want != 0 {
-				t.Errorf("Got: %v - want: %v", len(urls), tt.want)
+		t.Run(tt.Name, func(t *testing.T) {
+			URLs := parseURL(tt.URL)
+			if len(URLs) > tt.Want && tt.Want != 0 {
+				t.Errorf("Got: %v - Want: %v", len(URLs), tt.Want)
 			}
 		})
 	}
@@ -38,36 +38,36 @@ func TestParseURL(t *testing.T) {
 
 func TestExtract(t *testing.T) {
 	tests := []struct {
-		name string
-		url  string
-		want int
+		Name string
+		URL  string
+		Want int
 	}{
 		{
-			name: "Series Extraction 4k",
-			url:  "https://hentaistream.moe/anime/overflow/",
-			want: 8,
+			Name: "Series Extraction 4k",
+			URL:  "https://hentaistream.moe/anime/overflow/",
+			Want: 8,
 		}, {
-			name: "Single Episode 4k",
-			url:  "https://hentaistream.moe/515/overflow-1/",
-			want: 1,
+			Name: "Single Episode 4k",
+			URL:  "https://hentaistream.moe/515/overflow-1/",
+			Want: 1,
 		}, {
-			name: "Single Episode",
-			url:  "https://hentaistream.moe/593/kateikyoushi-no-oneesan-2-the-animation-1/",
-			want: 1,
+			Name: "Single Episode",
+			URL:  "https://hentaistream.moe/593/kateikyoushi-no-oneesan-2-the-animation-1/",
+			Want: 1,
 		}, {
-			name: "Series",
-			url:  "https://hentaistream.moe/anime/kateikyoushi-no-oneesan-2-the-animation/",
-			want: 2,
+			Name: "Series",
+			URL:  "https://hentaistream.moe/anime/kateikyoushi-no-oneesan-2-the-animation/",
+			Want: 2,
 		},
 	}
 	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			data, err := New().Extract(tt.url)
+		t.Run(tt.Name, func(t *testing.T) {
+			data, err := New().Extract(tt.URL)
 			if err != nil {
 				t.Error(err)
 			}
-			if len(data) > tt.want {
-				t.Errorf("Got: %v - want: %v", len(data), tt.want)
+			if len(data) > tt.Want {
+				t.Errorf("Got: %v - Want: %v", len(data), tt.Want)
 			}
 		})
 	}

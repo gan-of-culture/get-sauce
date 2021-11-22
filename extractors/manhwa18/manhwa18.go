@@ -48,7 +48,7 @@ func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 		if err != nil {
 			return nil, utils.Wrap(err, u)
 		}
-		data = append(data, &d)
+		data = append(data, d)
 	}
 
 	return data, nil
@@ -70,54 +70,54 @@ func parseURL(URL string) []string {
 	return reEpisodeURL.FindAllString(htmlString, -1)
 }
 
-func extractData(URL string) (static.Data, error) {
+func extractData(URL string) (*static.Data, error) {
 	htmlString, err := request.Get(URL)
 	if err != nil {
-		return static.Data{}, err
+		return nil, err
 	}
 
 	title := html.UnescapeString(utils.GetMeta(&htmlString, "og:title"))
 
 	matchedAPIParams := reAPIParams.FindStringSubmatch(htmlString)
 	if len(matchedAPIParams) < 2 {
-		return static.Data{}, static.ErrDataSourceParseFailed
+		return nil, static.ErrDataSourceParseFailed
 	}
 
 	jsonData, err := request.GetAsBytesWithHeaders(fmt.Sprintf(playerAPITemplate, matchedAPIParams[1], matchedAPIParams[2]), map[string]string{
 		"X-Requested-With": "XMLHttpRequest",
 	})
 	if err != nil {
-		return static.Data{}, err
+		return nil, err
 	}
 
 	pData := playerData{}
 	err = json.Unmarshal(jsonData, &pData)
 	if err != nil {
-		return static.Data{}, err
+		return nil, err
 	}
 	if !pData.Data.Status {
-		return static.Data{}, static.ErrDataSourceParseFailed
+		return nil, static.ErrDataSourceParseFailed
 	}
 
 	pData.Data.Sources = strings.ReplaceAll(pData.Data.Sources, `\`, "")
 	matchedSrcURL := reSourceURL.FindStringSubmatch(pData.Data.Sources)
 	if len(matchedSrcURL) < 2 {
-		return static.Data{}, static.ErrDataSourceParseFailed
+		return nil, static.ErrDataSourceParseFailed
 	}
 
 	srcURL := fmt.Sprintf(m3uTemplateURL, matchedSrcURL[1])
 
 	m3uMedia, err := request.Get(srcURL)
 	if err != nil {
-		return static.Data{}, err
+		return nil, err
 	}
 
 	URLs, _, err := request.GetM3UMeta(&m3uMedia, srcURL, "mp4")
 	if err != nil {
-		return static.Data{}, err
+		return nil, err
 	}
 
-	return static.Data{
+	return &static.Data{
 		Site:  site,
 		Title: title,
 		Type:  static.DataTypeVideo,
@@ -127,6 +127,6 @@ func extractData(URL string) (static.Data, error) {
 				Ext:  "mp4",
 			},
 		},
-		Url: URL,
+		URL: URL,
 	}, nil
 }

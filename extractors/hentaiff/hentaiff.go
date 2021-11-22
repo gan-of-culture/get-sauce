@@ -54,7 +54,7 @@ func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 		if err != nil {
 			return nil, utils.Wrap(err, u)
 		}
-		data = append(data, &d)
+		data = append(data, d)
 	}
 
 	return data, nil
@@ -90,43 +90,43 @@ func parseURL(URL string) []string {
 	}
 }
 
-func extractData(URL string) (static.Data, error) {
+func extractData(URL string) (*static.Data, error) {
 
 	htmlString, err := request.Get(URL)
 	if err != nil {
-		return static.Data{}, err
+		return nil, err
 	}
 
 	title := html.UnescapeString(utils.GetH1(&htmlString, -1))
 
 	matchedVideoID := reParseAmHentaiID.FindStringSubmatch(htmlString) //1=VID
 	if len(matchedVideoID) < 2 {
-		return static.Data{}, static.ErrDataSourceParseFailed
+		return nil, static.ErrDataSourceParseFailed
 	}
 
 	jsonData, err := request.PostAsBytesWithHeaders(videoInfoAPI+matchedVideoID[1], map[string]string{"Referer": matchedVideoID[0]})
 	if err != nil {
-		return static.Data{}, err
+		return nil, err
 	}
 
 	videoInfo := videoData{}
 	err = json.Unmarshal(jsonData, &videoInfo)
 	if err != nil {
-		return static.Data{}, err
+		return nil, err
 	}
 
 	streams := map[string]*static.Stream{}
 	dataLen := len(videoInfo.Data)
 	for i, stream := range videoInfo.Data {
-		url, size, err := resolveVideoSource(stream.File)
+		u, size, err := resolveVideoSource(stream.File)
 		if err != nil {
-			return static.Data{}, err
+			return nil, err
 		}
 
 		streams[fmt.Sprint(dataLen-i-1)] = &static.Stream{
 			URLs: []*static.URL{
 				{
-					URL: url,
+					URL: u,
 					Ext: stream.Type,
 				},
 			},
@@ -136,12 +136,12 @@ func extractData(URL string) (static.Data, error) {
 		}
 	}
 
-	return static.Data{
+	return &static.Data{
 		Site:    site,
 		Title:   title,
 		Type:    static.DataTypeVideo,
 		Streams: streams,
-		Url:     URL,
+		URL:     URL,
 	}, nil
 }
 

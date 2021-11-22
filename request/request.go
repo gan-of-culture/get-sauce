@@ -59,11 +59,11 @@ func DefaultClient() *http.Client {
 }
 
 //Request http
-func Request(method string, url string, headers map[string]string, body io.Reader) (*http.Response, error) {
+func Request(method string, URL string, headers map[string]string, body io.Reader) (*http.Response, error) {
 
 	client := DefaultClient()
 
-	req, err := http.NewRequest(method, url, body)
+	req, err := http.NewRequest(method, URL, body)
 	if err != nil {
 		return nil, errors.New("Request can't be created")
 	}
@@ -75,7 +75,7 @@ func Request(method string, url string, headers map[string]string, body io.Reade
 		req.Header.Set(k, v)
 	}
 	if _, ok := headers["Referer"]; !ok {
-		req.Header.Set("Referer", url)
+		req.Header.Set("Referer", URL)
 	}
 
 	resp, err := client.Do(req)
@@ -87,8 +87,8 @@ func Request(method string, url string, headers map[string]string, body io.Reade
 }
 
 // Get content as string
-func Get(url string) (string, error) {
-	body, err := GetAsBytes(url)
+func Get(URL string) (string, error) {
+	body, err := GetAsBytes(URL)
 	if err != nil {
 		return "", err
 	}
@@ -97,8 +97,8 @@ func Get(url string) (string, error) {
 }
 
 // GetAsBytes content as string
-func GetAsBytes(url string) ([]byte, error) {
-	resp, err := Request(http.MethodGet, url, nil, nil)
+func GetAsBytes(URL string) ([]byte, error) {
+	resp, err := Request(http.MethodGet, URL, nil, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -115,8 +115,8 @@ func GetAsBytes(url string) ([]byte, error) {
 }
 
 // PostAsBytes content as string
-func PostAsBytes(url string) ([]byte, error) {
-	resp, err := Request(http.MethodPost, url, nil, nil)
+func PostAsBytes(URL string) ([]byte, error) {
+	resp, err := Request(http.MethodPost, URL, nil, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -133,8 +133,8 @@ func PostAsBytes(url string) ([]byte, error) {
 }
 
 // GetWithHeaders content as string
-func GetWithHeaders(url string, headers map[string]string) (string, error) {
-	body, err := GetAsBytesWithHeaders(url, headers)
+func GetWithHeaders(URL string, headers map[string]string) (string, error) {
+	body, err := GetAsBytesWithHeaders(URL, headers)
 	if err != nil {
 		return "", err
 	}
@@ -143,8 +143,8 @@ func GetWithHeaders(url string, headers map[string]string) (string, error) {
 }
 
 // GetAsBytesWithHeaders content as string
-func GetAsBytesWithHeaders(url string, headers map[string]string) ([]byte, error) {
-	resp, err := Request(http.MethodGet, url, headers, nil)
+func GetAsBytesWithHeaders(URL string, headers map[string]string) ([]byte, error) {
+	resp, err := Request(http.MethodGet, URL, headers, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -161,8 +161,8 @@ func GetAsBytesWithHeaders(url string, headers map[string]string) ([]byte, error
 }
 
 // PostAsBytesWithHeaders content as string
-func PostAsBytesWithHeaders(url string, headers map[string]string) ([]byte, error) {
-	resp, err := Request(http.MethodPost, url, headers, nil)
+func PostAsBytesWithHeaders(URL string, headers map[string]string) ([]byte, error) {
+	resp, err := Request(http.MethodPost, URL, headers, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -178,40 +178,40 @@ func PostAsBytesWithHeaders(url string, headers map[string]string) ([]byte, erro
 	return body, nil
 }
 
-// Headers return the HTTP Headers of the url
-func Headers(url, refer string) (http.Header, error) {
+// Headers return the HTTP Headers of the URL
+func Headers(URL, refer string) (http.Header, error) {
 	headers := map[string]string{
 		"Referer": refer,
 	}
-	res, err := Request(http.MethodHead, url, headers, nil)
+	res, err := Request(http.MethodHead, URL, headers, nil)
 	if err == nil {
 		return res.Header, nil
 	}
 	if res != nil && res.StatusCode == 503 {
 		time.Sleep(200 * time.Millisecond)
-		res, err := Request(http.MethodHead, url, headers, nil)
+		res, err := Request(http.MethodHead, URL, headers, nil)
 		if err == nil {
 			return res.Header, nil
 		}
 	}
 
 	headers["Range"] = "bytes=0-1"
-	res, err = Request(http.MethodGet, url, headers, nil)
+	res, err = Request(http.MethodGet, URL, headers, nil)
 	if err != nil {
 		return nil, err
 	}
 	return res.Header, nil
 }
 
-// Size get size of the url
-func Size(url, refer string) (int64, error) {
+// Size get size of the URL
+func Size(URL, refer string) (int64, error) {
 	// if you are trying to scrape more than one thing
 	// sending size request just make it slower thinking of image boards etc.
 	if config.Amount != 0 {
 		return 0, nil
 	}
 
-	headers, err := Headers(url, refer)
+	headers, err := Headers(URL, refer)
 	if err != nil {
 		return 0, err
 	}
@@ -279,7 +279,7 @@ func (p *Myjar) Cookies(u *url.URL) []*http.Cookie {
 	return p.Jar[u.Host]
 }
 
-// GetM3UMeta segment urls
+// GetM3UMeta segment URLs
 func GetM3UMeta(master *string, URL, Ext string) ([]*static.URL, []byte, error) {
 	re := regexp.MustCompile(`\s[^#]+\s`) // 1=segment URI
 	matchedSegmentURLs := re.FindAllString(*master, -1)

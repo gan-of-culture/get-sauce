@@ -33,7 +33,7 @@ func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 		if err != nil {
 			return nil, utils.Wrap(err, u)
 		}
-		data = append(data, &d)
+		data = append(data, d)
 	}
 
 	return data, nil
@@ -49,21 +49,21 @@ func parseURL(URL string) []string {
 	return reSingleURL.FindAllString(htmlString, -1)
 }
 
-func extractData(URL string) (static.Data, error) {
+func extractData(URL string) (*static.Data, error) {
 
 	htmlString, err := request.Get(URL)
 	if err != nil {
-		return static.Data{}, err
+		return nil, err
 	}
 
 	data, err := kvsplayer.ExtractFromHTML(&htmlString)
 	if err != nil {
-		return static.Data{}, err
+		return nil, err
 	}
 
 	data[0].Site = site
 	data[0].Title = utils.GetMeta(&htmlString, "og:title")
-	data[0].Url = URL
+	data[0].URL = URL
 
-	return *data[0], nil
+	return data[0], nil
 }

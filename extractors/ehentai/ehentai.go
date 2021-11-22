@@ -15,6 +15,11 @@ import (
 
 const site = "https://e-hentai.org/"
 
+var reNumbOfPages = regexp.MustCompile(`([0-9]+) pages`)
+var reIMGURLs = regexp.MustCompile(`https://e-hentai.org/s[^"]+-[0-9]+`)
+var reFileInfo = regexp.MustCompile(`<div>[^.]+\.([^::]+):: ([^::]+) :: ([^.]+.[0-9]+) ([A-Z]{2})`)
+var reSourceURL = regexp.MustCompile(`<img id="img" src="([^"]+)`)
+
 type extractor struct{}
 
 // New returns a e-hentai extractor.
@@ -78,8 +83,7 @@ func extractData(URL string) ([]*static.Data, error) {
 		return extractData(URL + "?nw=session")
 	}
 
-	re := regexp.MustCompile(`([0-9]+) pages`)
-	htmlNumberOfPages := re.FindStringSubmatch(htmlString)
+	htmlNumberOfPages := reNumbOfPages.FindStringSubmatch(htmlString)
 	if len(htmlNumberOfPages) != 2 {
 		return nil, errors.New("error while trying to access the gallery images")
 	}
@@ -88,8 +92,7 @@ func extractData(URL string) ([]*static.Data, error) {
 		return nil, errors.New("couldn't get number of pages")
 	}
 
-	re = regexp.MustCompile(`https://e-hentai.org/s[^"]+-[0-9]+`)
-	imgURLs := re.FindAllString(htmlString, -1)
+	imgURLs := reIMGURLs.FindAllString(htmlString, -1)
 
 	// if gallery has more than 40 images -> walk other pages for links aswell
 	for page := 1; len(imgURLs) < numberOfPages; page++ {
@@ -97,7 +100,7 @@ func extractData(URL string) ([]*static.Data, error) {
 		if err != nil {
 			return nil, err
 		}
-		imgURLs = append(imgURLs, re.FindAllString(htmlString, -1)...)
+		imgURLs = append(imgURLs, reIMGURLs.FindAllString(htmlString, -1)...)
 	}
 
 	data := []*static.Data{}
@@ -112,16 +115,14 @@ func extractData(URL string) ([]*static.Data, error) {
 			return nil, errors.New("invaild image title")
 		}
 
-		re := regexp.MustCompile(`<div>[^.]+\.([^::]+):: ([^::]+) :: ([^.]+.[0-9]+) ([A-Z]{2})`)
-		matchedFileInfo := re.FindAllStringSubmatch(htmlString, -1)
+		matchedFileInfo := reFileInfo.FindAllStringSubmatch(htmlString, -1)
 		if len(matchedFileInfo) == 0 {
 			return nil, errors.New("invaild image file info")
 		}
 		fileInfo := matchedFileInfo[0]
 
-		// sometimes the "full image url is not provided"
-		re = regexp.MustCompile(`<img id="img" src="([^"]+)`)
-		matchedSrcURL := re.FindAllStringSubmatch(htmlString, -1)
+		// sometimes the "full image URL is not provided"
+		matchedSrcURL := reSourceURL.FindAllStringSubmatch(htmlString, -1)
 		if len(matchedSrcURL) != 1 {
 			return nil, static.ErrDataSourceParseFailed
 		}
@@ -146,7 +147,7 @@ func extractData(URL string) ([]*static.Data, error) {
 					Size: utils.CalcSizeInByte(fSize, fileInfo[4]),
 				},
 			},
-			Url: imgURLs[idx-1],
+			URL: imgURLs[idx-1],
 		})
 
 	}

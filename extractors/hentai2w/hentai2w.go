@@ -11,6 +11,8 @@ import (
 
 const site = "https://hentai2w.com/"
 
+var reSourceURL = regexp.MustCompile(`<source.*src="([^"]+)"`)
+
 type extractor struct{}
 
 // New returns a hentai2w extractor.
@@ -30,7 +32,7 @@ func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 		if err != nil {
 			return nil, utils.Wrap(err, u)
 		}
-		data = append(data, &d)
+		data = append(data, d)
 	}
 
 	return data, nil
@@ -50,22 +52,21 @@ func parseURL(URL string) []string {
 	return re.FindAllString(htmlString, -1)
 }
 
-func extractData(URL string) (static.Data, error) {
+func extractData(URL string) (*static.Data, error) {
 	htmlString, err := request.Get(URL)
 	if err != nil {
-		return static.Data{}, err
+		return nil, err
 	}
 
-	re := regexp.MustCompile(`<source.*src="([^"]+)"`)
-	videoURL := utils.GetLastItemString(re.FindStringSubmatch(htmlString))
+	videoURL := utils.GetLastItemString(reSourceURL.FindStringSubmatch(htmlString))
 	if videoURL == "" || strings.HasPrefix(videoURL, "<") {
-		return static.Data{}, static.ErrDataSourceParseFailed
+		return nil, static.ErrDataSourceParseFailed
 	}
 	ext := utils.GetLastItemString(strings.Split(videoURL, "."))
 
 	size, _ := request.Size(URL, site)
 
-	return static.Data{
+	return &static.Data{
 		Site:  site,
 		Title: utils.GetMeta(&htmlString, "og:title"),
 		Type:  "video",
@@ -80,6 +81,6 @@ func extractData(URL string) (static.Data, error) {
 				Size: size,
 			},
 		},
-		Url: URL,
+		URL: URL,
 	}, nil
 }

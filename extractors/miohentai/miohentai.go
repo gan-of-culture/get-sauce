@@ -11,6 +11,9 @@ import (
 
 const site = "https://miohentai.com/"
 
+var reSourceURL = regexp.MustCompile(`[^"]*cdn\.miohentai[^"]*`)
+var reImageSourceURL = regexp.MustCompile(`async data-src="([^"]*)`)
+
 type extractor struct{}
 
 // New returns a miohentai extractor.
@@ -30,7 +33,7 @@ func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 		if err != nil {
 			return nil, utils.Wrap(err, u)
 		}
-		data = append(data, &d)
+		data = append(data, d)
 	}
 
 	return data, nil
@@ -59,26 +62,24 @@ func parseURL(URL string) []string {
 	return URLs
 }
 
-func extractData(URL string) (static.Data, error) {
+func extractData(URL string) (*static.Data, error) {
 	htmlString, err := request.Get(URL)
 	if err != nil {
-		return static.Data{}, err
+		return nil, err
 	}
 
-	videoRe := regexp.MustCompile(`[^"]*cdn\.miohentai[^"]*`)
-	srcURL := videoRe.FindString(htmlString)
+	srcURL := reSourceURL.FindString(htmlString)
 	if srcURL == "" {
-		imageRe := regexp.MustCompile(`async data-src="([^"]*)`)
-		srcURL = imageRe.FindStringSubmatch(htmlString)[1]
+		srcURL = reImageSourceURL.FindStringSubmatch(htmlString)[1]
 	}
 
 	headers, err := request.Headers(srcURL, URL)
 	if err != nil {
-		return static.Data{}, err
+		return nil, err
 	}
 	size, err := request.GetSizeFromHeaders(&headers)
 	if err != nil {
-		return static.Data{}, err
+		return nil, err
 	}
 
 	ext := utils.GetLastItemString(strings.Split(srcURL, "."))
@@ -86,7 +87,7 @@ func extractData(URL string) (static.Data, error) {
 		ext = strings.Split(headers.Get("content-type"), "/")[1]
 	}
 
-	return static.Data{
+	return &static.Data{
 		Site:  site,
 		Title: strings.Split(utils.GetMeta(&htmlString, "og:title"), " | ")[0],
 		Type:  utils.GetMediaType(headers.Get("content-type")),
@@ -101,6 +102,6 @@ func extractData(URL string) (static.Data, error) {
 				Size: size,
 			},
 		},
-		Url: URL,
+		URL: URL,
 	}, nil
 }

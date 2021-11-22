@@ -177,6 +177,6 @@ func extractData(URL string) (*static.Data, error) {
 				Info: appStat.InitialData.Data.Language.Name,
 			},
 		},
-		Url: URL,
+		URL: URL,
 	}, nil
 }

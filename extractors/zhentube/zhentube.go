@@ -76,7 +76,7 @@ func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 		if err != nil {
 			return nil, utils.Wrap(err, u)
 		}
-		data = append(data, &d)
+		data = append(data, d)
 	}
 
 	return data, nil
@@ -92,35 +92,35 @@ func parseURL(URL string) []string {
 	if err != nil {
 		return nil
 	}
-	// remove rest of site's html including the sidebar that contains videos we don't want
+	// remove rest of site's html including the sidebar that contains videos we don't Want
 	htmlString = strings.Split(htmlString, "<aside")[0]
 
 	return regexp.MustCompile(site+`[^"]+episode-[^/]+/"`).FindAllString(htmlString, -1)
 }
 
-func extractData(URL string) (static.Data, error) {
+func extractData(URL string) (*static.Data, error) {
 	htmlString, err := request.Get(URL)
 	if err != nil {
-		return static.Data{}, err
+		return nil, err
 	}
 
 	reEmbedURL := regexp.MustCompile(`<meta itemprop="embedURL" content="([^"]+)`)
 	matchedEmbedURL := reEmbedURL.FindStringSubmatch(htmlString)
 	if len(matchedEmbedURL) < 2 {
-		return static.Data{}, static.ErrDataSourceParseFailed
+		return nil, static.ErrDataSourceParseFailed
 	}
 
 	title := utils.GetMeta(&htmlString, "og:title")
 
 	htmlString, err = request.Get(matchedEmbedURL[1])
 	if err != nil {
-		return static.Data{}, err
+		return nil, err
 	}
 
 	rePlayerData := regexp.MustCompile(`{"hostList[^\n]+`)
 	matchedPlayerData := rePlayerData.FindString(htmlString)
 	if matchedPlayerData == "" {
-		return static.Data{}, utils.Wrap(static.ErrDataSourceParseFailed, matchedEmbedURL[1])
+		return nil, utils.Wrap(static.ErrDataSourceParseFailed, matchedEmbedURL[1])
 	}
 	//remove trailing js ", false);"
 	matchedPlayerData = matchedPlayerData[:len(matchedPlayerData)-10]
@@ -128,10 +128,10 @@ func extractData(URL string) (static.Data, error) {
 	playerData := playerData{}
 	err = json.Unmarshal([]byte(matchedPlayerData), &playerData)
 	if err != nil {
-		return static.Data{}, err
+		return nil, err
 	}
 	if len(playerData.VideoData.VideoSources) < 1 {
-		return static.Data{}, utils.Wrap(static.ErrDataSourceParseFailed, "no videoSources in: "+matchedEmbedURL[1])
+		return nil, utils.Wrap(static.ErrDataSourceParseFailed, "no videoSources in: "+matchedEmbedURL[1])
 	}
 
 	playerData.HostList.Num1[0] = "stream.deepthroatxvideo.com"
@@ -142,12 +142,12 @@ func extractData(URL string) (static.Data, error) {
 		"accept":  "*/*",
 	})
 	if err != nil {
-		return static.Data{}, err
+		return nil, err
 	}
 
 	dummyStreams, err := utils.ParseM3UMaster(&m3u8Master)
 	if err != nil {
-		return static.Data{}, err
+		return nil, err
 	}
 
 	streams := map[string]*static.Stream{}
@@ -157,12 +157,12 @@ func extractData(URL string) (static.Data, error) {
 			"accept":  "*/*",
 		})
 		if err != nil {
-			return static.Data{}, err
+			return nil, err
 		}
 
 		URLs, _, err := request.GetM3UMeta(&m3u8Media, s.URLs[0].URL, "mp4")
 		if err != nil {
-			return static.Data{}, err
+			return nil, err
 		}
 
 		streams[fmt.Sprint(len(dummyStreams)-idx-1)] = &static.Stream{
@@ -174,11 +174,11 @@ func extractData(URL string) (static.Data, error) {
 		}
 	}
 
-	return static.Data{
+	return &static.Data{
 		Site:    site,
 		Title:   title,
 		Type:    static.DataTypeVideo,
 		Streams: streams,
-		Url:     URL,
+		URL:     URL,
 	}, nil
 }

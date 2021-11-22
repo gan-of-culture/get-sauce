@@ -22,6 +22,12 @@ import (
 const site = "https://exhentai.org/"
 const loginFormURL = "https://forums.e-hentai.org/index.php?act=Login&CODE=01"
 
+var reFileInfo = regexp.MustCompile(`<div>[^.]+\.([^::]+):: ([^::]+) :: ([^.]+.[0-9]+) ([A-Z]{2})`)
+var reSourceURL = regexp.MustCompile(`https://exhentai.org/fullimg[^"]+`)
+var reSourceURLBackup = regexp.MustCompile(`<img id="img" src="([^"]+)`)
+var reNumbOfPages = regexp.MustCompile(`([0-9]+) pages`)
+var reIMGURLs = regexp.MustCompile(`[^"]*/s/[^"\s]*`)
+
 type extractor struct {
 	client *http.Client
 }
@@ -84,9 +90,9 @@ func (e *extractor) login() error {
 }
 
 //Request http
-func (e *extractor) Request(method string, url string, headers map[string]string) (*http.Response, error) {
+func (e *extractor) Request(method string, URL string, headers map[string]string) (*http.Response, error) {
 
-	req, err := http.NewRequest(method, url, nil)
+	req, err := http.NewRequest(method, URL, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -98,7 +104,7 @@ func (e *extractor) Request(method string, url string, headers map[string]string
 		req.Header.Set(k, v)
 	}
 	if _, ok := headers["Referer"]; !ok {
-		req.Header.Set("Referer", url)
+		req.Header.Set("Referer", URL)
 	}
 
 	resp, err := e.client.Do(req)
@@ -111,8 +117,8 @@ func (e *extractor) Request(method string, url string, headers map[string]string
 }
 
 // get content as string
-func (e *extractor) get(url string) (string, error) {
-	resp, err := e.Request(http.MethodGet, url, nil)
+func (e *extractor) get(URL string) (string, error) {
+	resp, err := e.Request(http.MethodGet, URL, nil)
 	if err != nil {
 		return "", err
 	}
@@ -168,20 +174,17 @@ func (e *extractor) extractData(URLs []string) ([]*static.Data, error) {
 			return nil, errors.New("invaild image title")
 		}
 
-		re := regexp.MustCompile(`<div>[^.]+\.([^::]+):: ([^::]+) :: ([^.]+.[0-9]+) ([A-Z]{2})`)
-		matchedFileInfo := re.FindAllStringSubmatch(htmlString, -1)
+		matchedFileInfo := reFileInfo.FindAllStringSubmatch(htmlString, -1)
 		if len(matchedFileInfo) == 0 {
 			return nil, errors.New("invaild image file info")
 		}
 		fileInfo := matchedFileInfo[0]
 
-		re = regexp.MustCompile(`https://exhentai.org/fullimg[^"]+`)
-		srcURL := re.FindStringSubmatch(htmlString)
+		srcURL := reSourceURL.FindStringSubmatch(htmlString)
 		if len(srcURL) != 1 {
 
-			// sometimes the "full image url is not provided"
-			re = regexp.MustCompile(`<img id="img" src="([^"]+)`)
-			matchedSrcURL := re.FindAllStringSubmatch(htmlString, -1)
+			// sometimes the "full image URL is not provided"
+			matchedSrcURL := reSourceURLBackup.FindAllStringSubmatch(htmlString, -1)
 			if len(matchedSrcURL) != 1 {
 				return nil, static.ErrDataSourceParseFailed
 			}
@@ -227,7 +230,7 @@ func (e *extractor) extractData(URLs []string) ([]*static.Data, error) {
 					Size: utils.CalcSizeInByte(fSize, fileInfo[4]),
 				},
 			},
-			Url: URL,
+			URL: URL,
 		})
 	}
 
@@ -278,8 +281,7 @@ func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 			return nil, err
 		}
 
-		re := regexp.MustCompile(`([0-9]+) pages`)
-		htmlNumberOfPages := re.FindStringSubmatch(htmlString)
+		htmlNumberOfPages := reNumbOfPages.FindStringSubmatch(htmlString)
 		if len(htmlNumberOfPages) != 2 {
 			return nil, errors.New("error while trying to access the gallery images")
 		}
@@ -289,8 +291,7 @@ func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 		}
 		pages := utils.NeedDownloadList(numberOfPages)
 
-		re = regexp.MustCompile(`[^"]*/s/[^"\s]*`)
-		matchedImgURLs := re.FindAllString(htmlString, -1)
+		matchedImgURLs := reIMGURLs.FindAllString(htmlString, -1)
 
 		// with this only necessary pages of gallery are scraped
 		// for example you have a gallery with 150 sites, but you only
@@ -302,7 +303,7 @@ func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 			if err != nil {
 				return nil, err
 			}
-			matchedImgURLs = append(matchedImgURLs, re.FindAllString(htmlString, -1)...)
+			matchedImgURLs = append(matchedImgURLs, reIMGURLs.FindAllString(htmlString, -1)...)
 		}
 
 		for _, page := range pages {

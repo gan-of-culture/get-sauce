@@ -9,12 +9,12 @@ import (
 
 func TestDownload(t *testing.T) {
 	tests := []struct {
-		name string
+		Name string
 		data *static.Data
-		want error
+		Want error
 	}{
 		{
-			name: "hentaistream.moe 4k episode concurWriter",
+			Name: "hentaistream.moe 4k episode concurWriter",
 			data: &static.Data{
 				Site:  "https://hentaistream.moe/",
 				Title: "Overflow 1",
@@ -32,7 +32,7 @@ func TestDownload(t *testing.T) {
 				},
 			},
 		}, {
-			name: "rule34.xxx single img",
+			Name: "rule34.xxx single img",
 			data: &static.Data{
 				Site:  "https://rule34.xxx",
 				Title: "4470590",
@@ -47,11 +47,11 @@ func TestDownload(t *testing.T) {
 						},
 					},
 				},
-				Url: "https://rule34.xxx/index.php?page=post&s=view&id=4470590",
+				URL: "https://rule34.xxx/index.php?page=post&s=view&id=4470590",
 			},
-			want: nil,
+			Want: nil,
 		}, {
-			name: "danbooru single post",
+			Name: "danbooru single post",
 			data: &static.Data{
 				Site:  "https://danbooru.donmai.us/",
 				Title: " touhou konpaku youmu niwashi  yuyu ",
@@ -66,11 +66,11 @@ func TestDownload(t *testing.T) {
 						},
 					},
 				},
-				Url: "https://danbooru.donmai.us/posts/3749687",
+				URL: "https://danbooru.donmai.us/posts/3749687",
 			},
-			want: nil,
+			Want: nil,
 		}, {
-			name: "rule 34 single post image",
+			Name: "rule 34 single post image",
 			data: &static.Data{
 				Site:  "https://rule34.paheal.net",
 				Title: "The_Dark_Mangaka tagme",
@@ -85,11 +85,11 @@ func TestDownload(t *testing.T) {
 						},
 					},
 				},
-				Url: "https://rule34.paheal.net/post/view/4322498",
+				URL: "https://rule34.paheal.net/post/view/4322498",
 			},
-			want: nil,
+			Want: nil,
 		}, {
-			name: "nhentai single page",
+			Name: "nhentai single page",
 			data: &static.Data{
 				Site:  "https://nhentai.net",
 				Title: "(C97) [H@BREAK (Itose Ikuto)] Koe Dashicha Barechau kara! [English]",
@@ -106,7 +106,7 @@ func TestDownload(t *testing.T) {
 				},
 			},
 		}, /*{
-			name: "m3u8 normal",
+			Name: "m3u8 normal",
 			data: static.Data{
 				Site:  "https://hentaistream.xxx/",
 				Title: "Hime-sama Love Life! Episode 3",
@@ -124,7 +124,7 @@ func TestDownload(t *testing.T) {
 				Url: "https://hentaistream.xxx/watch/hime-sama-love-life-episode-3_P9TlY9FAOGHM7nn.html",
 			},
 		},*/{
-			name: "m3u8 with aes-128 key - this is not a complete file",
+			Name: "m3u8 with aes-128 key - this is not a complete file",
 			data: &static.Data{
 				Site:  "https://hanime.tv/",
 				Title: "Toilet no Hanako-san vs Kukkyou Taimashi 2",
@@ -157,7 +157,7 @@ func TestDownload(t *testing.T) {
 						Key: []byte{48, 49, 50, 51, 52, 53, 54, 55, 48, 49, 50, 51, 52, 53, 54, 55},
 					},
 				},
-				Url: "https://hanime.tv/videos/hentai/toilet-no-hanako-san-vs-kukkyou-taimashi-2",
+				URL: "https://hanime.tv/videos/hentai/toilet-no-hanako-san-vs-kukkyou-taimashi-2",
 			},
 		},
 	}
@@ -165,9 +165,9 @@ func TestDownload(t *testing.T) {
 	config.SelectStream = "0"
 	downloader := New(false)
 	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
+		t.Run(tt.Name, func(t *testing.T) {
 			err := downloader.Download(tt.data)
-			if err != tt.want {
+			if err != tt.Want {
 				t.Error(err)
 			}
 		})

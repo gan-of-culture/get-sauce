@@ -14,6 +14,9 @@ import (
 
 const site = "https://www.hentais.tube/"
 
+var rePlayerURL = regexp.MustCompile(`player.php[^']*`)
+var reSourceTag = regexp.MustCompile(`src="([^"]*)" type="([^"]*)"(?: label="([^"]*)")?`) // 1=videoURL 2=mimeType 3=quality
+
 type extractor struct{}
 
 // New returns a hentais extractor.
@@ -34,7 +37,7 @@ func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 		if err != nil {
 			return nil, utils.Wrap(err, u)
 		}
-		data = append(data, &d)
+		data = append(data, d)
 	}
 
 	return data, nil
@@ -59,30 +62,28 @@ func parseURL(URL string) []string {
 	return re.FindAllString(htmlString, -1)
 }
 
-func extractData(URL string) (static.Data, error) {
+func extractData(URL string) (*static.Data, error) {
 	htmlString, err := request.Get(URL)
 	if err != nil {
-		return static.Data{}, err
+		return nil, err
 	}
 
 	title := utils.GetH1(&htmlString, -1)
 
-	re := regexp.MustCompile(`player.php[^']*`)
-	playerURL := site + re.FindString(htmlString)
+	playerURL := site + rePlayerURL.FindString(htmlString)
 	if playerURL == "" {
-		return static.Data{}, errors.New("can't parse playerURL for")
+		return nil, errors.New("can't parse playerURL for")
 	}
 
 	htmlString, err = request.Get(playerURL)
 	if err != nil {
 		log.Println(URL)
-		return static.Data{}, err
+		return nil, err
 	}
 
-	re = regexp.MustCompile(`src="([^"]*)" type="([^"]*)"(?: label="([^"]*)")?`) // 1=videoURL 2=mimeType 3=quality
-	matchedSrcTag := re.FindAllStringSubmatch(htmlString, -1)                    //<-- is basically the different streams
+	matchedSrcTag := reSourceTag.FindAllStringSubmatch(htmlString, -1) //<-- is basically the different streams
 	if len(matchedSrcTag) < 1 {
-		return static.Data{}, static.ErrDataSourceParseFailed
+		return nil, static.ErrDataSourceParseFailed
 	}
 
 	u := ""
@@ -117,11 +118,11 @@ func extractData(URL string) (static.Data, error) {
 			Size:    size,
 		}
 	}
-	return static.Data{
+	return &static.Data{
 		Site:    site,
 		Title:   title,
 		Type:    "video",
 		Streams: streams,
-		Url:     URL,
+		URL:     URL,
 	}, nil
 }

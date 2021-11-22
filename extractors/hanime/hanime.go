@@ -31,7 +31,7 @@ func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 		if err != nil {
 			return nil, utils.Wrap(err, u)
 		}
-		data = append(data, &d)
+		data = append(data, d)
 	}
 
 	return data, nil
@@ -51,11 +51,11 @@ func parseURL(URL string) []string {
 	return re.FindAllString(htmlString, -1)
 }
 
-func extractData(URL string) (static.Data, error) {
+func extractData(URL string) (*static.Data, error) {
 
 	data, err := htstreaming.ExtractData(URL)
 	if err != nil {
-		return static.Data{}, err
+		return nil, err
 	}
 	data.Site = site
 	return data, nil

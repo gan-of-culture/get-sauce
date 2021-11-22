@@ -24,6 +24,8 @@ const site = "https://hentaidude.com/"
 const api = "https://hentaidude.com/wp-admin/admin-ajax.php"
 const apiPost = "https://hentaidude.com/?p="
 
+var reJSONParams = regexp.MustCompile(`id: '(\d*)',\s*nonce: '([^']*)`)
+
 type extractor struct{}
 
 // New returns a hentaidude extractor.
@@ -43,7 +45,7 @@ func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 		if err != nil {
 			return nil, utils.Wrap(err, u)
 		}
-		data = append(data, &d)
+		data = append(data, d)
 	}
 
 	return data, nil
@@ -66,18 +68,17 @@ func parseURL(URL string) []string {
 	return []string{URL}
 }
 
-func extractData(URL string) (static.Data, error) {
+func extractData(URL string) (*static.Data, error) {
 	htmlString, err := request.Get(URL)
 	if err != nil {
-		return static.Data{}, err
+		return nil, err
 	}
 	title := utils.GetMeta(&htmlString, "og:title")
 	title = strings.TrimSuffix(title, " | Hentaidude.com")
 
-	re := regexp.MustCompile(`id: '(\d*)',\s*nonce: '([^']*)`)
-	matchedSourceReq := re.FindStringSubmatch(htmlString) // 1=id  2=nonce
+	matchedSourceReq := reJSONParams.FindStringSubmatch(htmlString) // 1=id  2=nonce
 	if len(matchedSourceReq) < 3 {
-		return static.Data{}, errors.New("can't locate json params in URL")
+		return nil, errors.New("can't locate json params in URL")
 	}
 
 	headers := map[string]string{
@@ -93,34 +94,34 @@ func extractData(URL string) (static.Data, error) {
 
 	res, err := request.Request(http.MethodPost, api, headers, strings.NewReader(params.Encode()))
 	if err != nil {
-		return static.Data{}, err
+		return nil, err
 	}
 	defer res.Body.Close()
 
 	body, err := ioutil.ReadAll(res.Body)
 	if err != nil {
-		return static.Data{}, err
+		return nil, err
 	}
 
 	sources := &streams{}
 	err = json.Unmarshal(body, &sources)
 	if err != nil {
-		return static.Data{}, err
+		return nil, err
 	}
 	if !sources.Success {
-		return static.Data{}, errors.New("the api request for the streams did not return successful for")
+		return nil, errors.New("the api request for the streams did not return successful for")
 	}
 
 	streams := make(map[string]*static.Stream)
 	for _, source := range sources.Sources {
 		headers, err := request.Headers(source, source)
 		if err != nil {
-			return static.Data{}, err
+			return nil, err
 		}
 
 		size, err := request.GetSizeFromHeaders(&headers)
 		if err != nil {
-			return static.Data{}, err
+			return nil, err
 		}
 
 		streams[fmt.Sprint(len(streams))] = &static.Stream{
@@ -134,12 +135,12 @@ func extractData(URL string) (static.Data, error) {
 		}
 	}
 
-	return static.Data{
+	return &static.Data{
 		Site:    site,
 		Title:   title,
 		Type:    "video",
 		Streams: streams,
-		Url:     URL,
+		URL:     URL,
 	}, nil
 
 }

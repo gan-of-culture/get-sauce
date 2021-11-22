@@ -5,37 +5,37 @@ import "testing"
 //9hentai
 func TestParseURL(t *testing.T) {
 	tests := []struct {
-		name string
+		Name string
 		in   string
-		want int
+		Want int
 	}{
 		{
-			name: "Single Gallery",
+			Name: "Single Gallery",
 			in:   "https://9hentai.to/g/301/",
-			want: 1,
+			Want: 1,
 		}, {
-			name: "Single Gallery .ru",
+			Name: "Single Gallery .ru",
 			in:   "https://www1.9hentai.ru/g/71163/",
-			want: 1,
+			Want: 1,
 		},
 		{
-			name: "Single Tag",
+			Name: "Single Tag",
 			in:   "https://9hentai.to/t/71/",
-			want: 18,
+			Want: 18,
 		}, {
-			name: "Complex search",
+			Name: "Complex search",
 			in:   "https://9hentai.to/t/71/#~(text~'~page~0~sort~0~pages~(range~(~0~2000))~tag~(text~'AN~type~1~tags~(~)~items~(included~(~(id~71~name~'Alice~description~null~type~5~books_count~25)~(id~30~name~'Anal~description~null~type~1))~excluded~(~))))#",
-			want: 18,
+			Want: 18,
 		},
 	}
 	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
+		t.Run(tt.Name, func(t *testing.T) {
 			galleries, err := parseURL(tt.in)
 			if err != nil {
 				t.Error(err)
 			}
-			if len(galleries) < tt.want {
-				t.Errorf("Got: %v - want: %v", len(galleries), tt.want)
+			if len(galleries) < tt.Want {
+				t.Errorf("Got: %v - Want: %v", len(galleries), tt.Want)
 			}
 		})
 	}
@@ -43,28 +43,28 @@ func TestParseURL(t *testing.T) {
 
 func TestExtract(t *testing.T) {
 	tests := []struct {
-		name string
+		Name string
 		in   string
-		want int
+		Want int
 	}{
 		{
-			name: "Single Gallery",
+			Name: "Single Gallery",
 			in:   "https://9hentai.to/g/301/",
-			want: 1,
+			Want: 1,
 		}, {
-			name: "Complex search",
+			Name: "Complex search",
 			in:   "https://9hentai.to/t/71/#~(text~'~page~0~sort~0~pages~(range~(~0~2000))~tag~(text~'AN~type~1~tags~(~)~items~(included~(~(id~71~name~'Alice~description~null~type~5~books_count~25)~(id~30~name~'Anal~description~null~type~1))~excluded~(~))))#",
-			want: 18,
+			Want: 18,
 		},
 	}
 	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
+		t.Run(tt.Name, func(t *testing.T) {
 			data, err := New().Extract(tt.in)
 			if err != nil {
 				t.Error(err)
 			}
-			if len(data) < tt.want {
-				t.Errorf("Got: %v - want: %v", len(data), tt.want)
+			if len(data) < tt.Want {
+				t.Errorf("Got: %v - Want: %v", len(data), tt.Want)
 			}
 		})
 	}

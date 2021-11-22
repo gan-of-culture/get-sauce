@@ -34,7 +34,7 @@ func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 		if err != nil {
 			return nil, utils.Wrap(err, u)
 		}
-		data = append(data, &d)
+		data = append(data, d)
 	}
 
 	return data, nil
@@ -58,22 +58,22 @@ func parseURL(URL string) []string {
 	return out
 }
 
-func extractData(URL string) (static.Data, error) {
+func extractData(URL string) (*static.Data, error) {
 	htmlString, err := request.Get(URL)
 	if err != nil {
-		return static.Data{}, err
+		return nil, err
 	}
 
 	title := utils.GetLastItemString(reTitle.FindStringSubmatch(htmlString))
 
 	sourceURL := utils.GetLastItemString(reSourceURL.FindStringSubmatch(htmlString))
 	if sourceURL == "" {
-		return static.Data{}, static.ErrDataSourceParseFailed
+		return nil, static.ErrDataSourceParseFailed
 	}
 
 	size, _ := request.Size(sourceURL, site+"/")
 
-	return static.Data{
+	return &static.Data{
 		Site:  site,
 		Title: title,
 		Type:  static.DataTypeVideo,
@@ -88,6 +88,6 @@ func extractData(URL string) (static.Data, error) {
 				Size: size,
 			},
 		},
-		Url: site + "/" + title,
+		URL: site + "/" + title,
 	}, nil
 }

@@ -15,7 +15,7 @@ func TestSize(t *testing.T) {
 		}
 
 		if size == 0 {
-			t.Errorf("Got: %v - want: %v", size, "more than 0 Bytes")
+			t.Errorf("Got: %v - Want: %v", size, "more than 0 Bytes")
 		}
 	})
 }
@@ -28,7 +28,7 @@ func TestGet(t *testing.T) {
 		}
 
 		if htmlString == "" {
-			t.Errorf("Got: %v - want: %v", htmlString, "a string")
+			t.Errorf("Got: %v - Want: %v", htmlString, "a string")
 		}
 	})
 }
@@ -41,7 +41,7 @@ func TestPost(t *testing.T) {
 		}
 
 		if len(data) < 1 {
-			t.Errorf("Got: %v - want: %v", data, "some bytes")
+			t.Errorf("Got: %v - Want: %v", data, "some bytes")
 		}
 	})
 }
@@ -56,7 +56,7 @@ func TestGetWReferer(t *testing.T) {
 		}
 
 		if htmlString == "" {
-			t.Errorf("Got: %v - want: %v", htmlString, "a string")
+			t.Errorf("Got: %v - Want: %v", htmlString, "a string")
 		}
 	})
 }

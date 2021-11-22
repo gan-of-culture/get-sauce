@@ -262,6 +262,6 @@ func extractData(g gallery) (static.Data, error) {
 				Info: fmt.Sprint(g.TotalPage),
 			},
 		},
-		Url: fmt.Sprintf("%sg/%d", site, g.ID),
+		URL: fmt.Sprintf("%sg/%d", site, g.ID),
 	}, nil
 }

@@ -7,17 +7,17 @@ import (
 
 func TestParseFirePlayerParams(t *testing.T) {
 	tests := []struct {
-		name string
+		Name string
 		in   struct {
 			jsTemplate string
 			a          int
 			c          int
 			keywords   []string
 		}
-		want string
+		Want string
 	}{
 		{
-			name: "Default",
+			Name: "Default",
 			in: struct {
 				jsTemplate string
 				a          int
@@ -29,14 +29,14 @@ func TestParseFirePlayerParams(t *testing.T) {
 				c:          136,
 				keywords:   strings.Split(`||false|com|true||https|x4e|x4d|x6d||captions|Onaho|x5a|x44|x78|null|function|file|x6a|x79|x47|x46|x4f|default|201|language|label|vtt|20Animation|20The|20Keikaku|20Ninshin|20Zenin|20Joshi|20Kyoushitsu|htstreaming|cdn|kind|fireplay|fireload|source|Spanish|libraries|jwplatform|content|jwPlayerURL|20Episodio|rZFhulEcXvUQMbyWAmIQyyjPjZAQPLw|20SubESP|ksaKvjlJRbnrPXSGpuPVqfscYS9|jwPlayerKey|jwplayer|js|videoPlayer|downloadType|fontSize|fontfamily|Trebuchet|MS|defaultImage|ck|x69|hDZaZjnc|admessage|downloadFile|active|f874601f91ab162335b5856b05987b7d|skin|name|url|logo|link|position|top|right|tracks|spanish|english|20Episode|20English|20Subbed|English|if|var|ready|document|x7a|x6c|x63|rememberPosition|Kyoushitsu|Joshi|Zenin|Ninshin|Keikaku|The|Animation|Episode|displaytitle|advertising|title|client|vast|schedule|offset|pre|tag|adtng|get|10012948|skipoffset|Reklam|jwplayer8quality|FirePlayer|jwplayer8button1|x34|x45|x49|x59|firevideoplayer|x52|x68|popurl||x41|poplimit|popactive|openwebtorrent|tracker|wss|p2pTrackers|p2p|x51|x3d|SubtitleManager`, "|"),
 			},
-			want: `function fireload(source=null){FirePlayer("f874601f91ab162335b5856b05987b7d",{"skin":{"name":"","url":""},"logo":{"file":"","link":"","position":"top-right","active":false},"tracks":[{"kind":"captions","file":"https:\/\/cdn.htstreaming.com\/english\/Onaho%20Kyoushitsu-%20Joshi%20Zenin%20Ninshin%20Keikaku%20The%20Animation%20Episode%201%20English%20Subbed.vtt","label":"English","language":null,"default":true},{"kind":"captions","file":"https:\/\/cdn.htstreaming.com\/spanish\/Onaho%20Kyoushitsu%20Joshi%20Zenin%20Ninshin%20Keikaku%20The%20Animation%20Episodio%201%20SubESP.vtt","label":"Spanish","language":null,"default":false}],"captions":{"fontSize":"20","fontfamily":"Trebuchet MS"},"defaultImage":"","ck":"\\x4f\\x47\\x46\\x69\\x4d\\x7a\\x46\\x6c\\x4d\\x6a\\x63\\x34\\x4e\\x44\\x45\\x78\\x4e\\x6d\\x49\\x79\\x4e\\x6d\\x59\\x78\\x4d\\x44\\x5a\\x6d\\x5a\\x47\\x52\\x68\\x5a\\x6a\\x41\\x78\\x4e\\x6d\\x4d\\x79\\x4f\\x44\\x51\\x3d","SubtitleManager":true,"jwplayer8button1":true,"jwplayer8quality":true,"title":"Onaho Kyoushitsu: Joshi Zenin Ninshin Keikaku The Animation Episode 1","displaytitle":false,"rememberPosition":false,"advertising":{"client":"vast","schedule":[{"offset":"pre","tag":"https:\/\/a.adtng.com\/get\/10012948","skipoffset":"5"}],"admessage":"Reklam"},"p2p":false,"p2pTrackers":["wss:\/\/tracker.openwebtorrent.com\/"],"popactive":false,"poplimit":"0","popurl":"https:\/\/firevideoplayer.com\/","downloadFile":true,"downloadType":"1","videoPlayer":"jwplayer","jwPlayerKey":"ksaKvjlJRbnrPXSGpuPVqfscYS9+rZFhulEcXvUQMbyWAmIQyyjPjZAQPLw=","jwPlayerURL":"https:\/\/content.jwplatform.com\/libraries\/hDZaZjnc.js"},false,source)}$(function(){$(document).ready(function(){var fireplay=true;if(fireplay){fireload()}})});`,
+			Want: `function fireload(source=null){FirePlayer("f874601f91ab162335b5856b05987b7d",{"skin":{"name":"","url":""},"logo":{"file":"","link":"","position":"top-right","active":false},"tracks":[{"kind":"captions","file":"https:\/\/cdn.htstreaming.com\/english\/Onaho%20Kyoushitsu-%20Joshi%20Zenin%20Ninshin%20Keikaku%20The%20Animation%20Episode%201%20English%20Subbed.vtt","label":"English","language":null,"default":true},{"kind":"captions","file":"https:\/\/cdn.htstreaming.com\/spanish\/Onaho%20Kyoushitsu%20Joshi%20Zenin%20Ninshin%20Keikaku%20The%20Animation%20Episodio%201%20SubESP.vtt","label":"Spanish","language":null,"default":false}],"captions":{"fontSize":"20","fontfamily":"Trebuchet MS"},"defaultImage":"","ck":"\\x4f\\x47\\x46\\x69\\x4d\\x7a\\x46\\x6c\\x4d\\x6a\\x63\\x34\\x4e\\x44\\x45\\x78\\x4e\\x6d\\x49\\x79\\x4e\\x6d\\x59\\x78\\x4d\\x44\\x5a\\x6d\\x5a\\x47\\x52\\x68\\x5a\\x6a\\x41\\x78\\x4e\\x6d\\x4d\\x79\\x4f\\x44\\x51\\x3d","SubtitleManager":true,"jwplayer8button1":true,"jwplayer8quality":true,"title":"Onaho Kyoushitsu: Joshi Zenin Ninshin Keikaku The Animation Episode 1","displaytitle":false,"rememberPosition":false,"advertising":{"client":"vast","schedule":[{"offset":"pre","tag":"https:\/\/a.adtng.com\/get\/10012948","skipoffset":"5"}],"admessage":"Reklam"},"p2p":false,"p2pTrackers":["wss:\/\/tracker.openwebtorrent.com\/"],"popactive":false,"poplimit":"0","popurl":"https:\/\/firevideoplayer.com\/","downloadFile":true,"downloadType":"1","videoPlayer":"jwplayer","jwPlayerKey":"ksaKvjlJRbnrPXSGpuPVqfscYS9+rZFhulEcXvUQMbyWAmIQyyjPjZAQPLw=","jwPlayerURL":"https:\/\/content.jwplatform.com\/libraries\/hDZaZjnc.js"},false,source)}$(function(){$(document).ready(function(){var fireplay=true;if(fireplay){fireload()}})});`,
 		},
 	}
 	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
+		t.Run(tt.Name, func(t *testing.T) {
 			out := parseFirePlayerParams(tt.in.jsTemplate, tt.in.a, tt.in.c, tt.in.keywords)
-			if out != tt.want {
-				t.Errorf("Got: %v \n want: %v", out, tt.want)
+			if out != tt.Want {
+				t.Errorf("Got: %v \n Want: %v", out, tt.Want)
 			}
 		})
 	}
@@ -44,21 +44,21 @@ func TestParseFirePlayerParams(t *testing.T) {
 
 func TestParseSubtitles(t *testing.T) {
 	tests := []struct {
-		name string
+		Name string
 		in   string
-		want int
+		Want int
 	}{
 		{
-			name: "Default",
+			Name: "Default",
 			in:   `function fireload(source=null){FirePlayer("f874601f91ab162335b5856b05987b7d",{"skin":{"name":"","url":""},"logo":{"file":"","link":"","position":"top-right","active":false},"tracks":[{"kind":"captions","file":"https:\/\/cdn.htstreaming.com\/english\/Onaho%20Kyoushitsu-%20Joshi%20Zenin%20Ninshin%20Keikaku%20The%20Animation%20Episode%201%20English%20Subbed.vtt","label":"English","language":null,"default":true},{"kind":"captions","file":"https:\/\/cdn.htstreaming.com\/spanish\/Onaho%20Kyoushitsu%20Joshi%20Zenin%20Ninshin%20Keikaku%20The%20Animation%20Episodio%201%20SubESP.vtt","label":"Spanish","language":null,"default":false}],"captions":{"fontSize":"20","fontfamily":"Trebuchet MS"},"defaultImage":"","ck":"\\x4f\\x47\\x46\\x69\\x4d\\x7a\\x46\\x6c\\x4d\\x6a\\x63\\x34\\x4e\\x44\\x45\\x78\\x4e\\x6d\\x49\\x79\\x4e\\x6d\\x59\\x78\\x4d\\x44\\x5a\\x6d\\x5a\\x47\\x52\\x68\\x5a\\x6a\\x41\\x78\\x4e\\x6d\\x4d\\x79\\x4f\\x44\\x51\\x3d","SubtitleManager":true,"jwplayer8button1":true,"jwplayer8quality":true,"title":"Onaho Kyoushitsu: Joshi Zenin Ninshin Keikaku The Animation Episode 1","displaytitle":false,"rememberPosition":false,"advertising":{"client":"vast","schedule":[{"offset":"pre","tag":"https:\/\/a.adtng.com\/get\/10012948","skipoffset":"5"}],"admessage":"Reklam"},"p2p":false,"p2pTrackers":["wss:\/\/tracker.openwebtorrent.com\/"],"popactive":false,"poplimit":"0","popurl":"https:\/\/firevideoplayer.com\/","downloadFile":true,"downloadType":"1","videoPlayer":"jwplayer","jwPlayerKey":"ksaKvjlJRbnrPXSGpuPVqfscYS9+rZFhulEcXvUQMbyWAmIQyyjPjZAQPLw=","jwPlayerURL":"https:\/\/content.jwplatform.com\/libraries\/hDZaZjnc.js"},false,source)}$(function(){$(document).ready(function(){var fireplay=true;if(fireplay){fireload()}})});`,
-			want: 2,
+			Want: 2,
 		},
 	}
 	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
+		t.Run(tt.Name, func(t *testing.T) {
 			out := parseCaptions(tt.in)
-			if len(out) != tt.want {
-				t.Errorf("Got: %v \n want: %v", len(out), tt.want)
+			if len(out) != tt.Want {
+				t.Errorf("Got: %v \n Want: %v", len(out), tt.Want)
 			}
 		})
 	}

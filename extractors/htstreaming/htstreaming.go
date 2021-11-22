@@ -31,6 +31,7 @@ type videoData struct {
 
 var reTitle = regexp.MustCompile(`"title":"[^"]+`)
 var reVideoURL = regexp.MustCompile(`https://htstreaming.com/video/([^"]*)`)
+var rePlayerURL = regexp.MustCompile(`[^"]*index.php\?data[^"]*`)
 
 var site string
 
@@ -64,7 +65,7 @@ func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 			}
 			return nil, utils.Wrap(err, u)
 		}
-		data = append(data, &d)
+		data = append(data, d)
 	}
 
 	return data, nil
@@ -93,10 +94,9 @@ func parseURL(URL string) []string {
 }
 
 // ExtractData for a single episode that is hosted by the htstreaming network
-func ExtractData(URL string) (static.Data, error) {
+func ExtractData(URL string) (*static.Data, error) {
 
-	re := regexp.MustCompile(`[^"]*index.php\?data[^"]*`)
-	playerURL := re.FindString(URL)
+	playerURL := rePlayerURL.FindString(URL)
 	if playerURL == "" {
 		hash := utils.GetLastItemString(reVideoURL.FindStringSubmatch(URL))
 		if hash != "" {
@@ -109,13 +109,12 @@ func ExtractData(URL string) (static.Data, error) {
 		htmlString, err := request.Get(URL)
 		if err != nil {
 			log.Println(htmlString)
-			return static.Data{}, err
+			return nil, err
 		}
 
 		htmlString = strings.ReplaceAll(htmlString, `\`, ``)
 
-		re = regexp.MustCompile(`[^"]*index.php\?data[^"]*`)
-		playerURL = re.FindString(htmlString)
+		playerURL = rePlayerURL.FindString(htmlString)
 		if playerURL == "" {
 			hash := utils.GetLastItemString(reVideoURL.FindStringSubmatch(htmlString))
 			if hash != "" {
@@ -123,7 +122,7 @@ func ExtractData(URL string) (static.Data, error) {
 			}
 		}
 		if playerURL == "" {
-			return static.Data{}, errors.New("player URL not found")
+			return nil, errors.New("player URL not found")
 		}
 
 	}
@@ -136,20 +135,20 @@ func ExtractData(URL string) (static.Data, error) {
 		"x-requested-with": "XMLHttpRequest",
 	}, strings.NewReader(URLValues.Encode()))
 	if err != nil {
-		return static.Data{}, err
+		return nil, err
 	}
 	defer res.Body.Close()
 
 	buffer, err := ioutil.ReadAll(res.Body)
 	if err != nil {
-		return static.Data{}, err
+		return nil, err
 	}
 
 	pData := videoData{}
 	err = json.Unmarshal(buffer, &pData)
 	if err != nil {
 		log.Println(string(buffer))
-		return static.Data{}, err
+		return nil, err
 	}
 
 	m3u8Master, err := request.GetWithHeaders(pData.VideoSource, map[string]string{
@@ -157,12 +156,12 @@ func ExtractData(URL string) (static.Data, error) {
 		"accept":  "*/*",
 	})
 	if err != nil {
-		return static.Data{}, err
+		return nil, err
 	}
 
 	dummyStreams, err := utils.ParseM3UMaster(&m3u8Master)
 	if err != nil {
-		return static.Data{}, err
+		return nil, err
 	}
 
 	ext := "ts"
@@ -173,12 +172,12 @@ func ExtractData(URL string) (static.Data, error) {
 			"accept":  "*/*",
 		})
 		if err != nil {
-			return static.Data{}, err
+			return nil, err
 		}
 
 		URLs, key, err := request.GetM3UMeta(&master, stream.URLs[0].URL, ext)
 		if err != nil {
-			return static.Data{}, err
+			return nil, err
 		}
 
 		if strings.Contains(stream.Info, "mp4a") {
@@ -196,31 +195,31 @@ func ExtractData(URL string) (static.Data, error) {
 
 	htmlString, err := request.Get(playerURL)
 	if err != nil {
-		return static.Data{}, err
+		return nil, err
 	}
 
 	matchedSubtitleParams := reSubtitleParams.FindStringSubmatch(htmlString) //1=jsTemplate 2=a 3=c 4=keywords
 	if len(matchedSubtitleParams) < 5 {
-		return static.Data{}, static.ErrDataSourceParseFailed
+		return nil, static.ErrDataSourceParseFailed
 	}
 
 	a, err := strconv.Atoi(matchedSubtitleParams[2])
 	if err != nil {
-		return static.Data{}, err
+		return nil, err
 	}
 	c, err := strconv.Atoi(matchedSubtitleParams[3])
 	if err != nil {
-		return static.Data{}, err
+		return nil, err
 	}
 
 	jsParams := parseFirePlayerParams(matchedSubtitleParams[1], a, c, strings.Split(matchedSubtitleParams[4], "|"))
 
-	return static.Data{
+	return &static.Data{
 		Site:     site,
 		Title:    utils.GetLastItemString(strings.Split(reTitle.FindString(jsParams), `"`)),
 		Type:     "video",
 		Streams:  streams,
 		Captions: parseCaptions(jsParams),
-		Url:      URL,
+		URL:      URL,
 	}, nil
 }

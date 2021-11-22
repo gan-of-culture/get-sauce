@@ -168,6 +168,6 @@ func extractData(ID string) (*static.Data, error) {
 				URLs: URLs,
 			},
 		},
-		Url: fmt.Sprintf("%sgallery/%s/", site, ID),
+		URL: fmt.Sprintf("%sgallery/%s/", site, ID),
 	}, nil
 }

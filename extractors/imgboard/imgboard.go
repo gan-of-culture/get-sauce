@@ -13,6 +13,13 @@ import (
 	"github.com/gan-of-culture/get-sauce/utils"
 )
 
+var reSiteName = regexp.MustCompile(`http?s://(?:www.)?([^.]*)`)
+var rePostURL = regexp.MustCompile(`<a.+href="([^"]+\.([^"?]+)).+>\s*(?:Original|Download PNG)`)                //1=url 2=ext
+var rePostBackup = regexp.MustCompile(`<a.+href="([^"]+\.([^"?]+)).+>\s*(?:Original|View larger|Download PNG)`) //1=url 2=ext
+var reID = regexp.MustCompile(`Id: [^<]*`)
+var reSize = regexp.MustCompile(`Size: [^<]*`)
+var reDirectLink = regexp.MustCompile(`https://[^/]*/[^/]*/([^/]*)/[^.\s]*\.[^\.\s]*\..*(\w{3,4})$`) //1=title //2=ext
+
 var siteURL string
 var mass bool
 
@@ -35,7 +42,7 @@ func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 	}
 
 	var data []*static.Data
-	var extractDataFunc func(url string) (static.Data, error)
+	var extractDataFunc func(URL string) (*static.Data, error)
 	extractDataFunc = extractData
 	if mass {
 		extractDataFunc = extractDataFromDirectLink
@@ -46,7 +53,7 @@ func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 		if err != nil {
 			return nil, utils.Wrap(err, u)
 		}
-		data = append(data, &d)
+		data = append(data, d)
 	}
 
 	return data, nil
@@ -88,7 +95,7 @@ func parseURL(URL string) []string {
 	rePost := regexp.MustCompile(`(?:index.php\?page=post(?:(?:&)|(?:&amp;))s=view(?:(?:&)|(?:&amp;))id=[0-9]*)|"/post/show/[^"]*`)
 	reDirectLinks := regexp.MustCompile(`directlink largeimg"\s*href="([^"]*)`)
 	found := 0
-	urls := []string{}
+	URLs := []string{}
 	pID := 0
 
 	// if the url contains a specific page number and there is no amount set
@@ -108,9 +115,9 @@ func parseURL(URL string) []string {
 			mass = true
 			for _, l := range matchedDirectLinks {
 				if found >= config.Amount && config.Amount > 0 {
-					return urls
+					return URLs
 				}
-				urls = append(urls, l[1])
+				URLs = append(URLs, l[1])
 				found++
 			}
 		}
@@ -118,22 +125,22 @@ func parseURL(URL string) []string {
 		if !mass {
 			matchedPosts := rePost.FindAllString(htmlString, -1)
 			if len(matchedPosts) == 0 {
-				return urls
+				return URLs
 			}
 
 			for _, p := range matchedPosts {
 				if found >= config.Amount && config.Amount > 0 {
-					return urls
+					return URLs
 				}
 				p = strings.TrimLeft(p, `"/`)
 				p = strings.ReplaceAll(p, "&amp;", "&")
 
-				urls = append(urls, fmt.Sprintf("%s/%s", siteURL, p))
+				URLs = append(URLs, fmt.Sprintf("%s/%s", siteURL, p))
 				found++
 			}
 		}
 		if config.Amount == 0 {
-			return urls
+			return URLs
 		}
 		if pageParam == "&pid=%d" {
 			i += 42
@@ -142,26 +149,23 @@ func parseURL(URL string) []string {
 		i++
 	}
 
-	return urls
+	return URLs
 }
 
-func extractData(url string) (static.Data, error) {
+func extractData(URL string) (*static.Data, error) {
 
-	re := regexp.MustCompile(`http?s://(?:www.)?([^.]*)`)
-	siteName := re.FindStringSubmatch(siteURL)[1]
+	siteName := reSiteName.FindStringSubmatch(siteURL)[1]
 
-	postHTML, err := request.Get(url)
+	postHTML, err := request.Get(URL)
 	if err != nil {
-		return static.Data{}, err
+		return nil, err
 	}
 
-	re = regexp.MustCompile(`<a.+href="([^"]+\.([^"?]+)).+>\s*(?:Original|Download PNG)`) //1=url 2=ext
-	matchedPostURL := re.FindStringSubmatch(postHTML)
+	matchedPostURL := rePostURL.FindStringSubmatch(postHTML)
 	if len(matchedPostURL) != 3 {
-		re = regexp.MustCompile(`<a.+href="([^"]+\.([^"?]+)).+>\s*(?:Original|View larger|Download PNG)`)
-		matchedPostURL = re.FindStringSubmatch(postHTML)
+		matchedPostURL = rePostBackup.FindStringSubmatch(postHTML)
 		if len(matchedPostURL) != 3 {
-			return static.Data{}, static.ErrDataSourceParseFailed
+			return nil, static.ErrDataSourceParseFailed
 		}
 	}
 
@@ -171,20 +175,18 @@ func extractData(url string) (static.Data, error) {
 
 	var size int64
 	if config.Amount == 0 {
-		size, err = request.Size(matchedPostURL[1], url)
+		size, err = request.Size(matchedPostURL[1], URL)
 		if err != nil {
-			return static.Data{}, errors.New("no image size not found")
+			return nil, errors.New("no image size not found")
 		}
 	}
 
-	re = regexp.MustCompile(`Id: [^<]*`)
-	id := re.FindString(postHTML)
+	id := reID.FindString(postHTML)
 
-	re = regexp.MustCompile(`Size: [^<]*`)
-	quality := re.FindString(postHTML)
+	quality := reSize.FindString(postHTML)
 	quality = strings.ReplaceAll(quality, "Size: ", "")
 
-	return static.Data{
+	return &static.Data{
 		Site:  siteURL,
 		Title: fmt.Sprintf("%s_%s", siteName, strings.ReplaceAll(id, "Id: ", "")),
 		Type:  utils.GetMediaType(matchedPostURL[2]),
@@ -200,19 +202,18 @@ func extractData(url string) (static.Data, error) {
 				Size:    size,
 			},
 		},
-		Url: url,
+		URL: URL,
 	}, nil
 
 }
 
-func extractDataFromDirectLink(url string) (static.Data, error) {
-	re := regexp.MustCompile(`https://[^/]*/[^/]*/([^/]*)/[^.\s]*\.[^\.\s]*\..*(\w{3,4})$`) //1=title //2=ext
-	matchedURL := re.FindStringSubmatch(url)
+func extractDataFromDirectLink(URL string) (*static.Data, error) {
+	matchedURL := reDirectLink.FindStringSubmatch(URL)
 	if len(matchedURL) != 3 {
-		return static.Data{}, errors.New("direct download can't match URL")
+		return nil, errors.New("direct download can't match URL")
 	}
 
-	return static.Data{
+	return &static.Data{
 		Site:  siteURL,
 		Title: matchedURL[1],
 		Type:  utils.GetMediaType(matchedURL[2]),
@@ -220,13 +221,13 @@ func extractDataFromDirectLink(url string) (static.Data, error) {
 			"0": {
 				URLs: []*static.URL{
 					{
-						URL: url,
+						URL: URL,
 						Ext: matchedURL[2],
 					},
 				},
 				Size: 0,
 			},
 		},
-		Url: url,
+		URL: URL,
 	}, nil
 }

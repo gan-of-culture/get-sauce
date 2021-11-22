@@ -4,25 +4,25 @@ import "testing"
 
 func TestParseURL(t *testing.T) {
 	tests := []struct {
-		name string
-		url  string
-		want int
+		Name string
+		URL  string
+		Want int
 	}{
 		{
-			name: "Single Episode hanime.io/",
-			url:  "https://hanime.io/hentai/torokase-orgasm-1/",
-			want: 1,
+			Name: "Single Episode hanime.io/",
+			URL:  "https://hanime.io/hentai/torokase-orgasm-1/",
+			Want: 1,
 		}, {
-			name: "Overview hanime.io/",
-			url:  "https://hanime.io/genre/adventure/",
-			want: 35,
+			Name: "Overview hanime.io/",
+			URL:  "https://hanime.io/genre/adventure/",
+			Want: 35,
 		},
 	}
 	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			urls := parseURL(tt.url)
-			if len(urls) > tt.want || len(urls) == 0 {
-				t.Errorf("Got: %v - want: %v", len(urls), tt.want)
+		t.Run(tt.Name, func(t *testing.T) {
+			URLs := parseURL(tt.URL)
+			if len(URLs) > tt.Want || len(URLs) == 0 {
+				t.Errorf("Got: %v - Want: %v", len(URLs), tt.Want)
 			}
 		})
 	}
@@ -30,28 +30,28 @@ func TestParseURL(t *testing.T) {
 
 func TestExtract(t *testing.T) {
 	tests := []struct {
-		name string
-		url  string
-		want int
+		Name string
+		URL  string
+		Want int
 	}{
 		{
-			name: "Single Episode hanime.io/",
-			url:  "https://hanime.io/hentai/torokase-orgasm-1/",
-			want: 1,
+			Name: "Single Episode hanime.io/",
+			URL:  "https://hanime.io/hentai/torokase-orgasm-1/",
+			Want: 1,
 		}, {
-			name: "Overview hanime.io/",
-			url:  "https://hanime.io/genre/adventure/",
-			want: 2,
+			Name: "Overview hanime.io/",
+			URL:  "https://hanime.io/genre/adventure/",
+			Want: 2,
 		},
 	}
 	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			data, err := New().Extract(tt.url)
+		t.Run(tt.Name, func(t *testing.T) {
+			data, err := New().Extract(tt.URL)
 			if err != nil {
 				t.Error(err)
 			}
-			if len(data) > tt.want || len(data) == 0 {
-				t.Errorf("Got: %v - want: %v", len(data), tt.want)
+			if len(data) > tt.Want || len(data) == 0 {
+				t.Errorf("Got: %v - Want: %v", len(data), tt.Want)
 			}
 		})
 	}
