@@ -14,6 +14,10 @@ import (
 
 const site = "https://hentaimama.io/"
 
+var reMirrorURLs = regexp.MustCompile(`[^"]*new\d.php\?p=([^"]*)`)
+var reExt = regexp.MustCompile(`([a-z][\w]*)(?:\?|$)`)
+var reMimeType = regexp.MustCompile(`video/[^']*`)
+
 type extractor struct{}
 
 // New returns a hentaimama extractor.
@@ -33,7 +37,7 @@ func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 		if err != nil {
 			return nil, utils.Wrap(err, u)
 		}
-		data = append(data, &d)
+		data = append(data, d)
 	}
 
 	return data, nil
@@ -57,16 +61,15 @@ func parseURL(URL string) []string {
 	return re.FindAllString(htmlString, -1)
 }
 
-func extractData(URL string) (static.Data, error) {
+func extractData(URL string) (*static.Data, error) {
 	episodeHtmlString, err := request.Get(URL)
 	if err != nil {
-		return static.Data{}, err
+		return nil, err
 	}
 
-	re := regexp.MustCompile(`[^"]*new\d.php\?p=([^"]*)`)
-	matchedMirrorURLs := re.FindAllStringSubmatch(episodeHtmlString, -1)
+	matchedMirrorURLs := reMirrorURLs.FindAllStringSubmatch(episodeHtmlString, -1)
 	if len(matchedMirrorURLs) < 1 {
-		return static.Data{}, static.ErrDataSourceParseFailed
+		return nil, static.ErrDataSourceParseFailed
 	}
 
 	idx := -1
@@ -75,29 +78,27 @@ func extractData(URL string) (static.Data, error) {
 		idx += 1
 		b64Path, err := base64.StdEncoding.DecodeString(u[1])
 		if err != nil {
-			return static.Data{}, err
+			return nil, err
 		}
 		b64Paths := strings.Split(string(b64Path), "?")
 
 		htmlString, err := request.Get(u[0])
 		if err != nil {
-			return static.Data{}, err
+			return nil, err
 		}
 
 		reSrc := regexp.MustCompile(fmt.Sprintf(`[^"']*/%s[^"']*`, string(b64Paths[0])))
 		srcURL := reSrc.FindString(htmlString)
 
-		re = regexp.MustCompile(`([a-z][\w]*)(?:\?|$)`)
-		ext := strings.TrimSuffix(utils.GetLastItemString(re.FindStringSubmatch(srcURL)), "?")
+		ext := strings.TrimSuffix(utils.GetLastItemString(reExt.FindStringSubmatch(srcURL)), "?")
 		if ext != "m3u8" {
 			size, err := request.Size(srcURL, site)
 			if err != nil {
-				return static.Data{}, err
+				return nil, err
 			}
 
 			if ext == "" {
-				re = regexp.MustCompile(`video/[^']*`)
-				ext = strings.Split(re.FindString(srcURL), "/")[1]
+				ext = strings.Split(reMimeType.FindString(srcURL), "/")[1]
 			}
 
 			streams[fmt.Sprint(idx)] = &static.Stream{
@@ -116,17 +117,17 @@ func extractData(URL string) (static.Data, error) {
 
 		master, err := request.GetWithHeaders(srcURL, map[string]string{"Referer": srcURL})
 		if err != nil {
-			return static.Data{}, err
+			return nil, err
 		}
 
 		baseURL, err := url.Parse(srcURL)
 		if err != nil {
-			return static.Data{}, err
+			return nil, err
 		}
 
 		streamsTmp, err := utils.ParseM3UMaster(&master)
 		if err != nil {
-			return static.Data{}, err
+			return nil, err
 		}
 
 		for j := len(streamsTmp) - 1; j > -1; j-- {
@@ -135,17 +136,17 @@ func extractData(URL string) (static.Data, error) {
 			streamTmp := streamsTmp[j]
 			mediaURL, err := baseURL.Parse(streamTmp.URLs[0].URL)
 			if err != nil {
-				return static.Data{}, err
+				return nil, err
 			}
 
 			mediaStr, err := request.Get(mediaURL.String())
 			if err != nil {
-				return static.Data{}, err
+				return nil, err
 			}
 
 			URLs, key, err := request.GetM3UMeta(&mediaStr, mediaURL.String(), "ts")
 			if err != nil {
-				return static.Data{}, err
+				return nil, err
 			}
 
 			streams[fmt.Sprint(idx)] = &static.Stream{
@@ -160,12 +161,12 @@ func extractData(URL string) (static.Data, error) {
 
 	}
 
-	return static.Data{
+	return &static.Data{
 		Site:    site,
 		Title:   utils.GetMeta(&episodeHtmlString, "og:title"),
 		Type:    "video",
 		Streams: streams,
-		Url:     URL,
+		URL:     URL,
 	}, nil
 
 }

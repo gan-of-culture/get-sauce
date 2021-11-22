@@ -49,6 +49,8 @@ type gallery struct {
 const site = "https://nhentai.net"
 const cdn = "https://i.nhentai.net/galleries/"
 
+var reJSONString = regexp.MustCompile(`("{\\u0022[\s\S]*?}")`)
+
 type extractor struct{}
 
 // New returns a nhentai extractor.
@@ -68,7 +70,7 @@ func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 		if err != nil {
 			return nil, utils.Wrap(err, id)
 		}
-		data = append(data, &d)
+		data = append(data, d)
 	}
 
 	return data, nil
@@ -115,11 +117,11 @@ func parseURL(URL string) ([]string, string) {
 	return nil, ""
 }
 
-func extractData(id string, page string) (static.Data, error) {
+func extractData(id string, page string) (*static.Data, error) {
 	URL := fmt.Sprintf("https://nhentai.net/g/%s/", id)
 	htmlString, err := request.Get(URL)
 	if err != nil {
-		return static.Data{}, err
+		return nil, err
 	}
 
 	if utils.GetH1(&htmlString, 0) == "429 Too Many Requests" {
@@ -127,11 +129,10 @@ func extractData(id string, page string) (static.Data, error) {
 		htmlString, _ = request.Get(URL)
 	}
 
-	re := regexp.MustCompile(`("{\\u0022[\s\S]*?}")`)
-	matchedJsonString := re.FindStringSubmatch(htmlString)
+	matchedJsonString := reJSONString.FindStringSubmatch(htmlString)
 	if len(matchedJsonString) < 2 {
 		fmt.Println(htmlString)
-		return static.Data{}, errors.New("invalid JSON for")
+		return nil, errors.New("invalid JSON for")
 	}
 	jsonString, _ := strconv.Unquote(matchedJsonString[1])
 
@@ -140,14 +141,14 @@ func extractData(id string, page string) (static.Data, error) {
 	if err != nil {
 		log.Println(jsonString)
 		log.Println(URL)
-		return static.Data{}, err
+		return nil, err
 	}
 
 	pages := utils.NeedDownloadList(gData.NumPages)
 	if page != "" {
 		pageNo, err := strconv.Atoi(page)
 		if err != nil {
-			return static.Data{}, err
+			return nil, err
 		}
 		pages = []int{pageNo}
 	}
@@ -166,10 +167,10 @@ func extractData(id string, page string) (static.Data, error) {
 
 	title, ok := gData.Title["pretty"]
 	if !ok {
-		return static.Data{}, errors.New("cannot find title for")
+		return nil, errors.New("cannot find title for")
 	}
 
-	return static.Data{
+	return &static.Data{
 		Site:  site,
 		Title: title,
 		Type:  "image",
@@ -178,6 +179,6 @@ func extractData(id string, page string) (static.Data, error) {
 				URLs: URLs,
 			},
 		},
-		Url: URL,
+		URL: URL,
 	}, nil
 }

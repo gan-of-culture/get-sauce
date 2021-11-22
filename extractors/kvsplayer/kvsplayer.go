@@ -43,7 +43,7 @@ func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 		return nil, err
 	}
 
-	data[0].Url = URL
+	data[0].URL = URL
 	return data, nil
 }
 

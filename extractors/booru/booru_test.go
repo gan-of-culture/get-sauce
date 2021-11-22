@@ -7,33 +7,33 @@ import (
 
 func TestParseURL(t *testing.T) {
 	tests := []struct {
-		name string
-		url  string
-		want string
+		Name string
+		URL  string
+		Want string
 	}{
 		{
-			name: "Tag query",
-			url:  "https://booru.io/q/1girl%20nude%20animal_ears%20cat%20solo",
-			want: "https://booru.io/api/legacy/query/entity?query=1girl%20nude%20animal_ears%20cat%20solo",
+			Name: "Tag query",
+			URL:  "https://booru.io/q/1girl%20nude%20animal_ears%20cat%20solo",
+			Want: "https://booru.io/api/legacy/query/entity?query=1girl%20nude%20animal_ears%20cat%20solo",
 		}, {
-			name: "Single Tag query",
-			url:  "https://booru.io/q/1girl",
-			want: "https://booru.io/api/legacy/query/entity?query=1girl",
+			Name: "Single Tag query",
+			URL:  "https://booru.io/q/1girl",
+			Want: "https://booru.io/api/legacy/query/entity?query=1girl",
 		}, {
-			name: "Example Post",
-			url:  "https://booru.io/p/YoZR3jurfVNOXD4vjCNn",
-			want: "https://booru.io/api/legacy/entity/YoZR3jurfVNOXD4vjCNn",
+			Name: "Example Post",
+			URL:  "https://booru.io/p/YoZR3jurfVNOXD4vjCNn",
+			Want: "https://booru.io/api/legacy/entity/YoZR3jurfVNOXD4vjCNn",
 		},
 	}
 	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			log.Println(tt.name)
-			url, err := parseURL(tt.url)
+		t.Run(tt.Name, func(t *testing.T) {
+			log.Println(tt.Name)
+			URL, err := parseURL(tt.URL)
 			if err != nil {
 				t.Error(err)
 			}
-			if url != tt.want {
-				t.Errorf("Got: %v - want: %v", url, tt.want)
+			if URL != tt.Want {
+				t.Errorf("Got: %v - Want: %v", URL, tt.Want)
 			}
 		})
 	}
@@ -41,29 +41,29 @@ func TestParseURL(t *testing.T) {
 
 func TestExtractData(t *testing.T) {
 	tests := []struct {
-		name string
-		url  string
-		want int
+		Name string
+		URL  string
+		Want int
 	}{
 		{
-			name: "Default extraction",
-			url:  "https://booru.io/api/legacy/entity/YoZR3jurfVNOXD4vjCNn",
-			want: 1,
+			Name: "Default extraction",
+			URL:  "https://booru.io/api/legacy/entity/YoZR3jurfVNOXD4vjCNn",
+			Want: 1,
 		},
 		{
-			name: "Query extraction",
-			url:  "https://booru.io/api/legacy/query/entity?query=1girl%20nude%20animal_ears%20cat%20solo",
-			want: 100,
+			Name: "Query extraction",
+			URL:  "https://booru.io/api/legacy/query/entity?query=1girl%20nude%20animal_ears%20cat%20solo",
+			Want: 100,
 		},
 	}
 	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			data, err := extractData(tt.url)
+		t.Run(tt.Name, func(t *testing.T) {
+			data, err := extractData(tt.URL)
 			if err != nil {
 				t.Error(err)
 			}
-			if len(data) > tt.want {
-				t.Errorf("Got: %v - want: %v", len(data), tt.want)
+			if len(data) > tt.Want {
+				t.Errorf("Got: %v - Want: %v", len(data), tt.Want)
 			}
 		})
 	}
@@ -71,24 +71,24 @@ func TestExtractData(t *testing.T) {
 
 func TestExtract(t *testing.T) {
 	tests := []struct {
-		name string
-		url  string
-		want int
+		Name string
+		URL  string
+		Want int
 	}{
 		{
-			name: "Default extraction",
-			url:  "https://booru.io/p/YoZR3jurfVNOXD4vjCNn",
-			want: 1,
+			Name: "Default extraction",
+			URL:  "https://booru.io/p/YoZR3jurfVNOXD4vjCNn",
+			Want: 1,
 		},
 	}
 	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			data, err := New().Extract(tt.url)
+		t.Run(tt.Name, func(t *testing.T) {
+			data, err := New().Extract(tt.URL)
 			if err != nil {
 				t.Error(err)
 			}
-			if len(data) < tt.want {
-				t.Errorf("Got: %v - want: %v", len(data), tt.want)
+			if len(data) < tt.Want {
+				t.Errorf("Got: %v - Want: %v", len(data), tt.Want)
 			}
 		})
 	}

@@ -132,7 +132,7 @@ func extractData(URL string) ([]*static.Data, error) {
 						Size:    size,
 					},
 				},
-				Url: URL,
+				URL: URL,
 			})
 		}
 		return data, nil
@@ -178,7 +178,7 @@ func extractData(URL string) ([]*static.Data, error) {
 			Title:   title,
 			Type:    static.DataTypeVideo,
 			Streams: streams,
-			Url:     URL,
+			URL:     URL,
 		},
 	}, nil
 }

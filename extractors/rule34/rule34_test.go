@@ -9,40 +9,40 @@ import (
 
 func TestParseURL(t *testing.T) {
 	tests := []struct {
-		name   string
-		url    string
+		Name   string
+		URL    string
 		amount int
-		want   int
+		Want   int
 	}{
 		{
-			name: "Single image",
-			url:  "https://rule34.paheal.net/post/view/3464197",
-			want: 1,
+			Name: "Single image",
+			URL:  "https://rule34.paheal.net/post/view/3464197",
+			Want: 1,
 		}, {
-			name: "Single video",
-			url:  "https://rule34.paheal.net/post/view/3464181",
-			want: 1,
+			Name: "Single video",
+			URL:  "https://rule34.paheal.net/post/view/3464181",
+			Want: 1,
 		}, {
-			name: "Overview page",
-			url:  "https://rule34.paheal.net/post/list/2",
+			Name: "Overview page",
+			URL:  "https://rule34.paheal.net/post/list/2",
 			// atleast more than 2
-			want: 2,
+			Want: 2,
 		}, {
-			name: "Mass extract page",
-			url:  "https://rule34.paheal.net/post/list/1",
+			Name: "Mass extract page",
+			URL:  "https://rule34.paheal.net/post/list/1",
 			// atleast more than 2
-			want: 100,
+			Want: 100,
 		},
 	}
 	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if tt.name == "Mass extract page" {
+		t.Run(tt.Name, func(t *testing.T) {
+			if tt.Name == "Mass extract page" {
 				config.Amount = 101
 			}
-			elements := parseURL(tt.url)
+			elements := parseURL(tt.URL)
 
-			if len(elements) < tt.want {
-				t.Errorf("Got: %v - want: %v", len(elements), tt.want)
+			if len(elements) < tt.Want {
+				t.Errorf("Got: %v - Want: %v", len(elements), tt.Want)
 			}
 		})
 	}
@@ -50,36 +50,36 @@ func TestParseURL(t *testing.T) {
 }
 
 func TestExtract(t *testing.T) {
-	type want struct {
+	type Want struct {
 		Title   string
 		Type    static.DataType
 		DataLen int
 	}
 	tests := []struct {
-		name string
-		url  string
-		want want
+		Name string
+		URL  string
+		Want Want
 	}{
 		{
-			name: "Test image",
-			url:  "https://rule34.paheal.net/post/view/3427635",
-			want: want{
+			Name: "Test image",
+			URL:  "https://rule34.paheal.net/post/view/3427635",
+			Want: Want{
 				Title:   "Magical_Sempai_(Series) Magician_Sempai skyfreedom 3427635",
 				Type:    static.DataTypeImage,
 				DataLen: 1,
 			},
 		}, {
-			name: "Test video",
-			url:  "https://rule34.paheal.net/post/view/3464181",
-			want: want{
+			Name: "Test video",
+			URL:  "https://rule34.paheal.net/post/view/3464181",
+			Want: Want{
 				Title:   "Hv54rDSL Nier Nier_Automata YoRHa_No.2_Type_B animated audiodude blender sound webm 3464181",
 				Type:    static.DataTypeVideo,
 				DataLen: 1,
 			},
 		}, {
-			name: "Test gif",
-			url:  "https://rule34.paheal.net/post/view/3461411",
-			want: want{
+			Name: "Test gif",
+			URL:  "https://rule34.paheal.net/post/view/3461411",
+			Want: Want{
 				Title:   "World_of_Warcraft animated blood_elf 3461411",
 				Type:    static.DataTypeImage,
 				DataLen: 1,
@@ -87,19 +87,19 @@ func TestExtract(t *testing.T) {
 		},
 	}
 	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
+		t.Run(tt.Name, func(t *testing.T) {
 			config.Amount = 26
-			elements, err := New().Extract(tt.url)
+			elements, err := New().Extract(tt.URL)
 			if err != nil {
 				t.Error("elements has error or is too big for single tests")
 			}
-			act := want{
+			act := Want{
 				Title:   elements[0].Title,
 				Type:    elements[0].Type,
 				DataLen: len(elements),
 			}
-			if act != tt.want {
-				t.Errorf("Got: %v - want: %v", act, tt.want)
+			if act != tt.Want {
+				t.Errorf("Got: %v - Want: %v", act, tt.Want)
 			}
 		})
 	}
@@ -108,25 +108,25 @@ func TestExtract(t *testing.T) {
 func TestMassExtract(t *testing.T) {
 
 	tests := []struct {
-		name string
-		url  string
-		want int
+		Name string
+		URL  string
+		Want int
 	}{
 		{
-			name: "Test mass",
-			url:  "https://rule34.paheal.net/post/list/1",
-			want: 10,
+			Name: "Test mass",
+			URL:  "https://rule34.paheal.net/post/list/1",
+			Want: 10,
 		},
 	}
 	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
+		t.Run(tt.Name, func(t *testing.T) {
 			config.Amount = 10
-			elements, err := New().Extract(tt.url)
+			elements, err := New().Extract(tt.URL)
 			if err != nil {
 				t.Error("elements has error or is too big for single tests")
 			}
-			if len(elements) != tt.want {
-				t.Errorf("Got: %v - want: %v", len(elements), tt.want)
+			if len(elements) != tt.Want {
+				t.Errorf("Got: %v - Want: %v", len(elements), tt.Want)
 			}
 		})
 	}

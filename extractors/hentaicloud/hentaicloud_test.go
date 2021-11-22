@@ -4,25 +4,25 @@ import "testing"
 
 func TestParseURL(t *testing.T) {
 	tests := []struct {
-		name string
-		url  string
-		want int
+		Name string
+		URL  string
+		Want int
 	}{
 		{
-			name: "Single Episode",
-			url:  "https://www.hentaicloud.com/video/3366/rikujoubu-joshi-wa-ore-no-nama-onaho-the-animation/episode2/english",
-			want: 1,
+			Name: "Single Episode",
+			URL:  "https://www.hentaicloud.com/video/3366/rikujoubu-joshi-wa-ore-no-nama-onaho-the-animation/episode2/english",
+			Want: 1,
 		}, {
-			name: "Group",
-			url:  "https://www.hentaicloud.com/videos/oppai",
-			want: 23,
+			Name: "Group",
+			URL:  "https://www.hentaicloud.com/videos/oppai",
+			Want: 23,
 		},
 	}
 	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			urls := parseURL(tt.url)
-			if len(urls) > tt.want || len(urls) == 0 {
-				t.Errorf("Got: %v - want: %v", len(urls), tt.want)
+		t.Run(tt.Name, func(t *testing.T) {
+			URLs := parseURL(tt.URL)
+			if len(URLs) > tt.Want || len(URLs) == 0 {
+				t.Errorf("Got: %v - Want: %v", len(URLs), tt.Want)
 			}
 		})
 	}
@@ -30,28 +30,28 @@ func TestParseURL(t *testing.T) {
 
 func TestExtract(t *testing.T) {
 	tests := []struct {
-		name string
-		url  string
-		want int
+		Name string
+		URL  string
+		Want int
 	}{
 		{
-			name: "Single Episode",
-			url:  "https://www.hentaicloud.com/video/750/boy-meets-harem-the-animation/episode1",
-			want: 1,
+			Name: "Single Episode",
+			URL:  "https://www.hentaicloud.com/video/750/boy-meets-harem-the-animation/episode1",
+			Want: 1,
 		}, {
-			name: "Group",
-			url:  "https://www.hentaicloud.com/videos/anal",
-			want: 23,
+			Name: "Group",
+			URL:  "https://www.hentaicloud.com/videos/anal",
+			Want: 23,
 		},
 	}
 	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			data, err := New().Extract(tt.url)
+		t.Run(tt.Name, func(t *testing.T) {
+			data, err := New().Extract(tt.URL)
 			if err != nil {
 				t.Error(err)
 			}
-			if len(data) > tt.want || len(data) == 0 {
-				t.Errorf("Got: %v - want: %v", len(data), tt.want)
+			if len(data) > tt.Want || len(data) == 0 {
+				t.Errorf("Got: %v - Want: %v", len(data), tt.Want)
 			}
 		})
 	}

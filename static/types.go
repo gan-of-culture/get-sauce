@@ -59,8 +59,8 @@ type Data struct {
 	// Caption this includes (CC, OC or Subtitles)
 	Captions []*Caption
 
-	// Url that was supplied to the scraper
-	Url string `json:"sourceUrl"`
+	// URL that was supplied to the scraper
+	URL string `json:"sourceUrl"`
 }
 
 // Extractor template

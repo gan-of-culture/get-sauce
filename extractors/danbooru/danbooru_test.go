@@ -7,64 +7,64 @@ import (
 
 func TestParseURL(t *testing.T) {
 	tests := []struct {
-		name string
-		url  string
-		want int
+		Name string
+		URL  string
+		Want int
 	}{
 		{
-			name: "Overview page",
-			url:  "https://danbooru.donmai.us/posts?page=3&tags=fire_emblem",
-			want: 2,
+			Name: "Overview page",
+			URL:  "https://danbooru.donmai.us/posts?page=3&tags=fire_emblem",
+			Want: 2,
 		}, {
-			name: "Example Post",
-			url:  "https://danbooru.donmai.us/posts/3749687",
-			want: 1,
+			Name: "Example Post",
+			URL:  "https://danbooru.donmai.us/posts/3749687",
+			Want: 1,
 		},
 	}
 	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			log.Println(tt.name)
-			urls, err := parseURL(tt.url)
+		t.Run(tt.Name, func(t *testing.T) {
+			log.Println(tt.Name)
+			URLs, err := parseURL(tt.URL)
 			if err != nil {
 				t.Error(err)
 			}
-			if len(urls) < tt.want {
-				t.Errorf("Got: %v - want: %v", len(urls), tt.want)
+			if len(URLs) < tt.Want {
+				t.Errorf("Got: %v - Want: %v", len(URLs), tt.Want)
 			}
 		})
 	}
 }
 
 func TestExtractData(t *testing.T) {
-	type want struct {
+	type Want struct {
 		numberOfStream int
 		title          string
 	}
 	tests := []struct {
-		name string
-		url  string
-		want want
+		Name string
+		URL  string
+		Want Want
 	}{
 		{
-			name: "Default extraction",
-			url:  "https://danbooru.donmai.us/posts/3773519",
-			want: want{
+			Name: "Default extraction",
+			URL:  "https://danbooru.donmai.us/posts/3773519",
+			Want: Want{
 				numberOfStream: 1,
 				title:          "misty and squirtle (pokemon and 2 more) drawn by shellvi",
 			},
 		},
 	}
 	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			data, err := extractData(tt.url)
+		t.Run(tt.Name, func(t *testing.T) {
+			data, err := extractData(tt.URL)
 			if err != nil {
 				t.Error(err)
 			}
-			if len(data.Streams) != tt.want.numberOfStream {
-				t.Errorf("Got: %v - want: %v", len(data.Streams), tt.want.numberOfStream)
+			if len(data.Streams) != tt.Want.numberOfStream {
+				t.Errorf("Got: %v - Want: %v", len(data.Streams), tt.Want.numberOfStream)
 			}
-			if data.Title != tt.want.title {
-				t.Errorf("Got: %v - want: %v", data.Title, tt.want.title)
+			if data.Title != tt.Want.title {
+				t.Errorf("Got: %v - Want: %v", data.Title, tt.Want.title)
 			}
 		})
 	}
@@ -72,24 +72,24 @@ func TestExtractData(t *testing.T) {
 
 func TestExtract(t *testing.T) {
 	tests := []struct {
-		name string
-		url  string
-		want int
+		Name string
+		URL  string
+		Want int
 	}{
 		{
-			name: "Default extraction",
-			url:  "https://danbooru.donmai.us/posts/3749687",
-			want: 1,
+			Name: "Default extraction",
+			URL:  "https://danbooru.donmai.us/posts/3749687",
+			Want: 1,
 		},
 	}
 	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			data, err := New().Extract(tt.url)
+		t.Run(tt.Name, func(t *testing.T) {
+			data, err := New().Extract(tt.URL)
 			if err != nil {
 				t.Error(err)
 			}
-			if len(data) < tt.want {
-				t.Errorf("Got: %v - want: %v", len(data), tt.want)
+			if len(data) < tt.Want {
+				t.Errorf("Got: %v - Want: %v", len(data), tt.Want)
 			}
 		})
 	}

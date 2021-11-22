@@ -18,6 +18,8 @@ type source struct {
 
 const site = "https://ohentai.org/"
 
+var reSources = regexp.MustCompile(`\[{.+}\]`)
+
 type extractor struct{}
 
 // New returns a nhentai extractor.
@@ -37,7 +39,7 @@ func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 		if err != nil {
 			return nil, utils.Wrap(err, u)
 		}
-		data = append(data, &d)
+		data = append(data, d)
 	}
 
 	return data, nil
@@ -61,29 +63,28 @@ func parseURL(URL string) []string {
 }
 
 // extractData of URL
-func extractData(URL string) (static.Data, error) {
+func extractData(URL string) (*static.Data, error) {
 	URL = site + URL
 	htmlString, err := request.Get(URL)
 	if err != nil {
-		return static.Data{}, err
+		return nil, err
 	}
 
 	title := strings.TrimSpace(utils.GetH1(&htmlString, -1))
 
-	reSources := regexp.MustCompile(`\[{.+}\]`)
 	matchedSources := reSources.FindString(htmlString)
 
 	sourceInfo := []source{}
 	err = json.Unmarshal([]byte(matchedSources), &sourceInfo)
 	if err != nil {
-		return static.Data{}, err
+		return nil, err
 	}
 
 	streams := map[string]*static.Stream{}
 	for i, s := range sourceInfo {
 		u, err := url.Parse(s.File)
 		if err != nil {
-			return static.Data{}, err
+			return nil, err
 		}
 
 		size, _ := request.Size(s.File, URL)
@@ -99,11 +100,11 @@ func extractData(URL string) (static.Data, error) {
 		}
 	}
 
-	return static.Data{
+	return &static.Data{
 		Site:    site,
 		Title:   title,
 		Type:    "video",
 		Streams: streams,
-		Url:     URL,
+		URL:     URL,
 	}, nil
 }

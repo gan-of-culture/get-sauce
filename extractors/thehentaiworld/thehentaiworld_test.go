@@ -8,61 +8,61 @@ import (
 
 func TestParseURL(t *testing.T) {
 	tests := []struct {
-		name string
-		url  string
-		want int
+		Name string
+		URL  string
+		Want int
 	}{
 		/*{
-			name: "Single video",
-			url:  "https://thehentaiworld.com/videos/shiranui-mai-akiyamaryo-king-of-fighters-5/",
-			want: 1,
+			Name: "Single video",
+			URL:  "https://thehentaiworld.com/videos/shiranui-mai-akiyamaryo-king-of-fighters-5/",
+			Want: 1,
 		}, {
-			name: "Single 3d-cgi-hentai-images",
-			url:  "https://thehentaiworld.com/3d-cgi-hentai-images/victoria-chase-ubermachine-life-is-strange/",
-			want: 24,
+			Name: "Single 3d-cgi-hentai-images",
+			URL:  "https://thehentaiworld.com/3d-cgi-hentai-images/victoria-chase-ubermachine-life-is-strange/",
+			Want: 24,
 		}, {
-			name: "Single Gallery gif-animated-hentai-images",
-			url:  "https://thehentaiworld.com/gif-animated-hentai-images/hentai-gif-10/",
-			want: 1,
+			Name: "Single Gallery gif-animated-hentai-images",
+			URL:  "https://thehentaiworld.com/gif-animated-hentai-images/hentai-gif-10/",
+			Want: 1,
 		}, {
-			name: "Single Gallery hentai-cosplay-images",
-			url:  "https://thehentaiworld.com/hentai-cosplay-images/utsushimi-camie-wowmalpal-my-hero-academia/",
-			want: 1,
+			Name: "Single Gallery hentai-cosplay-images",
+			URL:  "https://thehentaiworld.com/hentai-cosplay-images/utsushimi-camie-wowmalpal-my-hero-academia/",
+			Want: 1,
 		}, {
-			name: "Single Gallery hentai-cosplay-images",
-			url:  "https://thehentaiworld.com/hentai-doujinshi/the-start-of-a-harem-juna-juna-juice-my-hero-academia/",
-			want: 1,
+			Name: "Single Gallery hentai-cosplay-images",
+			URL:  "https://thehentaiworld.com/hentai-doujinshi/the-start-of-a-harem-juna-juna-juice-my-hero-academia/",
+			Want: 1,
 		}, {
-			name: "Single Gallery hentai-images",
-			url:  "https://thehentaiworld.com/hentai-images/nico-robin-tit-flash-one-piece-hentai-image/",
-			want: 1,
+			Name: "Single Gallery hentai-images",
+			URL:  "https://thehentaiworld.com/hentai-images/nico-robin-tit-flash-one-piece-hentai-image/",
+			Want: 1,
 		}, {
-			name: "Overview",
-			url:  "https://thehentaiworld.com/?new",
-			want: 24,
+			Name: "Overview",
+			URL:  "https://thehentaiworld.com/?new",
+			Want: 24,
 		}, {
-			name: "Specific Page",
-			url:  "https://thehentaiworld.com/page/4/?s=cyberpunk",
-			want: 24,
+			Name: "Specific Page",
+			URL:  "https://thehentaiworld.com/page/4/?s=cyberpunk",
+			Want: 24,
 		}, */{
-			name: "Tag",
-			url:  "https://thehentaiworld.com/tag/cyberpunk-2077/page/4/",
-			want: 24,
+			Name: "Tag",
+			URL:  "https://thehentaiworld.com/tag/cyberpunk-2077/page/4/",
+			Want: 24,
 		}, {
-			name: "Mass",
-			url:  "https://thehentaiworld.com/?s=ahri",
-			want: 30,
+			Name: "Mass",
+			URL:  "https://thehentaiworld.com/?s=ahri",
+			Want: 30,
 		},
 	}
 	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if tt.name == "Mass" {
+		t.Run(tt.Name, func(t *testing.T) {
+			if tt.Name == "Mass" {
 				config.Amount = 30
 			}
 
-			urls := parseURL(tt.url)
-			if len(urls) > tt.want || len(urls) == 0 {
-				t.Errorf("Got: %v - want: %v", len(urls), tt.want)
+			URLs := parseURL(tt.URL)
+			if len(URLs) > tt.Want || len(URLs) == 0 {
+				t.Errorf("Got: %v - Want: %v", len(URLs), tt.Want)
 			}
 		})
 	}
@@ -70,29 +70,29 @@ func TestParseURL(t *testing.T) {
 
 func TestExtract(t *testing.T) {
 	tests := []struct {
-		name string
-		url  string
-		want int
+		Name string
+		URL  string
+		Want int
 	}{
 		{
-			name: "Single video",
-			url:  "hhttps://thehentaiworld.com/videos/ahri-bewyx-league-of-legends-9/",
-			want: 1,
+			Name: "Single video",
+			URL:  "hhttps://thehentaiworld.com/videos/ahri-bewyx-league-of-legends-9/",
+			Want: 1,
 		}, {
 			// downloads all images if the post is a image set
-			name: "Single Gallery hentai-images",
-			url:  "https://thehentaiworld.com/hentai-cosplay-images/ahri-helly-von-valentine-league-of-legends-2/",
-			want: 20,
+			Name: "Single Gallery hentai-images",
+			URL:  "https://thehentaiworld.com/hentai-cosplay-images/ahri-helly-von-valentine-league-of-legends-2/",
+			Want: 20,
 		},
 	}
 	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			data, err := New().Extract(tt.url)
+		t.Run(tt.Name, func(t *testing.T) {
+			data, err := New().Extract(tt.URL)
 			if err != nil {
 				t.Error(err)
 			}
-			if len(data) > tt.want || len(data) == 0 {
-				t.Errorf("Got: %v - want: %v", len(data), tt.want)
+			if len(data) > tt.Want || len(data) == 0 {
+				t.Errorf("Got: %v - Want: %v", len(data), tt.Want)
 			}
 		})
 	}

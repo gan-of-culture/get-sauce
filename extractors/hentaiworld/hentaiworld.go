@@ -11,6 +11,9 @@ import (
 
 const site = "https://hentaiworld.tv/"
 
+var reFileInfo = regexp.MustCompile(`window.open\(\'([^']+\.([0-9a-zA-z]*))`) // 1 = dlURL 2=ext
+var reFileInfoBackup = regexp.MustCompile(`src='(.*)\.(mp4*).*`)              // 1 = dlURL 2=ext
+
 type extractor struct{}
 
 // New returns a hentaiworld extractor.
@@ -31,7 +34,7 @@ func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 		if err != nil {
 			return nil, utils.Wrap(err, u)
 		}
-		data = append(data, &d)
+		data = append(data, d)
 	}
 	return data, nil
 }
@@ -56,19 +59,19 @@ func parseURL(URL string) []string {
 
 	re = regexp.MustCompile(`"display-all-posts-background"><a href="([^"]*)`)
 	matchedEpisodesURLs := re.FindAllStringSubmatch(massHTMLPage, -1)
-	urls := []string{}
+	URLs := []string{}
 	for _, matchedURL := range matchedEpisodesURLs {
-		urls = append(urls, matchedURL[1])
+		URLs = append(URLs, matchedURL[1])
 	}
 
-	return urls
+	return URLs
 }
 
 //extractData of hentai
-func extractData(URL string) (static.Data, error) {
+func extractData(URL string) (*static.Data, error) {
 	postHTMLpage, err := request.Get(URL)
 	if err != nil {
-		return static.Data{}, nil
+		return nil, nil
 	}
 
 	title := strings.TrimSuffix(utils.GetMeta(&postHTMLpage, "og:title"), " - HentaiWorld")
@@ -77,20 +80,18 @@ func extractData(URL string) (static.Data, error) {
 		title = strings.ReplaceAll(title, "\u0026#8211;", "-")
 	}
 
-	re := regexp.MustCompile(`window.open\(\'([^']+\.([0-9a-zA-z]*))`)
-	infoAboutFile := re.FindStringSubmatch(postHTMLpage) // 1 = dlURL 2=ext
+	infoAboutFile := reFileInfo.FindStringSubmatch(postHTMLpage) // 1 = dlURL 2=ext
 
 	if len(infoAboutFile) != 3 {
-		re = regexp.MustCompile(`src='(.*)\.(mp4*).*`)
-		infoAboutFile = re.FindStringSubmatch(postHTMLpage) // 1 = dlURL 2=ext
+		infoAboutFile = reFileInfoBackup.FindStringSubmatch(postHTMLpage) // 1 = dlURL 2=ext
 		if len(infoAboutFile) != 3 {
-			return static.Data{}, static.ErrDataSourceParseFailed
+			return nil, static.ErrDataSourceParseFailed
 		}
 	}
 	infoAboutFile[1] = strings.ReplaceAll(infoAboutFile[1], " ", "%20")
 	size, _ := request.Size(infoAboutFile[1], site)
 
-	return static.Data{
+	return &static.Data{
 		Site:  site,
 		Title: title,
 		Type:  "video",
@@ -105,6 +106,6 @@ func extractData(URL string) (static.Data, error) {
 				Size: size,
 			},
 		},
-		Url: URL,
+		URL: URL,
 	}, nil
 }

@@ -13,6 +13,8 @@ import (
 
 const site = "https://danbooru.donmai.us"
 
+var reIMGData = regexp.MustCompile(`data-width="([^"]+)"[ ]+data-height="([^"]+)".+alt="([^"]+)".+src="([^"]+)"`) // [1] = img original width [2] image original height [3] image name [4] src URL
+
 type extractor struct{}
 
 // New returns a danbooru extractor.
@@ -33,7 +35,7 @@ func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 		if err != nil {
 			return nil, utils.Wrap(err, site+post)
 		}
-		data = append(data, &contentData)
+		data = append(data, contentData)
 	}
 
 	return data, nil
@@ -43,7 +45,7 @@ func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 func parseURL(URL string) ([]string, error) {
 	re := regexp.MustCompile(`page=([0-9]+)`)
 	pageNo := re.FindAllString(URL, -1)
-	// pageNo = url?page=number -> if it's there it means overview page otherwise single post or invalid
+	// pageNo = URL?page=number -> if it's there it means overview page otherwise single post or invalid
 	if len(pageNo) == 0 {
 
 		re := regexp.MustCompile(`/posts/[0-9]+`)
@@ -71,25 +73,24 @@ func parseURL(URL string) ([]string, error) {
 	return out, nil
 }
 
-func extractData(postURL string) (static.Data, error) {
+func extractData(postURL string) (*static.Data, error) {
 	htmlString, err := request.Get(postURL)
 	if err != nil {
-		return static.Data{}, err
+		return nil, err
 	}
 
-	re := regexp.MustCompile(`data-width="([^"]+)"[ ]+data-height="([^"]+)".+alt="([^"]+)".+src="([^"]+)"`)
-	matchedImgData := re.FindStringSubmatch(htmlString)
+	matchedImgData := reIMGData.FindStringSubmatch(htmlString)
 	if len(matchedImgData) != 5 {
-		return static.Data{}, static.ErrDataSourceParseFailed
+		return nil, static.ErrDataSourceParseFailed
 	}
-	// [1] = img original width [2] image original height [3] image name [4] src url
+	// [1] = img original width [2] image original height [3] image name [4] src URL
 
 	size, err := request.Size(matchedImgData[4], postURL)
 	if err != nil {
-		return static.Data{}, errors.New("no image size not found")
+		return nil, errors.New("no image size not found")
 	}
 
-	return static.Data{
+	return &static.Data{
 		Site:  site,
 		Title: matchedImgData[3],
 		Type:  "image",
@@ -105,6 +106,6 @@ func extractData(postURL string) (static.Data, error) {
 				Size:    size,
 			},
 		},
-		Url: postURL,
+		URL: postURL,
 	}, nil
 }

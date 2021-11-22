@@ -22,6 +22,9 @@ type gData struct {
 const site = "https://hentai2read.com/"
 const cdn = "https://static.hentaicdn.com/hentai"
 
+var reJSONString = regexp.MustCompile(`{\s*'title'[\s\S]*?}`)
+var reTitle = regexp.MustCompile(`[^[(|]*`)
+
 type extractor struct{}
 
 // New returns a hentai2read extractor.
@@ -41,7 +44,7 @@ func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 		if err != nil {
 			return nil, utils.Wrap(err, u)
 		}
-		data = append(data, &d)
+		data = append(data, d)
 	}
 
 	return data, nil
@@ -67,25 +70,23 @@ func parseURL(URL string) []string {
 	return URLs
 }
 
-func extractData(URL string) (static.Data, error) {
+func extractData(URL string) (*static.Data, error) {
 	htmlString, err := request.Get(URL + "1/")
 	if err != nil {
-		return static.Data{}, err
+		return nil, err
 	}
 
-	re := regexp.MustCompile(`{\s*'title'[\s\S]*?}`)
-	jsonString := strings.ReplaceAll(re.FindString(htmlString), "'", `"`)
+	jsonString := strings.ReplaceAll(reJSONString.FindString(htmlString), "'", `"`)
 
 	galleryData := gData{}
 	err = json.Unmarshal([]byte(jsonString), &galleryData)
 	if err != nil {
-		return static.Data{}, err
+		return nil, err
 	}
 
-	re = regexp.MustCompile(`[^[(|]*`)
-	title := html.UnescapeString(strings.TrimSpace(re.FindString(galleryData.Title)))
+	title := html.UnescapeString(strings.TrimSpace(reTitle.FindString(galleryData.Title)))
 
-	return static.Data{
+	return &static.Data{
 		Site:  site,
 		Title: title,
 		Type:  "image",
@@ -95,7 +96,7 @@ func extractData(URL string) (static.Data, error) {
 				Size: 0,
 			},
 		},
-		Url: URL,
+		URL: URL,
 	}, nil
 }
 

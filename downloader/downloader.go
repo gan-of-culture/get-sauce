@@ -41,6 +41,8 @@ type downloaderStruct struct {
 	bar         bool
 }
 
+var reSanitizeTitle = regexp.MustCompile(`["&|:?<>/*\\ ]+`)
+
 func init() {
 	runtime.GOMAXPROCS(runtime.NumCPU())
 }
@@ -66,8 +68,7 @@ func (downloader *downloaderStruct) Download(data *static.Data) error {
 	}
 
 	//sanitize filename here
-	re := regexp.MustCompile(`["&|:?<>/*\\ ]+`)
-	data.Title = strings.TrimSpace(re.ReplaceAllString(data.Title, " "))
+	data.Title = strings.TrimSpace(reSanitizeTitle.ReplaceAllString(data.Title, " "))
 
 	// select stream to download
 	var ok bool
@@ -207,7 +208,7 @@ func (downloader *downloaderStruct) Download(data *static.Data) error {
 	return nil
 }
 
-func (downloader *downloaderStruct) save(url static.URL, fileURI string) error {
+func (downloader *downloaderStruct) save(URL static.URL, fileURI string) error {
 
 	file, err := os.Create(fileURI)
 	if err != nil {
@@ -217,10 +218,10 @@ func (downloader *downloaderStruct) save(url static.URL, fileURI string) error {
 
 	//if stream size bigger than 10MB then use concurWrite
 	if downloader.stream.Size > 10_000_000 && config.Workers > 1 && downloader.stream.Ext == "" {
-		return downloader.concurWriteFile(url.URL, file)
+		return downloader.concurWriteFile(URL.URL, file)
 	}
 
-	return downloader.writeFile(url.URL, file)
+	return downloader.writeFile(URL.URL, file)
 }
 
 func (downloader *downloaderStruct) concurWriteFile(URL string, file *os.File) error {
@@ -266,7 +267,7 @@ func (downloader *downloaderStruct) concurWriteFile(URL string, file *os.File) e
 					lock.Unlock()
 
 				}
-				//fmt.Printf("Url: %s, Status: %s, Size: %d", url, res.Status, res.ContentLength)
+				//fmt.Printf("Url: %s, Status: %s, Size: %d", URL, res.Status, res.ContentLength)
 				if res.StatusCode != http.StatusPartialContent {
 					time.Sleep(1 * time.Second)
 					res, err = downloader.client.Get(URL)
@@ -340,7 +341,7 @@ func (downloader *downloaderStruct) writeFile(URL string, file *os.File) error {
 	if err != nil {
 		return err
 	}
-	//fmt.Printf("Url: %s, Status: %s, Size: %d", url, res.Status, res.ContentLength)
+	//fmt.Printf("Url: %s, Status: %s, Size: %d", URL, res.Status, res.ContentLength)
 	if res.StatusCode != http.StatusOK {
 		time.Sleep(1 * time.Second)
 		res, _ = downloader.client.Get(URL)

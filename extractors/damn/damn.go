@@ -38,7 +38,7 @@ func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 		if err != nil {
 			return nil, utils.Wrap(err, u)
 		}
-		data = append(data, &d)
+		data = append(data, d)
 	}
 
 	return data, nil
@@ -62,10 +62,10 @@ func parseURL(URL string) []string {
 	return utils.RemoveAdjDuplicates(re.FindAllString(htmlString, -1))
 }
 
-func extractData(URL string) (static.Data, error) {
+func extractData(URL string) (*static.Data, error) {
 	htmlString, err := request.Get(URL)
 	if err != nil {
-		return static.Data{}, err
+		return nil, err
 	}
 
 	title := strings.Trim(utils.GetH1(&htmlString, -1), "\n- ")
@@ -73,7 +73,7 @@ func extractData(URL string) (static.Data, error) {
 
 	htmlString, err = request.Get(fmt.Sprintf("%s%s", embed, videoID))
 	if err != nil {
-		return static.Data{}, err
+		return nil, err
 	}
 
 	srcMeta := reSrcMeta.FindStringSubmatch(htmlString) //1=URL 2=ext
@@ -89,7 +89,7 @@ func extractData(URL string) (static.Data, error) {
 
 	size, _ := request.Size(srcMeta[1], site)
 
-	return static.Data{
+	return &static.Data{
 		Site:  site,
 		Title: title,
 		Type:  "video",
@@ -105,6 +105,6 @@ func extractData(URL string) (static.Data, error) {
 				Size:    size,
 			},
 		},
-		Url: URL,
+		URL: URL,
 	}, err
 }

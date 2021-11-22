@@ -14,6 +14,9 @@ import (
 const site = "https://pururin.to/"
 const cdn = "https://cdn.pururin.io/assets/images/data/%s/%d.jpg"
 
+var reID = regexp.MustCompile(fmt.Sprintf("%sgallery/(\\d*)/[^\"]*", site))
+var rePageInfo = regexp.MustCompile(`(\d+) \( [\d.]+ \w \)`)
+
 type extractor struct{}
 
 // New returns a pururin extractor.
@@ -33,7 +36,7 @@ func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 		if err != nil {
 			return nil, utils.Wrap(err, u)
 		}
-		data = append(data, &d)
+		data = append(data, d)
 	}
 
 	return data, nil
@@ -58,17 +61,15 @@ func parseURL(URL string) []string {
 	return URLs
 }
 
-func extractData(URL string) (static.Data, error) {
+func extractData(URL string) (*static.Data, error) {
 	htmlString, err := request.Get(URL)
 	if err != nil {
-		return static.Data{}, err
+		return nil, err
 	}
 
-	re := regexp.MustCompile(fmt.Sprintf("%sgallery/(\\d*)/[^\"]*", site))
-	ID := utils.GetLastItemString(re.FindStringSubmatch(URL))
+	ID := utils.GetLastItemString(reID.FindStringSubmatch(URL))
 
-	re = regexp.MustCompile(`(\d+) \( [\d.]+ \w \)`)
-	matchedPageInfo := re.FindStringSubmatch(htmlString) //1=numPages
+	matchedPageInfo := rePageInfo.FindStringSubmatch(htmlString) //1=numPages
 	pages, _ := strconv.Atoi(matchedPageInfo[1])
 
 	URLs := []*static.URL{}
@@ -79,7 +80,7 @@ func extractData(URL string) (static.Data, error) {
 		})
 	}
 
-	return static.Data{
+	return &static.Data{
 		Site:  site,
 		Title: strings.Split(utils.GetMeta(&htmlString, "og:title"), "/")[0],
 		Type:  "image",
@@ -89,6 +90,6 @@ func extractData(URL string) (static.Data, error) {
 				Info: ID,
 			},
 		},
-		Url: URL,
+		URL: URL,
 	}, nil
 }

@@ -4,41 +4,41 @@ import "testing"
 
 func TestParseURL(t *testing.T) {
 	tests := []struct {
-		name string
-		url  string
-		want int
+		Name string
+		URL  string
+		Want int
 	}{
 		{
-			name: "Single Episode",
-			url:  "https://hentaiworld.tv/hentai-videos/ijirare-fukushuu-saimin-episode-2/",
-			want: 1,
+			Name: "Single Episode",
+			URL:  "https://hentaiworld.tv/hentai-videos/ijirare-fukushuu-saimin-episode-2/",
+			Want: 1,
 		}, {
-			name: "All episodes page",
-			url:  "https://hentaiworld.tv/all-episodes/page/2/",
-			want: 30,
+			Name: "All episodes page",
+			URL:  "https://hentaiworld.tv/all-episodes/page/2/",
+			Want: 30,
 		}, {
-			name: "Uncensored page",
-			url:  "https://hentaiworld.tv/uncensored/",
-			want: 30,
+			Name: "Uncensored page",
+			URL:  "https://hentaiworld.tv/uncensored/",
+			Want: 30,
 		}, {
-			name: "3d page",
-			url:  "https://hentaiworld.tv/3d/",
-			want: 60,
+			Name: "3d page",
+			URL:  "https://hentaiworld.tv/3d/",
+			Want: 60,
 		}, {
-			name: "tag page",
-			url:  "https://hentaiworld.tv/hentai-videos/tag/anal/",
-			want: 30,
+			Name: "tag page",
+			URL:  "https://hentaiworld.tv/hentai-videos/tag/anal/",
+			Want: 30,
 		}, {
-			name: "3d post page",
-			url:  "https://hentaiworld.tv/hentai-videos/3d/final-fantasy-tifa-7/",
-			want: 1,
+			Name: "3d post page",
+			URL:  "https://hentaiworld.tv/hentai-videos/3d/final-fantasy-tifa-7/",
+			Want: 1,
 		},
 	}
 	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			urls := parseURL(tt.url)
-			if len(urls) > tt.want {
-				t.Errorf("Got: %v - want: %v", len(urls), tt.want)
+		t.Run(tt.Name, func(t *testing.T) {
+			URLs := parseURL(tt.URL)
+			if len(URLs) > tt.Want {
+				t.Errorf("Got: %v - Want: %v", len(URLs), tt.Want)
 			}
 		})
 	}
@@ -46,29 +46,29 @@ func TestParseURL(t *testing.T) {
 
 func TestExtractData(t *testing.T) {
 	tests := []struct {
-		name string
-		url  string
-		want string
+		Name string
+		URL  string
+		Want string
 	}{
 		{
-			name: "Single 3d extraction",
-			url:  "https://hentaiworld.tv/hentai-videos/3d/final-fantasy-tifa-7/",
-			want: "Final Fantasy – Tifa",
+			Name: "Single 3d extraction",
+			URL:  "https://hentaiworld.tv/hentai-videos/3d/final-fantasy-tifa-7/",
+			Want: "Final Fantasy – Tifa",
 		},
 		{
-			name: "Single default extraction",
-			url:  "https://hentaiworld.tv/hentai-videos/yuutousei-ayaka-no-uraomote-episode-1/",
-			want: "Yuutousei Ayaka no Uraomote - Episode 1",
+			Name: "Single default extraction",
+			URL:  "https://hentaiworld.tv/hentai-videos/yuutousei-ayaka-no-uraomote-episode-1/",
+			Want: "Yuutousei Ayaka no Uraomote - Episode 1",
 		},
 	}
 	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			data, err := extractData(tt.url)
+		t.Run(tt.Name, func(t *testing.T) {
+			data, err := extractData(tt.URL)
 			if err != nil {
 				t.Error(err)
 			}
-			if data.Title != tt.want {
-				t.Errorf("Got: %v - want: %v", data.Title, tt.want)
+			if data.Title != tt.Want {
+				t.Errorf("Got: %v - Want: %v", data.Title, tt.Want)
 			}
 		})
 	}
@@ -76,24 +76,24 @@ func TestExtractData(t *testing.T) {
 
 func TestExtract(t *testing.T) {
 	tests := []struct {
-		name string
-		url  string
-		want int
+		Name string
+		URL  string
+		Want int
 	}{
 		{
-			name: "Page Extraction",
-			url:  "https://hentaiworld.tv/hentai-videos/category/yuutousei-ayaka-no-uraomote/",
-			want: 2,
+			Name: "Page Extraction",
+			URL:  "https://hentaiworld.tv/hentai-videos/category/yuutousei-ayaka-no-uraomote/",
+			Want: 2,
 		},
 	}
 	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			data, err := New().Extract(tt.url)
+		t.Run(tt.Name, func(t *testing.T) {
+			data, err := New().Extract(tt.URL)
 			if err != nil {
 				t.Error(err)
 			}
-			if len(data) > tt.want {
-				t.Errorf("Got: %v - want: %v", len(data), tt.want)
+			if len(data) > tt.Want {
+				t.Errorf("Got: %v - Want: %v", len(data), tt.Want)
 			}
 		})
 	}

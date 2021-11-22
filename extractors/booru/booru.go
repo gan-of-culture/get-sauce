@@ -37,6 +37,8 @@ type EntitySlice struct {
 	Cursor string   `json:"cursor"`
 }
 
+var reKey = regexp.MustCompile(`[0-9]+`)
+
 type extractor struct{}
 
 // New returns a booru.io extractor.
@@ -60,17 +62,17 @@ func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 }
 
 // parseURL for danbooru pages
-func parseURL(url string) (string, error) {
-	if strings.HasPrefix(url, "https://booru.io/p/") {
+func parseURL(URL string) (string, error) {
+	if strings.HasPrefix(URL, "https://booru.io/p/") {
 		re := regexp.MustCompile(`https://booru\.io/p/(.+)`)
-		matchedID := re.FindStringSubmatch(url)
+		matchedID := re.FindStringSubmatch(URL)
 		if len(matchedID) > 2 {
 			return "", static.ErrURLParseFailed
 		}
 		return fmt.Sprintf("%s%s", apiEntityURL, matchedID[1]), nil
 	}
 
-	tags := strings.Split(url, "https://booru.io/q/")
+	tags := strings.Split(URL, "https://booru.io/q/")
 
 	return fmt.Sprintf("%s%s", apiQueryURL, tags[1]), nil
 }
@@ -144,7 +146,7 @@ func extractData(queryURL string) ([]*static.Data, error) {
 					Size:    size,
 				},
 			},
-			Url: fmt.Sprintf("%s%s", postURL, e.Key),
+			URL: fmt.Sprintf("%s%s", postURL, e.Key),
 		})
 	}
 
@@ -152,12 +154,11 @@ func extractData(queryURL string) ([]*static.Data, error) {
 }
 
 func getBestQualityImg(transformations map[string]string) (string, string) {
-	re := regexp.MustCompile(`[0-9]+`)
 	transformationType := ""
 	transformationValue := ""
 	currentBest := 0
 	for key, val := range transformations {
-		resString := re.FindString(key)
+		resString := reKey.FindString(key)
 		resolution, _ := strconv.Atoi(resString)
 		if resolution <= 0 {
 			continue

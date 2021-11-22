@@ -12,6 +12,8 @@ import (
 
 const site = "https://hentaiyes.com/"
 
+var reSlug = regexp.MustCompile(`/watch/([^"\s]*?episode-\d*)/`)
+
 type extractor struct{}
 
 // New returns a hentaiyes extractor.
@@ -31,7 +33,7 @@ func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 		if err != nil {
 			return nil, utils.Wrap(err, u)
 		}
-		data = append(data, &d)
+		data = append(data, d)
 	}
 
 	return data, nil
@@ -57,17 +59,16 @@ func parseURL(URL string) []string {
 	return URLs
 }
 
-func extractData(URL string) (static.Data, error) {
-	re := regexp.MustCompile(`/watch/([^"\s]*?episode-\d*)/`)
-	slug := re.FindStringSubmatch(URL)
+func extractData(URL string) (*static.Data, error) {
+	slug := reSlug.FindStringSubmatch(URL)
 	embedURL := fmt.Sprintf("%sembed.php?name=%s&source=1", site, slug[1])
 
 	data, err := htstreaming.ExtractData(embedURL)
 	if err != nil {
-		return static.Data{}, err
+		return nil, err
 	}
 	data.Site = site
 	data.Title = slug[1]
-	data.Url = URL
+	data.URL = URL
 	return data, nil
 }

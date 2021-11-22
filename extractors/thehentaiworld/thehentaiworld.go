@@ -262,7 +262,7 @@ func extractData(pID string) ([]*static.Data, error) {
 			Title:   fmt.Sprintf("%d – %s", m.ID, html.UnescapeString(m.Title.Rendered)),
 			Type:    static.DataType(strings.Split(m.MimeType, "/")[0]),
 			Streams: streams,
-			Url:     "https://thehentaiworld.com/?p=" + fmt.Sprint(m.ID),
+			URL:     "https://thehentaiworld.com/?p=" + fmt.Sprint(m.ID),
 		})
 	}
 

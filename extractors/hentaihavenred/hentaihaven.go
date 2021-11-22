@@ -45,7 +45,7 @@ func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 		if err != nil {
 			return nil, utils.Wrap(err, u)
 		}
-		data = append(data, &d)
+		data = append(data, d)
 	}
 
 	return data, nil
@@ -71,10 +71,10 @@ func parseURL(URL string) []string {
 	return utils.RemoveAdjDuplicates(matchedURLs)
 }
 
-func extractData(URL string) (static.Data, error) {
+func extractData(URL string) (*static.Data, error) {
 	htmlString, err := request.Get(URL)
 	if err != nil {
-		return static.Data{}, err
+		return nil, err
 	}
 
 	title := strings.Split(utils.GetMeta(&htmlString, "og:title"), " - ")[0]
@@ -92,28 +92,28 @@ func extractData(URL string) (static.Data, error) {
 		"Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
 	}, strings.NewReader(params.Encode()))
 	if err != nil {
-		return static.Data{}, errors.New("api request failed")
+		return nil, errors.New("api request failed")
 	}
 	defer res.Body.Close()
 
 	buffer, err := ioutil.ReadAll(res.Body)
 	if err != nil {
-		return static.Data{}, err
+		return nil, err
 	}
 
 	embedData := embed{}
 	err = json.Unmarshal(buffer, &embedData)
 	if err != nil {
-		return static.Data{}, err
+		return nil, err
 	}
 
 	data, err := htstreaming.ExtractData(rePlayer.FindString(embedData.EmbedURL))
 	if err != nil {
-		return static.Data{}, err
+		return nil, err
 	}
 
 	data.Site = site
 	data.Title = title
-	data.Url = URL
+	data.URL = URL
 	return data, nil
 }

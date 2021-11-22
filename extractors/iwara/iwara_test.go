@@ -8,33 +8,33 @@ import (
 
 func TestParseURL(t *testing.T) {
 	tests := []struct {
-		name string
-		url  string
-		want int
+		Name string
+		URL  string
+		Want int
 	}{
 		{
-			name: "Single video",
-			url:  "https://ecchi.iwara.tv/videos/kmnzvsa75uzbaw36?language=en",
-			want: 1,
+			Name: "Single video",
+			URL:  "https://ecchi.iwara.tv/videos/kmnzvsa75uzbaw36?language=en",
+			Want: 1,
 		}, {
-			name: "Single images",
-			url:  "https://ecchi.iwara.tv/images/%E6%B9%AF%E4%B8%8A%E3%81%8C%E3%82%8A%E3%82%86%E3%81%84%E3%81%A1%E3%82%83%E3%82%93?language=en",
-			want: 2,
+			Name: "Single images",
+			URL:  "https://ecchi.iwara.tv/images/%E6%B9%AF%E4%B8%8A%E3%81%8C%E3%82%8A%E3%82%86%E3%81%84%E3%81%A1%E3%82%83%E3%82%93?language=en",
+			Want: 2,
 		}, /*{
-			name: "Mass",
-			url:  "https://ecchi.iwara.tv/images?language=en&f%5B0%5D=field_image_categories%3A5&page=1",
-			want: 40,
+			Name: "Mass",
+			URL:  "https://ecchi.iwara.tv/images?language=en&f%5B0%5D=field_image_categories%3A5&page=1",
+			Want: 40,
 		},*/
 	}
 	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if tt.name == "Mass" {
+		t.Run(tt.Name, func(t *testing.T) {
+			if tt.Name == "Mass" {
 				config.Amount = 40
 			}
 
-			urls := parseURL(tt.url)
-			if len(urls) > tt.want || len(urls) == 0 {
-				t.Errorf("Got: %v - want: %v", len(urls), tt.want)
+			URLs := parseURL(tt.URL)
+			if len(URLs) > tt.Want || len(URLs) == 0 {
+				t.Errorf("Got: %v - Want: %v", len(URLs), tt.Want)
 			}
 		})
 	}
@@ -42,28 +42,28 @@ func TestParseURL(t *testing.T) {
 
 func TestExtract(t *testing.T) {
 	tests := []struct {
-		name string
-		url  string
-		want int
+		Name string
+		URL  string
+		Want int
 	}{
 		{
-			name: "Single video",
-			url:  "https://ecchi.iwara.tv/videos/kmnzvsa75uzbaw36?language=en",
-			want: 1,
+			Name: "Single video",
+			URL:  "https://ecchi.iwara.tv/videos/kmnzvsa75uzbaw36?language=en",
+			Want: 1,
 		}, {
-			name: "Single images",
-			url:  "https://ecchi.iwara.tv/images/%E6%B9%AF%E4%B8%8A%E3%81%8C%E3%82%8A%E3%82%86%E3%81%84%E3%81%A1%E3%82%83%E3%82%93?language=en",
-			want: 2,
+			Name: "Single images",
+			URL:  "https://ecchi.iwara.tv/images/%E6%B9%AF%E4%B8%8A%E3%81%8C%E3%82%8A%E3%82%86%E3%81%84%E3%81%A1%E3%82%83%E3%82%93?language=en",
+			Want: 2,
 		},
 	}
 	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			data, err := New().Extract(tt.url)
+		t.Run(tt.Name, func(t *testing.T) {
+			data, err := New().Extract(tt.URL)
 			if err != nil {
 				t.Error(err)
 			}
-			if len(data) > tt.want || len(data) == 0 {
-				t.Errorf("Got: %v - want: %v", len(data), tt.want)
+			if len(data) > tt.Want || len(data) == 0 {
+				t.Errorf("Got: %v - Want: %v", len(data), tt.Want)
 			}
 		})
 	}

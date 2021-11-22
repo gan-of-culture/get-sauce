@@ -32,7 +32,7 @@ func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 		if err != nil {
 			return nil, utils.Wrap(err, u)
 		}
-		data = append(data, &d)
+		data = append(data, d)
 	}
 
 	return data, nil
@@ -56,27 +56,27 @@ func parseURL(URL string) []string {
 	return re.FindAllString(htmlString, -1)
 }
 
-func extractData(URL string) (static.Data, error) {
+func extractData(URL string) (*static.Data, error) {
 	htmlString, err := request.Get(URL)
 	if err != nil {
-		return static.Data{}, err
+		return nil, err
 	}
 	title := strings.TrimSpace(utils.GetH1(&htmlString, -1))
 
 	data, err := jwplayer.New().Extract(jwplayer.FindJWPlayerURL(&htmlString))
 	if err != nil {
-		return static.Data{}, err
+		return nil, err
 	}
 	if len(data) < 1 {
-		return static.Data{}, static.ErrDataSourceParseFailed
+		return nil, static.ErrDataSourceParseFailed
 	}
 
 	video := data[0]
 	video.Site = site
 	video.Title = title
 	video.Type = static.DataTypeVideo
-	video.Url = URL
+	video.URL = URL
 
-	return *video, nil
+	return video, nil
 
 }

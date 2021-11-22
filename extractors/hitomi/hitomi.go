@@ -49,6 +49,10 @@ const nozomi = "https://ltn.hitomi.la/"
 const nozomiExt = "nozomi"
 const galleriesPerPage = 25
 
+var reSubdomainPart = regexp.MustCompile(`\/[0-9a-f]\/([0-9a-f]{2})\/`)
+var reURLFromURL = regexp.MustCompile(`\/\/..?\.hitomi\.la\/`)
+var rePathFromHash = regexp.MustCompile(`^.*(..)(.)$`)
+
 type extractor struct{}
 
 // New returns a hitomi extractor.
@@ -68,7 +72,7 @@ func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 		if err != nil {
 			return nil, utils.Wrap(err, u)
 		}
-		data = append(data, &d)
+		data = append(data, d)
 	}
 
 	return data, nil
@@ -123,22 +127,22 @@ func parseURL(URL string) []string {
 	return URLs
 }
 
-func extractData(URL string) (static.Data, error) {
+func extractData(URL string) (*static.Data, error) {
 	jsString, err := request.Get(URL)
 	if err != nil {
-		return static.Data{}, err
+		return nil, err
 	}
 
 	jsonStart := strings.Index(jsString, "{")
 	if err != nil {
-		return static.Data{}, errors.New("no json string found for")
+		return nil, errors.New("no json string found for")
 	}
 
 	galleryData := gallery{}
 	err = json.Unmarshal([]byte(jsString[jsonStart:]), &galleryData)
 	if err != nil {
 		log.Println(URL)
-		return static.Data{}, err
+		return nil, err
 	}
 
 	base := ""
@@ -159,7 +163,7 @@ func extractData(URL string) (static.Data, error) {
 		})
 	}
 
-	return static.Data{
+	return &static.Data{
 		Site:  site,
 		Title: galleryData.Title,
 		Type:  "image",
@@ -168,7 +172,7 @@ func extractData(URL string) (static.Data, error) {
 				URLs: URLs,
 			},
 		},
-		Url: URL,
+		URL: URL,
 	}, nil
 }
 
@@ -186,8 +190,7 @@ func subdomainFromURL(URL, base string) string {
 	numberOfFrontends := 3
 	b := 16
 
-	re := regexp.MustCompile(`\/[0-9a-f]\/([0-9a-f]{2})\/`)
-	var m = re.FindStringSubmatch(URL)
+	var m = reSubdomainPart.FindStringSubmatch(URL)
 	if len(m) < 2 {
 		return "a"
 	}
@@ -208,8 +211,7 @@ func subdomainFromURL(URL, base string) string {
 }
 
 func urlFromURL(URL, base string) string {
-	re := regexp.MustCompile(`\/\/..?\.hitomi\.la\/`)
-	return re.ReplaceAllString(URL, fmt.Sprintf("//%s.hitomi.la/", subdomainFromURL(URL, base)))
+	return reURLFromURL.ReplaceAllString(URL, fmt.Sprintf("//%s.hitomi.la/", subdomainFromURL(URL, base)))
 }
 
 func urlFromHash(imgFile img) string {
@@ -232,6 +234,5 @@ func fullPathFromHash(hash string) string {
 	if len(hash) < 3 {
 		return hash
 	}
-	re := regexp.MustCompile(`^.*(..)(.)$`)
-	return re.ReplaceAllString(hash, "$2/$1/"+hash)
+	return rePathFromHash.ReplaceAllString(hash, "$2/$1/"+hash)
 }

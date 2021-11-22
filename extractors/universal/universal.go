@@ -48,7 +48,7 @@ func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 						Size: 0,
 					},
 				},
-				Url: URL,
+				URL: URL,
 			},
 		}, nil
 	}
@@ -74,7 +74,7 @@ func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 					Size: size,
 				},
 			},
-			Url: URL,
+			URL: URL,
 		},
 	}, nil
 }

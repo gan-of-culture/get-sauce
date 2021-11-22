@@ -62,6 +62,8 @@ var players = map[string][]quality{
 	},
 }
 
+var reBase64CDNURL = regexp.MustCompile(`<iframe[\s\S]*?(player[^#]*)#([^"]*)`) // 1=player[4k].html  2 = "url=https://01cdn.hentaistream.moe/2021/02/Overflow/E08/"
+
 type extractor struct{}
 
 // New returns a hentaistream extractor.
@@ -78,7 +80,7 @@ func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 		if err != nil {
 			return nil, utils.Wrap(err, u)
 		}
-		data = append(data, &d)
+		data = append(data, d)
 	}
 
 	return data, nil
@@ -102,10 +104,10 @@ func parseURL(URL string) []string {
 	return re.FindAllString(htmlString, -1)
 }
 
-func extractData(URL string) (static.Data, error) {
+func extractData(URL string) (*static.Data, error) {
 	htmlString, err := request.Get(URL)
 	if err != nil {
-		return static.Data{}, err
+		return nil, err
 	}
 
 	if strings.Contains(htmlString, "<title>DDOS-GUARD</title>") {
@@ -113,15 +115,15 @@ func extractData(URL string) (static.Data, error) {
 		htmlString, _ = request.Get(URL)
 	}
 
-	re := regexp.MustCompile(`<iframe[\s\S]*?(player[^#]*)#([^"]*)`)
-	matchedBase64CDNURL := re.FindStringSubmatch(htmlString) // 1=player[4k].html  2 = "url=https://01cdn.hentaistream.moe/2021/02/Overflow/E08/"
+	// 1=player[4k].html  2 = "url=https://01cdn.hentaistream.moe/2021/02/Overflow/E08/"
+	matchedBase64CDNURL := reBase64CDNURL.FindStringSubmatch(htmlString)
 	if len(matchedBase64CDNURL) < 2 {
-		return static.Data{}, static.ErrDataSourceParseFailed
+		return nil, static.ErrDataSourceParseFailed
 	}
 
 	downloadURLBytes, err := base64.StdEncoding.DecodeString(matchedBase64CDNURL[2])
 	if err != nil {
-		return static.Data{}, err
+		return nil, err
 	}
 	baseDownloadURL := strings.Split(strings.TrimPrefix(strings.Trim(string(downloadURLBytes), `"`), "url="), ";")[0]
 
@@ -129,7 +131,7 @@ func extractData(URL string) (static.Data, error) {
 	for i, quality := range players[matchedBase64CDNURL[1]] {
 		size, err := request.Size(fmt.Sprintf("%s%s", baseDownloadURL, quality.codec), site)
 		if err != nil {
-			return static.Data{}, err
+			return nil, err
 		}
 
 		streams[fmt.Sprint(i)] = &static.Stream{
@@ -144,12 +146,12 @@ func extractData(URL string) (static.Data, error) {
 		}
 	}
 
-	return static.Data{
+	return &static.Data{
 		Site:    site,
 		Title:   utils.GetH1(&htmlString, -1),
 		Type:    "video",
 		Streams: streams,
-		Url:     URL,
+		URL:     URL,
 	}, nil
 
 }
