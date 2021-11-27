@@ -79,6 +79,7 @@ func extractData(URL string) (*static.Data, error) {
 		Type:  static.DataTypeVideo,
 		Streams: map[string]*static.Stream{
 			"0": {
+				Type: static.DataTypeVideo,
 				URLs: []*static.URL{
 					{
 						URL: sourceURL,

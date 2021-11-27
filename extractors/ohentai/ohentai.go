@@ -90,6 +90,7 @@ func extractData(URL string) (*static.Data, error) {
 		size, _ := request.Size(s.File, URL)
 
 		streams[fmt.Sprint(i)] = &static.Stream{
+			Type: static.DataTypeVideo,
 			URLs: []*static.URL{
 				{
 					URL: s.File,
@@ -103,7 +104,7 @@ func extractData(URL string) (*static.Data, error) {
 	return &static.Data{
 		Site:    site,
 		Title:   title,
-		Type:    "video",
+		Type:    static.DataTypeVideo,
 		Streams: streams,
 		URL:     URL,
 	}, nil

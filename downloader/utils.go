@@ -41,11 +41,17 @@ func printCaption(i int, caption *static.Caption) {
 	fmt.Printf("\n     [%d]  -------------------", i)
 	fmt.Printf("\n     Language:            %s\n", caption.Language)
 	fmt.Printf("     # download with: ")
-	fmt.Printf("get-sauce -s %d ...\n\n", i)
+	fmt.Printf("get-sauce -c %d ...\n\n", i)
 }
 
 func printStream(key string, stream *static.Stream) {
 	fmt.Printf("\n     [%s]  -------------------", key)
+	if stream.Type == "" {
+		stream.Type = static.DataTypeUnknown
+	}
+	if stream.Type != "" {
+		fmt.Printf("\n     Type:            %s", stream.Type)
+	}
 	if stream.Info != "" {
 		fmt.Printf("\n     Info:            %s", stream.Info)
 	}

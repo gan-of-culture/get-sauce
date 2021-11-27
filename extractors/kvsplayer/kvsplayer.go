@@ -114,6 +114,7 @@ func ExtractFromHTML(htmlString *string) ([]*static.Data, error) {
 		size, _ := request.Size(rURL, rURL)
 
 		streams[fmt.Sprint(dataLen-i-1)] = &static.Stream{
+			Type: static.DataTypeVideo,
 			URLs: []*static.URL{
 				{
 					URL: rURL,

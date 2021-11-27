@@ -153,6 +153,7 @@ func extractData(URL string) (*static.Data, error) {
 		Type:  dataType,
 		Streams: map[string]*static.Stream{
 			"0": {
+				Type: dataType,
 				URLs: []*static.URL{
 					{
 						URL: postSrcURL,

@@ -50,8 +50,12 @@ func DefaultClient() *http.Client {
 		Transport: LogRedirects{&http.Transport{
 			DisableCompression:  true,
 			TLSHandshakeTimeout: 10 * time.Second,
-			TLSClientConfig:     &tls.Config{InsecureSkipVerify: true},
-			IdleConnTimeout:     5 * time.Second,
+			TLSClientConfig: &tls.Config{
+				InsecureSkipVerify: true,
+				//PreferServerCipherSuites: false,
+				//CurvePreferences:         []tls.CurveID{tls.CurveP256, tls.CurveP384, tls.CurveP521, tls.X25519},
+			},
+			IdleConnTimeout: 5 * time.Second,
 			//DisableKeepAlives:   true,
 		}},
 		Timeout: 10 * time.Minute,
@@ -280,7 +284,7 @@ func (p *Myjar) Cookies(u *url.URL) []*http.Cookie {
 }
 
 // GetM3UMeta segment URLs
-func GetM3UMeta(master *string, URL, Ext string) ([]*static.URL, []byte, error) {
+func GetM3UMeta(master *string, URL string) ([]*static.URL, []byte, error) {
 	re := regexp.MustCompile(`\s[^#]+\s`) // 1=segment URI
 	matchedSegmentURLs := re.FindAllString(*master, -1)
 	if len(matchedSegmentURLs) == 0 {
@@ -306,7 +310,7 @@ func GetM3UMeta(master *string, URL, Ext string) ([]*static.URL, []byte, error) 
 		}
 		segments = append(segments, &static.URL{
 			URL: segmentURI,
-			Ext: Ext,
+			Ext: utils.GetFileExt(segmentURI),
 		})
 	}
 

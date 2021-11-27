@@ -108,6 +108,7 @@ func extractData(URL string) (*static.Data, error) {
 		}
 		size, _ := request.Size(u, playerURL)
 		streams[fmt.Sprintf("%d", len(matchedSrcTag)-i-1)] = &static.Stream{
+			Type: static.DataTypeVideo,
 			URLs: []*static.URL{
 				{
 					URL: u,

@@ -162,9 +162,10 @@ func extractData(ID string) (*static.Data, error) {
 	return &static.Data{
 		Site:  site,
 		Title: title,
-		Type:  "image",
+		Type:  static.DataTypeImage,
 		Streams: map[string]*static.Stream{
 			"0": {
+				Type: static.DataTypeImage,
 				URLs: URLs,
 			},
 		},

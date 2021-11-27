@@ -155,7 +155,7 @@ func (downloader *downloaderStruct) Download(data *static.Data) error {
 	}
 
 	// download captions
-	if len(data.Captions) > config.Caption && config.Caption > -1 {
+	if len(data.Captions) > config.Caption && config.Caption > -1 && downloader.stream.Type == static.DataTypeVideo {
 		fileURI = filepath.Join(downloader.filePath, fmt.Sprintf("%s_caption_%s.%s", data.Title, data.Captions[config.Caption].Language, data.Captions[config.Caption].URL.Ext))
 		downloader.save(data.Captions[config.Caption].URL, fileURI)
 	}
@@ -167,40 +167,32 @@ func (downloader *downloaderStruct) Download(data *static.Data) error {
 	//build final file URI
 	fileURI = filepath.Join(downloader.filePath, data.Title+"."+downloader.stream.Ext)
 
-	file, err := os.OpenFile(fileURI, os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0644)
+	/*err := downloader.MergeFilesWithSameExtension(fileURI)
 	if err != nil {
 		return err
-	}
-	defer file.Close()
+	}*/
 
-	downloader.initPB(int64(lenOfUrls), fmt.Sprintf("Merging into %s ...", file.Name()), false)
-
-	var d []byte
-	for i, u := range downloader.stream.URLs {
-		partURL := filepath.Join(downloader.tmpFilePath, fmt.Sprintf("%d.%s", pageNumbers[i], u.Ext))
-		if len(downloader.stream.Key) > 0 {
-			d, err = decrypt(downloader.stream.Key, partURL)
-			if err != nil {
-				return err
-			}
-		} else {
-			d, err = os.ReadFile(partURL)
-			if err != nil {
-				return err
-			}
-		}
-
-		if _, err := file.Write(d); err != nil {
-			return err
-		}
-
-		if downloader.bar {
-			downloader.progressBar.Add(1)
-		}
-
+	// stop infinite loop due to recursion
+	if downloader.stream.Type == static.DataTypeAudio {
+		return nil
 	}
 
-	err = os.RemoveAll(downloader.tmpFilePath)
+	// if audio is in separate stream -> download it with the video stream
+	streamID := ""
+	for k, v := range data.Streams {
+		if v.Type != static.DataTypeAudio {
+			continue
+		}
+		streamID = k
+	}
+	if streamID == "" {
+		return nil
+	}
+	selectStreamOld := config.SelectStream
+	config.SelectStream = streamID
+
+	err := downloader.Download(data)
+	config.SelectStream = selectStreamOld
 	if err != nil {
 		return err
 	}
@@ -387,4 +379,48 @@ func (downloader *downloaderStruct) initPB(len int64, descr string, asBytes bool
 		progressbar.OptionSetPredictTime(true),
 		progressbar.OptionSetRenderBlankState(true),
 	)
+}
+
+func (downloader *downloaderStruct) MergeFilesWithSameExtension(fileURI string) error {
+	lenOfUrls := len(downloader.stream.URLs)
+
+	file, err := os.OpenFile(fileURI, os.O_APPEND|os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644)
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+
+	downloader.initPB(int64(lenOfUrls), fmt.Sprintf("Merging into %s ...", file.Name()), false)
+
+	var d []byte
+	for i, u := range downloader.stream.URLs {
+		partURL := filepath.Join(downloader.tmpFilePath, fmt.Sprintf("%d.%s", i+1, u.Ext))
+		if len(downloader.stream.Key) > 0 {
+			d, err = decrypt(downloader.stream.Key, partURL)
+			if err != nil {
+				return err
+			}
+		} else {
+			d, err = os.ReadFile(partURL)
+			if err != nil {
+				return err
+			}
+		}
+
+		if _, err := file.Write(d); err != nil {
+			return err
+		}
+
+		if downloader.bar {
+			downloader.progressBar.Add(1)
+		}
+
+	}
+
+	err = os.RemoveAll(downloader.tmpFilePath)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

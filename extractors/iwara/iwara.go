@@ -161,6 +161,7 @@ func extractData(URL string) ([]*static.Data, error) {
 		size, _ := request.Size(stream.URI, site)
 
 		streams[fmt.Sprint(i)] = &static.Stream{
+			Type: static.DataTypeVideo,
 			URLs: []*static.URL{
 				{
 					URL: stream.URI,

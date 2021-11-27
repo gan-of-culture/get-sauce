@@ -175,7 +175,7 @@ func ExtractData(URL string) (*static.Data, error) {
 			return nil, err
 		}
 
-		URLs, key, err := request.GetM3UMeta(&master, stream.URLs[0].URL, ext)
+		URLs, key, err := request.GetM3UMeta(&master, stream.URLs[0].URL)
 		if err != nil {
 			return nil, err
 		}
@@ -185,6 +185,7 @@ func ExtractData(URL string) (*static.Data, error) {
 		}
 
 		streams[fmt.Sprint(len(dummyStreams)-idx-1)] = &static.Stream{
+			Type:    static.DataTypeVideo,
 			URLs:    URLs,
 			Quality: stream.Quality,
 			Size:    stream.Size,
@@ -217,7 +218,7 @@ func ExtractData(URL string) (*static.Data, error) {
 	return &static.Data{
 		Site:     site,
 		Title:    utils.GetLastItemString(strings.Split(reTitle.FindString(jsParams), `"`)),
-		Type:     "video",
+		Type:     static.DataTypeVideo,
 		Streams:  streams,
 		Captions: parseCaptions(jsParams),
 		URL:      URL,

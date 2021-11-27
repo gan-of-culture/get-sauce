@@ -144,12 +144,13 @@ func extractData(URL string) (*static.Data, error) {
 				return nil, err
 			}
 
-			URLs, key, err := request.GetM3UMeta(&mediaStr, mediaURL.String(), "ts")
+			URLs, key, err := request.GetM3UMeta(&mediaStr, mediaURL.String())
 			if err != nil {
 				return nil, err
 			}
 
 			streams[fmt.Sprint(idx)] = &static.Stream{
+				Type:    static.DataTypeVideo,
 				URLs:    URLs,
 				Quality: streamTmp.Quality,
 				Size:    streamTmp.Size,

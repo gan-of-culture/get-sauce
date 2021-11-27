@@ -92,6 +92,7 @@ func extractData(URL string) (*static.Data, error) {
 		Type:  "image",
 		Streams: map[string]*static.Stream{
 			"0": {
+				Type: static.DataTypeImage,
 				URLs: buildFullImgURL(galleryData.Images),
 				Size: 0,
 			},

@@ -65,6 +65,7 @@ func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 			Type:  utils.GetMediaType(matches[2]),
 			Streams: map[string]*static.Stream{
 				"0": {
+					Type: utils.GetMediaType(matches[2]),
 					URLs: []*static.URL{
 						0: {
 							URL: URL,

@@ -281,12 +281,14 @@ func TestParseM3UMaster(t *testing.T) {
 			`,
 			Want: []*static.Stream{
 				{
+					Type: static.DataTypeVideo,
 					URLs: []*static.URL{
 						{
 							URL: "media-1/stream.m3u8",
 						},
 					},
 				}, {
+					Type: static.DataTypeVideo,
 					URLs: []*static.URL{
 						{
 							URL: "media-2/stream.m3u8",
@@ -294,6 +296,7 @@ func TestParseM3UMaster(t *testing.T) {
 					},
 					Quality: "1280x720",
 				}, {
+					Type: static.DataTypeVideo,
 					URLs: []*static.URL{
 						{
 							URL: "media-3/stream.m3u8",
@@ -301,6 +304,14 @@ func TestParseM3UMaster(t *testing.T) {
 					},
 					Quality: "864x486",
 					Info:    "avc1.42C01F,mp4a.40.2",
+				}, {
+					Type: static.DataTypeAudio,
+					URLs: []*static.URL{
+						{
+							URL: "audio/aac/ja/stream.m3u8",
+						},
+					},
+					Info: "ja",
 				},
 			},
 		},

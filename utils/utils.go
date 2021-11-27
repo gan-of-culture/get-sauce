@@ -131,6 +131,7 @@ func ParseM3UMaster(master *string) ([]*static.Stream, error) {
 	out := []*static.Stream{}
 	for _, stream := range matchedStreams {
 		s := &static.Stream{}
+		s.Type = static.DataTypeVideo
 
 		for _, v := range stream[1:] {
 
@@ -160,6 +161,29 @@ func ParseM3UMaster(master *string) ([]*static.Stream, error) {
 		}
 		out = append(out, s)
 	}
+
+	// AUDIO
+	re = regexp.MustCompile(`#EXT-X-MEDIA:([^\n]*)\n`) // 1=PARAMS
+	matchedAudioStream := re.FindStringSubmatch(*master)
+	if len(matchedAudioStream) < 2 {
+		return out, nil
+	}
+
+	params := map[string]string{}
+	for _, param := range strings.Split(matchedAudioStream[1], ",") {
+		splitParam := strings.Split(param, "=")
+		params[splitParam[0]] = strings.Trim(splitParam[1], `"`)
+	}
+
+	out = append(out, &static.Stream{
+		Type: static.DataTypeAudio,
+		URLs: []*static.URL{
+			{
+				URL: params["URI"],
+			},
+		},
+		Info: params["LANGUAGE"],
+	})
 
 	return out, nil
 }
