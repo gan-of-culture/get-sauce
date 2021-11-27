@@ -19,8 +19,9 @@ media
 *.txt
 *.vtt
 *.srt
+*.aac
 
 *token
 *exhentai_test.go
-*tsumino*
+*muchohentai*
 get-sauce*

@@ -176,6 +176,7 @@ func extractData(id string, page string) (*static.Data, error) {
 		Type:  "image",
 		Streams: map[string]*static.Stream{
 			"0": {
+				Type: static.DataTypeImage,
 				URLs: URLs,
 			},
 		},

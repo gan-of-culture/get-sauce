@@ -243,6 +243,7 @@ func extractData(pID string) ([]*static.Data, error) {
 		streams := map[string]*static.Stream{}
 		for i, s := range sizes {
 			streams[fmt.Sprint(i)] = &static.Stream{
+				Type: static.DataType(strings.Split(m.MimeType, "/")[0]),
 				URLs: []*static.URL{
 					{
 						URL: s.SourceURL,

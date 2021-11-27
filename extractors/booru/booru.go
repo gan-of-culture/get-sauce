@@ -136,6 +136,7 @@ func extractData(queryURL string) ([]*static.Data, error) {
 			Type:  "image",
 			Streams: map[string]*static.Stream{
 				"0": {
+					Type: static.DataTypeImage,
 					URLs: []*static.URL{
 						{
 							URL: fmt.Sprintf("%s%s", apiDataURL, tVal),

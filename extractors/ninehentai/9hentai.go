@@ -255,9 +255,10 @@ func extractData(g gallery) (static.Data, error) {
 	return static.Data{
 		Site:  site,
 		Title: g.Title,
-		Type:  "image",
+		Type:  static.DataTypeImage,
 		Streams: map[string]*static.Stream{
 			"0": {
+				Type: static.DataTypeImage,
 				URLs: URLs,
 				Info: fmt.Sprint(g.TotalPage),
 			},

@@ -216,9 +216,10 @@ func extractDataFromDirectLink(URL string) (*static.Data, error) {
 	return &static.Data{
 		Site:  siteURL,
 		Title: matchedURL[1],
-		Type:  utils.GetMediaType(matchedURL[2]),
+		Type:  static.DataTypeImage,
 		Streams: map[string]*static.Stream{
 			"0": {
+				Type: static.DataTypeImage,
 				URLs: []*static.URL{
 					{
 						URL: URL,

@@ -10,6 +10,8 @@ type URL struct {
 
 // Stream Struct of stream
 type Stream struct {
+	// Type of stream audio or video
+	Type DataType
 	// URLs that together are the stream
 	URLs []*URL `json:"url"`
 	// Quality e.g. 2160p, 1080p, 720p ... or 1050x1200 or codec
@@ -38,6 +40,8 @@ type DataType string
 const (
 	// DataTypeVideo indicates the type of extracted data is the video.
 	DataTypeVideo DataType = "video"
+	// DataTypeAudio indicates the type of extracted data is the audio.
+	DataTypeAudio DataType = "audio"
 	// DataTypeImage indicates the type of extracted data is the image.
 	DataTypeImage DataType = "image"
 	// DataTypeUnknown indicates the type of extracted data is the unknown.

@@ -112,7 +112,7 @@ func extractData(URL string) (*static.Data, error) {
 		return nil, err
 	}
 
-	URLs, _, err := request.GetM3UMeta(&m3uMedia, srcURL, "mp4")
+	URLs, _, err := request.GetM3UMeta(&m3uMedia, srcURL)
 	if err != nil {
 		return nil, err
 	}
@@ -123,6 +123,7 @@ func extractData(URL string) (*static.Data, error) {
 		Type:  static.DataTypeVideo,
 		Streams: map[string]*static.Stream{
 			"0": {
+				Type: static.DataTypeVideo,
 				URLs: URLs,
 				Ext:  "mp4",
 			},

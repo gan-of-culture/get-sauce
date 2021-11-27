@@ -135,6 +135,7 @@ func extractData(URL string) (*static.Data, error) {
 		}
 
 		streams[fmt.Sprint(i)] = &static.Stream{
+			Type: static.DataTypeVideo,
 			URLs: []*static.URL{
 				{
 					URL: fmt.Sprintf("%s%s", baseDownloadURL, quality.codec),
