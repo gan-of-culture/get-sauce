@@ -167,10 +167,10 @@ func (downloader *downloaderStruct) Download(data *static.Data) error {
 	//build final file URI
 	fileURI = filepath.Join(downloader.filePath, data.Title+"."+downloader.stream.Ext)
 
-	/*err := downloader.MergeFilesWithSameExtension(fileURI)
+	err := downloader.MergeFilesWithSameExtension(fileURI)
 	if err != nil {
 		return err
-	}*/
+	}
 
 	// stop infinite loop due to recursion
 	if downloader.stream.Type == static.DataTypeAudio {
@@ -191,7 +191,7 @@ func (downloader *downloaderStruct) Download(data *static.Data) error {
 	selectStreamOld := config.SelectStream
 	config.SelectStream = streamID
 
-	err := downloader.Download(data)
+	err = downloader.Download(data)
 	config.SelectStream = selectStreamOld
 	if err != nil {
 		return err
