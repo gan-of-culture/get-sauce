@@ -5,6 +5,8 @@ var (
 	Amount int
 	// Caption to download if available
 	Caption int
+	// Don't merge video, audio and subtitles if spilt using ffmpeg
+	NoMerge bool
 	// OutputPath for files
 	OutputPath string
 	// OutputName for file

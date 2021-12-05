@@ -11,9 +11,9 @@ import (
 // thanks to https://github.com/canhlinh/hlsdl for creating to beautiful way to decrypt
 // I only did some small modifications to the original
 
-const (
+/*const (
 	syncByte = uint8(71) //0x47
-)
+)*/
 
 func decryptAES128(crypted, key, iv []byte) ([]byte, error) {
 	block, err := aes.NewCipher(key)
@@ -63,12 +63,16 @@ func decrypt(key []byte, fileName string) ([]byte, error) {
 		return nil, err
 	}
 
-	for j := 0; j < len(data); j++ {
+	// sync byte is part of the Transport Stream (ts) header which is 4 bytes
+	// it works by ditching all data that is infront of the sync byte
+	// this is not something you would want for anything besides Transport Streams
+	// it's also not really necessary here since this is a complete download so there is no syncing
+	/*for j := 0; j < len(data); j++ {
 		if data[j] == syncByte {
 			data = data[j:]
 			break
 		}
-	}
+	}*/
 
 	return data, nil
 }

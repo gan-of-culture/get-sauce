@@ -18,6 +18,12 @@ Is a hentai scraper that is not using official APIs if they are restrictive. Thi
 
 ## Installation
 
+The following dependencies are required and must be installed separately.
+
+- **[FFmpeg](https://www.ffmpeg.org)**
+
+> **Note**: FFmpeg does not affect the download, only affects the final file merge.
+
 If you don't want to build the app yourself checkout the [releases page](https://github.com/gan-of-culture/get-sauce/releases).
 
 Otherwise you can use [Golang](https://golang.org/dl/) to build and install it:
@@ -179,6 +185,12 @@ get-sauce -i https://hentai-moon.com/videos/285/isekai-harem-monogatari-ep-1/
  -j             Show extracted data for the provided URL
 
  get-sauce -j http...
+
+--------------------------------------------------------------------------------
+
+ -n             Don't merge video, audio and subtitles using ffmpeg
+
+ get-sauce -n http...
 
 --------------------------------------------------------------------------------
  -o             Output name of the file

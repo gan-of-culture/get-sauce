@@ -80,7 +80,7 @@ func (downloader *downloaderStruct) Download(data *static.Data) error {
 		printStreamInfo(data, config.SelectStream)
 	}
 
-	needsMerge := false
+	streamNeedsMerge := false
 	if downloader.stream.Ext != "" {
 		// ensure a different tmpDir for each download so concurrent processes won't colide
 		h := sha1.New()
@@ -90,7 +90,7 @@ func (downloader *downloaderStruct) Download(data *static.Data) error {
 		if err != nil {
 			return err
 		}
-		needsMerge = true
+		streamNeedsMerge = true
 	}
 
 	lenOfUrls := len(downloader.stream.URLs)
@@ -142,7 +142,7 @@ func (downloader *downloaderStruct) Download(data *static.Data) error {
 
 		//build final file URI
 		fileURI = filepath.Join(downloader.filePath, fileURI+"."+URL.Ext)
-		if needsMerge {
+		if streamNeedsMerge {
 			fileURI = filepath.Join(downloader.tmpFilePath, fmt.Sprintf("%d.%s", pageNumbers[idx], URL.Ext))
 		}
 
@@ -154,13 +154,40 @@ func (downloader *downloaderStruct) Download(data *static.Data) error {
 		return saveErr
 	}
 
+	var files []string
+	if !config.NoMerge {
+		if downloader.stream.Ext == "" {
+			downloader.stream.Ext = downloader.stream.URLs[0].Ext
+		}
+		mergeMediaFiles(files, filepath.Join(downloader.filePath, data.Title+"."+downloader.stream.Ext))
+	}
+	if !streamNeedsMerge {
+		files = append(files, fileURI)
+	}
+
 	// download captions
 	if len(data.Captions) > config.Caption && config.Caption > -1 && downloader.stream.Type == static.DataTypeVideo {
 		fileURI = filepath.Join(downloader.filePath, fmt.Sprintf("%s_caption_%s.%s", data.Title, data.Captions[config.Caption].Language, data.Captions[config.Caption].URL.Ext))
-		downloader.save(data.Captions[config.Caption].URL, fileURI)
+		err := downloader.save(data.Captions[config.Caption].URL, fileURI)
+		if err != nil {
+			return err
+		}
+		if data.Captions[config.Caption].URL.Ext == "vtt" {
+			err = sanitizeVTT(fileURI)
+			if err != nil {
+				return err
+			}
+		}
+		files = append(files, fileURI)
 	}
 
-	if !needsMerge {
+	if !streamNeedsMerge {
+		if !config.NoMerge {
+			if downloader.stream.Ext == "" {
+				downloader.stream.Ext = downloader.stream.URLs[0].Ext
+			}
+			return mergeMediaFiles(files, filepath.Join(downloader.filePath, data.Title+"_merged."+downloader.stream.Ext))
+		}
 		return nil
 	}
 
@@ -171,30 +198,35 @@ func (downloader *downloaderStruct) Download(data *static.Data) error {
 	if err != nil {
 		return err
 	}
+	files = append(files, fileURI)
 
 	// stop infinite loop due to recursion
-	if downloader.stream.Type == static.DataTypeAudio {
-		return nil
-	}
-
-	// if audio is in separate stream -> download it with the video stream
-	streamID := ""
-	for k, v := range data.Streams {
-		if v.Type != static.DataTypeAudio {
-			continue
+	if downloader.stream.Type != static.DataTypeAudio {
+		// if audio is in separate stream -> download it with the video stream
+		streamID := ""
+		for k, v := range data.Streams {
+			if v.Type != static.DataTypeAudio {
+				continue
+			}
+			streamID = k
 		}
-		streamID = k
-	}
-	if streamID == "" {
-		return nil
-	}
-	selectStreamOld := config.SelectStream
-	config.SelectStream = streamID
+		if streamID == "" {
+			return nil
+		}
+		selectStreamOld := config.SelectStream
+		config.SelectStream = streamID
 
-	err = downloader.Download(data)
-	config.SelectStream = selectStreamOld
-	if err != nil {
-		return err
+		err = downloader.Download(data)
+		config.SelectStream = selectStreamOld
+		if err != nil {
+			return err
+		}
+		// used in defer function
+		files = append(files, filepath.Join(downloader.filePath, data.Title+"."+data.Streams[streamID].Ext))
+	}
+
+	if !config.NoMerge {
+		return mergeMediaFiles(files, filepath.Join(downloader.filePath, data.Title+"_merged."+downloader.stream.Ext))
 	}
 
 	return nil

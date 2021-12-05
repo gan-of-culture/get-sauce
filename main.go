@@ -5,6 +5,7 @@ import (
 	"flag"
 	"fmt"
 	"log"
+	"os/exec"
 	"sync"
 
 	"github.com/gan-of-culture/get-sauce/config"
@@ -16,6 +17,7 @@ import (
 func init() {
 	flag.IntVar(&config.Amount, "a", 0, "Amount of files to download")
 	flag.IntVar(&config.Caption, "c", -1, "Download caption if separate to a extra file")
+	flag.BoolVar(&config.NoMerge, "n", false, "Merge video, audio and subtitles if spilt using ffmpeg")
 	flag.StringVar(&config.OutputName, "o", "", "Output name")
 	flag.StringVar(&config.OutputPath, "O", "", "Output path (include ending slash)")
 	flag.StringVar(&config.Pages, "p", "", "Enter pages like 1,2,3-4,6,7,8-9 for doujins")
@@ -30,6 +32,14 @@ func init() {
 }
 
 func download(URL string) {
+	if !config.NoMerge {
+		_, err := exec.LookPath("ffmpeg")
+		if err != nil {
+			log.Println("No merging possible, because ffmpeg is not installed or not found in PATH")
+			config.NoMerge = true
+		}
+	}
+
 	data, err := extractors.Extract(URL)
 	if err != nil {
 		log.Fatal(err)

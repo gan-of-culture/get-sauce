@@ -1,12 +1,19 @@
 package downloader
 
 import (
+	"bufio"
 	"fmt"
+	"io/ioutil"
+	"os"
+	"os/exec"
+	"path/filepath"
+	"regexp"
 	"sort"
 	"strconv"
 
 	"github.com/gan-of-culture/get-sauce/config"
 	"github.com/gan-of-culture/get-sauce/static"
+	"github.com/gan-of-culture/get-sauce/utils"
 )
 
 // GenSortedStreams for stream map
@@ -95,4 +102,83 @@ func printStreamInfo(data *static.Data, streamKey string) {
 
 	fmt.Println("\n Stream:   ")
 	printStream(streamKey, data.Streams[streamKey])
+}
+
+// mergeMediaFiles into one output file using ffmpeg | merges video + audio + subtitles
+func mergeMediaFiles(files []string, outFile string) error {
+	if len(files) < 2 {
+		return nil
+	}
+	if !config.Quiet {
+		fmt.Println("\nMerging files using ffmpeg...")
+	}
+
+	command := []string{"-y"}
+	var caption string
+	for _, f := range files {
+		p, _ := filepath.Abs(f)
+		switch utils.GetFileExt(f) {
+		case "ass", "srt", "vtt":
+			caption = p
+		}
+		command = append(command, "-i")
+		command = append(command, p)
+	}
+	command = append(command, "-c")
+	command = append(command, "copy")
+	if caption != "" {
+		command = append(command, "-c:s")
+		command = append(command, "mov_text")
+	}
+	command = append(command, outFile)
+
+	if !config.Quiet {
+		fmt.Println(command)
+	}
+	cmd := exec.Command("ffmpeg", command...)
+	if err := cmd.Run(); err != nil {
+		return err
+	}
+
+	for _, f := range files {
+		err := os.Remove(f)
+		if err != nil {
+			return err
+		}
+	}
+	if !config.Quiet {
+		fmt.Println("Success!")
+	}
+
+	return nil
+}
+
+func sanitizeVTT(fileURI string) error {
+	// sometimes VTT contains weird blank lines that will cause an issue if you try to merge it later with ffmpeg
+	// this routine removes said lines
+	f, err := os.Open(fileURI)
+	if err != nil {
+		return err
+	}
+
+	re := regexp.MustCompile(`\d\d:\d\d:\d\d.\d{3} --> \d\d:\d\d:\d\d.\d{3}`)
+	var checkNextLine bool
+
+	var out string
+	scanner := bufio.NewScanner(f)
+	for scanner.Scan() {
+		if checkNextLine {
+			checkNextLine = false
+			if scanner.Text() == "" {
+				continue
+			}
+		}
+		if re.MatchString(scanner.Text()) {
+			checkNextLine = true
+		}
+		out = out + scanner.Text() + "\n"
+	}
+	f.Close()
+
+	return ioutil.WriteFile(fileURI, []byte(out), 0644)
 }

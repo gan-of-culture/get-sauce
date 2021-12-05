@@ -193,6 +193,7 @@ func TestDownload(t *testing.T) {
 	}
 	config.Workers = 5
 	config.SelectStream = "0"
+	config.NoMerge = true
 	downloader := New(false)
 	for _, tt := range tests {
 		t.Run(tt.Name, func(t *testing.T) {
