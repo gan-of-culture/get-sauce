@@ -64,7 +64,7 @@ func TestExtract(t *testing.T) {
 			Name: "Test image",
 			URL:  "https://rule34.paheal.net/post/view/3427635",
 			Want: Want{
-				Title:   "Magical_Sempai_(Series) Magician_Sempai skyfreedom 3427635",
+				Title:   "Magical_Sempai_(series) Magician_Sempai skyfreedom 3427635",
 				Type:    static.DataTypeImage,
 				DataLen: 1,
 			},

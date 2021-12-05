@@ -51,9 +51,9 @@ func DefaultClient() *http.Client {
 			DisableCompression:  true,
 			TLSHandshakeTimeout: 10 * time.Second,
 			TLSClientConfig: &tls.Config{
-				InsecureSkipVerify: true,
-				//PreferServerCipherSuites: false,
-				//CurvePreferences:         []tls.CurveID{tls.CurveP256, tls.CurveP384, tls.CurveP521, tls.X25519},
+				InsecureSkipVerify:       true,
+				PreferServerCipherSuites: false,
+				CurvePreferences:         []tls.CurveID{tls.CurveP256, tls.CurveP384, tls.CurveP521, tls.X25519},
 			},
 			IdleConnTimeout: 5 * time.Second,
 			//DisableKeepAlives:   true,

@@ -1,6 +1,7 @@
 package hentaimoon
 
 import (
+	"net/url"
 	"regexp"
 
 	"github.com/gan-of-culture/get-sauce/extractors/kvsplayer"
@@ -65,12 +66,16 @@ func extractData(URL string) (*static.Data, error) {
 	data[0].Site = site
 	data[0].Title = utils.GetH1(&htmlString, -1)
 
-	subtitleURL := reSubtitles.FindString(htmlString)
-	if subtitleURL != "" {
+	matchedSubtitleURL := reSubtitles.FindString(htmlString)
+	if matchedSubtitleURL != "" {
+		subtitleURL, err := url.Parse(matchedSubtitleURL)
+		if err != nil {
+			return nil, err
+		}
 		data[0].Captions = append(data[0].Captions, &static.Caption{
 			URL: static.URL{
-				URL: "https:" + subtitleURL,
-				Ext: utils.GetFileExt(subtitleURL),
+				URL: "https:" + subtitleURL.String(),
+				Ext: utils.GetFileExt(matchedSubtitleURL),
 			},
 			Language: "English",
 		})
