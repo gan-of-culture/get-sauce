@@ -288,6 +288,7 @@ The following links will direct you to adult content. Please keep that in mind!
 | [simply-hentai.com](https://www.simply-hentai.com)                              | :heavy_check_mark: |        ?         |
 | [thehentaiworld.com](https://thehentaiworld.com)                                | :heavy_check_mark: |:heavy_check_mark:|
 | [uncensoredhentai.xxx (1080p, 720p, 480p, 360p)](https://uncensoredhentai.xxx/) |         ?          |:heavy_check_mark:|
+| [v2.hentaihd.net (1080p, 720p, 480p)](https://v2.hentaihd.net)                  |         ?          |:heavy_check_mark:|
 | [yandere.re](https://yande.re/post)                                             | :heavy_check_mark: |        ?         |
 | [zhentube.com (1080p, 720p)](https://zhentube.com)                              |         ?          |:heavy_check_mark:|
 

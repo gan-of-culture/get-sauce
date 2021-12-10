@@ -19,6 +19,7 @@ import (
 	"github.com/gan-of-culture/get-sauce/extractors/hentaiguru"
 	"github.com/gan-of-culture/get-sauce/extractors/hentaihaven"
 	"github.com/gan-of-culture/get-sauce/extractors/hentaihavenred"
+	"github.com/gan-of-culture/get-sauce/extractors/hentaihd"
 	"github.com/gan-of-culture/get-sauce/extractors/hentaimama"
 	"github.com/gan-of-culture/get-sauce/extractors/hentaimoon"
 	"github.com/gan-of-culture/get-sauce/extractors/hentaipulse"
@@ -85,6 +86,7 @@ func init() {
 		"hentaihaven.com":       htstreamingExtactor,
 		"hentaihaven.red":       hentaihavenred.New(),
 		"hentaihaven.xxx":       hentaihaven.New(),
+		"v2.hentaihd.net":       hentaihd.New(),
 		"hentaimama.io":         hentaimama.New(),
 		"hentaipulse.com":       hentaipulse.New(),
 		"hentairox.com":         htdoujinExtractor,

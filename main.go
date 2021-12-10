@@ -27,8 +27,8 @@ func init() {
 	flag.BoolVar(&config.ShowExtractedData, "j", false, "Show extracted data")
 	flag.BoolVar(&config.ShowInfo, "i", false, "Show info")
 	flag.IntVar(&config.Workers, "w", 1, "Number of workers used for downloading")
-	flag.StringVar(&config.Username, "un", "", "Username for exhentai/forum e hentai")
-	flag.StringVar(&config.UserPassword, "up", "", "User password for exhentai/forum e hentai")
+	flag.StringVar(&config.Username, "un", "", "Username for exhentai")
+	flag.StringVar(&config.UserPassword, "up", "", "User password for exhentai")
 }
 
 func download(URL string) {
