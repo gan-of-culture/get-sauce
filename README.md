@@ -252,6 +252,7 @@ The following links will direct you to adult content. Please keep that in mind!
 | [e-hentai.org](http://e-hentai.org/)                                            | :heavy_check_mark: |        ?         |
 | [ecchi.iwara.tv](https://ecchi.iwara.tv/)                                       | :heavy_check_mark: |:heavy_check_mark:|
 | [exhentai.org*](http://exhentai.org/)                                           | :heavy_check_mark: |        ?         |
+| [haho.moe (1080p, 720p, 480p, 360p)](https://haho.moe)                          |         ?          |:heavy_check_mark:|
 | [hanime.io (1080p, 720p, 480p, 360p)](https://hanime.io)                        |         ?          |:heavy_check_mark:|
 | [hentai.guru (1080p, 720p, 480p)](https://hentai.guru/)                         |         ?          |:heavy_check_mark:|
 | [hentai.tv (1080p, 720p, 480p, 360p)](https://hentai.tv/)                       |         ?          |:heavy_check_mark:|
