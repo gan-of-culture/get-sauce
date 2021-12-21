@@ -100,7 +100,7 @@ func TestExtract(t *testing.T) {
 		}, {
 			Name: "Series animeidhentai.com",
 			URL:  "https://animeidhentai.com/hentai/mako-chan-kaihatsu-nikki/",
-			Want: 4,
+			Want: 2,
 		},
 	}
 	for _, tt := range tests {
