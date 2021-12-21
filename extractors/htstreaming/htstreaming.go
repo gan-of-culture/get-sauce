@@ -72,7 +72,7 @@ func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 }
 
 func parseURL(URL string) []string {
-	if ok, _ := regexp.MatchString(`episode-\d+[/_\-]`, URL); ok {
+	if ok, _ := regexp.MatchString(`episode-\d+[/_\-]*`, URL); ok {
 		return []string{URL}
 	}
 

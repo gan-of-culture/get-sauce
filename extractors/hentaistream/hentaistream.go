@@ -152,7 +152,16 @@ func extractData(URL string) (*static.Data, error) {
 		Title:   utils.GetH1(&htmlString, -1),
 		Type:    "video",
 		Streams: streams,
-		URL:     URL,
+		Captions: []*static.Caption{
+			{
+				URL: static.URL{
+					URL: baseDownloadURL + "eng.vtt",
+					Ext: "vtt",
+				},
+				Language: "English",
+			},
+		},
+		URL: URL,
 	}, nil
 
 }

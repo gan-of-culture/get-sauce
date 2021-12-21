@@ -19,7 +19,7 @@ var reSource = regexp.MustCompile(`<source.+src="([^"]+)" title="([^"]+)" type="
 
 type extractor struct{}
 
-// New returns a hentaihd extractor.
+// New returns a haho extractor.
 func New() static.Extractor {
 	return &extractor{}
 }

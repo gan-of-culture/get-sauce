@@ -10,6 +10,7 @@ import (
 	"regexp"
 	"sort"
 	"strconv"
+	"strings"
 
 	"github.com/gan-of-culture/get-sauce/config"
 	"github.com/gan-of-culture/get-sauce/static"
@@ -111,6 +112,10 @@ func mergeMediaFiles(files []string, outFile string) error {
 	}
 	if !config.Quiet {
 		fmt.Println("\nMerging files using ffmpeg...")
+	}
+
+	if strings.HasSuffix(outFile, ".webm") {
+		outFile = strings.ReplaceAll(outFile, ".webm", ".mp4")
 	}
 
 	command := []string{"-y"}
