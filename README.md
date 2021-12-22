@@ -137,9 +137,9 @@ The URLs will be downloaded one by one.
 
 ### Captions
 
-For most of the sites the captions (CC, OC or Subtitles) are hard encoded into the video file and can't be downloaded separately. If it is not encoded into the video and a Caption file was found you can download it with the option ```-c```.
+For most of the sites the captions (CC, OC or Subtitles) are hard encoded into the video file and can't be downloaded separately. If it is not encoded into the video and a caption file was found, then you can download it using the option ```-c```.
 
-To see if the caption will be downloaded into an extra file you can look at your data's information with the option ```-i```. You'll see extra information if the option ```-c``` can be used:
+To see if the captions can be downloaded separately use the option ```-i```. There will be extra information displayed if the option ```-c``` can be used.
 ```console
 get-sauce -i https://hentai-moon.com/videos/285/isekai-harem-monogatari-ep-1/
 
@@ -150,7 +150,7 @@ get-sauce -i https://hentai-moon.com/videos/285/isekai-harem-monogatari-ep-1/
 
      [0]  -------------------
      Language:            English
-     # download with: get-sauce -s 0 ...
+     # download with: get-sauce -c 0 ...
 
 
  Streams:   # All available qualities
