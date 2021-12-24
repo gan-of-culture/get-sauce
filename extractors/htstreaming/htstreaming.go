@@ -82,7 +82,7 @@ func parseURL(URL string) []string {
 		return []string{}
 	}
 
-	re := regexp.MustCompile(`https[^"\s]*?episode-\d*/*"`)
+	re := regexp.MustCompile(`https[^"\s]*?episode-\d*(?:/*|[-\w]*)"`)
 	matchedURLs := re.FindAllString(htmlString, -1)
 
 	out := []string{}

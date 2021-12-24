@@ -49,7 +49,7 @@ func TestParseURL(t *testing.T) {
 			Want: 24,
 		}, */{
 			Name: "Single Episode animeidhentai.com",
-			URL:  "https://animeidhentai.com/31678/mako-chan-kaihatsu-nikki-episode-1/",
+			URL:  "https://animeidhentai.com/31678/mako-chan-kaihatsu-nikki-episode-1-subbed/",
 			Want: 1,
 		}, {
 			Name: "Series animeidhentai.com",
