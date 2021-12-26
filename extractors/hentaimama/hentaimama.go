@@ -102,6 +102,7 @@ func extractData(URL string) (*static.Data, error) {
 			}
 
 			streams[fmt.Sprint(idx)] = &static.Stream{
+				Type: static.DataTypeVideo,
 				URLs: []*static.URL{
 					{
 						URL: srcURL,
