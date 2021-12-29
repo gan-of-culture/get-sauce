@@ -1,7 +1,6 @@
 package booru
 
 import (
-	"log"
 	"testing"
 )
 
@@ -27,7 +26,6 @@ func TestParseURL(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.Name, func(t *testing.T) {
-			log.Println(tt.Name)
 			URL, err := parseURL(tt.URL)
 			if err != nil {
 				t.Error(err)

@@ -7,7 +7,6 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/gan-of-culture/get-sauce/config"
 	"github.com/gan-of-culture/get-sauce/request"
 	"github.com/gan-of-culture/get-sauce/static"
 	"github.com/gan-of-culture/get-sauce/utils"
@@ -71,16 +70,13 @@ func parseURL(URL string) []string {
 }
 
 func extractData(URL string) ([]*static.Data, error) {
+	if !strings.Contains(URL, "?nw=session") {
+		URL = URL + "?nw=session"
+	}
+
 	htmlString, err := request.Get(URL)
 	if err != nil {
 		return nil, err
-	}
-
-	if strings.Contains(htmlString, "<h1>Content Warning</h1>") {
-		if config.RestrictContent {
-			return nil, errors.New("restricted content")
-		}
-		return extractData(URL + "?nw=session")
 	}
 
 	htmlNumberOfPages := reNumbOfPages.FindStringSubmatch(htmlString)

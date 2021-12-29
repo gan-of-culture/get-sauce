@@ -15,8 +15,6 @@ var (
 	Pages string
 	// Quiet mode - show minimal information
 	Quiet bool
-	// RestrictContent for e-hentai
-	RestrictContent bool
 	// SelectStream to download
 	SelectStream string
 	// ShowExtractedData of URL(s)
