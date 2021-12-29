@@ -11,6 +11,9 @@ import (
 
 const site = "https://www.hentaicloud.com/"
 
+var defaultCookies = map[string]string{
+	"Cookie": "splash=1",
+}
 var reSourceTags = regexp.MustCompile(`source src="(https://www.hentaicloud.com/media/videos/[^.]+([^"]+)).+res="([^"]*)`) //1=URL 2=ext 3=resolution
 
 type extractor struct{}
@@ -44,7 +47,7 @@ func parseURL(URL string) []string {
 		return []string{URL}
 	}
 
-	htmlString, err := request.Get(URL)
+	htmlString, err := request.GetWithHeaders(URL, defaultCookies)
 	if err != nil {
 		return []string{}
 	}
@@ -60,7 +63,7 @@ func parseURL(URL string) []string {
 }
 
 func extractData(URL string) (*static.Data, error) {
-	htmlString, err := request.Get(URL)
+	htmlString, err := request.GetWithHeaders(URL, defaultCookies)
 	if err != nil {
 		return nil, err
 	}
