@@ -118,7 +118,7 @@ func extractData(URL string) (*static.Data, error) {
 		return nil, err
 	}
 
-	ext := "ts"
+	var ext string
 	streams := map[string]*static.Stream{}
 	for idx, stream := range dummyStreams {
 

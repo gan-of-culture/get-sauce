@@ -278,9 +278,7 @@ func (downloader *downloaderStruct) concurWriteFile(URL string, file *os.File) e
 					req.Header.Set(k, v)
 				}
 
-				if ref := req.Header.Get("Referer"); ref == "" {
-					req.Header.Set("Referer", URL)
-				}
+				req.Header.Set("Referer", URL)
 				req.Header.Set("Range", fmt.Sprintf("bytes=%d-%d", d.offset, d.length))
 				//fmt.Println(req.Header.Get("Range"))
 
