@@ -119,46 +119,40 @@ func RemoveAdjDuplicates(slice []string) []string {
 	return out
 }
 
-// ParseM3UMaster into static.Stream to prefill the structure
-// returns a pre filled structure where URLs[0].URL is the media m3u URI
-func ParseM3UMaster(master *string) ([]*static.Stream, error) {
+// ParseHLSMaster into static.Stream to prefill the structure
+// returns a pre filled structure where URLs[0].URL is the media stream URI
+func ParseHLSMaster(master *string) ([]*static.Stream, error) {
 	re := regexp.MustCompile(`#EXT-X-STREAM-INF:([^\n]*)\n([^\n]+)`) // 1=PARAMS 2=MEDIAURI
 	matchedStreams := re.FindAllStringSubmatch(*master, -1)
 	if len(matchedStreams) < 1 {
-		return nil, fmt.Errorf("unable to parse any stream in m3u master file: %s", *master)
+		return nil, fmt.Errorf("unable to parse any stream in m3u master: %s", *master)
 	}
 
 	out := []*static.Stream{}
 	for _, stream := range matchedStreams {
-		s := &static.Stream{}
-		s.Type = static.DataTypeVideo
+		s := &static.Stream{
+			Type: static.DataTypeVideo,
+			URLs: []*static.URL{
+				{
+					URL: strings.TrimSpace(stream[2]),
+					Ext: "",
+				},
+			},
+		}
 
-		for _, v := range stream[1:] {
+		re = regexp.MustCompile(`[A-Z\-]+=(?:"[^"]*"|[^,]*)`) // PARAMETERNAME=VALUE
+		for _, streamParam := range re.FindAllString(stream[1], -1) {
 
-			re = regexp.MustCompile(`([A-Z\-]+=(?:"[^"]*"|[^,]*))`) // 1=list of PARAMNAME=value,
-			matchedStreamParams := re.FindAllStringSubmatch(v, -1)
-			if len(matchedStreamParams) == 0 {
-				s.URLs = []*static.URL{
-					{
-						URL: strings.TrimSpace(v),
-						Ext: "",
-					},
-				}
-				continue
-			}
-
-			for _, streamParam := range matchedStreamParams {
-
-				splitParam := strings.Split(streamParam[1], "=")
-				splitParam[1] = strings.Trim(splitParam[1], `",`)
-				switch splitParam[0] {
-				case "RESOLUTION":
-					s.Quality = splitParam[1]
-				case "CODECS":
-					s.Info = splitParam[1]
-				}
+			splitParam := strings.Split(streamParam, "=")
+			splitParam[1] = strings.Trim(splitParam[1], `",`)
+			switch splitParam[0] {
+			case "RESOLUTION":
+				s.Quality = splitParam[1]
+			case "CODECS":
+				s.Info = splitParam[1]
 			}
 		}
+
 		out = append(out, s)
 	}
 

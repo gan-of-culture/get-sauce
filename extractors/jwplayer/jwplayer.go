@@ -9,12 +9,10 @@ import (
 	"mime/multipart"
 	"net/http"
 	"net/textproto"
-	"net/url"
 	"regexp"
 
 	"github.com/gan-of-culture/get-sauce/request"
 	"github.com/gan-of-culture/get-sauce/static"
-	"github.com/gan-of-culture/get-sauce/utils"
 )
 
 type mediaData struct {
@@ -111,46 +109,14 @@ func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 		return nil, errors.New("the jwplayer api request for the streams did not return successful for")
 	}
 
-	m3u8String, err := request.Get(sources.Data.Sources[0].Src)
-	if err != nil {
-		return nil, err
-	}
-
-	baseURL, err := url.Parse(sources.Data.Sources[0].Src)
-	if err != nil {
-		return nil, err
-	}
-
-	streams, err := utils.ParseM3UMaster(&m3u8String)
+	streams, err := request.ExtractHLS(sources.Data.Sources[0].Src, nil)
 	if err != nil {
 		return nil, err
 	}
 
 	out := map[string]*static.Stream{}
-	for idx, variant := range streams {
-		mediaURL, err := baseURL.Parse(variant.URLs[0].URL)
-		if err != nil {
-			return nil, err
-		}
-
-		mediaStr, err := request.Get(mediaURL.String())
-		if err != nil {
-			return nil, err
-		}
-
-		URLs, key, err := request.GetM3UMeta(&mediaStr, mediaURL.String())
-		if err != nil {
-			return nil, err
-		}
-
-		out[fmt.Sprint(len(streams)-idx-1)] = &static.Stream{
-			Type:    static.DataTypeVideo,
-			URLs:    URLs,
-			Quality: variant.Quality,
-			Size:    variant.Size,
-			Ext:     "mp4",
-			Key:     key,
-		}
+	for _, stream := range streams {
+		stream.Ext = "mp4"
 	}
 
 	return []*static.Data{

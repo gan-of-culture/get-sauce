@@ -3,7 +3,6 @@ package htstreaming
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -151,7 +150,7 @@ func ExtractData(URL string) (*static.Data, error) {
 		return nil, err
 	}
 
-	m3u8Master, err := request.GetWithHeaders(pData.VideoSource, map[string]string{
+	streams, err := request.ExtractHLS(pData.VideoSource, map[string]string{
 		"referer": playerURL,
 		"accept":  "*/*",
 	})
@@ -159,39 +158,13 @@ func ExtractData(URL string) (*static.Data, error) {
 		return nil, err
 	}
 
-	dummyStreams, err := utils.ParseM3UMaster(&m3u8Master)
-	if err != nil {
-		return nil, err
-	}
-
 	ext := "ts"
-	streams := map[string]*static.Stream{}
-	for idx, stream := range dummyStreams {
-		master, err := request.GetWithHeaders(stream.URLs[0].URL, map[string]string{
-			"referer": playerURL,
-			"accept":  "*/*",
-		})
-		if err != nil {
-			return nil, err
-		}
-
-		URLs, key, err := request.GetM3UMeta(&master, stream.URLs[0].URL)
-		if err != nil {
-			return nil, err
-		}
-
+	for _, stream := range streams {
 		if strings.Contains(stream.Info, "mp4a") {
 			ext = "mp4"
 		}
 
-		streams[fmt.Sprint(len(dummyStreams)-idx-1)] = &static.Stream{
-			Type:    static.DataTypeVideo,
-			URLs:    URLs,
-			Quality: stream.Quality,
-			Size:    stream.Size,
-			Ext:     ext,
-			Key:     key,
-		}
+		stream.Ext = ext
 	}
 
 	htmlString, err := request.Get(playerURL)
@@ -214,10 +187,13 @@ func ExtractData(URL string) (*static.Data, error) {
 	}
 
 	jsParams := parseFirePlayerParams(matchedSubtitleParams[1], a, c, strings.Split(matchedSubtitleParams[4], "|"))
+	title := utils.GetLastItemString(strings.Split(reTitle.FindString(jsParams), `"`))
+	title = strings.TrimSuffix(title, ".mkv")
+	title = strings.TrimSuffix(title, ".mp4")
 
 	return &static.Data{
 		Site:     site,
-		Title:    utils.GetLastItemString(strings.Split(reTitle.FindString(jsParams), `"`)),
+		Title:    title,
 		Type:     static.DataTypeVideo,
 		Streams:  streams,
 		Captions: parseCaptions(jsParams),

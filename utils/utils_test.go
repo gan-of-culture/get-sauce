@@ -253,7 +253,7 @@ func TestRemoveAdjDuplicates(t *testing.T) {
 	}
 }
 
-func TestParseM3UMaster(t *testing.T) {
+func TestParseHLSMaster(t *testing.T) {
 	tests := []struct {
 		Name   string
 		master string
@@ -318,7 +318,7 @@ func TestParseM3UMaster(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.Name, func(t *testing.T) {
-			streams, err := ParseM3UMaster(&tt.master)
+			streams, err := ParseHLSMaster(&tt.master)
 			if err != nil {
 				t.Error(err)
 			}

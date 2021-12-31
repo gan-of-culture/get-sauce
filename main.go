@@ -5,6 +5,7 @@ import (
 	"flag"
 	"fmt"
 	"log"
+	"os"
 	"os/exec"
 	"sync"
 
@@ -108,7 +109,7 @@ func main() {
 		fmt.Println("Too few arguments")
 		fmt.Println("Usage: go-hentai-scraper [args] URLs...")
 		flag.PrintDefaults()
-		return
+		os.Exit(1)
 	}
 
 	for _, a := range args {

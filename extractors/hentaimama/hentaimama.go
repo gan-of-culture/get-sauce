@@ -3,7 +3,6 @@ package hentaimama
 import (
 	"encoding/base64"
 	"fmt"
-	"net/url"
 	"regexp"
 	"strings"
 
@@ -116,49 +115,15 @@ func extractData(URL string) (*static.Data, error) {
 		}
 		idx -= 1
 
-		master, err := request.GetWithHeaders(srcURL, map[string]string{"Referer": srcURL})
+		streams, err = request.ExtractHLS(srcURL, map[string]string{"Referer": srcURL})
 		if err != nil {
 			return nil, err
 		}
 
-		baseURL, err := url.Parse(srcURL)
-		if err != nil {
-			return nil, err
-		}
-
-		streamsTmp, err := utils.ParseM3UMaster(&master)
-		if err != nil {
-			return nil, err
-		}
-
-		for j := len(streamsTmp) - 1; j > -1; j-- {
+		for _, v := range streams {
 			idx += 1
-
-			streamTmp := streamsTmp[j]
-			mediaURL, err := baseURL.Parse(streamTmp.URLs[0].URL)
-			if err != nil {
-				return nil, err
-			}
-
-			mediaStr, err := request.Get(mediaURL.String())
-			if err != nil {
-				return nil, err
-			}
-
-			URLs, key, err := request.GetM3UMeta(&mediaStr, mediaURL.String())
-			if err != nil {
-				return nil, err
-			}
-
-			streams[fmt.Sprint(idx)] = &static.Stream{
-				Type:    static.DataTypeVideo,
-				URLs:    URLs,
-				Quality: streamTmp.Quality,
-				Size:    streamTmp.Size,
-				Ext:     "mp4",
-				Key:     key,
-				Info:    fmt.Sprintf("Mirror %d", i+1),
-			}
+			v.Ext = "mp4"
+			v.Info = fmt.Sprintf("Mirror %d", i+1)
 		}
 
 	}

@@ -2,7 +2,6 @@ package zhentube
 
 import (
 	"encoding/json"
-	"fmt"
 	"regexp"
 	"strings"
 
@@ -137,7 +136,7 @@ func extractData(URL string) (*static.Data, error) {
 	playerData.HostList.Num1[0] = "stream.deepthroatxvideo.com"
 	masterURL := strings.Replace(playerData.VideoData.VideoSources[0].File, playerData.VideoServer, playerData.HostList.Num1[0], 1) + "?s=1&d="
 
-	m3u8Master, err := request.GetWithHeaders(masterURL, map[string]string{
+	streams, err := request.ExtractHLS(masterURL, map[string]string{
 		"referer": matchedEmbedURL[1],
 		"accept":  "*/*",
 	})
@@ -145,34 +144,8 @@ func extractData(URL string) (*static.Data, error) {
 		return nil, err
 	}
 
-	dummyStreams, err := utils.ParseM3UMaster(&m3u8Master)
-	if err != nil {
-		return nil, err
-	}
-
-	streams := map[string]*static.Stream{}
-	for idx, s := range dummyStreams {
-		m3u8Media, err := request.GetWithHeaders(s.URLs[0].URL, map[string]string{
-			"referer": matchedEmbedURL[1],
-			"accept":  "*/*",
-		})
-		if err != nil {
-			return nil, err
-		}
-
-		URLs, _, err := request.GetM3UMeta(&m3u8Media, s.URLs[0].URL)
-		if err != nil {
-			return nil, err
-		}
-
-		streams[fmt.Sprint(len(dummyStreams)-idx-1)] = &static.Stream{
-			Type:    static.DataTypeVideo,
-			URLs:    URLs,
-			Quality: s.Quality,
-			Size:    s.Size,
-			Info:    s.Info,
-			Ext:     "mp4",
-		}
+	for _, stream := range streams {
+		stream.Ext = "mp4"
 	}
 
 	return &static.Data{
