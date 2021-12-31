@@ -211,7 +211,7 @@ func (downloader *downloaderStruct) Download(data *static.Data) error {
 			streamID = k
 		}
 		if streamID == "" {
-			return nil
+			return mergeMediaFiles(files, filepath.Join(downloader.filePath, data.Title+"_merged."+downloader.stream.Ext))
 		}
 		selectStreamOld := config.SelectStream
 		config.SelectStream = streamID
@@ -226,7 +226,7 @@ func (downloader *downloaderStruct) Download(data *static.Data) error {
 	}
 
 	if !config.NoMerge {
-		return mergeMediaFiles(files, filepath.Join(downloader.filePath, data.Title+"_merged."+downloader.stream.Ext))
+		return mergeMediaFiles(files, filepath.Join(downloader.filePath, data.Title+"_merged."+data.Streams[config.SelectStream].Ext))
 	}
 
 	return nil
