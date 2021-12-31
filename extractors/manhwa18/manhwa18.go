@@ -112,7 +112,7 @@ func extractData(URL string) (*static.Data, error) {
 		return nil, err
 	}
 
-	URLs, _, err := request.GetM3UMeta(&m3uMedia, srcURL)
+	URLs, _, err := request.ParseHLSMediaStream(&m3uMedia, srcURL)
 	if err != nil {
 		return nil, err
 	}

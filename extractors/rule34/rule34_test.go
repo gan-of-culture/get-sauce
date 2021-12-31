@@ -72,7 +72,7 @@ func TestExtract(t *testing.T) {
 			Name: "Test video",
 			URL:  "https://rule34.paheal.net/post/view/3464181",
 			Want: Want{
-				Title:   "Hv54rDSL Nier Nier_Automata YoRHa_No.2_Type_B animated audiodude blender sound webm 3464181",
+				Title:   "Hv54rDSL Nier_(series) Nier_Automata YoRHa_No.2_Type_B animated audiodude blender sound webm 3464181",
 				Type:    static.DataTypeVideo,
 				DataLen: 1,
 			},

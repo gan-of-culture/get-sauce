@@ -11,10 +11,8 @@ package muchohentai
 */
 
 import (
-	"fmt"
 	"html"
 	"math/rand"
-	"net/url"
 	"regexp"
 	"strings"
 
@@ -103,61 +101,20 @@ func extractData(URL string) (*static.Data, error) {
 
 	m3uMasterURL := baseURL + srcURLParts[0]
 
-	htmlString, err = request.GetWithHeaders(m3uMasterURL, map[string]string{"Referer": site})
-	if err != nil {
-		return nil, err
-	}
-
-	dummyStreams, err := utils.ParseM3UMaster(&htmlString)
-	if err != nil {
-		return nil, err
-	}
-
-	mainURL, err := url.Parse(m3uMasterURL)
+	streams, err := request.ExtractHLS(m3uMasterURL, map[string]string{"Referer": site})
 	if err != nil {
 		return nil, err
 	}
 
 	var ext string
-	streams := map[string]*static.Stream{}
-	for idx, stream := range dummyStreams {
-
-		mediaURL, err := mainURL.Parse(stream.URLs[0].URL)
-		if err != nil {
-			return nil, err
-		}
-
-		master, err := request.GetWithHeaders(mediaURL.String(), map[string]string{
-			"Referer": site,
-			"Accept":  "*/*",
-		})
-		if err != nil {
-			return nil, err
-		}
-
-		URLs, key, err := request.GetM3UMeta(&master, mediaURL.String())
-		if err != nil {
-			return nil, err
-		}
-
-		if len(URLs) < 1 {
-			return nil, static.ErrDataSourceParseFailed
-		}
-
-		ext = URLs[0].Ext
+	for _, stream := range streams {
+		ext = stream.URLs[0].Ext
 
 		if strings.Contains(stream.Info, "mp4a") {
 			ext = "mp4"
 		}
 
-		streams[fmt.Sprint(idx)] = &static.Stream{
-			Type:    stream.Type,
-			URLs:    URLs,
-			Quality: stream.Quality,
-			Size:    stream.Size,
-			Ext:     ext,
-			Key:     key,
-		}
+		stream.Ext = ext
 	}
 
 	return &static.Data{
