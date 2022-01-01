@@ -64,7 +64,7 @@ func extractData(URL string) (*static.Data, error) {
 	}
 	ext := utils.GetLastItemString(strings.Split(videoURL, "."))
 
-	size, _ := request.Size(URL, site)
+	size, _ := request.Size(videoURL, URL)
 
 	return &static.Data{
 		Site:  site,
