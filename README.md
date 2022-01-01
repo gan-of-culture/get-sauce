@@ -58,47 +58,52 @@ get-sauce https://hentaimama.io/episodes/torokase-orgasm-animation-episode-1/
 The ```-i``` option displays all available quality of video without downloading.
 
 ```console
-get-sauce -i https://hentaimama.io/episodes/torokase-orgasm-animation-episode-1/
+get-sauce -i https://hentaimama.io/episodes/torokase-orgasm-animation-episode-1/                                                                                                    (base)
 
  Site:      https://hentaimama.io/
  Title:     Torokase Orgasm The Animation Episode 1
  Type:      video
  Streams:   # All available qualities
      [0]  -------------------
+     Type:            video
      Info:            Mirror 1
-     Quality:         unknown
-     Size:            186.26 MB (186261816 Bytes)
+     Quality:         1280x720
+     Parts:           562
+     Size:            ~427.59 MB (427589832 Bytes)
      # download with: get-sauce -s 0 ...
 
 
      [1]  -------------------
-     Info:            Mirror 2
-     Quality:         unknown
-     Size:            186.26 MB (186261816 Bytes)
+     Type:            video
+     Info:            Mirror 1
+     Quality:         842x480
+     Parts:           562
+     Size:            ~123.83 MB (123828832 Bytes)
      # download with: get-sauce -s 1 ...
 
 
      [2]  -------------------
-     Info:            Mirror 3
-     Quality:         1280x720
+     Type:            video
+     Info:            Mirror 1
+     Quality:         640x360
      Parts:           562
-     Size:            0.00 MB (0 Bytes)
+     Size:            ~120.66 MB (120659152 Bytes)
      # download with: get-sauce -s 2 ...
 
 
      [3]  -------------------
-     Info:            Mirror 3
-     Quality:         842x480
-     Parts:           562
-     Size:            0.00 MB (0 Bytes)
+     Type:            video
+     Info:            Mirror 2
+     Quality:         unknown
+     Size:            186.26 MB (186261816 Bytes)
      # download with: get-sauce -s 3 ...
 
 
      [4]  -------------------
+     Type:            video
      Info:            Mirror 3
-     Quality:         640x360
-     Parts:           562
-     Size:            0.00 MB (0 Bytes)
+     Quality:         unknown
+     Size:            186.26 MB (186261816 Bytes)
      # download with: get-sauce -s 4 ...
 ```
 
@@ -109,13 +114,14 @@ The default stream is 0 and it also offers the best available quality. If you wa
 You can also download multiple URLs at once:
 
 ```console
-get-sauce -i https://nhentai.net/g/364616/ https://nhentai.net/g/364591/
+get-sauce -i https://nhentai.net/g/364616/ https://nhentai.net/g/364591/                                                                                                                (base)
 
  Site:      https://nhentai.net
- Title:     Matsuri tte Iina
+ Title:     Matsuri tte Ii na
  Type:      image
  Streams:   # All available qualities
      [0]  -------------------
+     Type:            image
      Quality:         unknown
      Parts:           31
      Size:            0.00 MB (0 Bytes)
@@ -127,6 +133,7 @@ get-sauce -i https://nhentai.net/g/364616/ https://nhentai.net/g/364591/
  Type:      image
  Streams:   # All available qualities
      [0]  -------------------
+     Type:            image
      Quality:         unknown
      Parts:           36
      Size:            0.00 MB (0 Bytes)
@@ -141,7 +148,7 @@ For most of the sites the captions (CC, OC or Subtitles) are hard encoded into t
 
 To see if the captions can be downloaded separately use the option ```-i```. There will be extra information displayed if the option ```-c``` can be used.
 ```console
-get-sauce -i https://hentai-moon.com/videos/285/isekai-harem-monogatari-ep-1/
+get-sauce -i https://hentai-moon.com/videos/285/isekai-harem-monogatari-ep-1/                                                                                                           (base)
 
  Site:      https://hentai-moon.com
  Title:     Isekai Harem Monogatari - Ep.1
@@ -155,6 +162,7 @@ get-sauce -i https://hentai-moon.com/videos/285/isekai-harem-monogatari-ep-1/
 
  Streams:   # All available qualities
      [0]  -------------------
+     Type:            video
      Quality:         unknown
      Size:            78.44 MB (78441598 Bytes)
      # download with: get-sauce -s 0 ...
