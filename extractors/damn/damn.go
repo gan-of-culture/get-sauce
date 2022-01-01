@@ -83,8 +83,8 @@ func extractData(URL string) (*static.Data, error) {
 	}
 
 	quality := ""
-	if len(srcMeta) > 2 {
-		quality = srcMeta[2]
+	if len(srcMeta) > 2 && srcMeta[2] != "" {
+		quality = srcMeta[2] + "p"
 	}
 
 	size, _ := request.Size(srcMeta[1], site)
@@ -102,7 +102,7 @@ func extractData(URL string) (*static.Data, error) {
 						Ext: utils.GetFileExt(srcMeta[1]),
 					},
 				},
-				Quality: quality + "p",
+				Quality: quality,
 				Size:    size,
 			},
 		},
