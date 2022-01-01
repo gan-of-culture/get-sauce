@@ -27,9 +27,7 @@ func TestParseURL(t *testing.T) {
 		t.Run(tt.Name, func(t *testing.T) {
 			log.Println(tt.Name)
 			URLs, err := parseURL(tt.URL)
-			if err != nil {
-				t.Error(err)
-			}
+			test.CheckError(t, err)
 			if len(URLs) < tt.Want {
 				t.Errorf("Got: %v - Want: %v", len(URLs), tt.Want)
 			}
@@ -59,9 +57,7 @@ func TestExtractData(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.Name, func(t *testing.T) {
 			data, err := extractData(tt.URL)
-			if err != nil {
-				t.Error(err)
-			}
+			test.CheckError(t, err)
 			if len(data.Streams) != tt.Want.numberOfStream {
 				t.Errorf("Got: %v - Want: %v", len(data.Streams), tt.Want.numberOfStream)
 			}
