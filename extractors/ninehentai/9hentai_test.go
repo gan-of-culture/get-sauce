@@ -35,9 +35,7 @@ func TestParseURL(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.Name, func(t *testing.T) {
 			galleries, err := parseURL(tt.in)
-			if err != nil {
-				t.Error(err)
-			}
+			test.CheckError(t, err)
 			if len(galleries) < tt.Want {
 				t.Errorf("Got: %v - Want: %v", len(galleries), tt.Want)
 			}

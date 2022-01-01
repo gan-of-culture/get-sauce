@@ -34,9 +34,7 @@ func TestParseURL(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.Name, func(t *testing.T) {
 			u, err := url.Parse(tt.URL)
-			if err != nil {
-				t.Error(err)
-			}
+			test.CheckError(t, err)
 
 			site = "https://" + u.Host + "/"
 

@@ -5,6 +5,7 @@ import (
 
 	"github.com/gan-of-culture/get-sauce/config"
 	"github.com/gan-of-culture/get-sauce/static"
+	"github.com/gan-of-culture/get-sauce/test"
 )
 
 func TestDownload(t *testing.T) {
@@ -198,9 +199,7 @@ func TestDownload(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.Name, func(t *testing.T) {
 			err := downloader.Download(tt.data)
-			if err != tt.Want {
-				t.Error(err)
-			}
+			test.CheckError(t, err)
 		})
 	}
 }

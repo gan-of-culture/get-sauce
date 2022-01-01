@@ -158,9 +158,7 @@ func TestExtractDataFromDirectLink(t *testing.T) {
 		t.Run(tt.Name, func(t *testing.T) {
 			config.Amount = 10
 			elements, err := New().Extract(tt.URL)
-			if err != nil {
-				t.Error(err)
-			}
+			test.CheckError(t, err)
 			if len(elements) < tt.Want {
 				t.Errorf("Got: %v - Want: %v", len(elements), tt.Want)
 			}
