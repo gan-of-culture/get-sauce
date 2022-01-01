@@ -1,6 +1,7 @@
 package miohentai
 
 import (
+	"html"
 	"regexp"
 	"strings"
 
@@ -68,6 +69,12 @@ func extractData(URL string) (*static.Data, error) {
 		return nil, err
 	}
 
+	title := html.UnescapeString(utils.GetH1(&htmlString, -1))
+	if title == "" {
+		splitURL := strings.Split(URL, "/")
+		title = splitURL[len(splitURL)-2]
+	}
+
 	srcURL := reSourceURL.FindString(htmlString)
 	if srcURL == "" {
 		srcURL = reImageSourceURL.FindStringSubmatch(htmlString)[1]
@@ -89,7 +96,7 @@ func extractData(URL string) (*static.Data, error) {
 
 	return &static.Data{
 		Site:  site,
-		Title: strings.Split(utils.GetMeta(&htmlString, "og:title"), " | ")[0],
+		Title: title,
 		Type:  utils.GetMediaType(strings.Split(headers.Get("content-type"), "/")[1]),
 		Streams: map[string]*static.Stream{
 			"0": {
