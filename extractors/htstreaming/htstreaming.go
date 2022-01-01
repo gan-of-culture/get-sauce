@@ -28,7 +28,7 @@ type videoData struct {
 	DownloadLinks []source `json:"downloadLinks"`
 }
 
-var reTitle = regexp.MustCompile(`"title":"[^"]+`)
+var reTitle = regexp.MustCompile(`"title":"[^"]+Episode \d+`)
 var reVideoURL = regexp.MustCompile(`https://htstreaming.com/video/([^"]*)`)
 var rePlayerURL = regexp.MustCompile(`[^"]*index.php\?data[^"]*`)
 
