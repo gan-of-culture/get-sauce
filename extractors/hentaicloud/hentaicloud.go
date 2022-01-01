@@ -3,6 +3,7 @@ package hentaicloud
 import (
 	"fmt"
 	"regexp"
+	"strings"
 
 	"github.com/gan-of-culture/get-sauce/request"
 	"github.com/gan-of-culture/get-sauce/static"
@@ -67,7 +68,7 @@ func extractData(URL string) (*static.Data, error) {
 	if err != nil {
 		return nil, err
 	}
-	title := utils.GetMeta(&htmlString, "og:title")
+	title := strings.TrimSpace(utils.GetMeta(&htmlString, "og:title"))
 
 	srcTags := reSourceTags.FindAllStringSubmatch(htmlString, -1) //1=URL 2=ext 3=resolution
 	if len(srcTags) < 1 {
