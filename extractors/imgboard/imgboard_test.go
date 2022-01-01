@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	"github.com/gan-of-culture/get-sauce/config"
-	"github.com/gan-of-culture/get-sauce/static"
+	"github.com/gan-of-culture/get-sauce/test"
 )
 
 func TestParseURL(t *testing.T) {
@@ -79,72 +79,61 @@ func TestParseURL(t *testing.T) {
 }
 
 func TestExtract(t *testing.T) {
-	type Want struct {
-		Title   string
-		Type    static.DataType
-		DataLen int
-	}
 	tests := []struct {
 		Name string
-		URL  string
-		Want Want
+		Args test.Args
 	}{
 		{
 			Name: "Test image",
-			URL:  "https://gelbooru.com/index.php?page=post&s=view&id=5888807",
-			Want: Want{
+			Args: test.Args{
+				URL:     "https://gelbooru.com/index.php?page=post&s=view&id=5888807",
 				Title:   "gelbooru_5888807",
-				Type:    static.DataTypeImage,
-				DataLen: 1,
+				Quality: "800x1280",
+				Size:    679127,
 			},
-		}, {
+		},
+		{
 			Name: "Test video",
-			URL:  "https://rule34.xxx/index.php?page=post&s=view&id=4470579",
-			Want: Want{
+			Args: test.Args{
+				URL:     "https://rule34.xxx/index.php?page=post&s=view&id=4470579",
 				Title:   "rule34_4470579",
-				Type:    static.DataTypeVideo,
-				DataLen: 1,
+				Quality: "1280x720",
+				Size:    4134392,
 			},
-		}, {
+		},
+		{
 			Name: "Test image konachan",
-			URL:  "https://konachan.com/post/show/323560/anthropomorphism-azur_lane-black_hair-blush-breast",
-			Want: Want{
+			Args: test.Args{
+				URL:     "https://konachan.com/post/show/323560/anthropomorphism-azur_lane-black_hair-blush-breast",
 				Title:   "konachan_323560",
-				Type:    static.DataTypeImage,
-				DataLen: 1,
+				Quality: "1371x1029",
+				Size:    866039,
 			},
-		}, {
+		},
+		{
 			Name: "Test image yande.re",
-			URL:  "https://yande.re/post/show/745150",
-			Want: Want{
+			Args: test.Args{
+				URL:     "https://yande.re/post/show/745150",
 				Title:   "yande_745150",
-				Type:    static.DataTypeImage,
-				DataLen: 1,
+				Quality: "2275x3660",
+				Size:    4682030,
 			},
-		}, {
+		},
+		{
 			Name: "Test image tbib",
-			URL:  "https://tbib.org/index.php?page=post&s=view&id=9022091",
-			Want: Want{
+			Args: test.Args{
+				URL:     "https://tbib.org/index.php?page=post&s=view&id=9022091",
 				Title:   "tbib_9022091",
-				Type:    static.DataTypeImage,
-				DataLen: 1,
+				Quality: "2869x5100",
+				Size:    2179461,
 			},
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.Name, func(t *testing.T) {
-			elements, err := New().Extract(tt.URL)
-			if err != nil {
-				t.Error(err)
-			}
-			act := Want{
-				Title:   elements[0].Title,
-				Type:    elements[0].Type,
-				DataLen: len(elements),
-			}
-			if act != tt.Want {
-				t.Errorf("Got: %v - Want: %v", act, tt.Want)
-			}
+			data, err := New().Extract(tt.Args.URL)
+			test.CheckError(t, err)
+			test.Check(t, tt.Args, data[0])
 		})
 	}
 }

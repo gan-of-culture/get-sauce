@@ -2,6 +2,8 @@ package hentaidude
 
 import (
 	"testing"
+
+	"github.com/gan-of-culture/get-sauce/test"
 )
 
 func TestParseURL(t *testing.T) {
@@ -65,36 +67,32 @@ func TestParseURL(t *testing.T) {
 func TestExtract(t *testing.T) {
 	tests := []struct {
 		Name string
-		URL  string
-		Want int
+		Args test.Args
 	}{
 		{
-			Name: "Page",
-			URL:  "https://hentaidude.com/",
-			Want: 20,
-		}, {
 			Name: "Single Episode",
-			URL:  "https://hentaidude.com/yuutousei-ayaka-no-uraomote-episode-1/",
-			Want: 1,
-		}, {
-			Name: "3D Single Episode",
-			URL:  "https://hentaidude.com/scarlet-nights-episode-1/",
-			Want: 1,
-		}, /*{
-			Name: "3D Page",
-			URL:  "https://hentaidude.com/tag/3d-hentai-0/",
-			Want: 20,
-		},*/ //this was removed to save time when testing
+			Args: test.Args{
+				URL:     "https://hentaidude.com/yuutousei-ayaka-no-uraomote-episode-1/",
+				Title:   "Yuutousei Ayaka No Uraomote - Episode 1",
+				Quality: "",
+				Size:    107194356,
+			},
+		},
+		{
+			Name: "Single 3D Episode",
+			Args: test.Args{
+				URL:     "https://hentaidude.com/scarlet-nights-episode-1/",
+				Title:   "Scarlet Nights - Episode 1",
+				Quality: "",
+				Size:    436684542,
+			},
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.Name, func(t *testing.T) {
-			data, err := New().Extract(tt.URL)
-			if err != nil {
-				t.Error(err)
-			}
-			if len(data) > tt.Want {
-				t.Errorf("Got: %v - Want: %v", len(data), tt.Want)
-			}
+			data, err := New().Extract(tt.Args.URL)
+			test.CheckError(t, err)
+			test.Check(t, tt.Args, data[0])
 		})
 	}
 }

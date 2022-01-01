@@ -1,6 +1,10 @@
 package hentaiworld
 
-import "testing"
+import (
+	"testing"
+
+	"github.com/gan-of-culture/get-sauce/test"
+)
 
 func TestParseURL(t *testing.T) {
 	tests := []struct {
@@ -44,57 +48,35 @@ func TestParseURL(t *testing.T) {
 	}
 }
 
-func TestExtractData(t *testing.T) {
-	tests := []struct {
-		Name string
-		URL  string
-		Want string
-	}{
-		{
-			Name: "Single 3d extraction",
-			URL:  "https://hentaiworld.tv/hentai-videos/3d/final-fantasy-tifa-7/",
-			Want: "Final Fantasy – Tifa",
-		},
-		{
-			Name: "Single default extraction",
-			URL:  "https://hentaiworld.tv/hentai-videos/yuutousei-ayaka-no-uraomote-episode-1/",
-			Want: "Yuutousei Ayaka no Uraomote - Episode 1",
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.Name, func(t *testing.T) {
-			data, err := extractData(tt.URL)
-			if err != nil {
-				t.Error(err)
-			}
-			if data.Title != tt.Want {
-				t.Errorf("Got: %v - Want: %v", data.Title, tt.Want)
-			}
-		})
-	}
-}
-
 func TestExtract(t *testing.T) {
 	tests := []struct {
 		Name string
-		URL  string
-		Want int
+		Args test.Args
 	}{
 		{
-			Name: "Page Extraction",
-			URL:  "https://hentaiworld.tv/hentai-videos/category/yuutousei-ayaka-no-uraomote/",
-			Want: 2,
+			Name: "Single 3D Extraction",
+			Args: test.Args{
+				URL:     "https://hentaiworld.tv/hentai-videos/3d/final-fantasy-tifa-7/",
+				Title:   "Final Fantasy – Tifa",
+				Quality: "",
+				Size:    23462163,
+			},
+		},
+		{
+			Name: "Single Extraction",
+			Args: test.Args{
+				URL:     "https://hentaiworld.tv/hentai-videos/yuutousei-ayaka-no-uraomote-episode-1/",
+				Title:   "Yuutousei Ayaka no Uraomote - Episode 1",
+				Quality: "",
+				Size:    80671065,
+			},
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.Name, func(t *testing.T) {
-			data, err := New().Extract(tt.URL)
-			if err != nil {
-				t.Error(err)
-			}
-			if len(data) > tt.Want {
-				t.Errorf("Got: %v - Want: %v", len(data), tt.Want)
-			}
+			data, err := New().Extract(tt.Args.URL)
+			test.CheckError(t, err)
+			test.Check(t, tt.Args, data[0])
 		})
 	}
 }

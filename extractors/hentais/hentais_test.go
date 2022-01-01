@@ -2,6 +2,8 @@ package hentais
 
 import (
 	"testing"
+
+	"github.com/gan-of-culture/get-sauce/test"
 )
 
 func TestParseURL(t *testing.T) {
@@ -34,24 +36,23 @@ func TestParseURL(t *testing.T) {
 func TestExtract(t *testing.T) {
 	tests := []struct {
 		Name string
-		URL  string
-		Want int
+		Args test.Args
 	}{
 		{
-			Name: "Single default extraction",
-			URL:  "https://www.hentais.tube/episodes/shishunki-sex-episode-4",
-			Want: 1,
+			Name: "Single Episode",
+			Args: test.Args{
+				URL:     "https://www.hentais.tube/episodes/shishunki-sex-episode-4",
+				Title:   "Shishunki Sex - Episode 4",
+				Quality: "720p",
+				Size:    164494351,
+			},
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.Name, func(t *testing.T) {
-			data, err := New().Extract(tt.URL)
-			if err != nil {
-				t.Error(err)
-			}
-			if len(data) != tt.Want {
-				t.Errorf("Got: %v - Want: %v", len(data), tt.Want)
-			}
+			data, err := New().Extract(tt.Args.URL)
+			test.CheckError(t, err)
+			test.Check(t, tt.Args, data[0])
 		})
 	}
 }

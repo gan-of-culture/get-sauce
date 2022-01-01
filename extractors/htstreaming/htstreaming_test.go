@@ -1,8 +1,9 @@
 package htstreaming
 
 import (
-	"strings"
 	"testing"
+
+	"github.com/gan-of-culture/get-sauce/test"
 )
 
 func TestParseURL(t *testing.T) {
@@ -70,48 +71,68 @@ func TestParseURL(t *testing.T) {
 func TestExtract(t *testing.T) {
 	tests := []struct {
 		Name string
-		URL  string
-		Want int
+		Args test.Args
 	}{
 		{
 			Name: "Single Episode hentaihaven.com",
-			URL:  "https://hentaihaven.com/soshite-watashi-wa-sensei-ni-episode-1/",
-			Want: 1,
-		}, {
+			Args: test.Args{
+				URL:     "https://hentaihaven.com/soshite-watashi-wa-sensei-ni-episode-1/",
+				Title:   "Soshite Watashi wa Sensei ni… Episode 1",
+				Quality: "1920x1080",
+				Size:    0,
+			},
+		},
+		{
 			Name: "Single Episode uncensoredhentai.xxx",
-			URL:  "https://uncensoredhentai.xxx/watch/mako-chan-kaihatsu-nikki-episode-1/",
-			Want: 1,
-		}, {
+			Args: test.Args{
+				URL:     "https://uncensoredhentai.xxx/watch/mako-chan-kaihatsu-nikki-episode-1/",
+				Title:   "Mako chan Kaihatsu Nikki Episode 1",
+				Quality: "1920x1080",
+				Size:    0,
+			},
+		},
+		{
 			Name: "Single Episode hentai.pro",
-			URL:  "https://hentai.pro/imaizumin-chi-wa-douyara-gal-no-tamariba-ni-natteru-rashii-episode-2/",
-			Want: 1,
-		}, {
+			Args: test.Args{
+				URL:     "https://hentai.pro/imaizumin-chi-wa-douyara-gal-no-tamariba-ni-natteru-rashii-episode-2/",
+				Title:   "Imaizumin-chi wa Douyara Gal no Tamariba ni Natteru Rashii Episode 2",
+				Quality: "1920x1080",
+				Size:    0,
+			},
+		},
+		{
 			Name: "Single Episode hentaistream.xxx",
-			URL:  "https://hentaistream.xxx/watch/mako-chan-kaihatsu-nikki-episode-1/",
-			Want: 1,
-		}, /* {
+			Args: test.Args{
+				URL:     "https://hentaistream.xxx/watch/mako-chan-kaihatsu-nikki-episode-1/",
+				Title:   "Mako chan Kaihatsu Nikki Episode 1",
+				Quality: "1920x1080",
+				Size:    0,
+			},
+		},
+		{
 			Name: "Single Episode hentai.tv",
-			URL:  "https://hentai.tv/hentai/chiisana-tsubomi-no-sono-oku-ni-episode-1/",
-			Want: 1,
-		}, */{
+			Args: test.Args{
+				URL:     "https://hentai.tv/hentai/chiisana-tsubomi-no-sono-oku-ni-episode-1/",
+				Title:   "Chiisana Tsubomi no Sono Oku Ni…… Episode 1",
+				Quality: "1280x720",
+				Size:    0,
+			},
+		},
+		{
 			Name: "Single Episode animeidhentai.com",
-			URL:  "https://animeidhentai.com/31680/mako-chan-kaihatsu-nikki-episode-2/",
-			Want: 1,
-		}, {
-			Name: "Series animeidhentai.com",
-			URL:  "https://animeidhentai.com/hentai/mako-chan-kaihatsu-nikki/",
-			Want: 2,
+			Args: test.Args{
+				URL:     "https://animeidhentai.com/31680/mako-chan-kaihatsu-nikki-episode-2/",
+				Title:   "Mako chan Kaihatsu Nikki Episode 2",
+				Quality: "1920x1080",
+				Size:    0,
+			},
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.Name, func(t *testing.T) {
-			data, err := New().Extract(tt.URL)
-			if err != nil && !strings.Contains(err.Error(), "Video not found") {
-				t.Error(err)
-			}
-			if len(data) > tt.Want || len(data) == 0 {
-				t.Errorf("Got: %v - Want: %v", len(data), tt.Want)
-			}
+			data, err := New().Extract(tt.Args.URL)
+			test.CheckError(t, err)
+			test.Check(t, tt.Args, data[0])
 		})
 	}
 }

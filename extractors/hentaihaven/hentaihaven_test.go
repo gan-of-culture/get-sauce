@@ -32,28 +32,23 @@ func TestParseURL(t *testing.T) {
 func TestExtract(t *testing.T) {
 	tests := []struct {
 		Name string
-		URL  string
-		Want int
+		Args test.Args
 	}{
 		{
 			Name: "Single Episode",
-			URL:  "https://hentaihaven.xxx/watch/showtime-uta-no-onee-san-datte-shitai/episode-3/",
-			Want: 1,
-		}, {
-			Name: "Series",
-			URL:  "https://hentaihaven.xxx/watch/ero-konbini-tenchou/",
-			Want: 4,
+			Args: test.Args{
+				URL:     "https://hentaihaven.xxx/watch/showtime-uta-no-onee-san-datte-shitai/episode-3/",
+				Title:   "Showtime! Uta no Onee-san Datte Shitai - Episode 3",
+				Quality: "1920x1080",
+				Size:    0,
+			},
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.Name, func(t *testing.T) {
-			data, err := New().Extract(tt.URL)
-			if err != nil {
-				t.Error(err)
-			}
-			if len(data) > tt.Want {
-				t.Errorf("Got: %v - Want: %v", len(data), tt.Want)
-			}
+			data, err := New().Extract(tt.Args.URL)
+			test.CheckError(t, err)
+			test.Check(t, tt.Args, data[0])
 		})
 	}
 }*/

@@ -1,6 +1,10 @@
 package nhentai
 
-import "testing"
+import (
+	"testing"
+
+	"github.com/gan-of-culture/get-sauce/test"
+)
 
 func TestParseURL(t *testing.T) {
 	type Want struct {
@@ -57,35 +61,34 @@ func TestParseURL(t *testing.T) {
 }
 
 func TestExtract(t *testing.T) {
-
 	tests := []struct {
-		Name  string
-		URL   string
-		title string
-		Want  int
+		Name string
+		Args test.Args
 	}{
 		{
-			Name:  "Complete extraction of a doujinshi",
-			URL:   "https://nhentai.net/g/297485/",
-			title: "Isekai Shoukan II - Elf na Onee-san no Tomodachi wa Suki desu ka?",
-			Want:  43,
-		}, {
-			Name:  "One page extraction",
-			URL:   "https://nhentai.net/g/297280/14/",
-			title: "(C97) [H@BREAK (Itose Ikuto)] Koe Dashicha Barechau kara! [English]",
-			Want:  1,
+			Name: "Complete extraction of a doujinshi",
+			Args: test.Args{
+				URL:     "https://nhentai.net/g/297485/",
+				Title:   "Isekai Shoukan IIsan no Tomodachi wa Suki desu ka?",
+				Quality: "",
+				Size:    0,
+			},
+		},
+		{
+			Name: "One page extraction",
+			Args: test.Args{
+				URL:     "https://nhentai.net/g/297280/14/",
+				Title:   "Koe Dashicha Barechau kara!",
+				Quality: "",
+				Size:    0,
+			},
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.Name, func(t *testing.T) {
-			data, err := New().Extract(tt.URL)
-			if err != nil {
-				t.Error(err)
-			}
-			URLlen := len(data[0].Streams["0"].URLs)
-			if URLlen != tt.Want {
-				t.Errorf("Got: %v - Want: %v", URLlen, tt.Want)
-			}
+			data, err := New().Extract(tt.Args.URL)
+			test.CheckError(t, err)
+			test.Check(t, tt.Args, data[0])
 		})
 	}
 }

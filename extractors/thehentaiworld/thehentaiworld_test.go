@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/gan-of-culture/get-sauce/config"
+	"github.com/gan-of-culture/get-sauce/test"
 )
 
 func TestParseURL(t *testing.T) {
@@ -12,7 +13,7 @@ func TestParseURL(t *testing.T) {
 		URL  string
 		Want int
 	}{
-		/*{
+		{
 			Name: "Single video",
 			URL:  "https://thehentaiworld.com/videos/shiranui-mai-akiyamaryo-king-of-fighters-5/",
 			Want: 1,
@@ -44,7 +45,7 @@ func TestParseURL(t *testing.T) {
 			Name: "Specific Page",
 			URL:  "https://thehentaiworld.com/page/4/?s=cyberpunk",
 			Want: 24,
-		}, */{
+		}, {
 			Name: "Tag",
 			URL:  "https://thehentaiworld.com/tag/cyberpunk-2077/page/4/",
 			Want: 24,
@@ -71,29 +72,32 @@ func TestParseURL(t *testing.T) {
 func TestExtract(t *testing.T) {
 	tests := []struct {
 		Name string
-		URL  string
-		Want int
+		Args test.Args
 	}{
 		{
 			Name: "Single video",
-			URL:  "hhttps://thehentaiworld.com/videos/ahri-bewyx-league-of-legends-9/",
-			Want: 1,
-		}, {
-			// downloads all images if the post is a image set
+			Args: test.Args{
+				URL:     "https://thehentaiworld.com/videos/ahri-bewyx-league-of-legends-9/",
+				Title:   "153088 – Ahri – Bewyx – League of Legends Animated Hentai 3D CGI Video_T1_C1",
+				Quality: "720p; 1280 x 720",
+				Size:    2345048,
+			},
+		},
+		{
 			Name: "Single Gallery hentai-images",
-			URL:  "https://thehentaiworld.com/hentai-cosplay-images/ahri-helly-von-valentine-league-of-legends-2/",
-			Want: 20,
+			Args: test.Args{
+				URL:     "https://thehentaiworld.com/hentai-cosplay-images/ahri-helly-von-valentine-league-of-legends-2/",
+				Title:   "153371 – Ahri – Helly von Valentine – League of Legends Hentai Cosplay (20)",
+				Quality: "1242p; 1824 x 1242",
+				Size:    0,
+			},
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.Name, func(t *testing.T) {
-			data, err := New().Extract(tt.URL)
-			if err != nil {
-				t.Error(err)
-			}
-			if len(data) > tt.Want || len(data) == 0 {
-				t.Errorf("Got: %v - Want: %v", len(data), tt.Want)
-			}
+			data, err := New().Extract(tt.Args.URL)
+			test.CheckError(t, err)
+			test.Check(t, tt.Args, data[0])
 		})
 	}
 }

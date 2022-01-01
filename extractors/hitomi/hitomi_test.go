@@ -1,6 +1,10 @@
 package hitomi
 
-import "testing"
+import (
+	"testing"
+
+	"github.com/gan-of-culture/get-sauce/test"
+)
 
 func TestParseURL(t *testing.T) {
 	tests := []struct {
@@ -35,28 +39,32 @@ func TestParseURL(t *testing.T) {
 func TestExtract(t *testing.T) {
 	tests := []struct {
 		Name string
-		URL  string
-		Want int
+		Args test.Args
 	}{
 		{
-			Name: "Single Gallery",
-			URL:  "https://hitomi.la/doujinshi/%E3%82%B8%E3%82%A7%E3%83%B3%E3%83%88%E3%83%AB%E3%82%B3%E3%83%8D%E3%82%AF%E3%83%88!re:dive-%E6%97%A5%E6%9C%AC%E8%AA%9E-1905632.html",
-			Want: 1,
-		}, {
-			Name: "Single Gallery",
-			URL:  "https://hitomi.la/manga/%E7%8C%A5%E8%A4%BB%E3%83%9F%E3%82%B5%E3%82%A4%E3%83%AB-%E6%97%A5%E6%9C%AC%E8%AA%9E-440479.html",
-			Want: 1,
+			Name: "Single Doujin",
+			Args: test.Args{
+				URL:     "https://hitomi.la/doujinshi/%E3%82%B8%E3%82%A7%E3%83%B3%E3%83%88%E3%83%AB%E3%82%B3%E3%83%8D%E3%82%AF%E3%83%88!re:dive-%E6%97%A5%E6%9C%AC%E8%AA%9E-1905632.html",
+				Title:   "gentle connect!Re:Dive",
+				Quality: "",
+				Size:    0,
+			},
+		},
+		{
+			Name: "Single Manga",
+			Args: test.Args{
+				URL:     "https://hitomi.la/manga/%E7%8C%A5%E8%A4%BB%E3%83%9F%E3%82%B5%E3%82%A4%E3%83%AB-%E6%97%A5%E6%9C%AC%E8%AA%9E-440479.html",
+				Title:   "Waisetsu Missile",
+				Quality: "",
+				Size:    0,
+			},
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.Name, func(t *testing.T) {
-			data, err := New().Extract(tt.URL)
-			if err != nil {
-				t.Error(err)
-			}
-			if len(data) > tt.Want || len(data) == 0 {
-				t.Errorf("Got: %v - Want: %v", len(data), tt.Want)
-			}
+			data, err := New().Extract(tt.Args.URL)
+			test.CheckError(t, err)
+			test.Check(t, tt.Args, data[0])
 		})
 	}
 }

@@ -129,7 +129,7 @@ func ExtractFromHTML(htmlString *string) ([]*static.Data, error) {
 	return []*static.Data{
 		{
 			Site:    "https://kvsplayer.com/",
-			Title:   matchcedTitle[0],
+			Title:   matchcedTitle[1],
 			Type:    static.DataTypeVideo,
 			Streams: streams,
 		},

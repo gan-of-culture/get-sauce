@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"net/url"
 	"testing"
+
+	"github.com/gan-of-culture/get-sauce/test"
 )
 
 func TestParseURL(t *testing.T) {
@@ -77,36 +79,50 @@ func TestParseURL(t *testing.T) {
 func TestExtract(t *testing.T) {
 	tests := []struct {
 		Name string
-		URL  string
-		Want int
+		Args test.Args
 	}{
 		{
 			Name: "Single Gallery IMHentai",
-			URL:  "https://imhentai.xxx/gallery/684976/",
-			Want: 1,
-		}, {
+			Args: test.Args{
+				URL:     "https://imhentai.xxx/gallery/684976/",
+				Title:   "Otona ni Naru Hi",
+				Quality: "",
+				Size:    0,
+			},
+		},
+		{
 			Name: "Single Gallery HentaiFox",
-			URL:  "https://hentaifox.com/gallery/84580/",
-			Want: 1,
-		}, {
+			Args: test.Args{
+				URL:     "https://hentaifox.com/gallery/84580/",
+				Title:   "Mirai Kairozu ni Android + 2 Plus",
+				Quality: "",
+				Size:    0,
+			},
+		},
+		{
 			Name: "Single Gallery HentaiEra",
-			URL:  "https://hentaiera.com/gallery/488946/",
-			Want: 1,
-		}, {
+			Args: test.Args{
+				URL:     "https://hentaiera.com/gallery/488946/",
+				Title:   "NEO-QUEENDOM Daijuunanagou",
+				Quality: "",
+				Size:    0,
+			},
+		},
+		{
 			Name: "Single Gallery HentaiRox",
-			URL:  "https://hentairox.com/gallery/397913/",
-			Want: 1,
+			Args: test.Args{
+				URL:     "https://hentairox.com/gallery/397913/",
+				Title:   "Hanamizuki Vol.1",
+				Quality: "",
+				Size:    0,
+			},
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.Name, func(t *testing.T) {
-			data, err := New().Extract(tt.URL)
-			if err != nil {
-				t.Error(err)
-			}
-			if len(data) > tt.Want || len(data) == 0 {
-				t.Errorf("Got: %v - Want: %v", len(data), tt.Want)
-			}
+			data, err := New().Extract(tt.Args.URL)
+			test.CheckError(t, err)
+			test.Check(t, tt.Args, data[0])
 		})
 	}
 }
