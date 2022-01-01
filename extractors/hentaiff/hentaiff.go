@@ -133,7 +133,6 @@ func extractData(URL string) (*static.Data, error) {
 			},
 			Quality: stream.Label,
 			Size:    size,
-			Info:    "Downloading concurrently with the -w is not possible for this source",
 		}
 	}
 
