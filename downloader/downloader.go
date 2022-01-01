@@ -310,12 +310,12 @@ func (downloader *downloaderStruct) concurWriteFile(URL string, file *os.File) e
 				}
 
 				lock.Lock()
-				_, err = file.WriteAt(buffer, d.offset)
+				written, err := file.WriteAt(buffer, d.offset)
 				if err != nil {
 					saveErr = err
 				}
 				if downloader.bar {
-					downloader.progressBar.Add(1)
+					downloader.progressBar.Add(written)
 				}
 				lock.Unlock()
 
@@ -326,7 +326,7 @@ func (downloader *downloaderStruct) concurWriteFile(URL string, file *os.File) e
 		}()
 	}
 
-	downloader.initPB(fileSize, fmt.Sprintf("Downloading with workers %s ...", file.Name()), false)
+	downloader.initPB(fileSize, fmt.Sprintf("Downloading %s using %d workers...", file.Name(), config.Workers), true)
 
 	var offset int64
 	for ; fileSize > 0; fileSize -= pieceSize {
