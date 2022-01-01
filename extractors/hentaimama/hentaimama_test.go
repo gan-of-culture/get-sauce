@@ -55,6 +55,15 @@ func TestExtract(t *testing.T) {
 				Size:    77530809,
 			},
 		},
+		{
+			Name: "Single Episode using a both mp4 and HLS",
+			Args: test.Args{
+				URL:     "https://hentaimama.io/episodes/torokase-orgasm-animation-episode-1/",
+				Title:   "Torokase Orgasm The Animation Episode 1",
+				Quality: "1280x720",
+				Size:    427589832,
+			},
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.Name, func(t *testing.T) {

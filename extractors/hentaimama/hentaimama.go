@@ -71,10 +71,8 @@ func extractData(URL string) (*static.Data, error) {
 		return nil, static.ErrDataSourceParseFailed
 	}
 
-	idx := -1
-	streams := make(map[string]*static.Stream)
+	srcURLs := make([]string, len(matchedMirrorURLs))
 	for i, u := range matchedMirrorURLs {
-		idx += 1
 		b64Path, err := base64.StdEncoding.DecodeString(u[1])
 		if err != nil {
 			return nil, err
@@ -87,45 +85,61 @@ func extractData(URL string) (*static.Data, error) {
 		}
 
 		reSrc := regexp.MustCompile(fmt.Sprintf(`[^"']*/%s[^"']*`, string(b64Paths[0])))
-		srcURL := reSrc.FindString(htmlString)
+		srcURLs[i] = reSrc.FindString(htmlString)
+	}
 
+	mirrorIdx := 0
+	streams := map[string]*static.Stream{}
+	// resolve all HLS URLs
+	for _, srcURL := range srcURLs {
 		ext := strings.TrimSuffix(utils.GetLastItemString(reExt.FindStringSubmatch(srcURL)), "?")
 		if ext != "m3u8" {
-			size, err := request.Size(srcURL, site)
-			if err != nil {
-				return nil, err
-			}
-
-			if ext == "" {
-				ext = strings.Split(reMimeType.FindString(srcURL), "/")[1]
-			}
-
-			streams[fmt.Sprint(idx)] = &static.Stream{
-				Type: static.DataTypeVideo,
-				URLs: []*static.URL{
-					{
-						URL: srcURL,
-						Ext: ext,
-					},
-				},
-				Size: size,
-				Info: fmt.Sprintf("Mirror %d", i+1),
-			}
 			continue
 		}
-		idx -= 1
 
 		streams, err = request.ExtractHLS(srcURL, map[string]string{"Referer": srcURL})
 		if err != nil {
 			return nil, err
 		}
 
+		mirrorIdx += 1
 		for _, v := range streams {
-			idx += 1
 			v.Ext = "mp4"
-			v.Info = fmt.Sprintf("Mirror %d", i+1)
+			v.Info = fmt.Sprintf("Mirror %d", mirrorIdx)
+		}
+	}
+
+	idx := len(streams) - 1
+	// resolve other URLs
+	for _, srcURL := range srcURLs {
+		ext := strings.TrimSuffix(utils.GetLastItemString(reExt.FindStringSubmatch(srcURL)), "?")
+		if ext == "m3u8" {
+			continue
 		}
 
+		size, err := request.Size(srcURL, site)
+		if err != nil {
+			return nil, err
+		}
+
+		if ext == "" {
+			ext = strings.Split(reMimeType.FindString(srcURL), "/")[1]
+		}
+
+		idx += 1
+		mirrorIdx += 1
+		streams[fmt.Sprint(idx)] = &static.Stream{
+			Type: static.DataTypeVideo,
+			URLs: []*static.URL{
+				{
+					URL: srcURL,
+					Ext: ext,
+				},
+			},
+			Size: size,
+			Info: fmt.Sprintf("Mirror %d", mirrorIdx),
+		}
+		continue
 	}
 
 	return &static.Data{
