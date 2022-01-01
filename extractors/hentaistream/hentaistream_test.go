@@ -51,7 +51,7 @@ func TestExtract(t *testing.T) {
 				URL:     "https://hentaistream.moe/515/overflow-1/",
 				Title:   "Overflow 1",
 				Quality: "av1.2160p.webm",
-				Size:    556,
+				Size:    96865295,
 			},
 		},
 		{
@@ -60,7 +60,7 @@ func TestExtract(t *testing.T) {
 				URL:     "https://hentaistream.moe/593/kateikyoushi-no-oneesan-2-the-animation-1/",
 				Title:   "Kateikyoushi no Oneesan 2 The Animation 1",
 				Quality: "av1.1080p.webm",
-				Size:    555,
+				Size:    219251128,
 			},
 		},
 	}
