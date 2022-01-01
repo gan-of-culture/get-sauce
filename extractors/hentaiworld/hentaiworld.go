@@ -12,7 +12,7 @@ import (
 const site = "https://hentaiworld.tv/"
 
 var reFileInfo = regexp.MustCompile(`window.open\(\'([^']+\.([0-9a-zA-z]*))`) // 1 = dlURL 2=ext
-var reFileInfoBackup = regexp.MustCompile(`src='(.*)\.(mp4*).*`)              // 1 = dlURL 2=ext
+var reFileInfoBackup = regexp.MustCompile(`src='(.*\.(mp4*)).*`)              // 1 = dlURL 2=ext
 
 type extractor struct{}
 
