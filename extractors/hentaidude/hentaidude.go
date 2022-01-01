@@ -74,7 +74,7 @@ func extractData(URL string) (*static.Data, error) {
 		return nil, err
 	}
 	title := utils.GetMeta(&htmlString, "og:title")
-	title = strings.TrimSuffix(title, " | Hentaidude.com")
+	title = strings.TrimSuffix(title, " - Hentaidude.com")
 
 	matchedSourceReq := reJSONParams.FindStringSubmatch(htmlString) // 1=id  2=nonce
 	if len(matchedSourceReq) < 3 {
