@@ -3,6 +3,8 @@ package simplyhentai
 import (
 	"net/url"
 	"testing"
+
+	"github.com/gan-of-culture/get-sauce/test"
 )
 
 func TestParseURL(t *testing.T) {
@@ -49,28 +51,32 @@ func TestParseURL(t *testing.T) {
 func TestExtract(t *testing.T) {
 	tests := []struct {
 		Name string
-		URL  string
-		Want int
+		Args test.Args
 	}{
 		{
 			Name: "Single Gallery simply-hentai.com",
-			URL:  "https://www.simply-hentai.com/original-work/torotoro-ni-shite-ageru-ch1-3",
-			Want: 1,
-		}, {
+			Args: test.Args{
+				URL:     "https://www.simply-hentai.com/original-work/torotoro-ni-shite-ageru-ch1-3",
+				Title:   "Torotoro ni Shite Ageru Ch.1-3",
+				Quality: "",
+				Size:    0,
+			},
+		},
+		{
 			Name: "Single Gallery doujin.sexy",
-			URL:  "https://doujin.sexy/fate-grand-order/fdo-fatedosukebe-order-vol80",
-			Want: 1,
+			Args: test.Args{
+				URL:     "https://doujin.sexy/fate-grand-order/fdo-fatedosukebe-order-vol80",
+				Title:   "FDO Fate/Dosukebe Order VOL.8.0",
+				Quality: "",
+				Size:    0,
+			},
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.Name, func(t *testing.T) {
-			data, err := New().Extract(tt.URL)
-			if err != nil {
-				t.Error(err)
-			}
-			if len(data) > tt.Want || len(data) == 0 {
-				t.Errorf("Got: %v - Want: %v", len(data), tt.Want)
-			}
+			data, err := New().Extract(tt.Args.URL)
+			test.CheckError(t, err)
+			test.Check(t, tt.Args, data[0])
 		})
 	}
 }

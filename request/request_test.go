@@ -5,15 +5,14 @@ import (
 
 	"github.com/gan-of-culture/get-sauce/config"
 	"github.com/gan-of-culture/get-sauce/static"
+	"github.com/gan-of-culture/get-sauce/test"
 )
 
 func TestSize(t *testing.T) {
 	config.ShowInfo = true
 	t.Run("Default test", func(t *testing.T) {
 		size, err := Size("https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png", "")
-		if err != nil {
-			t.Error(err)
-		}
+		test.CheckError(t, err)
 
 		if size == 0 {
 			t.Errorf("Got: %v - Want: %v", size, "more than 0 Bytes")
@@ -24,9 +23,7 @@ func TestSize(t *testing.T) {
 func TestGet(t *testing.T) {
 	t.Run("Default test", func(t *testing.T) {
 		htmlString, err := Get("https://github.com/")
-		if err != nil {
-			t.Error(err)
-		}
+		test.CheckError(t, err)
 
 		if htmlString == "" {
 			t.Errorf("Got: %v - Want: %v", htmlString, "a string")
@@ -37,9 +34,7 @@ func TestGet(t *testing.T) {
 func TestPost(t *testing.T) {
 	t.Run("Default test", func(t *testing.T) {
 		data, err := PostAsBytesWithHeaders("https://www.google.com/", map[string]string{"Referer": "https://google.com"})
-		if err != nil {
-			t.Error(err)
-		}
+		test.CheckError(t, err)
 
 		if len(data) < 1 {
 			t.Errorf("Got: %v - Want: %v", data, "some bytes")
@@ -52,9 +47,7 @@ func TestGetWReferer(t *testing.T) {
 		htmlString, err := GetWithHeaders("https://github.com/", map[string]string{
 			"referer": "https://github.com/",
 		})
-		if err != nil {
-			t.Error(err)
-		}
+		test.CheckError(t, err)
 
 		if htmlString == "" {
 			t.Errorf("Got: %v - Want: %v", htmlString, "a string")
@@ -94,9 +87,7 @@ func TestExtractHLS(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.Name, func(t *testing.T) {
 			streams, err := ExtractHLS(tt.URL, tt.Headers)
-			if err != nil {
-				t.Error(err)
-			}
+			test.CheckError(t, err)
 			for k, v := range streams {
 				if v.Quality != tt.Want[k].Quality {
 					t.Errorf("Got: %v - Want: %v", v.Quality, tt.Want[k].Quality)

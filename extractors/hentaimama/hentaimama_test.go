@@ -1,6 +1,10 @@
 package hentaimama
 
-import "testing"
+import (
+	"testing"
+
+	"github.com/gan-of-culture/get-sauce/test"
+)
 
 func TestParseURL(t *testing.T) {
 	tests := []struct {
@@ -31,28 +35,32 @@ func TestParseURL(t *testing.T) {
 func TestExtract(t *testing.T) {
 	tests := []struct {
 		Name string
-		URL  string
-		Want int
+		Args test.Args
 	}{
 		{
-			Name: "Single Episode",
-			URL:  "https://hentaimama.io/episodes/kuroinu-ii-animation-episode-1/",
-			Want: 1,
-		}, {
-			Name: "Series",
-			URL:  "https://hentaimama.io/tvshows/ura-jutaijima/",
-			Want: 2,
+			Name: "Single Episode using HLS only",
+			Args: test.Args{
+				URL:     "https://hentaimama.io/episodes/kuroinu-ii-animation-episode-1/",
+				Title:   "Kuroinu II The Animation Episode 1",
+				Quality: "1280x720",
+				Size:    446315760,
+			},
+		},
+		{
+			Name: "Single Episode using a single mp4 file",
+			Args: test.Args{
+				URL:     "https://hentaimama.io/episodes/ura-jutaijima-episode-1/",
+				Title:   "Ura Jutaijima Episode 1",
+				Quality: "",
+				Size:    77530809,
+			},
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.Name, func(t *testing.T) {
-			data, err := New().Extract(tt.URL)
-			if err != nil {
-				t.Error(err)
-			}
-			if len(data) > tt.Want || len(data) == 0 {
-				t.Errorf("Got: %v - Want: %v", len(data), tt.Want)
-			}
+			data, err := New().Extract(tt.Args.URL)
+			test.CheckError(t, err)
+			test.Check(t, tt.Args, data[0])
 		})
 	}
 }

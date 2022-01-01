@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/gan-of-culture/get-sauce/config"
-	"github.com/gan-of-culture/get-sauce/static"
+	"github.com/gan-of-culture/get-sauce/test"
 )
 
 func TestParseURL(t *testing.T) {
@@ -50,57 +50,43 @@ func TestParseURL(t *testing.T) {
 }
 
 func TestExtract(t *testing.T) {
-	type Want struct {
-		Title   string
-		Type    static.DataType
-		DataLen int
-	}
 	tests := []struct {
 		Name string
-		URL  string
-		Want Want
+		Args test.Args
 	}{
 		{
-			Name: "Test image",
-			URL:  "https://rule34.paheal.net/post/view/3427635",
-			Want: Want{
-				Title:   "Magical_Sempai_(series) Magician_Sempai skyfreedom 3427635",
-				Type:    static.DataTypeImage,
-				DataLen: 1,
-			},
-		}, {
-			Name: "Test video",
-			URL:  "https://rule34.paheal.net/post/view/3464181",
-			Want: Want{
+			Name: "Single video",
+			Args: test.Args{
+				URL:     "https://rule34.paheal.net/post/view/3464181",
 				Title:   "Hv54rDSL Nier_(series) Nier_Automata YoRHa_No.2_Type_B animated audiodude blender sound webm 3464181",
-				Type:    static.DataTypeVideo,
-				DataLen: 1,
+				Quality: "540 x 1280",
+				Size:    7503936,
 			},
-		}, {
-			Name: "Test gif",
-			URL:  "https://rule34.paheal.net/post/view/3461411",
-			Want: Want{
+		},
+		{
+			Name: "Single image",
+			Args: test.Args{
+				URL:     "https://rule34.paheal.net/post/view/3427635",
+				Title:   "Magical_Sempai_(series) Magician_Sempai skyfreedom 3427635",
+				Quality: "1800 x 1269",
+				Size:    590974,
+			},
+		},
+		{
+			Name: "Single GIF",
+			Args: test.Args{
+				URL:     "https://rule34.paheal.net/post/view/3461411",
 				Title:   "World_of_Warcraft animated blood_elf 3461411",
-				Type:    static.DataTypeImage,
-				DataLen: 1,
+				Quality: "480 x 854",
+				Size:    7811055,
 			},
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.Name, func(t *testing.T) {
-			config.Amount = 26
-			elements, err := New().Extract(tt.URL)
-			if err != nil {
-				t.Error("elements has error or is too big for single tests")
-			}
-			act := Want{
-				Title:   elements[0].Title,
-				Type:    elements[0].Type,
-				DataLen: len(elements),
-			}
-			if act != tt.Want {
-				t.Errorf("Got: %v - Want: %v", act, tt.Want)
-			}
+			data, err := New().Extract(tt.Args.URL)
+			test.CheckError(t, err)
+			test.Check(t, tt.Args, data[0])
 		})
 	}
 }

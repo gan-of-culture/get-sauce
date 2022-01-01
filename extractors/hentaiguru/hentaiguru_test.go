@@ -1,6 +1,10 @@
 package hentaiguru
 
-import "testing"
+import (
+	"testing"
+
+	"github.com/gan-of-culture/get-sauce/test"
+)
 
 func TestParseURL(t *testing.T) {
 	tests := []struct {
@@ -35,24 +39,23 @@ func TestParseURL(t *testing.T) {
 func TestExtract(t *testing.T) {
 	tests := []struct {
 		Name string
-		URL  string
-		Want int
+		Args test.Args
 	}{
 		{
 			Name: "Single Episode",
-			URL:  "https://hentai.guru/hentai/bitch-na-inane-sama/episode-4/",
-			Want: 1,
+			Args: test.Args{
+				URL:     "https://hentai.guru/hentai/bitch-na-inane-sama/episode-4/",
+				Title:   "Bitch na Inane-sama - Episode 4",
+				Quality: "1920x1080",
+				Size:    0,
+			},
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.Name, func(t *testing.T) {
-			data, err := New().Extract(tt.URL)
-			if err != nil {
-				t.Error(err)
-			}
-			if len(data) > tt.Want || len(data) == 0 {
-				t.Errorf("Got: %v - Want: %v", len(data), tt.Want)
-			}
+			data, err := New().Extract(tt.Args.URL)
+			test.CheckError(t, err)
+			test.Check(t, tt.Args, data[0])
 		})
 	}
 }

@@ -114,7 +114,6 @@ func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 		return nil, err
 	}
 
-	out := map[string]*static.Stream{}
 	for _, stream := range streams {
 		stream.Ext = "mp4"
 	}
@@ -124,7 +123,7 @@ func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 			Site:    URLBase,
 			Title:   "jwplayer video",
 			Type:    static.DataTypeVideo,
-			Streams: out,
+			Streams: streams,
 		},
 	}, nil
 }

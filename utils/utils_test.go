@@ -6,6 +6,7 @@ import (
 
 	"github.com/gan-of-culture/get-sauce/config"
 	"github.com/gan-of-culture/get-sauce/static"
+	"github.com/gan-of-culture/get-sauce/test"
 )
 
 func TestGetLastItem(t *testing.T) {
@@ -319,9 +320,7 @@ func TestParseHLSMaster(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.Name, func(t *testing.T) {
 			streams, err := ParseHLSMaster(&tt.master)
-			if err != nil {
-				t.Error(err)
-			}
+			test.CheckError(t, err)
 
 			for i := range streams {
 				if streams[i].Size != tt.Want[i].Size {
