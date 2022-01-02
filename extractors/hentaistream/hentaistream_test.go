@@ -46,6 +46,15 @@ func TestExtract(t *testing.T) {
 		Args test.Args
 	}{
 		{
+			Name: "Single Episode 8k",
+			Args: test.Args{
+				URL:     "https://hentaistream.moe/816/oneshota-1/",
+				Title:   "Oneshota 1",
+				Quality: "av1.4320p.webm",
+				Size:    1073734107,
+			},
+		},
+		{
 			Name: "Single Episode 4k",
 			Args: test.Args{
 				URL:     "https://hentaistream.moe/515/overflow-1/",
@@ -55,7 +64,7 @@ func TestExtract(t *testing.T) {
 			},
 		},
 		{
-			Name: "Single Episode 4k",
+			Name: "Single Episode",
 			Args: test.Args{
 				URL:     "https://hentaistream.moe/593/kateikyoushi-no-oneesan-2-the-animation-1/",
 				Title:   "Kateikyoushi no Oneesan 2 The Animation 1",

@@ -60,6 +60,24 @@ var players = map[string][]quality{
 			vType: "video/mp4",
 		},
 	},
+	"player8k.html": {
+		{
+			codec: "av1.4320p.webm",
+			vType: "video/webm",
+		},
+		{
+			codec: "av1.2160p.webm",
+			vType: "video/webm",
+		},
+		{
+			codec: "av1.1080p.webm",
+			vType: "video/webm",
+		},
+		{
+			codec: "x264.720p.mp4",
+			vType: "video/mp4",
+		},
+	},
 }
 
 var reBase64CDNURL = regexp.MustCompile(`<iframe[\s\S]*?(player[^#]*)#([^"]*)`) // 1=player[4k].html  2 = "url=https://01cdn.hentaistream.moe/2021/02/Overflow/E08/"
