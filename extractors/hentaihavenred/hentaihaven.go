@@ -3,7 +3,7 @@ package hentaihavenred
 import (
 	"encoding/json"
 	"errors"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"net/url"
 	"regexp"
@@ -96,7 +96,7 @@ func extractData(URL string) (*static.Data, error) {
 	}
 	defer res.Body.Close()
 
-	buffer, err := ioutil.ReadAll(res.Body)
+	buffer, err := io.ReadAll(res.Body)
 	if err != nil {
 		return nil, err
 	}

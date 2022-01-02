@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"regexp"
 	"strings"
@@ -178,7 +178,7 @@ func getTagByID(ID string) (tag, error) {
 	}
 	defer res.Body.Close()
 
-	buffer, err := ioutil.ReadAll(res.Body)
+	buffer, err := io.ReadAll(res.Body)
 	if err != nil {
 		return tag{}, err
 	}
@@ -201,7 +201,7 @@ func getBookByID(ID string) (gallery, error) {
 	}
 	defer res.Body.Close()
 
-	buffer, err := ioutil.ReadAll(res.Body)
+	buffer, err := io.ReadAll(res.Body)
 	if err != nil {
 		return gallery{}, err
 	}
@@ -229,7 +229,7 @@ func getBook(s searchReq) ([]gallery, error) {
 	}
 	defer res.Body.Close()
 
-	buffer, err = ioutil.ReadAll(res.Body)
+	buffer, err = io.ReadAll(res.Body)
 	if err != nil {
 		return nil, err
 	}

@@ -9,6 +9,7 @@ torrent*
 *.zip
 
 media
+*.avif
 *.jpg
 *.png
 *.mp4

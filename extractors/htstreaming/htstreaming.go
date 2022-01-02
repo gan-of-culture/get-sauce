@@ -3,7 +3,7 @@ package htstreaming
 import (
 	"encoding/json"
 	"errors"
-	"io/ioutil"
+	"io"
 	"log"
 	"net/http"
 	"net/url"
@@ -138,7 +138,7 @@ func ExtractData(URL string) (*static.Data, error) {
 	}
 	defer res.Body.Close()
 
-	buffer, err := ioutil.ReadAll(res.Body)
+	buffer, err := io.ReadAll(res.Body)
 	if err != nil {
 		return nil, err
 	}

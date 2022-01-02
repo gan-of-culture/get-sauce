@@ -4,7 +4,6 @@ import (
 	"crypto/sha1"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -302,7 +301,7 @@ func (downloader *downloaderStruct) concurWriteFile(URL string, file *os.File) e
 				defer res.Body.Close()
 				//fmt.Println(res.ContentLength)
 
-				buffer, err := ioutil.ReadAll(res.Body)
+				buffer, err := io.ReadAll(res.Body)
 				if err != nil {
 					lock.Lock()
 					saveErr = err
