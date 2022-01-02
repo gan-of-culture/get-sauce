@@ -3,7 +3,6 @@ package downloader
 import (
 	"bufio"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -191,5 +190,5 @@ func sanitizeVTT(fileURI string) error {
 	}
 	f.Close()
 
-	return ioutil.WriteFile(fileURI, []byte(out), 0644)
+	return os.WriteFile(fileURI, []byte(out), 0644)
 }
