@@ -44,8 +44,8 @@ func TestExtract(t *testing.T) {
 		{
 			Name: "Single Doujin",
 			Args: test.Args{
-				URL:     "https://hitomi.la/doujinshi/%E3%82%B8%E3%82%A7%E3%83%B3%E3%83%88%E3%83%AB%E3%82%B3%E3%83%8D%E3%82%AF%E3%83%88!re:dive-%E6%97%A5%E6%9C%AC%E8%AA%9E-1905632.html",
-				Title:   "gentle connect!Re:Dive",
+				URL:     "https://hitomi.la/doujinshi/m-o-muke-onaclu-_shinjin-kenshuu-hen-english-2102221.html",
+				Title:   "M-o Muke OnaClu _Shinjin Kenshuu Hen",
 				Quality: "",
 				Size:    0,
 			},

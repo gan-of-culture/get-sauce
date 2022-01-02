@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"log"
 	"net/http"
 	"net/url"
@@ -48,10 +48,14 @@ const site = "https://hitomi.la/"
 const nozomi = "https://ltn.hitomi.la/"
 const nozomiExt = "nozomi"
 const galleriesPerPage = 25
+const ggURL = nozomi + "gg.js"
 
-var reSubdomainPart = regexp.MustCompile(`\/[0-9a-f]\/([0-9a-f]{2})\/`)
+var reSubdomainPart = regexp.MustCompile(`\/[0-9a-f]{61}([0-9a-f]{2})([0-9a-f])`)
 var reURLFromURL = regexp.MustCompile(`\/\/..?\.hitomi\.la\/`)
-var rePathFromHash = regexp.MustCompile(`^.*(..)(.)$`)
+var rePathFromHash = regexp.MustCompile(`(..)(.)$`)
+
+var ggValues []*int
+var b string
 
 type extractor struct{}
 
@@ -65,6 +69,8 @@ func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 	if len(URLs) == 0 {
 		return nil, static.ErrURLParseFailed
 	}
+
+	initGGValues()
 
 	data := []*static.Data{}
 	for _, u := range URLs {
@@ -113,7 +119,7 @@ func parseURL(URL string) []string {
 	}
 	defer resp.Body.Close()
 
-	buffer, err := ioutil.ReadAll(resp.Body)
+	buffer, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return []string{}
 	}
@@ -177,35 +183,22 @@ func extractData(URL string) (*static.Data, error) {
 	}, nil
 }
 
-func subdomainFromGalleryid(g, numOfFrontends int64) string {
-	o := g % numOfFrontends
-	return fmt.Sprintf("%c", 97+o)
-}
-
 func subdomainFromURL(URL, base string) string {
 	retval := "b"
 	if base != "" {
 		retval = base
 	}
 
-	numberOfFrontends := 3
 	b := 16
 
 	var m = reSubdomainPart.FindStringSubmatch(URL)
-	if len(m) < 2 {
+	if len(m) == 0 {
 		return "a"
 	}
 
-	g, err := strconv.ParseInt(m[1], b, 64)
+	g, err := strconv.ParseInt(m[2]+m[1], b, 64)
 	if err == nil {
-		// check these values if it doesn't work anymore
-		if g < 0x80 {
-			numberOfFrontends = 2
-		}
-		if g < 0x59 {
-			g = 1
-		}
-		retval = subdomainFromGalleryid(g, int64(numberOfFrontends)) + retval
+		retval = fmt.Sprintf("%c", 97+inGGValues(int(g))) + retval
 	}
 
 	return retval
@@ -232,8 +225,35 @@ func urlFromHash(imgFile img) string {
 }
 
 func fullPathFromHash(hash string) string {
-	if len(hash) < 3 {
-		return hash
+	m := rePathFromHash.FindStringSubmatch(hash)
+
+	dec, _ := strconv.ParseInt(m[2]+m[1], 16, 64)
+	return fmt.Sprintf("%s%d/%s", b, dec, hash)
+}
+
+func initGGValues() {
+	jsStr, _ := request.GetWithHeaders(ggURL, map[string]string{"Referer": site})
+
+	b = regexp.MustCompile(`\d+/`).FindString(jsStr)
+
+	re := regexp.MustCompile(`case \d+`)
+	matchedCases := re.FindAllString(jsStr, -1)
+	ggValues = make([]*int, len(matchedCases))
+	for idx, num := range matchedCases {
+		n, _ := strconv.Atoi(num[5:])
+
+		ggValues[idx] = &n
 	}
-	return rePathFromHash.ReplaceAllString(hash, "$2/$1/"+hash)
+}
+
+func inGGValues(num int) int {
+	if ggValues == nil {
+		return 0
+	}
+	for _, value := range ggValues {
+		if *value == num {
+			return 0
+		}
+	}
+	return 1
 }

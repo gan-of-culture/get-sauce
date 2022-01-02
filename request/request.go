@@ -5,7 +5,6 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"net/http"
 	"net/url"
 	"regexp"
@@ -109,7 +108,7 @@ func GetAsBytes(URL string) ([]byte, error) {
 	}
 	defer resp.Body.Close()
 
-	body, err := ioutil.ReadAll(resp.Body)
+	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		if err != io.ErrUnexpectedEOF {
 			return nil, err
@@ -127,7 +126,7 @@ func PostAsBytes(URL string) ([]byte, error) {
 	}
 	defer resp.Body.Close()
 
-	body, err := ioutil.ReadAll(resp.Body)
+	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		if err != io.ErrUnexpectedEOF {
 			return nil, err
@@ -155,7 +154,7 @@ func GetAsBytesWithHeaders(URL string, headers map[string]string) ([]byte, error
 	}
 	defer resp.Body.Close()
 
-	body, err := ioutil.ReadAll(resp.Body)
+	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		if err != io.ErrUnexpectedEOF {
 			return nil, err
@@ -173,7 +172,7 @@ func PostAsBytesWithHeaders(URL string, headers map[string]string) ([]byte, erro
 	}
 	defer resp.Body.Close()
 
-	body, err := ioutil.ReadAll(resp.Body)
+	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		if err != io.ErrUnexpectedEOF {
 			return nil, err
