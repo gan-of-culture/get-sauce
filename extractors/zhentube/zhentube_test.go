@@ -48,10 +48,10 @@ func TestExtract(t *testing.T) {
 		{
 			Name: "Single Episode",
 			Args: test.Args{
-				URL:     "https://zhentube.com/torokase-orgasm-episode-1/",
-				Title:   "Torokase Orgasm Episode 1",
+				URL:     "https://zhentube.com/kyonyuu-erufu-oyako-saimin-episode-2/",
+				Title:   "Kyonyuu Erufu oyako saimin Episode 2",
 				Quality: "1920x1080",
-				Size:    442901680,
+				Size:    341447292,
 			},
 		},
 	}
