@@ -236,11 +236,11 @@ func initGGValues() {
 
 	b = regexp.MustCompile(`\d+/`).FindString(jsStr)
 
-	re := regexp.MustCompile(`case \d+`)
-	matchedCases := re.FindAllString(jsStr, -1)
+	re := regexp.MustCompile(`(\d+)\).+0`)
+	matchedCases := re.FindAllStringSubmatch(jsStr, -1)
 	ggValues = make([]*int, len(matchedCases))
 	for idx, num := range matchedCases {
-		n, _ := strconv.Atoi(num[5:])
+		n, _ := strconv.Atoi(num[1])
 
 		ggValues[idx] = &n
 	}
