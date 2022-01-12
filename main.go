@@ -45,10 +45,6 @@ func download(URL string) {
 		log.Fatal(err)
 	}
 
-	if err != nil {
-		log.Fatal(err)
-	}
-
 	if config.ShowExtractedData {
 		for _, singleData := range data {
 			jsonData, _ := json.MarshalIndent(singleData, "", "    ")
