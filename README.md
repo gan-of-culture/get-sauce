@@ -58,7 +58,7 @@ get-sauce https://hentaimama.io/episodes/torokase-orgasm-animation-episode-1/
 The ```-i``` option displays all available quality of video without downloading.
 
 ```console
-get-sauce -i https://hentaimama.io/episodes/torokase-orgasm-animation-episode-1/                                                                                                    (base)
+get-sauce -i https://hentaimama.io/episodes/torokase-orgasm-animation-episode-1/
 
  Site:      https://hentaimama.io/
  Title:     Torokase Orgasm The Animation Episode 1
@@ -114,7 +114,7 @@ The default stream is 0 and it also offers the best available quality. If you wa
 You can also download multiple URLs at once:
 
 ```console
-get-sauce -i https://nhentai.net/g/364616/ https://nhentai.net/g/364591/                                                                                                                (base)
+get-sauce -i https://nhentai.net/g/364616/ https://nhentai.net/g/364591/
 
  Site:      https://nhentai.net
  Title:     Matsuri tte Ii na
@@ -148,7 +148,7 @@ For most of the sites the captions (CC, OC or Subtitles) are hard encoded into t
 
 To see if the captions can be downloaded separately use the option ```-i```. There will be extra information displayed if the option ```-c``` can be used.
 ```console
-get-sauce -i https://hentai-moon.com/videos/285/isekai-harem-monogatari-ep-1/                                                                                                           (base)
+get-sauce -i https://hentai-moon.com/videos/285/isekai-harem-monogatari-ep-1/
 
  Site:      https://hentai-moon.com
  Title:     Isekai Harem Monogatari - Ep.1
@@ -303,7 +303,7 @@ The following links will direct you to adult content. Please keep that in mind!
 
 *you need a login for this site. You can supply it via the parameters -un and -up
 
-If your site is not listed - you can still try to use the universal downloader.
+You can still try to use the universal downloader, if your site is not listed.
 
 ## Credit
 
