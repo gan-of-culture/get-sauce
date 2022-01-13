@@ -43,7 +43,7 @@ func TestExtract(t *testing.T) {
 				URL:     "https://hentaihaven.red/hentai/bitch-na-inane-sama-episode-4/",
 				Title:   "Bitch na Inane-sama Episode 4",
 				Quality: "1920x1080",
-				Size:    0,
+				Size:    358198092,
 			},
 		},
 		{
@@ -52,7 +52,7 @@ func TestExtract(t *testing.T) {
 				URL:     "https://hentaihaven.red/hentai/mako-chan-kaihatsu-nikki-episode-2/",
 				Title:   "Mako-chan Kaihatsu Nikki Episode 2",
 				Quality: "1920x1080",
-				Size:    0,
+				Size:    306057984,
 			},
 		},
 	}
