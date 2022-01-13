@@ -79,7 +79,7 @@ func TestExtract(t *testing.T) {
 				URL:     "https://hentaihaven.com/soshite-watashi-wa-sensei-ni-episode-1/",
 				Title:   "Soshite Watashi wa Sensei ni… Episode 1",
 				Quality: "1920x1080",
-				Size:    0,
+				Size:    633196032,
 			},
 		},
 		{
@@ -88,7 +88,7 @@ func TestExtract(t *testing.T) {
 				URL:     "https://uncensoredhentai.xxx/watch/mako-chan-kaihatsu-nikki-episode-1/",
 				Title:   "Mako chan Kaihatsu Nikki Episode 1",
 				Quality: "1920x1080",
-				Size:    0,
+				Size:    558305856,
 			},
 		},
 		{
@@ -97,7 +97,7 @@ func TestExtract(t *testing.T) {
 				URL:     "https://hentai.pro/imaizumin-chi-wa-douyara-gal-no-tamariba-ni-natteru-rashii-episode-2/",
 				Title:   "Imaizumin-chi wa Douyara Gal no Tamariba ni Natteru Rashii Episode 2",
 				Quality: "1920x1080",
-				Size:    0,
+				Size:    288810112,
 			},
 		},
 		{
@@ -106,7 +106,7 @@ func TestExtract(t *testing.T) {
 				URL:     "https://hentaistream.xxx/watch/mako-chan-kaihatsu-nikki-episode-1/",
 				Title:   "Mako chan Kaihatsu Nikki Episode 1",
 				Quality: "1920x1080",
-				Size:    0,
+				Size:    558305856,
 			},
 		},
 		{
@@ -115,7 +115,7 @@ func TestExtract(t *testing.T) {
 				URL:     "https://hentai.tv/hentai/chiisana-tsubomi-no-sono-oku-ni-episode-1/",
 				Title:   "Chiisana Tsubomi no Sono Oku Ni…… Episode 1",
 				Quality: "1280x720",
-				Size:    0,
+				Size:    234157572,
 			},
 		},
 		{
@@ -124,7 +124,7 @@ func TestExtract(t *testing.T) {
 				URL:     "https://animeidhentai.com/31680/mako-chan-kaihatsu-nikki-episode-2/",
 				Title:   "Mako chan Kaihatsu Nikki Episode 2",
 				Quality: "1920x1080",
-				Size:    0,
+				Size:    306057984,
 			},
 		},
 	}

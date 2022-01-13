@@ -43,7 +43,7 @@ func TestExtract(t *testing.T) {
 				URL:     "https://hanime.io/hentai/torokase-orgasm-1/",
 				Title:   "Torokase Orgasm The Animation Episode 1",
 				Quality: "1920x1080",
-				Size:    0,
+				Size:    485130240,
 			},
 		},
 	}
