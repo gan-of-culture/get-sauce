@@ -225,12 +225,6 @@ get-sauce -i https://hentai-moon.com/videos/285/isekai-harem-monogatari-ep-1/
 
 --------------------------------------------------------------------------------
 
- -r             Restrict content -> don't download senisble content (e-hentai.org only)
-
- get-sauce -r http...
-
---------------------------------------------------------------------------------
-
  -s             Select a specific stream | 0 is default and the best quality of that stream
 
  get-sauce -s 0 http...
