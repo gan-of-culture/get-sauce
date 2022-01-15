@@ -17,7 +17,7 @@ func TestExtract(t *testing.T) {
 				URL:     "https://hentai.guru/wp-content/plugins/player-logic/player.php?data=bDFCblBOMTZvcVAwZ2E2M1VMeUpldUc2MzNpeGUwZEc5dGF5RlRVWlBnbjJXQWV2YzN4RmJwemJjVno1TUYvWXRvMnNaNjhPMEdDdDJ1RlA0ZFVZYyt1WksybnFsd2lxZW1pQzJMSzYzd05Vdk1FVzEyeStaS3c1ekpqSnFaNmlPZE96UUM2VzljdlRJb0Zkc0tqVlJnPT06fDo6fDpzN0t3UmFNcnRNYUdJa3FrbENKSzhnPT0=",
 				Title:   "jwplayer video",
 				Quality: "1920x1080",
-				Size:    0,
+				Size:    475164360,
 			},
 		},
 	}

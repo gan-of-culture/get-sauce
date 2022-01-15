@@ -47,7 +47,7 @@ func TestExtract(t *testing.T) {
 				URL:     "https://hentai.guru/hentai/bitch-na-inane-sama/episode-4/",
 				Title:   "Bitch na Inane-sama - Episode 4",
 				Quality: "1920x1080",
-				Size:    0,
+				Size:    475164360,
 			},
 		},
 	}
