@@ -157,30 +157,30 @@ func TestDownload(t *testing.T) {
 			Name: "m3u8 with aes-128 key - this is not a complete file",
 			data: &static.Data{
 				Site:  "https://hanime.tv/",
-				Title: "Toilet no Hanako-san vs Kukkyou Taimashi 2",
+				Title: "Papa Katsu 1",
 				Type:  static.DataTypeVideo,
 				Streams: map[string]*static.Stream{
 					"0": {
 						Type: static.DataTypeVideo,
 						URLs: []*static.URL{
 							{
-								URL: "https://new.alphafish.top/2/8/0/9/v1x/segs/b0/0/G6Q0WPempZmwKwgPIPEwD3hW.html",
+								URL: "https://s29.highwinds-cdn.com/2/9/1/3/v1x/segs/b0/2/rMMvtz8Tlnjp4qKe6JrfZbwV.html",
 								Ext: "ts",
 							},
 							{
-								URL: "https://order.apperoni.top/2/8/0/9/v1x/segs/b0/0/3PsK4HaXBX1MEcTE6pxNbo3T.html",
+								URL: "https://dalamud.highwinds-cdn.com/2/9/1/3/v1x/segs/b0/2/BvMkJtvHwoI2O8DbzOxD1hsO.html",
 								Ext: "ts",
 							},
 							{
-								URL: "https://dash.blingo.top/2/8/0/9/v1x/segs/b0/0/kFV4nuFjh9wTjlzImekNqShk.html",
+								URL: "https://s29.highwinds-cdn.com/2/9/1/3/v1x/segs/b0/2/Wzcz26tnQVIGeFFCiEjRZSV0.html",
 								Ext: "ts",
 							},
 							{
-								URL: "https://portal.nodebook11.top/2/8/0/9/v1x/segs/b0/0/8B9WLdrUH0oGWIcPpwN7BNRt.html",
+								URL: "https://s29.highwinds-cdn.com/2/9/1/3/v1x/segs/b0/2/1Lf6LWviP7bSksDclNPK0n5B.html",
 								Ext: "ts",
 							},
 							{
-								URL: "https://new.alphafish.top/2/8/0/9/v1x/segs/b0/0/93X7sk6FSwhtSRpZnCF5vodk.html",
+								URL: "https://dalamud.highwinds-cdn.com/2/9/1/3/v1x/segs/b0/2/QGtf49fMQPVWAgmWnCPNmKee.html",
 								Ext: "ts",
 							},
 						},
@@ -188,7 +188,7 @@ func TestDownload(t *testing.T) {
 						Key: []byte{48, 49, 50, 51, 52, 53, 54, 55, 48, 49, 50, 51, 52, 53, 54, 55},
 					},
 				},
-				URL: "https://hanime.tv/videos/hentai/toilet-no-hanako-san-vs-kukkyou-taimashi-2",
+				URL: "https://hanime.tv/videos/hentai/papa-katsu-1",
 			},
 		},
 	}
