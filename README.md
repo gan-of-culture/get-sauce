@@ -301,7 +301,7 @@ You can still try to use the universal downloader, if your site is not listed.
 
 ## Credit
 
-- Thanks to [annie](https://github.com/iawia002/annie) for the great template
+- Thanks to [lux](https://github.com/iawia002/lux) for the great template
 
 ## Donate
 
