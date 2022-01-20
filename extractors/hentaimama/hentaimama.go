@@ -11,6 +11,11 @@ import (
 	"github.com/gan-of-culture/get-sauce/utils"
 )
 
+type source struct {
+	URL     string
+	Referer string
+}
+
 const site = "https://hentaimama.io/"
 
 var reMirrorURLs = regexp.MustCompile(`[^"]*new\d.php\?p=([^"]*)`)
@@ -71,7 +76,7 @@ func extractData(URL string) (*static.Data, error) {
 		return nil, static.ErrDataSourceParseFailed
 	}
 
-	srcURLs := make([]string, len(matchedMirrorURLs))
+	sources := make([]source, len(matchedMirrorURLs))
 	for i, u := range matchedMirrorURLs {
 		b64Path, err := base64.StdEncoding.DecodeString(u[1])
 		if err != nil {
@@ -85,19 +90,22 @@ func extractData(URL string) (*static.Data, error) {
 		}
 
 		reSrc := regexp.MustCompile(fmt.Sprintf(`[^"']*/%s[^"']*`, string(b64Paths[0])))
-		srcURLs[i] = reSrc.FindString(htmlString)
+		sources[i] = source{
+			URL:     reSrc.FindString(htmlString),
+			Referer: u[0],
+		}
 	}
 
 	mirrorIdx := 0
 	streams := map[string]*static.Stream{}
 	// resolve all HLS URLs
-	for _, srcURL := range srcURLs {
-		ext := strings.TrimSuffix(utils.GetLastItemString(reExt.FindStringSubmatch(srcURL)), "?")
+	for _, src := range sources {
+		ext := strings.TrimSuffix(utils.GetLastItemString(reExt.FindStringSubmatch(src.URL)), "?")
 		if ext != "m3u8" {
 			continue
 		}
 
-		streams, err = request.ExtractHLS(srcURL, map[string]string{"Referer": srcURL})
+		streams, err = request.ExtractHLS(src.URL, map[string]string{"Referer": src.Referer})
 		if err != nil {
 			return nil, err
 		}
@@ -111,19 +119,19 @@ func extractData(URL string) (*static.Data, error) {
 
 	idx := len(streams) - 1
 	// resolve other URLs
-	for _, srcURL := range srcURLs {
-		ext := strings.TrimSuffix(utils.GetLastItemString(reExt.FindStringSubmatch(srcURL)), "?")
+	for _, src := range sources {
+		ext := strings.TrimSuffix(utils.GetLastItemString(reExt.FindStringSubmatch(src.URL)), "?")
 		if ext == "m3u8" {
 			continue
 		}
 
-		size, err := request.Size(srcURL, site)
+		size, err := request.Size(src.URL, site)
 		if err != nil {
 			return nil, err
 		}
 
 		if ext == "" {
-			ext = strings.Split(reMimeType.FindString(srcURL), "/")[1]
+			ext = strings.Split(reMimeType.FindString(src.URL), "/")[1]
 		}
 
 		idx += 1
@@ -132,7 +140,7 @@ func extractData(URL string) (*static.Data, error) {
 			Type: static.DataTypeVideo,
 			URLs: []*static.URL{
 				{
-					URL: srcURL,
+					URL: src.URL,
 					Ext: ext,
 				},
 			},
