@@ -153,43 +153,6 @@ func TestDownload(t *testing.T) {
 					},
 				},
 			},
-		}, {
-			Name: "m3u8 with aes-128 key - this is not a complete file",
-			data: &static.Data{
-				Site:  "https://hanime.tv/",
-				Title: "Papa Katsu 1",
-				Type:  static.DataTypeVideo,
-				Streams: map[string]*static.Stream{
-					"0": {
-						Type: static.DataTypeVideo,
-						URLs: []*static.URL{
-							{
-								URL: "https://s29.highwinds-cdn.com/2/9/1/3/v1x/segs/b0/2/rMMvtz8Tlnjp4qKe6JrfZbwV.html",
-								Ext: "ts",
-							},
-							{
-								URL: "https://dalamud.highwinds-cdn.com/2/9/1/3/v1x/segs/b0/2/BvMkJtvHwoI2O8DbzOxD1hsO.html",
-								Ext: "ts",
-							},
-							{
-								URL: "https://s29.highwinds-cdn.com/2/9/1/3/v1x/segs/b0/2/Wzcz26tnQVIGeFFCiEjRZSV0.html",
-								Ext: "ts",
-							},
-							{
-								URL: "https://s29.highwinds-cdn.com/2/9/1/3/v1x/segs/b0/2/1Lf6LWviP7bSksDclNPK0n5B.html",
-								Ext: "ts",
-							},
-							{
-								URL: "https://dalamud.highwinds-cdn.com/2/9/1/3/v1x/segs/b0/2/QGtf49fMQPVWAgmWnCPNmKee.html",
-								Ext: "ts",
-							},
-						},
-						Ext: "ts",
-						Key: []byte{48, 49, 50, 51, 52, 53, 54, 55, 48, 49, 50, 51, 52, 53, 54, 55},
-					},
-				},
-				URL: "https://hanime.tv/videos/hentai/papa-katsu-1",
-			},
 		},
 	}
 	config.Workers = 5
