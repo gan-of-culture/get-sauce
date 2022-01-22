@@ -86,7 +86,7 @@ func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 
 func parseURL(URL string) []string {
 	if ok, _ := regexp.MatchString(fmt.Sprintf("%s(?:manga|doujinshi)/", site), URL); ok {
-		re := regexp.MustCompile(`(\d*).html$`)
+		re := regexp.MustCompile(`(\d*).html#*\d*$`)
 		id := re.FindStringSubmatch(URL)[1]
 		return []string{fmt.Sprintf("%sgalleries/%s.js", nozomi, id)}
 	}
@@ -236,7 +236,7 @@ func initGGValues() {
 
 	b = regexp.MustCompile(`\d+/`).FindString(jsStr)
 
-	re := regexp.MustCompile(`(\d+)\).+0`)
+	re := regexp.MustCompile(`(\d+)\).+1`)
 	matchedCases := re.FindAllStringSubmatch(jsStr, -1)
 	ggValues = make([]*int, len(matchedCases))
 	for idx, num := range matchedCases {
@@ -252,8 +252,8 @@ func inGGValues(num int) int {
 	}
 	for _, value := range ggValues {
 		if *value == num {
-			return 0
+			return 1
 		}
 	}
-	return 1
+	return 0
 }
