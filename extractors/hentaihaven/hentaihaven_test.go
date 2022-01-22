@@ -1,7 +1,10 @@
 package hentaihaven
 
-/*
-import "testing"
+/*import (
+	"testing"
+
+	"github.com/gan-of-culture/get-sauce/test"
+)
 
 func TestParseURL(t *testing.T) {
 	tests := []struct {
