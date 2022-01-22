@@ -18,7 +18,7 @@ import (
 func init() {
 	flag.IntVar(&config.Amount, "a", 0, "Amount of files to download")
 	flag.IntVar(&config.Caption, "c", -1, "Download caption to a extra file")
-	flag.BoolVar(&config.NoMerge, "n", false, "No automatic merging of video, audio and subtitles using ffmpeg")
+	flag.BoolVar(&config.Keep, "k", false, "Keep video, audio and subtitles. Don't merge using ffmpeg")
 	flag.StringVar(&config.OutputName, "o", "", "Output name")
 	flag.StringVar(&config.OutputPath, "O", "", "Output path (include ending delimiter)")
 	flag.StringVar(&config.Pages, "p", "", "Enter pages like 1,2,3-4,6,7,8-9 for doujins")
@@ -32,11 +32,11 @@ func init() {
 }
 
 func download(URL string) {
-	if !config.NoMerge {
+	if !config.Keep {
 		_, err := exec.LookPath("ffmpeg")
 		if err != nil {
 			log.Println("No merging possible, because ffmpeg is not installed or not found in PATH")
-			config.NoMerge = true
+			config.Keep = true
 		}
 	}
 

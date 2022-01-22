@@ -179,7 +179,7 @@ func (downloader *downloaderStruct) Download(data *static.Data) error {
 		return err
 	}
 
-	if config.NoMerge {
+	if config.Keep {
 		return nil
 	}
 

@@ -196,9 +196,9 @@ get-sauce -i https://hentai-moon.com/videos/285/isekai-harem-monogatari-ep-1/
 
 --------------------------------------------------------------------------------
 
- -n             Don't merge video, audio and subtitles using ffmpeg
+ -k             Keep video, audio and subtitles. Don't merge using ffmpeg
 
- get-sauce -n http...
+ get-sauce -k http...
 
 --------------------------------------------------------------------------------
  -o             Output name of the file
