@@ -64,9 +64,9 @@ func TestExtractHLS(t *testing.T) {
 	}{
 		{
 			Name: "HLS where stream order is from small to high",
-			URL:  "https://hentaidoge.org/hls/K/kuroinu-ii-animation/1/playlist.m3u8",
+			URL:  "https://na-03.javprovider.com/hls/K/kuroinu-ii-animation/1/playlist.m3u8",
 			Headers: map[string]string{
-				"Referer": "https://hentaidoge.org/hls/K/kuroinu-ii-animation/1/playlist.m3u8",
+				"Referer": "https://hentaimama.io",
 			},
 			Want: map[string]*static.Stream{
 				"0": {
