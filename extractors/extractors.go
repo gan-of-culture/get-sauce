@@ -7,6 +7,7 @@ import (
 	"github.com/gan-of-culture/get-sauce/extractors/booru"
 	"github.com/gan-of-culture/get-sauce/extractors/damn"
 	"github.com/gan-of-culture/get-sauce/extractors/danbooru"
+	"github.com/gan-of-culture/get-sauce/extractors/doujin"
 	"github.com/gan-of-culture/get-sauce/extractors/ehentai"
 	"github.com/gan-of-culture/get-sauce/extractors/exhentai"
 	"github.com/gan-of-culture/get-sauce/extractors/haho"
@@ -54,7 +55,6 @@ func init() {
 	htstreamingExtactor := htstreaming.New()
 	htdoujinExtractor := htdoujin.New()
 	ninehentaiExtractor := ninehentai.New()
-	simplyhentaiExtractor := simplyhentai.New()
 
 	extractorsMap = map[string]static.Extractor{
 		"": universal.New(),
@@ -67,7 +67,7 @@ func init() {
 		"damn.stream":           damnExtractor,
 		"www.damn.stream":       damnExtractor,
 		"danbooru.donmai.us":    danbooru.New(),
-		"doujin.sexy":           simplyhentaiExtractor,
+		"doujin.sexy":           doujin.New(),
 		"e-hentai.org":          ehentai.New(),
 		"ecchi.iwara.tv":        iwara.New(),
 		"exhentai.org":          exhentai.New(),
@@ -106,7 +106,7 @@ func init() {
 		"ohentai.org":           ohentai.New(),
 		"pururin.to":            pururin.New(),
 		"rule34.paheal.net":     rule34.New(),
-		"www.simply-hentai.com": simplyhentaiExtractor,
+		"www.simply-hentai.com": simplyhentai.New(),
 		"thehentaiworld.com":    thehentaiworld.New(),
 		"uncensoredhentai.xxx":  htstreamingExtactor,
 		"zhentube.com":          zhentube.New(),

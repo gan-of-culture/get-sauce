@@ -1,4 +1,4 @@
-package simplyhentai
+package doujin
 
 import (
 	"testing"
@@ -13,12 +13,12 @@ func TestParseURL(t *testing.T) {
 		Want int
 	}{
 		{
-			Name: "Single Gallery simply-hentai.com",
-			URL:  "https://www.simply-hentai.com/1-kimetsu-no-yaiba/saimin-onsen-kanroji-mitsuri",
+			Name: "Single Gallery doujin.sexy",
+			URL:  "https://doujin.sexy/fate-grand-order/fdo-fatedosukebe-order-vol80",
 			Want: 1,
 		}, {
-			Name: "Overview simply-hentai.com",
-			URL:  "https://www.simply-hentai.com/tag/big-breasts",
+			Name: "Overview doujin.sexy",
+			URL:  "https://doujin.sexy/character/gudao",
 			Want: 24,
 		},
 	}
@@ -38,10 +38,10 @@ func TestExtract(t *testing.T) {
 		Args test.Args
 	}{
 		{
-			Name: "Single Gallery simply-hentai.com",
+			Name: "Single Gallery doujin.sexy",
 			Args: test.Args{
-				URL:     "https://www.simply-hentai.com/original-work/torotoro-ni-shite-ageru-ch1-3",
-				Title:   "Torotoro ni Shite Ageru Ch.1-3",
+				URL:     "https://doujin.sexy/fate-grand-order/fdo-fatedosukebe-order-vol80",
+				Title:   "FDO Fate/Dosukebe Order VOL.8.0",
 				Quality: "",
 				Size:    0,
 			},

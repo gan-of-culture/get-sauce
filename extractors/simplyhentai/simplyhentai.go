@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"net/url"
 	"regexp"
 
 	"github.com/gan-of-culture/get-sauce/request"
@@ -16,54 +15,71 @@ import (
 yet another hentai/porn site group with multiple sites same content different page layout
 */
 
-type size struct {
-	Full string `json:"full"`
+type state struct {
+	Props struct {
+		PageProps struct {
+			Status int `json:"status"`
+			Tag    struct {
+				Albums []struct {
+					CommentCount int         `json:"comment_count"`
+					Description  interface{} `json:"description"`
+					ID           int         `json:"id"`
+					ImageCount   int         `json:"image_count"`
+					Language     struct {
+						Name     string `json:"name"`
+						Slug     string `json:"slug"`
+						FlagCode string `json:"flag_code"`
+					} `json:"language"`
+					Series struct {
+						AlbumCount   int    `json:"album_count"`
+						CommentCount int    `json:"comment_count"`
+						Slug         string `json:"slug"`
+						Title        string `json:"title"`
+						Type         string `json:"type"`
+					} `json:"series"`
+					Slug  string `json:"slug"`
+					Title string `json:"title"`
+					Type  string `json:"type"`
+				}
+			}
+			Manga struct {
+				Description interface{} `json:"description"`
+				ID          int         `json:"id"`
+				ImageCount  int         `json:"image_count"`
+				Language    struct {
+					Name     string `json:"name"`
+					Slug     string `json:"slug"`
+					FlagCode string `json:"flag_code"`
+				} `json:"language"`
+				Images []struct {
+					ID      int `json:"id"`
+					PageNum int `json:"page_num"`
+					Sizes   struct {
+						Full       string `json:"full"`
+						SmallThumb string `json:"small_thumb"`
+						Thumb      string `json:"thumb"`
+						GiantThumb string `json:"giant_thumb"`
+					} `json:"sizes"`
+				} `json:"images"`
+				Slug  string `json:"slug"`
+				Title string `json:"title"`
+			} `json:"manga"`
+			Meta struct {
+				Title       string `json:"title"`
+				Description string `json:"description"`
+			} `json:"meta"`
+		} `json:"pageProps"`
+	} `json:"props"`
+	Page  string `json:"page"`
+	Query struct {
+		Series string `json:"series"`
+		Slug   string `json:"slug"`
+	} `json:"query"`
 }
 
-type page struct {
-	PageNum uint `json:"page_num"`
-	Sizes   size `json:"sizes"`
-}
+const site = "https://www.simply-hentai.com/"
 
-type language struct {
-	Name string `json:"name"`
-}
-
-type data struct {
-	ImageCount uint     `json:"image_count"`
-	Language   language `json:"language"`
-	Albums     []album  `json:"albums"`
-	Images     []page   `json:"images"`
-	Pages      []page   `json:"pages"`
-	Title      string   `json:"title"`
-}
-
-type series struct {
-	Slug string `json:"slug"`
-}
-
-type album struct {
-	Series series `json:"series"`
-	Slug   string `json:"slug"`
-}
-
-type objects struct {
-	Albums []album `json:"albums"`
-}
-
-type initData struct {
-	IsLoading bool    `json:"isLoading"`
-	Objects   objects `json:"objects"`
-	Data      data    `json:"data"`
-}
-
-type appState struct {
-	InitialData initData `json:"initialData"`
-}
-
-var site string
-
-var reAppState *regexp.Regexp = regexp.MustCompile(`__SERVER_APP_STATE__ =  ({[^<]+)`)
+var reAppState *regexp.Regexp = regexp.MustCompile(`__NEXT_DATA__.*?({[^<]+)`)
 
 type extractor struct{}
 
@@ -73,12 +89,6 @@ func New() static.Extractor {
 }
 
 func (e *extractor) Extract(URL string) ([]*static.Data, error) {
-	u, err := url.Parse(URL)
-	if err != nil {
-		return nil, static.ErrURLParseFailed
-	}
-
-	site = "https://" + u.Host + "/"
 
 	URLs := parseURL(URL)
 	if len(URLs) == 0 {
@@ -108,22 +118,18 @@ func parseURL(URL string) []string {
 		return nil
 	}
 
-	appStat := appState{}
+	appStat := state{}
 	err = json.Unmarshal([]byte(matchedAppState[1]), &appStat)
 	if err != nil {
 		return nil
 	}
 
-	if appStat.InitialData.Data.ImageCount != 0 {
+	if appStat.Props.PageProps.Manga.ImageCount != 0 {
 		return []string{URL}
 	}
 
-	if appStat.InitialData.Objects.Albums == nil {
-		appStat.InitialData.Objects.Albums = appStat.InitialData.Data.Albums
-	}
-
 	out := []string{}
-	for _, a := range appStat.InitialData.Objects.Albums {
+	for _, a := range appStat.Props.PageProps.Tag.Albums {
 		out = append(out, fmt.Sprintf("%s%s/%s", site, a.Series.Slug, a.Slug))
 	}
 
@@ -141,20 +147,17 @@ func extractData(URL string) (*static.Data, error) {
 		return &static.Data{}, errors.New("app state not found for URL")
 	}
 
-	appStat := appState{}
+	appStat := state{}
 	err = json.Unmarshal([]byte(matchedAppState[1]), &appStat)
 	if err != nil {
 		return &static.Data{}, err
 	}
 
-	if appStat.InitialData.Data.ImageCount == 0 {
+	if appStat.Props.PageProps.Manga.ImageCount == 0 {
 		return &static.Data{}, errors.New("no images found for URL")
 	}
 
-	images := appStat.InitialData.Data.Pages
-	if images == nil {
-		images = appStat.InitialData.Data.Images
-	}
+	images := appStat.Props.PageProps.Manga.Images
 
 	pages := utils.NeedDownloadList(len(images))
 
@@ -169,13 +172,13 @@ func extractData(URL string) (*static.Data, error) {
 
 	return &static.Data{
 		Site:  site,
-		Title: appStat.InitialData.Data.Title,
+		Title: appStat.Props.PageProps.Manga.Title,
 		Type:  static.DataTypeImage,
 		Streams: map[string]*static.Stream{
 			"0": {
 				Type: static.DataTypeImage,
 				URLs: URLs,
-				Info: appStat.InitialData.Data.Language.Name,
+				Info: appStat.Props.PageProps.Manga.Language.Name,
 			},
 		},
 		URL: URL,
