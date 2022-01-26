@@ -1,7 +1,6 @@
 package exhentai
 
 import (
-	"crypto/tls"
 	"errors"
 	"fmt"
 	"io"
@@ -10,7 +9,6 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
-	"time"
 
 	"github.com/gan-of-culture/get-sauce/config"
 	"github.com/gan-of-culture/get-sauce/request"
@@ -242,15 +240,10 @@ func New() static.Extractor {
 	jar := &request.Myjar{}
 	jar.Jar = make(map[string][]*http.Cookie)
 
-	e := extractor{client: &http.Client{
-		Transport: &http.Transport{
-			DisableCompression:  true,
-			TLSHandshakeTimeout: 10 * time.Second,
-			TLSClientConfig:     &tls.Config{InsecureSkipVerify: true},
-		},
-		Timeout: 15 * time.Minute,
-		Jar:     jar,
-	}}
+	client := request.DefaultClient()
+	client.Jar = jar
+
+	e := extractor{client: client}
 	e.client.CheckRedirect = func(req *http.Request, via []*http.Request) error {
 		if !strings.HasSuffix(req.URL.Host, ".hath.network") {
 			return nil
