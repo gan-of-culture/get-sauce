@@ -42,8 +42,8 @@ func TestExtract(t *testing.T) {
 			Args: test.Args{
 				URL:     "https://hentaibar.com/videos/2670/torokase-orgasm-the-animation-episode-1-english-subbed/",
 				Title:   "Torokase Orgasm The Animation Episode 1 English Subbed",
-				Quality: "720p",
-				Size:    381023060,
+				Quality: "1080p",
+				Size:    694356827,
 			},
 		},
 	}

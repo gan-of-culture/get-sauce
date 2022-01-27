@@ -59,23 +59,13 @@ func ExtractFromHTML(htmlString *string) ([]*static.Data, error) {
 		fmt.Printf("Untested major version (%s) in player engine--Download may fail.", matchedKVSPlayer[0][2])
 	}
 
-	htmlFlashvars := reFlashVars.FindString(*htmlString)
-	if htmlFlashvars == "" {
-		return nil, static.ErrDataSourceParseFailed
+	flashvars, err := parseFlashVars(htmlString)
+	if err != nil {
+		return nil, err
 	}
 
-	matchedFlashVarsValues := reFlashVarsValues.FindAllStringSubmatch(htmlFlashvars, -1) //1=key 2=val
-	if len(matchedFlashVarsValues) < 1 {
-		return nil, static.ErrDataSourceParseFailed
-	}
-
-	flashvars := map[string]string{}
-	for _, val := range matchedFlashVarsValues {
-		flashvars[val[1]] = val[2]
-	}
-
-	matchcedTitle := reTitle.FindStringSubmatch(*htmlString)
-	if len(matchcedTitle) < 1 {
+	matchedTitle := reTitle.FindStringSubmatch(*htmlString)
+	if len(matchedTitle) < 1 {
 		return nil, errors.New("no title found in 'cronical' URL link")
 	}
 
@@ -130,7 +120,7 @@ func ExtractFromHTML(htmlString *string) ([]*static.Data, error) {
 	return []*static.Data{
 		{
 			Site:    "https://kvsplayer.com/",
-			Title:   matchcedTitle[1],
+			Title:   matchedTitle[1],
 			Type:    static.DataTypeVideo,
 			Streams: streams,
 		},
@@ -206,4 +196,23 @@ func getLicenseToken(license string) string {
 		}
 	}
 	return retVal
+}
+
+func parseFlashVars(htmlString *string) (map[string]string, error) {
+	htmlFlashvars := reFlashVars.FindString(*htmlString)
+	if htmlFlashvars == "" {
+		return nil, static.ErrDataSourceParseFailed
+	}
+
+	matchedFlashVarsValues := reFlashVarsValues.FindAllStringSubmatch(htmlFlashvars, -1) //1=key 2=val
+	if len(matchedFlashVarsValues) < 1 {
+		return nil, static.ErrDataSourceParseFailed
+	}
+
+	flashvars := map[string]string{}
+	for _, val := range matchedFlashVarsValues {
+		flashvars[val[1]] = val[2]
+	}
+
+	return flashvars, nil
 }
