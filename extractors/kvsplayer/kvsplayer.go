@@ -15,7 +15,7 @@ import (
 /*
 
 	Special Thanks to rigstot https://github.com/ytdl-patched/ytdl-patched/commits?author=rigstot for the python based template https://github.com/ytdl-patched/ytdl-patched/commit/a318f59d14792d25b2206c3f50181e03e8716db7
-
+	Further documentation on the kvsplayer can be found here: https://www.kernel-scripts.com/en/documentation/player/
 */
 
 var reHasKVSPlayer = regexp.MustCompile(`<script [^>]*?src="https://.+?/kt_player\.js\?v=(?P<ver>(?P<maj_ver>\d+)(\.\d+)+)".*?>`)
@@ -91,12 +91,13 @@ func ExtractFromHTML(htmlString *string) ([]*static.Data, error) {
 
 	streams := map[string]*static.Stream{}
 	dataLen := 0 //number of possible streams
-	for _, key := range []string{"video_url", "video_alt_url", "video_alt_url2"} {
+	var flashvarsVideoURL = []string{"video_url", "video_alt_url", "video_alt_url2", "video_alt_url3", "video_alt_url4"}
+	for _, key := range flashvarsVideoURL {
 		if _, ok := flashvars[key]; ok {
 			dataLen += 1
 		}
 	}
-	for i, key := range []string{"video_url", "video_alt_url", "video_alt_url2"} {
+	for i, key := range flashvarsVideoURL {
 		if _, ok := flashvars[key]; !ok {
 			continue
 		}
