@@ -85,7 +85,7 @@ func printInfo(data *static.Data) {
 	printHeader(data)
 
 	if len(data.Captions) > 0 {
-		fmt.Println("\n Captions:  has to be downloaded separately with the option -c")
+		fmt.Println("\n Captions:  # All available languages")
 	}
 	for i, caption := range data.Captions {
 		printCaption(i, caption)
