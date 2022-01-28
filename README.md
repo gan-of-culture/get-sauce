@@ -153,7 +153,7 @@ get-sauce -i https://hentai-moon.com/videos/285/isekai-harem-monogatari-ep-1/
  Site:      https://hentai-moon.com
  Title:     Isekai Harem Monogatari - Ep.1
  Type:      video
- Captions:  has to be downloaded separately with the option -c
+ Captions:  # All available languages
 
      [0]  -------------------
      Language:            English
