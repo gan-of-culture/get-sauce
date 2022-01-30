@@ -95,35 +95,9 @@ func parseURL(URL string) []string {
 // ExtractData for a single episode that is hosted by the htstreaming network
 func ExtractData(URL string) (*static.Data, error) {
 
-	playerURL := rePlayerURL.FindString(URL)
-	if playerURL == "" {
-		hash := utils.GetLastItemString(reVideoURL.FindStringSubmatch(URL))
-		if hash != "" {
-			playerURL = "https://htstreaming.com/player/index.php?data=" + hash
-		}
-	}
-
-	if playerURL == "" {
-
-		htmlString, err := request.Get(URL)
-		if err != nil {
-			log.Println(htmlString)
-			return nil, err
-		}
-
-		htmlString = strings.ReplaceAll(htmlString, `\`, ``)
-
-		playerURL = rePlayerURL.FindString(htmlString)
-		if playerURL == "" {
-			hash := utils.GetLastItemString(reVideoURL.FindStringSubmatch(htmlString))
-			if hash != "" {
-				playerURL = "https://htstreaming.com/player/index.php?data=" + hash
-			}
-		}
-		if playerURL == "" {
-			return nil, errors.New("player URL not found")
-		}
-
+	playerURL, err := getPlayerURL(&URL)
+	if err != nil {
+		return nil, err
 	}
 
 	URLValues := url.Values{}
@@ -199,4 +173,41 @@ func ExtractData(URL string) (*static.Data, error) {
 		Captions: parseCaptions(jsParams),
 		URL:      URL,
 	}, nil
+}
+
+// parsePlayerURL parses either a full URL
+// like "https://htstreaming.com/player/index.php?data=" + hash or by parsing the hash and then
+// returning a full URL.
+func parsePlayerURL(target *string) string {
+	playerURL := rePlayerURL.FindString(*target)
+	if playerURL == "" {
+		hash := utils.GetLastItemString(reVideoURL.FindStringSubmatch(*target))
+		if hash != "" {
+			playerURL = "https://htstreaming.com/player/index.php?data=" + hash
+		}
+	}
+	return playerURL
+}
+
+// getPlayerURL returns a full and vaild htstreaming playerURL
+// like "https://htstreaming.com/player/index.php?data=" + hash
+func getPlayerURL(URL *string) (string, error) {
+	var playerURL string
+	if playerURL = parsePlayerURL(URL); playerURL != "" {
+		return playerURL, nil
+	}
+
+	htmlString, err := request.Get(*URL)
+	if err != nil {
+		log.Println(htmlString)
+		return "", err
+	}
+
+	htmlString = strings.ReplaceAll(htmlString, `\`, ``)
+
+	if playerURL = parsePlayerURL(&htmlString); playerURL == "" {
+		return "", errors.New("player URL not found")
+	}
+
+	return playerURL, nil
 }
