@@ -9,6 +9,7 @@ import (
 	"mime/multipart"
 	"net/http"
 	"net/textproto"
+	"net/url"
 	"regexp"
 
 	"github.com/gan-of-culture/get-sauce/request"
@@ -28,11 +29,9 @@ type mediaData struct {
 	} `json:"data"`
 }
 
-const playerLocation = "/wp-content/plugins/player-logic/api.php"
-
 var reJWPlayerURL = regexp.MustCompile(`[^"]+/wp-content/plugins/player-logic/player\.php[^"]+`)
 var reMultiPartParams = regexp.MustCompile(`append\('([abc])', ?'([^']*)`) //1=a : some string b : some other string
-var reURLBase = regexp.MustCompile(`https://[^/]+/`)
+var reAPIURL = regexp.MustCompile(`fetch\(['"]([^'"]+)`)
 
 type extractor struct{}
 
@@ -49,12 +48,19 @@ func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 		return nil, err
 	}
 
-	URLBase := reURLBase.FindString(URL)
-	if URLBase == "" {
+	u, err := url.Parse(URL)
+	if err != nil {
+		return nil, err
+	}
+
+	site := fmt.Sprintf("https://%s/", u.Host)
+
+	matchedAPIURL := reAPIURL.FindStringSubmatch(htmlString)
+	if len(matchedAPIURL) < 2 {
 		return nil, static.ErrURLParseFailed
 	}
 
-	apiURL := URLBase + playerLocation
+	apiURL := matchedAPIURL[1]
 
 	// --- Begin of multipart creation
 	body := &bytes.Buffer{}
@@ -120,7 +126,7 @@ func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 
 	return []*static.Data{
 		{
-			Site:    URLBase,
+			Site:    site,
 			Title:   "jwplayer video",
 			Type:    static.DataTypeVideo,
 			Streams: streams,
