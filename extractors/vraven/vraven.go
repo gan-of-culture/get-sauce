@@ -1,7 +1,8 @@
-package hentaihaven
+package vraven
 
 import (
 	"fmt"
+	"net/url"
 	"regexp"
 	"strings"
 
@@ -11,16 +12,24 @@ import (
 	"github.com/gan-of-culture/get-sauce/utils"
 )
 
-const site = "https://hentaihaven.xxx/"
+var site string
+var reJWPlayerURL = regexp.MustCompile(`https://[^/]+.*/player[\./](?:php\?data=)?[^"\s]+`)
 
 type extractor struct{}
 
-// New returns a hentaihaven.xxx extractor.
+// New returns a vraven extractor.
 func New() static.Extractor {
 	return &extractor{}
 }
 
 func (e *extractor) Extract(URL string) ([]*static.Data, error) {
+	u, err := url.Parse(URL)
+	if err != nil {
+		return nil, static.ErrURLParseFailed
+	}
+
+	site = fmt.Sprintf("https://%s/", u.Host)
+
 	URLs := parseURL(URL)
 	if len(URLs) == 0 {
 		return nil, static.ErrURLParseFailed
@@ -43,7 +52,7 @@ func parseURL(URL string) []string {
 		return []string{URL}
 	}
 
-	if !strings.Contains(URL, "https://hentaihaven.xxx/watch/") {
+	if !strings.Contains(URL, site+"watch/") {
 		return []string{}
 	}
 
@@ -63,7 +72,7 @@ func extractData(URL string) (*static.Data, error) {
 	}
 	title := strings.TrimSpace(utils.GetH1(&htmlString, -1))
 
-	data, err := jwplayer.New().Extract(jwplayer.FindJWPlayerURL(&htmlString))
+	data, err := jwplayer.New().Extract(reJWPlayerURL.FindString(htmlString))
 	if err != nil {
 		return nil, err
 	}
