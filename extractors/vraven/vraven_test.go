@@ -13,11 +13,11 @@ func TestParseURL(t *testing.T) {
 		Want int
 	}{
 		{
-			Name: "Single Episode hentaihaven.xxx/",
+			Name: "Single Episode hentaihaven.xxx",
 			URL:  "https://hentaihaven.xxx/watch/ero-konbini-tenchou/episode-4/",
 			Want: 1,
 		}, {
-			Name: "Series hentaihaven.xxx/",
+			Name: "Series hentaihaven.xxx",
 			URL:  "https://hentaihaven.xxx/watch/ero-konbini-tenchou/",
 			Want: 4,
 		},
@@ -56,7 +56,7 @@ func TestExtract(t *testing.T) {
 		Args test.Args
 	}{
 		{
-			Name: "Single Episode",
+			Name: "Single Episode hentaihaven.xxx",
 			Args: test.Args{
 				URL:     "https://hentaihaven.xxx/watch/showtime-uta-no-onee-san-datte-shitai/episode-3/",
 				Title:   "Showtime! Uta no Onee-san Datte Shitai - Episode 3",

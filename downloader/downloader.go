@@ -4,6 +4,7 @@ import (
 	"crypto/sha1"
 	"fmt"
 	"io"
+	"log"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -198,11 +199,28 @@ func (downloader *downloaderStruct) Download(data *static.Data) error {
 
 func (downloader *downloaderStruct) save(URL static.URL, fileURI string) error {
 
-	file, err := os.Create(fileURI)
+	openOpts := os.O_RDWR | os.O_CREATE
+	if config.Truncate {
+		openOpts |= os.O_TRUNC
+	}
+
+	file, err := os.OpenFile(fileURI, openOpts, 0644)
 	if err != nil {
 		return err
 	}
 	defer file.Close()
+
+	stat, err := file.Stat()
+	if err != nil {
+		return err
+	}
+
+	if stat.Size() > 0 {
+		if !config.Quiet {
+			log.Printf(`file "%s" already exists and will be skipped`, fileURI)
+		}
+		return nil
+	}
 
 	//if stream size bigger than 10MB then use concurWrite
 	if downloader.stream.Size > 10_000_000 && config.Workers > 1 && downloader.stream.Ext == "" {
