@@ -17,10 +17,12 @@ var (
 	Quiet bool
 	// SelectStream to download
 	SelectStream string
-	// ShowExtractedData of URL(s)
+	// ShowExtractedData as json
 	ShowExtractedData bool
 	// ShowInfo of all available streams
 	ShowInfo bool
+	// Truncate file if it already exists
+	Truncate bool
 	// Workers for downloading
 	Workers int
 	// Username for exhentai.org

@@ -172,13 +172,13 @@ get-sauce -i https://hentai-moon.com/videos/285/isekai-harem-monogatari-ep-1/
 
 ```console
 
- -a              Amount of files (image boards only)
+ -a             Amount of files (image boards only)
 
  get-sauce -a 5000 http...
 
 --------------------------------------------------------------------------------
 
- -c              Download caption if separate to a extra file
+ -c             Download caption if separate to a extra file
 
  get-sauce -c 0 http...
 
@@ -190,7 +190,7 @@ get-sauce -i https://hentai-moon.com/videos/285/isekai-harem-monogatari-ep-1/
 
 --------------------------------------------------------------------------------
 
- -j             Show extracted data for the provided URL
+ -j             Show extracted data as json
 
  get-sauce -j http...
 
@@ -213,7 +213,7 @@ get-sauce -i https://hentai-moon.com/videos/285/isekai-harem-monogatari-ep-1/
 
 --------------------------------------------------------------------------------
 
- -p              Enter pages like 1,2,3-4,6,7,8-9 for doujins
+ -p             Enter pages like 1,2,3-4,6,7,8-9 for doujins
 
  get-sauce -p 1,2,3-4 http...
 
@@ -228,6 +228,12 @@ get-sauce -i https://hentai-moon.com/videos/285/isekai-harem-monogatari-ep-1/
  -s             Select a specific stream | 0 is default and the best quality of that stream
 
  get-sauce -s 0 http...
+
+--------------------------------------------------------------------------------
+
+ -t             Truncate file if it already exists
+
+ get-sauce -t http...
 
 --------------------------------------------------------------------------------
 

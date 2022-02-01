@@ -21,6 +21,7 @@ func init() {
 	flag.BoolVar(&config.Keep, "k", false, "Keep video, audio and subtitles. Don't merge using ffmpeg")
 	flag.StringVar(&config.OutputName, "o", "", "Output name")
 	flag.StringVar(&config.OutputPath, "O", "", "Output path (include ending delimiter)")
+	flag.BoolVar(&config.Truncate, "t", false, "Truncate file if it already exists")
 	flag.StringVar(&config.Pages, "p", "", "Enter pages like 1,2,3-4,6,7,8-9 for doujins")
 	flag.BoolVar(&config.Quiet, "q", false, "Quiet mode - show minimal information")
 	flag.StringVar(&config.SelectStream, "s", "0", "Select a stream")
