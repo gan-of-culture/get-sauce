@@ -236,7 +236,7 @@ func initGGValues() {
 
 	b = regexp.MustCompile(`\d+/`).FindString(jsStr)
 
-	re := regexp.MustCompile(`(\d+)\).+1`)
+	re := regexp.MustCompile(`case (\d+)`)
 	matchedCases := re.FindAllStringSubmatch(jsStr, -1)
 	ggValues = make([]*int, len(matchedCases))
 	for idx, num := range matchedCases {
