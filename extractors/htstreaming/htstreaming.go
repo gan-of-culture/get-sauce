@@ -50,7 +50,6 @@ func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 
 	URLs := parseURL(URL)
 	if len(URLs) == 0 {
-		log.Println(URL)
 		return nil, static.ErrURLParseFailed
 	}
 
