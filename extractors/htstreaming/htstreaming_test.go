@@ -48,15 +48,7 @@ func TestParseURL(t *testing.T) {
 			Name: "Overview hentai.tv",
 			URL:  "https://hentai.tv/trending/",
 			Want: 24,
-		}, */{
-			Name: "Single Episode animeidhentai.com",
-			URL:  "https://animeidhentai.com/31678/mako-chan-kaihatsu-nikki-episode-1-subbed/",
-			Want: 1,
-		}, {
-			Name: "Series animeidhentai.com",
-			URL:  "https://animeidhentai.com/hentai/mako-chan-kaihatsu-nikki/",
-			Want: 4,
-		},
+		}, */
 	}
 	for _, tt := range tests {
 		t.Run(tt.Name, func(t *testing.T) {
@@ -116,15 +108,6 @@ func TestExtract(t *testing.T) {
 				Title:   "Chiisana Tsubomi no Sono Oku Ni…… Episode 1",
 				Quality: "1280x720",
 				Size:    234157572,
-			},
-		},
-		{
-			Name: "Single Episode animeidhentai.com",
-			Args: test.Args{
-				URL:     "https://animeidhentai.com/31680/mako-chan-kaihatsu-nikki-episode-2/",
-				Title:   "Mako chan Kaihatsu Nikki Episode 2",
-				Quality: "1920x1080",
-				Size:    306057984,
 			},
 		},
 	}

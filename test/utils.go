@@ -33,8 +33,8 @@ func CheckData(args, data Args) bool {
 func Check(t *testing.T, args Args, data *static.Data) {
 	defaultData := data.Streams["0"]
 
-	if len(data.Streams) == 0 {
-		t.Errorf("Data contains no streams")
+	if defaultData == nil {
+		t.Errorf("Data contains no streams or no default stream")
 	}
 
 	temp := Args{
