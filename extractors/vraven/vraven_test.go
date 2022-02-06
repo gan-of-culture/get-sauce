@@ -77,6 +77,7 @@ func TestExtract(t *testing.T) {
 				URL:     "https://hentaistream.tv/watch/papa-katsu/episode-1/",
 				Title:   "Papa Katsu! - Episode 1",
 				Quality: "1920x1080",
+				Size:    365561300,
 			},
 		},
 	}
