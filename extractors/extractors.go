@@ -36,6 +36,7 @@ import (
 	"github.com/gan-of-culture/get-sauce/extractors/miohentai"
 	"github.com/gan-of-culture/get-sauce/extractors/muchohentai"
 	"github.com/gan-of-culture/get-sauce/extractors/nhentai"
+	"github.com/gan-of-culture/get-sauce/extractors/nhgroup"
 	"github.com/gan-of-culture/get-sauce/extractors/ninehentai"
 	"github.com/gan-of-culture/get-sauce/extractors/ohentai"
 	"github.com/gan-of-culture/get-sauce/extractors/pururin"
@@ -56,13 +57,14 @@ func init() {
 	htdoujinExtractor := htdoujin.New()
 	ninehentaiExtractor := ninehentai.New()
 	vravenExtractor := vraven.New()
+	nhgroupExtractor := nhgroup.New()
 
 	extractorsMap = map[string]static.Extractor{
 		"": universal.New(),
 
 		"9hentai.to":            ninehentaiExtractor,
 		"www1.9hentai.ru":       ninehentaiExtractor,
-		"animeidhentai.com":     htstreamingExtactor,
+		"animeidhentai.com":     nhgroupExtractor,
 		"booru.io":              booru.New(),
 		"comicporn.xxx":         htdoujinExtractor,
 		"damn.stream":           damnExtractor,
@@ -76,7 +78,7 @@ func init() {
 		"hanime.io":             hanime.New(),
 		"hentai.guru":           hentaiguru.New(),
 		"hentai.pro":            htstreamingExtactor,
-		"hentai.tv":             htstreamingExtactor,
+		"hentai.tv":             nhgroupExtractor,
 		"hentai-moon.com":       hentaimoon.New(),
 		"hentai2read.com":       hentai2read.New(),
 		"hentai2w.com":          hentai2w.New(),
@@ -86,7 +88,7 @@ func init() {
 		"hentaiera.com":         htdoujinExtractor,
 		"hentaiff.com":          hentaiff.New(),
 		"hentaifox.com":         htdoujinExtractor,
-		"hentaihaven.com":       htstreamingExtactor,
+		"hentaihaven.com":       nhgroupExtractor,
 		"hentaihaven.red":       hentaihavenred.New(),
 		"hentaihaven.xxx":       vravenExtractor,
 		"v2.hentaihd.net":       hentaihd.New(),

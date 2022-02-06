@@ -1,8 +1,7 @@
-package animeidhentai
+package nhgroup
 
 import (
 	"log"
-	"net/url"
 	"regexp"
 	"strings"
 
@@ -13,11 +12,8 @@ import (
 	"github.com/gan-of-culture/get-sauce/utils"
 )
 
-var reVideoURL = regexp.MustCompile(`https://htstreaming.com/video/([^"]*)`)
-var reHTStreamingPlayerURL = regexp.MustCompile(`[^"]*index.php\?data[^"]*`)
-var reNHPlayerURL = regexp.MustCompile(`https://nhplayer\.com/v/[^/]+`)
-
-var site string
+var reHTStreamingVideoURL = regexp.MustCompile(`https://htstreaming.com/video/([^"]*)`)
+var reNHPlayerURL = regexp.MustCompile(`https:\\?/\\?/nhplayer\.com\\?/v\\?/[^/"]+`)
 
 type extractor struct{}
 
@@ -27,11 +23,6 @@ func New() static.Extractor {
 }
 
 func (e *extractor) Extract(URL string) ([]*static.Data, error) {
-	baseURL, err := url.Parse(URL)
-	if err != nil {
-		return nil, err
-	}
-	site = baseURL.Host
 
 	URLs := parseURL(URL)
 	if len(URLs) == 0 {
@@ -84,6 +75,7 @@ func extractData(URL string) (*static.Data, error) {
 	}
 
 	playerURL := reNHPlayerURL.FindString(htmlString)
+	playerURL = strings.ReplaceAll(playerURL, `\`, "")
 	if playerURL != "" {
 		data, err := nhplayer.New().Extract(playerURL)
 		if err != nil {
@@ -92,10 +84,5 @@ func extractData(URL string) (*static.Data, error) {
 		return data[0], err
 	}
 
-	playerURL = reHTStreamingPlayerURL.FindString(htmlString)
-	if playerURL == "" {
-		return nil, static.ErrURLParseFailed
-	}
-
-	return htstreaming.ExtractData(playerURL)
+	return htstreaming.ExtractData(URL)
 }

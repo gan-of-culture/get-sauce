@@ -9,9 +9,7 @@ import (
 	"github.com/gan-of-culture/get-sauce/utils"
 )
 
-const site = "https://nhplayer.com/"
-
-var rePlayerURL = regexp.MustCompile(`https://nhplayer\.com/v/[^/]+`)
+var rePlayerURL = regexp.MustCompile(`https://nhplayer\.com/v/[^/"]+`)
 var reHTStreamingVideoURL = regexp.MustCompile(`https://htstreaming.com/video/([^"]*)`)
 
 type extractor struct{}
