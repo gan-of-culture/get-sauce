@@ -26,7 +26,7 @@ The following dependencies are required and must be installed separately.
 
 If you don't want to build the app yourself checkout the [releases page](https://github.com/gan-of-culture/get-sauce/releases).
 
-Otherwise you can use [Golang](https://golang.org/dl/) to build and install it:
+Otherwise you can use [Golang](https://golang.org/dl/) to install or update it:
 
 ```console
 go install github.com/gan-of-culture/get-sauce@latest
