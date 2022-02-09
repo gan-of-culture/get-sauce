@@ -2,7 +2,11 @@ package hentaimama
 
 import (
 	"encoding/base64"
+	"errors"
 	"fmt"
+	"io"
+	"net/http"
+	"net/url"
 	"regexp"
 	"strings"
 
@@ -17,10 +21,12 @@ type source struct {
 }
 
 const site = "https://hentaimama.io/"
+const api = "https://hentaimama.io/wp-admin/admin-ajax.php"
 
 var reMirrorURLs = regexp.MustCompile(`[^"]*new\d.php\?p=([^"]*)`)
 var reExt = regexp.MustCompile(`([a-z][\w]*)(?:\?|$)`)
 var reMimeType = regexp.MustCompile(`video/[^']*`)
+var rePostID = regexp.MustCompile(`a:'(\d+)'`)
 
 type extractor struct{}
 
@@ -71,9 +77,9 @@ func extractData(URL string) (*static.Data, error) {
 		return nil, err
 	}
 
-	matchedMirrorURLs := reMirrorURLs.FindAllStringSubmatch(episodeHtmlString, -1)
-	if len(matchedMirrorURLs) < 1 {
-		return nil, static.ErrDataSourceParseFailed
+	matchedMirrorURLs, err := getMirrorURLs(&episodeHtmlString, URL)
+	if err != nil {
+		return nil, err
 	}
 
 	sources := make([]source, len(matchedMirrorURLs))
@@ -158,4 +164,35 @@ func extractData(URL string) (*static.Data, error) {
 		URL:     URL,
 	}, nil
 
+}
+
+func getMirrorURLs(htmlString *string, URL string) ([][]string, error) {
+	matchedID := rePostID.FindStringSubmatch(*htmlString)
+	if len(matchedID) < 1 {
+		return nil, static.ErrDataSourceParseFailed
+	}
+
+	params := url.Values{}
+	params.Add("action", "get_player_contents")
+	params.Add("a", matchedID[1])
+
+	res, err := request.Request(http.MethodPost, api, map[string]string{
+		"Referer": URL,
+		//		"Content-Length": len(params.Encode()),
+		"Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+	}, strings.NewReader(params.Encode()))
+	if err != nil {
+		return nil, errors.New("api request failed")
+	}
+	defer res.Body.Close()
+
+	buffer, err := io.ReadAll(res.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	resString := string(buffer)
+	resString = strings.ReplaceAll(resString, `\`, "")
+
+	return reMirrorURLs.FindAllStringSubmatch(resString, -1), nil
 }
