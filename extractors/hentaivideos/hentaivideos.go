@@ -57,7 +57,7 @@ func extractData(URL string) (*static.Data, error) {
 	}
 
 	videoSource := reVideoSource.FindString(htmlString)
-	if err != nil {
+	if videoSource == "" {
 		return nil, static.ErrDataSourceParseFailed
 	}
 

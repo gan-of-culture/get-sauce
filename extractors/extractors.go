@@ -33,6 +33,7 @@ import (
 	"github.com/gan-of-culture/get-sauce/extractors/htdoujin"
 	"github.com/gan-of-culture/get-sauce/extractors/htstreaming"
 	"github.com/gan-of-culture/get-sauce/extractors/iwara"
+	"github.com/gan-of-culture/get-sauce/extractors/latesthentai"
 	"github.com/gan-of-culture/get-sauce/extractors/manhwa18"
 	"github.com/gan-of-culture/get-sauce/extractors/miohentai"
 	"github.com/gan-of-culture/get-sauce/extractors/muchohentai"
@@ -106,6 +107,7 @@ func init() {
 		"hentaiyes.com":         hentaiyes.New(),
 		"hitomi.la":             hitomi.New(),
 		"imhentai.xxx":          htdoujinExtractor,
+		"latesthentai.com":      latesthentai.New(),
 		"manhwa18.tv":           manhwa18.New(),
 		"miohentai.com":         miohentai.New(),
 		"muchohentai.com":       muchohentai.New(),
