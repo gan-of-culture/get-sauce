@@ -20,10 +20,12 @@ type embed struct {
 	Type     string `json:"type"`
 }
 
-const site = "https://hentaihaven.red"
+const site = "https://hentaihaven.red/"
 const api = "https://hentaihaven.red/wp-admin/admin-ajax.php"
 
-var rePostID = regexp.MustCompile(site + `/\?p=(\d+)`)
+var reEpisodeURL = regexp.MustCompile(site + `hentai/[\w-%]+/`)
+var reParseURLShow = regexp.MustCompile(site + `watch/[\w-%]+/`)
+var rePostID = regexp.MustCompile(site + `\?p=(\d+)`)
 var rePlayer = regexp.MustCompile(`https://htstreaming.com/(?:(?:player/index.php\?data=[^\\"]+)|(?:video/[^\\"]+))`)
 
 type extractor struct{}
@@ -52,23 +54,28 @@ func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 }
 
 func parseURL(URL string) []string {
-	if ok, _ := regexp.MatchString(`episode-\d+[/_\-]`, URL); ok {
+	if ok := reEpisodeURL.MatchString(URL); ok {
 		return []string{URL}
 	}
 
-	//check if it's an overview/series page maybe
 	htmlString, err := request.Get(URL)
 	if err != nil {
-		return []string{}
+		return nil
 	}
 
-	re := regexp.MustCompile(`[^"]*red/hentai[^"]*`) //this sites URLs are built diff
+	if strings.Contains(URL, "/watch/") {
+		htmlString = strings.Split(htmlString, `<div class="bixbox"`)[0]
+		return utils.RemoveAdjDuplicates(reEpisodeURL.FindAllString(htmlString, -1))
+	}
 
-	matchedURLs := re.FindAllString(htmlString, -1)
-	//remove the five popular hentai on the side bar
-	matchedURLs = matchedURLs[:len(matchedURLs)-5]
+	// contains list of show that need to be derefenced to episode level
+	htmlString = strings.Split(htmlString, `<div id="sidebar">`)[0]
 
-	return utils.RemoveAdjDuplicates(matchedURLs)
+	out := []string{}
+	for _, anime := range reParseURLShow.FindAllString(htmlString, -1) {
+		out = append(out, parseURL(anime)...)
+	}
+	return out
 }
 
 func extractData(URL string) (*static.Data, error) {

@@ -5,6 +5,7 @@ import (
 	"regexp"
 	"strings"
 
+	"github.com/gan-of-culture/get-sauce/extractors/animestream"
 	"github.com/gan-of-culture/get-sauce/extractors/htstreaming"
 	"github.com/gan-of-culture/get-sauce/extractors/nhplayer"
 	"github.com/gan-of-culture/get-sauce/request"
@@ -58,6 +59,9 @@ func parseURL(URL string) []string {
 
 	re := regexp.MustCompile(`https[^"\s]*?episode-\d*(?:/*|[-\w]*)"`)
 	matchedURLs := re.FindAllString(htmlString, -1)
+	if len(matchedURLs) == 0 {
+		matchedURLs = animestream.ParseURLwoSite(URL)
+	}
 
 	out := []string{}
 	for _, u := range matchedURLs {

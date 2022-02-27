@@ -19,7 +19,7 @@ func TestParseURL(t *testing.T) {
 		}, {
 			Name: "Series",
 			URL:  "https://hentaivideos.net/hentai/ouji-no-honmei-wa-akuyaku-reijou",
-			Want: 5,
+			Want: 6,
 		},
 	}
 	for _, tt := range tests {
