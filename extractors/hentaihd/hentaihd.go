@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"html"
 	"regexp"
-	"strings"
 
+	"github.com/gan-of-culture/get-sauce/extractors/animestream"
 	"github.com/gan-of-culture/get-sauce/request"
 	"github.com/gan-of-culture/get-sauce/static"
 	"github.com/gan-of-culture/get-sauce/utils"
@@ -58,29 +58,7 @@ func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 }
 
 func parseURL(URL string) []string {
-	if ok := reEpisodeURL.MatchString(URL); ok {
-		return []string{URL}
-	}
-
-	htmlString, err := request.Get(URL)
-	if err != nil {
-		return nil
-	}
-
-	if strings.Contains(URL, "/anime/") {
-		htmlString = strings.Split(htmlString, `<div class="bixbox"`)[0]
-		return utils.RemoveAdjDuplicates(reEpisodeURL.FindAllString(htmlString, -1))
-	}
-
-	// contains list of show that need to be derefenced to episode level
-	htmlString = strings.Split(htmlString, `<div id="sidebar">`)[0]
-
-	out := []string{}
-	for _, anime := range reParseURLShow.FindAllString(htmlString, -1) {
-		out = append(out, parseURL(anime)...)
-	}
-	return out
-
+	return animestream.ParseURL(URL, site)
 }
 
 func extractData(URL string) (*static.Data, error) {

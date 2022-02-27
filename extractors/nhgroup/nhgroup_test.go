@@ -34,6 +34,22 @@ func TestParseURL(t *testing.T) {
 			Name: "Overview hentai.tv",
 			URL:  "https://hentai.tv/trending/",
 			Want: 48,
+		}, {
+			Name: "Single Episode hentaistream.xxx",
+			URL:  "https://hentaistream.xxx/watch/ijirare-fukushuu-saimin-episode-1/",
+			Want: 1,
+		}, {
+			Name: "Overview hentaistream.xxx",
+			URL:  "https://hentaistream.xxx/genres/ahegao/",
+			Want: 18,
+		}, {
+			Name: "Single Episode uncensoredhentai.xxx",
+			URL:  "https://uncensoredhentai.xxx/watch/mako-chan-kaihatsu-nikki-episode-1/",
+			Want: 1,
+		}, {
+			Name: "Overview uncensoredhentai.xxx",
+			URL:  "https://uncensoredhentai.xxx/genres/ahegao/",
+			Want: 18,
 		},
 	}
 	for _, tt := range tests {
@@ -84,6 +100,24 @@ func TestExtract(t *testing.T) {
 				Title:   "Usamimi Bouken-Tan Sekuhara Shinagara Sekai O Sukue Episode 3",
 				Quality: "1920x1080",
 				Size:    0,
+			},
+		},
+		{
+			Name: "Single Episode hentaistream.xxx",
+			Args: test.Args{
+				URL:     "https://hentaistream.xxx/watch/mako-chan-kaihatsu-nikki-episode-1/",
+				Title:   "Mako chan Kaihatsu Nikki Episode 1",
+				Quality: "1920x1080",
+				Size:    558305856,
+			},
+		},
+		{
+			Name: "Single Episode uncensoredhentai.xxx",
+			Args: test.Args{
+				URL:     "https://uncensoredhentai.xxx/watch/mako-chan-kaihatsu-nikki-episode-1/",
+				Title:   "Mako chan Kaihatsu Nikki Episode 1",
+				Quality: "1920x1080",
+				Size:    558305856,
 			},
 		},
 	}
