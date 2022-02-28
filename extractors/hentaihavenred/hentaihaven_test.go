@@ -50,9 +50,9 @@ func TestExtract(t *testing.T) {
 			Name: "[OLD] Single Episode",
 			Args: test.Args{
 				URL:     "https://hentaihaven.red/hentai/mako-chan-kaihatsu-nikki-episode-2/",
-				Title:   "Mako-chan Kaihatsu Nikki Episode 2",
+				Title:   "Mako chan Kaihatsu Nikki Episode 2",
 				Quality: "1920x1080",
-				Size:    306057984,
+				Size:    0,
 			},
 		},
 	}

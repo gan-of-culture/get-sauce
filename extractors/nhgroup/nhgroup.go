@@ -13,7 +13,6 @@ import (
 	"github.com/gan-of-culture/get-sauce/utils"
 )
 
-var reHTStreamingVideoURL = regexp.MustCompile(`https://htstreaming.com/video/([^"]*)`)
 var reNHPlayerURL = regexp.MustCompile(`https:\\?/\\?/nhplayer\.com\\?/v\\?/[^/"]+`)
 
 type extractor struct{}
@@ -32,7 +31,7 @@ func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 
 	data := []*static.Data{}
 	for _, u := range URLs {
-		d, err := extractData(u)
+		d, err := ExtractData(u)
 		if err != nil {
 			if strings.Contains(err.Error(), "video not found") || strings.Contains(err.Error(), "player URL not found") {
 				log.Println(utils.Wrap(err, u).Error())
@@ -71,7 +70,8 @@ func parseURL(URL string) []string {
 	return utils.RemoveAdjDuplicates(out)
 }
 
-func extractData(URL string) (*static.Data, error) {
+// ExtractData of a nhplayer
+func ExtractData(URL string) (*static.Data, error) {
 
 	htmlString, err := request.Get(URL)
 	if err != nil {
