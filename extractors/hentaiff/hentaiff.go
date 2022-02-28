@@ -7,8 +7,8 @@ import (
 	"net/http"
 	"regexp"
 	"strconv"
+	"strings"
 
-	"github.com/gan-of-culture/get-sauce/extractors/animestream"
 	"github.com/gan-of-culture/get-sauce/request"
 	"github.com/gan-of-culture/get-sauce/static"
 	"github.com/gan-of-culture/get-sauce/utils"
@@ -25,6 +25,9 @@ type videoData struct {
 	IsVr     bool          `json:"is_vr"`
 }
 
+var reParseURLMass = regexp.MustCompile(`https://hentaiff.com/(anime|genres|raw|sub|uncensored|censored|bookmark|studio|director)`)
+var reParseURLShow = regexp.MustCompile(`https://hentaiff.com/anime/[\w-%]+/`)
+var reParseURL = regexp.MustCompile(`https://hentaiff.com/[\w-%]+(?:raw|english-subbed|english-dubbed|previews)/`)
 var reParseAmHentaiID = regexp.MustCompile(`https://amhentai.com/v/([^"]+)`)
 
 const site = "https://hentaiff.com/"
@@ -57,7 +60,33 @@ func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 }
 
 func parseURL(URL string) []string {
-	return animestream.ParseURL(URL, site)
+	matchedGroup := reParseURLMass.FindStringSubmatch(URL)
+	if len(matchedGroup) < 2 {
+		if !reParseURL.MatchString(URL) {
+			return []string{}
+		}
+		return []string{URL}
+	}
+
+	htmlString, err := request.Get(URL)
+	if err != nil {
+		return []string{}
+	}
+
+	switch matchedGroup[1] {
+	case "anime":
+		htmlString = strings.Split(htmlString, `<div class="bixbox"`)[0]
+		return utils.RemoveAdjDuplicates(reParseURL.FindAllString(htmlString, -1))
+	default:
+		// contains list of show that need to be derefenced to episode level
+		htmlString = strings.Split(htmlString, `<div id="sidebar">`)[0]
+
+		out := []string{}
+		for _, anime := range reParseURLShow.FindAllString(htmlString, -1) {
+			out = append(out, parseURL(anime)...)
+		}
+		return out
+	}
 }
 
 func extractData(URL string) (*static.Data, error) {
