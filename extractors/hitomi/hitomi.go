@@ -252,8 +252,8 @@ func inGGValues(num int) int {
 	}
 	for _, value := range ggValues {
 		if *value == num {
-			return 0
+			return 1
 		}
 	}
-	return 1
+	return 0
 }
