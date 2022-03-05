@@ -61,7 +61,7 @@ func parseURL(URL string) []string {
 		return []string{}
 	}
 	slug := strings.Split(URL, "watch/")[1]
-	re := regexp.MustCompile(fmt.Sprintf("[^\"]*%sepisode-\\d*", slug))
+	re := regexp.MustCompile(fmt.Sprintf("[^\"]*%s/?episode-\\d*", slug))
 	return re.FindAllString(htmlString, -1)
 }
 
