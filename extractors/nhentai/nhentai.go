@@ -131,7 +131,6 @@ func extractData(id string, page string) (*static.Data, error) {
 
 	matchedJsonString := reJSONString.FindStringSubmatch(htmlString)
 	if len(matchedJsonString) < 2 {
-		fmt.Println(htmlString)
 		return nil, errors.New("invalid JSON for")
 	}
 	jsonString, _ := strconv.Unquote(matchedJsonString[1])
