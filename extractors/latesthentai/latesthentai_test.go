@@ -19,13 +19,13 @@ func TestParseURL(t *testing.T) {
 		}, {
 			Name: "Series",
 			URL:  "https://latesthentai.com/hentai/hajimete-no-hitozuma/",
-			Want: 3,
+			Want: 4,
 		}, {
 			// this is the same logic for all extensions that group shows e.g. /genres/
 			// its hard to make a test for the other groups since the number of episodes always changes
 			Name: "Studio",
 			URL:  "https://latesthentai.com/studio/new-generation/",
-			Want: 31,
+			Want: 32,
 		},
 	}
 	for _, tt := range tests {
