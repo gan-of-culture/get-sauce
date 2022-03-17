@@ -104,7 +104,7 @@ func main() {
 	args := flag.Args()
 	if len(args) < 1 {
 		fmt.Println("Too few arguments")
-		fmt.Println("Usage: go-hentai-scraper [args] URLs...")
+		fmt.Println("Usage: get-sauce [args] URLs...")
 		flag.PrintDefaults()
 		os.Exit(1)
 	}
