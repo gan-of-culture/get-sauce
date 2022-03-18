@@ -5,7 +5,6 @@ import (
 	"net/url"
 
 	"github.com/gan-of-culture/get-sauce/extractors/booru"
-	"github.com/gan-of-culture/get-sauce/extractors/damn"
 	"github.com/gan-of-culture/get-sauce/extractors/danbooru"
 	"github.com/gan-of-culture/get-sauce/extractors/doujin"
 	"github.com/gan-of-culture/get-sauce/extractors/ehentai"
@@ -53,7 +52,6 @@ import (
 var extractorsMap map[string]static.Extractor
 
 func init() {
-	damnExtractor := damn.New()
 	htstreamingExtactor := htstreaming.New()
 	htdoujinExtractor := htdoujin.New()
 	ninehentaiExtractor := ninehentai.New()
@@ -68,8 +66,6 @@ func init() {
 		"animeidhentai.com":     nhgroupExtractor,
 		"booru.io":              booru.New(),
 		"comicporn.xxx":         htdoujinExtractor,
-		"damn.stream":           damnExtractor,
-		"www.damn.stream":       damnExtractor,
 		"danbooru.donmai.us":    danbooru.New(),
 		"doujin.sexy":           doujin.New(),
 		"e-hentai.org":          ehentai.New(),
