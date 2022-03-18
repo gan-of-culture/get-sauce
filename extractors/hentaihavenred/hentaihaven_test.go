@@ -19,7 +19,7 @@ func TestParseURL(t *testing.T) {
 		}, {
 			Name: "Overview hentaihaven.red/",
 			URL:  "https://hentaihaven.red/studio/studio-hokiboshi/",
-			Want: 16,
+			Want: 17,
 		},
 	}
 	for _, tt := range tests {
