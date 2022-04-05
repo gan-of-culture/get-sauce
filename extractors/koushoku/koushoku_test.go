@@ -44,7 +44,7 @@ func TestExtract(t *testing.T) {
 		{
 			Name: "Single Gallery",
 			Args: test.Args{
-				URL:     "https://koushoku.org/archive/7619/queens-discipline/3",
+				URL:     "https://koushoku.org/archive/7915/no-virgins-allowed-the-time-a-creepy-otaku-like-me-helped-the-class-gyarus-lose-their-virginity",
 				Title:   "No Virgins Allowed - The Time a Creepy Otaku Like Me Helped the Class Gyarus Lose Their Virginity",
 				Quality: "",
 				Size:    99300000,
