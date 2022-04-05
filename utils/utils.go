@@ -3,6 +3,7 @@ package utils
 import (
 	"errors"
 	"fmt"
+	"html"
 	"regexp"
 	"strconv"
 	"strings"
@@ -23,14 +24,15 @@ func GetLastItemString(slice []string) string {
 func CalcSizeInByte(number float64, unit string) int64 {
 	switch unit {
 	case "KB":
-		return int64(number) * 1000
+		number *= 1000
 	case "MB":
-		return int64(number) * 1000000
+		number *= 1000000
 	case "GB":
-		return int64(number) * 10000000000
+		number *= 10000000000
 	default:
 		return int64(number)
 	}
+	return int64(number)
 }
 
 // NeedDownloadList return the indices of gallery that need download
@@ -92,7 +94,7 @@ func GetH1(htmlString *string, idx int) string {
 			return ""
 		}
 	}
-	return strings.TrimSuffix(h1s[idx], "</h1>")
+	return html.UnescapeString(strings.TrimSuffix(h1s[idx], "</h1>"))
 }
 
 // GetMeta of html file
