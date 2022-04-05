@@ -95,7 +95,7 @@ func (downloader *downloaderStruct) Download(data *static.Data) error {
 
 	lenOfUrls := len(downloader.stream.URLs)
 	appendEnum := false
-	if lenOfUrls > 1 {
+	if lenOfUrls > 1 || config.Pages != "" {
 		appendEnum = true
 	}
 
