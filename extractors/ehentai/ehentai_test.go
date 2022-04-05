@@ -45,7 +45,7 @@ func TestExtract(t *testing.T) {
 				URL:     "https://e-hentai.org/g/1559777/dc952bd4c1/",
 				Title:   "[Shimashima-PNT (Punita)] Diablo no Shoyuubutsu dakara Suki ni Shite mo Ii yo... | Диабло, мы твои рабы, так что ты можешь делать всё, что пожелаешь… [Russian] [R9N9Ga7] [Digital] - 1",
 				Quality: "1280 x 1807",
-				Size:    497000,
+				Size:    497500,
 			},
 		},
 	}

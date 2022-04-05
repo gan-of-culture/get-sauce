@@ -195,6 +195,11 @@ func TestGetH1(t *testing.T) {
 			htmlString: `<h1>Overflow 7</h1><h1>Overflow 8</h1>`,
 			idx:        -1,
 			Want:       "Overflow 8",
+		}, {
+			Name:       "escaped character",
+			htmlString: `<h1 class="title">Queen&#39;s Discipline</h1>`,
+			idx:        -1,
+			Want:       "Queen's Discipline",
 		},
 	}
 	for _, tt := range tests {
