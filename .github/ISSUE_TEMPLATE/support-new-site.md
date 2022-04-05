@@ -1,7 +1,7 @@
 ---
 name: Support new site
 about: Add support for a new website
-title: "[FEATURE]"
+title: "[FEATURE]: the website name"
 labels: enhancement
 assignees: ''
 
