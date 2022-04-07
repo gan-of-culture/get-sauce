@@ -11,6 +11,7 @@ import (
 	"github.com/gan-of-culture/get-sauce/extractors/exhentai"
 	"github.com/gan-of-culture/get-sauce/extractors/haho"
 	"github.com/gan-of-culture/get-sauce/extractors/hanime"
+	"github.com/gan-of-culture/get-sauce/extractors/hanimetv"
 	"github.com/gan-of-culture/get-sauce/extractors/hentai2read"
 	"github.com/gan-of-culture/get-sauce/extractors/hentai2w"
 	"github.com/gan-of-culture/get-sauce/extractors/hentaibar"
@@ -73,6 +74,7 @@ func init() {
 		"exhentai.org":          exhentai.New(),
 		"haho.moe":              haho.New(),
 		"hanime.io":             hanime.New(),
+		"hanime.tv":             hanimetv.New(),
 		"hentai.guru":           hentaiguru.New(),
 		"hentai.pro":            htstreamingExtactor,
 		"hentai.tv":             nhgroupExtractor,
