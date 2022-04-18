@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"net/url"
 	"regexp"
+	"strconv"
 	"strings"
 
 	"github.com/gan-of-culture/get-sauce/request"
@@ -46,6 +47,7 @@ var sites map[string]siteConfig = map[string]siteConfig{
 	},
 }
 
+var host string
 var site string
 var cdn string
 var readerURLPrefix string
@@ -69,17 +71,19 @@ func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 		return nil, err
 	}
 
-	if _, ok := sites[u.Host]; !ok {
+	host = u.Host
+
+	if _, ok := sites[host]; !ok {
 		return nil, errors.New("site not configured for htdoujin extractor")
 	}
-	site = "https://" + u.Host + "/"
-	cdn = fmt.Sprintf("https://%s.%s/", sites[u.Host].CDNPrefix, u.Host)
-	readerURLPrefix = sites[u.Host].ReaderURLPrefix
+	site = "https://" + host + "/"
 
 	IDs := parseURL(URL)
 	if len(IDs) == 0 {
 		return nil, static.ErrURLParseFailed
 	}
+
+	readerURLPrefix = sites[host].ReaderURLPrefix
 
 	data := []*static.Data{}
 	for _, id := range IDs {
@@ -112,6 +116,7 @@ func parseURL(URL string) []string {
 }
 
 func extractData(ID string) (*static.Data, error) {
+
 	htmlString, err := request.Get(fmt.Sprintf("%s%s/%s/1/", site, readerURLPrefix, ID))
 	if err != nil {
 		return &static.Data{}, err
@@ -139,6 +144,28 @@ func extractData(ID string) (*static.Data, error) {
 	}
 
 	pages := utils.NeedDownloadList(len(gData))
+
+	CDNPrefix := sites[host].CDNPrefix
+	// found in https://hentaiera.com/js/main_92xw36.js
+	if host == "hentaiera.com" {
+		IDAsNumber, err := strconv.Atoi(ID)
+		if err != nil {
+			return nil, err
+		}
+		if IDAsNumber > 274825 && IDAsNumber <= 403818 {
+			CDNPrefix = "m2"
+		} else if IDAsNumber > 403818 && IDAsNumber <= 527143 {
+			CDNPrefix = "m3"
+		} else if IDAsNumber > 527143 && IDAsNumber <= 632481 {
+			CDNPrefix = "m4"
+		} else if IDAsNumber > 632481 && IDAsNumber <= 815858 {
+			CDNPrefix = "m5"
+		} else if IDAsNumber > 815858 {
+			CDNPrefix = "m6"
+		}
+	}
+
+	cdn = fmt.Sprintf("https://%s.%s/", CDNPrefix, host)
 
 	URLs := []*static.URL{}
 	for _, i := range pages {
