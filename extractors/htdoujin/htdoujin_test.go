@@ -101,7 +101,7 @@ func TestExtract(t *testing.T) {
 			Name: "Single Gallery HentaiEra",
 			Args: test.Args{
 				URL:     "https://hentaiera.com/gallery/610929/",
-				Title:   "NEO-QUEENDOM Daijuunanagou",
+				Title:   "Senran Princess G",
 				Quality: "",
 				Size:    0,
 			},
