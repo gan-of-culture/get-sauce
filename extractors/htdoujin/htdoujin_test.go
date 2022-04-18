@@ -40,7 +40,7 @@ func TestParseURL(t *testing.T) {
 			Want: 20,
 		}, {
 			Name: "Single Gallery HentaiEra",
-			URL:  "https://hentaiera.com/gallery/150354/",
+			URL:  "https://hentaiera.com/gallery/610929/",
 			Want: 1,
 		}, {
 			Name: "Tag HentaiEra",
@@ -100,7 +100,7 @@ func TestExtract(t *testing.T) {
 		{
 			Name: "Single Gallery HentaiEra",
 			Args: test.Args{
-				URL:     "https://hentaiera.com/gallery/488946/",
+				URL:     "https://hentaiera.com/gallery/610929/",
 				Title:   "NEO-QUEENDOM Daijuunanagou",
 				Quality: "",
 				Size:    0,
