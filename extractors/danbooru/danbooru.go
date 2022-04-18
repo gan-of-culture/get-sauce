@@ -13,7 +13,7 @@ import (
 
 const site = "https://danbooru.donmai.us"
 
-var reIMGData = regexp.MustCompile(`data-width="([^"]+)"[ ]+data-height="([^"]+)".+alt="([^"]+)".+src="([^"]+)"`) // [1] = img original width [2] image original height [3] image name [4] src URL
+var reIMGData = regexp.MustCompile(`data-width="([^"]+)"[ ]+data-height="([^"]+)"[\s\S]*?alt="([^"]+)".+src="([^"]+)"`) // [1] = img original width [2] image original height [3] image name [4] src URL
 
 type extractor struct{}
 
