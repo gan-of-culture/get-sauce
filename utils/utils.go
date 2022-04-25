@@ -29,8 +29,6 @@ func CalcSizeInByte(number float64, unit string) int64 {
 		number *= 1000000
 	case "GB":
 		number *= 10000000000
-	default:
-		return int64(number)
 	}
 	return int64(number)
 }

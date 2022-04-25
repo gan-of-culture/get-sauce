@@ -20,7 +20,7 @@ var reGallerySize = regexp.MustCompile(`\d+.\d`)
 
 type extractor struct{}
 
-// New returns a latesthentai extractor.
+// New returns a koushoku extractor.
 func New() static.Extractor {
 	return &extractor{}
 }

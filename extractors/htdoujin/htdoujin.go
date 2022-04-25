@@ -20,43 +20,46 @@ because they linked to some of the htstreaming sites I called this extractor htd
 */
 
 type siteConfig struct {
-	CDNPrefix       string
-	ReaderURLPrefix string
+	CDNPrefixSrcURLPart string
+	ReaderURLPrefix     string
 }
 
 var sites map[string]siteConfig = map[string]siteConfig{
 	"comicporn.xxx": {
-		CDNPrefix:       "m5",
-		ReaderURLPrefix: "view",
+		CDNPrefixSrcURLPart: "js/main_v7.js",
+		ReaderURLPrefix:     "view",
 	},
 	"imhentai.xxx": {
-		CDNPrefix:       "m5",
-		ReaderURLPrefix: "view",
+		CDNPrefixSrcURLPart: "js/main.985451.js",
+		ReaderURLPrefix:     "view",
 	},
 	"hentaiera.com": {
-		CDNPrefix:       "m1",
-		ReaderURLPrefix: "view",
+		CDNPrefixSrcURLPart: "js/main_92xw36.js",
+		ReaderURLPrefix:     "view",
 	},
 	"hentaifox.com": {
-		CDNPrefix:       "i",
-		ReaderURLPrefix: "g",
+		CDNPrefixSrcURLPart: "i",
+		ReaderURLPrefix:     "g",
 	},
 	"hentairox.com": {
-		CDNPrefix:       "m5",
-		ReaderURLPrefix: "view",
+		CDNPrefixSrcURLPart: "js/main_v7.js",
+		ReaderURLPrefix:     "view",
 	},
 }
 
 var host string
 var site string
 var cdn string
+var cdnPrefixLevels []int
 var readerURLPrefix string
 
-var reUID *regexp.Regexp = regexp.MustCompile(`/gallery/(\d+)/`)
+var reGID *regexp.Regexp = regexp.MustCompile(`/gallery/(\d+)/`)
+var reUIDLevels *regexp.Regexp = regexp.MustCompile(`u_id\s*>\s*(\d+)`)
 var reTitle *regexp.Regexp = regexp.MustCompile(`<title>(.+)</title>`)
 var reJSONData *regexp.Regexp = regexp.MustCompile(`'{[^']+`)
 var reImgDir *regexp.Regexp = regexp.MustCompile(`image_dir" value="([^"]*)`)
 var reGalleryID *regexp.Regexp = regexp.MustCompile(`gallery_id" value="([^"]*)`)
+var reUID *regexp.Regexp = regexp.MustCompile(`u_id" value="([^"]*)`)
 
 type extractor struct{}
 
@@ -84,6 +87,10 @@ func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 	}
 
 	readerURLPrefix = sites[host].ReaderURLPrefix
+	cdnPrefixLevels, err = parseCDNPrefixLevels()
+	if err != nil {
+		return nil, err
+	}
 
 	data := []*static.Data{}
 	for _, id := range IDs {
@@ -108,7 +115,7 @@ func parseURL(URL string) []string {
 	}
 
 	IDs := []string{}
-	for _, v := range reUID.FindAllStringSubmatch(htmlString, -1) {
+	for _, v := range reGID.FindAllStringSubmatch(htmlString, -1) {
 		IDs = append(IDs, v[1])
 	}
 
@@ -125,7 +132,6 @@ func extractData(ID string) (*static.Data, error) {
 	title := strings.Split(reTitle.FindStringSubmatch(htmlString)[1], " - Page 1 - ")[0]
 
 	jsonString := strings.Trim(reJSONData.FindString(htmlString), "'")
-	//fmt.Println(jsonString)
 
 	gData := map[string]string{}
 	err = json.Unmarshal([]byte(jsonString), &gData)
@@ -143,26 +149,16 @@ func extractData(ID string) (*static.Data, error) {
 		return &static.Data{}, errors.New("cannot find gallery_id for")
 	}
 
+	uID := reUID.FindStringSubmatch(htmlString)
+	if len(uID) < 1 {
+		return &static.Data{}, errors.New("cannot find u_id for")
+	}
+
 	pages := utils.NeedDownloadList(len(gData))
 
-	CDNPrefix := sites[host].CDNPrefix
-	// found in https://hentaiera.com/js/main_92xw36.js
-	if host == "hentaiera.com" {
-		IDAsNumber, err := strconv.Atoi(ID)
-		if err != nil {
-			return nil, err
-		}
-		if IDAsNumber > 274825 && IDAsNumber <= 403818 {
-			CDNPrefix = "m2"
-		} else if IDAsNumber > 403818 && IDAsNumber <= 527143 {
-			CDNPrefix = "m3"
-		} else if IDAsNumber > 527143 && IDAsNumber <= 632481 {
-			CDNPrefix = "m4"
-		} else if IDAsNumber > 632481 && IDAsNumber <= 815858 {
-			CDNPrefix = "m5"
-		} else if IDAsNumber > 815858 {
-			CDNPrefix = "m6"
-		}
+	CDNPrefix, err := getCDNPrefix(uID[1])
+	if err != nil {
+		return nil, err
 	}
 
 	cdn = fmt.Sprintf("https://%s.%s/", CDNPrefix, host)
@@ -198,4 +194,42 @@ func extractData(ID string) (*static.Data, error) {
 		},
 		URL: fmt.Sprintf("%sgallery/%s/", site, ID),
 	}, nil
+}
+
+func getCDNPrefix(gID string) (string, error) {
+	if host == "hentaifox.com" {
+		return "i", nil
+	}
+
+	IDAsNumber, err := strconv.Atoi(gID)
+	if err != nil {
+		return "", err
+	}
+
+	for i := len(cdnPrefixLevels); i > 1; i-- {
+		if IDAsNumber > cdnPrefixLevels[i-1] {
+			return fmt.Sprintf("m%d", i), nil
+		}
+	}
+
+	return "", errors.New("no CDN prefix was found")
+}
+
+func parseCDNPrefixLevels() ([]int, error) {
+	jsString, err := request.Get(site + sites[host].CDNPrefixSrcURLPart)
+	if err != nil {
+		return nil, err
+	}
+
+	levels := reUIDLevels.FindAllStringSubmatch(jsString, -1)
+	var out []int
+	for _, uID := range levels {
+		IDAsNumber, err := strconv.Atoi(uID[1])
+		if err != nil {
+			return nil, err
+		}
+		out = append(out, IDAsNumber)
+	}
+
+	return out, nil
 }

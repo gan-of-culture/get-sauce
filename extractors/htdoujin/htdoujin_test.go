@@ -19,6 +19,10 @@ func TestParseURL(t *testing.T) {
 			URL:  "https://hentaiera.com/gallery/150354/",
 			Want: 1,
 		}, {
+			Name: "Single Gallery HentaiEra 2",
+			URL:  "https://hentaiera.com/gallery/610929/",
+			Want: 1,
+		}, {
 			Name: "Tag HentaiEra",
 			URL:  "https://hentaiera.com/tag/ahegao/",
 			Want: 25,
@@ -38,14 +42,6 @@ func TestParseURL(t *testing.T) {
 			Name: "Tag HentaiFox",
 			URL:  "https://hentaifox.com/tag/age-progression/",
 			Want: 20,
-		}, {
-			Name: "Single Gallery HentaiEra",
-			URL:  "https://hentaiera.com/gallery/610929/",
-			Want: 1,
-		}, {
-			Name: "Tag HentaiEra",
-			URL:  "https://hentaiera.com/tag/ahegao/",
-			Want: 25,
 		}, {
 			Name: "Single Gallery HentaiRox",
 			URL:  "https://hentairox.com/gallery/397913/",
