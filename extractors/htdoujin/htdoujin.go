@@ -149,19 +149,16 @@ func extractData(ID string) (*static.Data, error) {
 		return &static.Data{}, errors.New("cannot find gallery_id for")
 	}
 
-	uID := reUID.FindStringSubmatch(htmlString)
-	if len(uID) < 1 {
-		return &static.Data{}, errors.New("cannot find u_id for")
-	}
+	uID := utils.GetLastItemString(reUID.FindStringSubmatch(htmlString))
 
-	pages := utils.NeedDownloadList(len(gData))
-
-	CDNPrefix, err := getCDNPrefix(uID[1])
+	CDNPrefix, err := getCDNPrefix(uID)
 	if err != nil {
 		return nil, err
 	}
 
 	cdn = fmt.Sprintf("https://%s.%s/", CDNPrefix, host)
+
+	pages := utils.NeedDownloadList(len(gData))
 
 	URLs := []*static.URL{}
 	for _, i := range pages {

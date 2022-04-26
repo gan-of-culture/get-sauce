@@ -6,7 +6,6 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"log"
 	"net/http"
 	"net/url"
 	"regexp"
@@ -147,7 +146,6 @@ func extractData(URL string) (*static.Data, error) {
 	galleryData := gallery{}
 	err = json.Unmarshal([]byte(jsString[jsonStart:]), &galleryData)
 	if err != nil {
-		log.Println(URL)
 		return nil, err
 	}
 

@@ -112,7 +112,6 @@ func extractData(URL string) (*static.Data, error) {
 
 	matchedTagBox := reTagBox.FindStringSubmatch(htmlString)
 	if len(matchedTagBox) != 2 {
-		fmt.Println(htmlString)
 		return nil, errors.New("couldn't extract tags for post")
 	}
 

@@ -80,7 +80,6 @@ func parseURL(URL string) (string, error) {
 func extractData(queryURL string) ([]*static.Data, error) {
 	jsonData, err := request.GetAsBytes(queryURL)
 	if err != nil {
-		fmt.Println(queryURL)
 		return nil, err
 	}
 
@@ -90,7 +89,6 @@ func extractData(queryURL string) ([]*static.Data, error) {
 		entity := Entity{}
 		err := json.Unmarshal(jsonData, &entity)
 		if err != nil {
-			fmt.Println(queryURL)
 			return nil, err
 		}
 		entitySlice.Data = append(entitySlice.Data, entity)
