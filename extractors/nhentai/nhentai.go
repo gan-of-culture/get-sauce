@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"log"
 	"regexp"
 	"strconv"
 	"time"
@@ -138,8 +137,6 @@ func extractData(id string, page string) (*static.Data, error) {
 	gData := &gallery{}
 	err = json.Unmarshal([]byte(jsonString), &gData)
 	if err != nil {
-		log.Println(jsonString)
-		log.Println(URL)
 		return nil, err
 	}
 

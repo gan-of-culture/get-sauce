@@ -1,7 +1,6 @@
 package danbooru
 
 import (
-	"log"
 	"testing"
 
 	"github.com/gan-of-culture/get-sauce/test"
@@ -25,7 +24,6 @@ func TestParseURL(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.Name, func(t *testing.T) {
-			log.Println(tt.Name)
 			URLs, err := parseURL(tt.URL)
 			test.CheckError(t, err)
 			if len(URLs) < tt.Want {
