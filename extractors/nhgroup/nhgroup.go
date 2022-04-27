@@ -73,7 +73,9 @@ func parseURL(URL string) []string {
 // ExtractData of a nhplayer
 func ExtractData(URL string) (*static.Data, error) {
 
-	htmlString, err := request.Get(URL)
+	htmlString, err := request.GetWithHeaders(URL, map[string]string{
+		"Cookie": "inter=1",
+	})
 	if err != nil {
 		return nil, err
 	}
