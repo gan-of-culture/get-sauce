@@ -254,7 +254,7 @@ The following links will direct you to adult content. Please keep that in mind!
 | [animeidhentai.com (1080p, 720p, 480p, 360p)](https://animeidhentai.com)                  |         ?          |:heavy_check_mark:|
 | [booruproject (ex. rule34, gelbooru)](https://booru.org/top)                              | :heavy_check_mark: |:heavy_check_mark:|
 | [booru.io](https://booru.io/)                                                             | :heavy_check_mark: |        ?         |
-| [www.cartoonpornvideos.com (1080p, 720p, 480p, 360p)](https://www.cartoonpornvideos.com)  |         ?          |:heavy_check_mark:|
+| [www.cartoonpornvideos.com (1080p, 720p, 480p, 360p)](https://www.cartoonpornvideos.com)  |        :x:         |:heavy_check_mark:|
 | [comicporn.xxx](https://comicporn.xxx)                                                    | :heavy_check_mark: |        ?         |
 | [danbooru.donmai.us](https://danbooru.donmai.us)                                          | :heavy_check_mark: |        ?         |
 | [doujin.sexy](https://doujin.sexy)                                                        | :heavy_check_mark: |        ?         |
@@ -273,7 +273,7 @@ The following links will direct you to adult content. Please keep that in mind!
 | [hentaibar.com (1080p, 720p, 480p, 360p)](https://hentaibar.com)                          |         ?          |:heavy_check_mark:|
 | [hentaicloud.com(720p)](https://www.hentaicloud.com)                                      |        :x:         |:heavy_check_mark:|
 | [hentaidude.com(720p, 480, 360p)](https://hentaidude.com/)                                |         ?          |:heavy_check_mark:|
-| [hentaiera.com](https://hentaiera.com)                                                    | :heavy_check_mark: |         ?        |P
+| [hentaiera.com](https://hentaiera.com)                                                    | :heavy_check_mark: |         ?        |
 | [hentaiff.com (1080p, 720p, 480p)](https://hentaiff.com)                                  |         ?          |:heavy_check_mark:|
 | [hentaifox.com](https://hentaifox.com)                                                    | :heavy_check_mark: |         ?        |
 | [hentaihaven.com (1080p, 720p, 480p, 360p)](https://hentaihaven.com)                      |         ?          |:heavy_check_mark:|
