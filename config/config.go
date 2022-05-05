@@ -21,14 +21,16 @@ var (
 	ShowExtractedData bool
 	// ShowInfo of all available streams
 	ShowInfo bool
+	// Timeout for the http.client in minutes
+	Timeout int
 	// Truncate file if it already exists
 	Truncate bool
-	// Workers for downloading
-	Workers int
 	// Username for exhentai.org
 	Username string
 	// UserPassword for exhentai.org
 	UserPassword string
+	// Workers for downloading
+	Workers int
 )
 
 // FakeHeaders fake http headers
