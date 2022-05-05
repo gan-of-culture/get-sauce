@@ -18,18 +18,19 @@ import (
 func init() {
 	flag.IntVar(&config.Amount, "a", 0, "Amount of files to download")
 	flag.IntVar(&config.Caption, "c", -1, "Download caption to a extra file")
+	flag.BoolVar(&config.ShowInfo, "i", false, "Show info")
+	flag.BoolVar(&config.ShowExtractedData, "j", false, "Show extracted data as json")
 	flag.BoolVar(&config.Keep, "k", false, "Keep video, audio and subtitles. Don't merge using ffmpeg")
 	flag.StringVar(&config.OutputName, "o", "", "Output name")
 	flag.StringVar(&config.OutputPath, "O", "", "Output path (include ending delimiter)")
-	flag.BoolVar(&config.Truncate, "t", false, "Truncate file if it already exists")
 	flag.StringVar(&config.Pages, "p", "", "Enter pages like 1,2,3-4,6,7,8-9 for doujins")
 	flag.BoolVar(&config.Quiet, "q", false, "Quiet mode - show minimal information")
 	flag.StringVar(&config.SelectStream, "s", "0", "Select a stream")
-	flag.BoolVar(&config.ShowExtractedData, "j", false, "Show extracted data as json")
-	flag.BoolVar(&config.ShowInfo, "i", false, "Show info")
-	flag.IntVar(&config.Workers, "w", 1, "Number of workers used for downloading")
+	flag.BoolVar(&config.Truncate, "t", false, "Truncate file if it already exists")
+	flag.IntVar(&config.Timeout, "T", 10, "Timeout for the http.client in minutes")
 	flag.StringVar(&config.Username, "un", "", "Username for exhentai")
 	flag.StringVar(&config.UserPassword, "up", "", "User password for exhentai")
+	flag.IntVar(&config.Workers, "w", 1, "Number of workers used for downloading")
 }
 
 func download(URL string) {

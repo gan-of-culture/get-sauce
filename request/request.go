@@ -48,6 +48,7 @@ func (l LogRedirects) RoundTrip(req *http.Request) (resp *http.Response, err err
 func DefaultClient() *http.Client {
 	return &http.Client{
 		Transport: LogRedirects{&http.Transport{
+			Proxy:               http.ProxyFromEnvironment,
 			DisableCompression:  true,
 			TLSHandshakeTimeout: 10 * time.Second,
 			TLSClientConfig: &tls.Config{
@@ -58,7 +59,7 @@ func DefaultClient() *http.Client {
 			IdleConnTimeout: 5 * time.Second,
 			//DisableKeepAlives:   true,
 		}},
-		Timeout: 10 * time.Minute,
+		Timeout: time.Duration(config.Timeout) * time.Minute,
 	}
 }
 
