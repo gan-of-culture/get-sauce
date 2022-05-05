@@ -238,6 +238,11 @@ get-sauce -i https://hentai-moon.com/videos/285/isekai-harem-monogatari-ep-1/
 
 --------------------------------------------------------------------------------
 
+ -T             Set a custom timeout (in minutes) for the http.client
+
+ get-sauce -T 15 http...
+
+--------------------------------------------------------------------------------
  -w             Number of download workers
 
  get-sauce -w 4 http...
