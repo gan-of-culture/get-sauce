@@ -18,6 +18,7 @@ type quality struct {
 }
 
 const site = "https://hentaistream.moe/"
+const referer = "https://01cdn.hentaistream.moe/"
 
 var players = map[string][]quality{
 	"player.html": {
@@ -147,7 +148,7 @@ func extractData(URL string) (*static.Data, error) {
 
 	streams := make(map[string]*static.Stream)
 	for i, quality := range players[matchedBase64CDNURL[1]] {
-		size, err := request.Size(fmt.Sprintf("%s%s", baseDownloadURL, quality.codec), site)
+		size, err := request.Size(fmt.Sprintf("%s%s", baseDownloadURL, quality.codec), referer+matchedBase64CDNURL[1])
 		if err != nil {
 			return nil, err
 		}
