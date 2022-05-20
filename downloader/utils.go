@@ -1,7 +1,6 @@
 package downloader
 
 import (
-	"bufio"
 	"fmt"
 	"os"
 	"os/exec"
@@ -166,29 +165,17 @@ func mergeMediaFiles(files []string, outFile string) error {
 func sanitizeVTT(fileURI string) error {
 	// sometimes VTT contains weird blank lines that will cause an issue if you try to merge it later with ffmpeg
 	// this routine removes said lines
-	f, err := os.Open(fileURI)
+	// it also contains text separated from other text by blank lines this also causes issues with ffmpeg later
+	fileContent, err := os.ReadFile(fileURI)
 	if err != nil {
 		return err
 	}
 
-	re := regexp.MustCompile(`\d\d:\d\d:\d\d.\d{3} --> \d\d:\d\d:\d\d.\d{3}`)
-	var checkNextLine bool
-
-	var out string
-	scanner := bufio.NewScanner(f)
-	for scanner.Scan() {
-		if checkNextLine {
-			checkNextLine = false
-			if scanner.Text() == "" {
-				continue
-			}
-		}
-		if re.MatchString(scanner.Text()) {
-			checkNextLine = true
-		}
-		out = out + scanner.Text() + "\n"
+	re := regexp.MustCompile(`((?:\d{2,}:)?\d\d:\d\d\.\d{3} --> (?:\d{2,}:)?\d\d:\d\d\.\d{3})\s*((?:\n[^\n]+)+)`) // 1=TimeStamp 2=Text
+	out := "WEBVTT"
+	for _, match := range re.FindAllStringSubmatch(string(fileContent), -1) {
+		out = fmt.Sprintf("%s\n\n%s\n%s", out, match[1], strings.TrimSpace(match[2]))
 	}
-	f.Close()
 
 	return os.WriteFile(fileURI, []byte(out), 0644)
 }
