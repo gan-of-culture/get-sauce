@@ -183,6 +183,43 @@ func PostAsBytesWithHeaders(URL string, headers map[string]string) ([]byte, erro
 	return body, nil
 }
 
+// GetWithCookies content as string
+func GetWithCookies(URL string, jar *Myjar) (string, error) {
+	client := DefaultClient()
+
+	req, err := http.NewRequest(http.MethodGet, URL, nil)
+	if err != nil {
+		return "", errors.New("Request can't be created")
+	}
+
+	for k, v := range config.FakeHeaders {
+		req.Header.Set(k, v)
+	}
+
+	req.Header.Set("Referer", URL)
+
+	for _, cookie := range jar.Cookies(req.URL) {
+		req.AddCookie(cookie)
+	}
+
+	resp, err := client.Do(req)
+	if err != nil {
+		return "", err
+	}
+	defer resp.Body.Close()
+
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		if err != io.ErrUnexpectedEOF {
+			return "", err
+		}
+	}
+
+	jar.SetCookies(req.URL, resp.Cookies())
+
+	return string(body), nil
+}
+
 // Headers return the HTTP Headers of the URL
 func Headers(URL, refer string) (http.Header, error) {
 	headers := map[string]string{
@@ -249,6 +286,10 @@ func GetSizeFromHeaders(headers *http.Header) (int64, error) {
 // Myjar of client
 type Myjar struct {
 	Jar map[string][]*http.Cookie
+}
+
+func (p *Myjar) New() {
+	p.Jar = make(map[string][]*http.Cookie)
 }
 
 // SetCookies of client
