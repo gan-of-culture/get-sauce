@@ -1,6 +1,5 @@
 package hentaiguru
 
-/*
 import (
 	"testing"
 
@@ -60,4 +59,3 @@ func TestExtract(t *testing.T) {
 		})
 	}
 }
-*/
