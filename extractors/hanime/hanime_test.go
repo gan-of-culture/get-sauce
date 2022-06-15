@@ -14,12 +14,12 @@ func TestParseURL(t *testing.T) {
 	}{
 		{
 			Name: "Single Episode hanime.io/",
-			URL:  "https://hanime.io/hentai/torokase-orgasm-1/",
+			URL:  "https://hanime.io/watch/torokase-orgasm-the-animation-episode-1/",
 			Want: 1,
 		}, {
-			Name: "Overview hanime.io/",
-			URL:  "https://hanime.io/genre/adventure/",
-			Want: 35,
+			Name: "Series",
+			URL:  "https://hanime.io/hentai/kyonyuu-elf-oyako-saimin/",
+			Want: 2,
 		},
 	}
 	for _, tt := range tests {
@@ -40,7 +40,7 @@ func TestExtract(t *testing.T) {
 		{
 			Name: "Single Episode",
 			Args: test.Args{
-				URL:     "https://hanime.io/hentai/torokase-orgasm-1/",
+				URL:     "https://hanime.io/watch/torokase-orgasm-the-animation-episode-1/",
 				Title:   "Torokase Orgasm The Animation Episode 1",
 				Quality: "1920x1080",
 				Size:    485130240,
