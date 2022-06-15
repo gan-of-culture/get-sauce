@@ -1,11 +1,8 @@
 package hanime
 
 import (
-	"regexp"
-	"strings"
-
+	"github.com/gan-of-culture/get-sauce/extractors/animestream"
 	"github.com/gan-of-culture/get-sauce/extractors/htstreaming"
-	"github.com/gan-of-culture/get-sauce/request"
 	"github.com/gan-of-culture/get-sauce/static"
 	"github.com/gan-of-culture/get-sauce/utils"
 )
@@ -38,17 +35,7 @@ func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 }
 
 func parseURL(URL string) []string {
-	if strings.HasPrefix(URL, "https://hanime.io/hentai/") {
-		return []string{URL}
-	}
-
-	htmlString, err := request.Get(URL)
-	if err != nil {
-		return nil
-	}
-
-	re := regexp.MustCompile(`https://hanime.io/hentai/[^"]*`)
-	return re.FindAllString(htmlString, -1)
+	return animestream.ParseURL(URL, site)
 }
 
 func extractData(URL string) (*static.Data, error) {
