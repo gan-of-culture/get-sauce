@@ -36,7 +36,6 @@ import (
 	"github.com/gan-of-culture/get-sauce/extractors/iwara"
 	"github.com/gan-of-culture/get-sauce/extractors/koushoku"
 	"github.com/gan-of-culture/get-sauce/extractors/latesthentai"
-	"github.com/gan-of-culture/get-sauce/extractors/manhwa18"
 	"github.com/gan-of-culture/get-sauce/extractors/miohentai"
 	"github.com/gan-of-culture/get-sauce/extractors/muchohentai"
 	"github.com/gan-of-culture/get-sauce/extractors/nhentai"
@@ -80,7 +79,6 @@ func init() {
 		"hanime.io":                 hanime.New(),
 		"hanime.tv":                 hanimetv.New(),
 		"hentai.guru":               hentaiguru.New(),
-		"hentai.pro":                htstreamingExtactor,
 		"hentai.tv":                 nhgroupExtractor,
 		"hentai-moon.com":           hentaimoon.New(),
 		"hentai2read.com":           hentai2read.New(),
@@ -110,7 +108,6 @@ func init() {
 		"imhentai.xxx":              htdoujinExtractor,
 		"koushoku.org":              koushoku.New(),
 		"latesthentai.com":          latesthentai.New(),
-		"manhwa18.tv":               manhwa18.New(),
 		"miohentai.com":             miohentai.New(),
 		"muchohentai.com":           muchohentai.New(),
 		"nhentai.net":               nhentai.New(),
