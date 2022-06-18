@@ -11,9 +11,9 @@ type URL struct {
 // Stream Struct of stream
 type Stream struct {
 	// Type of stream audio or video
-	Type DataType
+	Type DataType `json:"type"`
 	// URLs that together are the stream
-	URLs []*URL `json:"url"`
+	URLs []*URL `json:"urls"`
 	// Quality e.g. 2160p, 1080p, 720p ... or 1050x1200 or codec
 	Quality string `json:"quality"`
 	// Size of stream - fill this if it is a big blob of data and you want to make use of concurrent downloading
@@ -61,7 +61,7 @@ type Data struct {
 	Streams map[string]*Stream `json:"streams"`
 
 	// Caption this includes (CC, OC or Subtitles)
-	Captions []*Caption
+	Captions []*Caption `json:"captions"`
 
 	// URL that was supplied to the scraper
 	URL string `json:"sourceUrl"`
