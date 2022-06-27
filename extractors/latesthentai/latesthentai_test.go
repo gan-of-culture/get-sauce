@@ -25,7 +25,7 @@ func TestParseURL(t *testing.T) {
 			// its hard to make a test for the other groups since the number of episodes always changes
 			Name: "Studio",
 			URL:  "https://latesthentai.com/studio/new-generation/",
-			Want: 32,
+			Want: 33,
 		},
 	}
 	for _, tt := range tests {
