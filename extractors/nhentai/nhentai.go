@@ -2,7 +2,6 @@ package nhentai
 
 import (
 	"encoding/json"
-	"errors"
 	"fmt"
 	"regexp"
 	"strconv"
@@ -13,42 +12,47 @@ import (
 	"github.com/gan-of-culture/get-sauce/utils"
 )
 
-type tag struct {
-	ID    int    `json:"id"`
-	Type  string `json:"type"`
-	Name  string `json:"name"`
-	URL   string `json:"url"`
-	Count int    `json:"count"`
-}
-
-type page struct {
-	T string `json:"t"` //j=jpg p=png
-	W int    `json:"w"`
-	H int    `json:"h"`
-}
-
-type images struct {
-	Pages      []page `json:"pages"`
-	Cover      page   `json:"cover"`
-	Thumbnails page   `json:"thumbnail"`
-}
-
 type gallery struct {
-	ID           json.RawMessage   `json:"id"` //can be string or int
-	MediaID      string            `json:"media_id"`
-	Title        map[string]string `json:"title"`
-	Images       images            `json:"images"`
-	Scanlator    string            `json:"scanlator"`
-	UploadDate   int               `json:"upload_date"`
-	Tags         []tag             `json:"tags"`
-	NumPages     int               `json:"num_pages"`
-	NumFavorites int               `json:"num_favorites"`
+	ID      int    `json:"id"`
+	MediaID string `json:"media_id"`
+	Title   struct {
+		English  string `json:"english"`
+		Japanese string `json:"japanese"`
+		Pretty   string `json:"pretty"`
+	} `json:"title"`
+	Images struct {
+		Pages []struct {
+			T string `json:"t"` //p=png j=jpg
+			W int    `json:"w"`
+			H int    `json:"h"`
+		} `json:"pages"`
+		Cover struct {
+			T string `json:"t"`
+			W int    `json:"w"`
+			H int    `json:"h"`
+		} `json:"cover"`
+		Thumbnail struct {
+			T string `json:"t"`
+			W int    `json:"w"`
+			H int    `json:"h"`
+		} `json:"thumbnail"`
+	} `json:"images"`
+	Scanlator  string `json:"scanlator"`
+	UploadDate int    `json:"upload_date"`
+	Tags       []struct {
+		ID    int    `json:"id"`
+		Type  string `json:"type"`
+		Name  string `json:"name"`
+		URL   string `json:"url"`
+		Count int    `json:"count"`
+	} `json:"tags"`
+	NumPages     int `json:"num_pages"`
+	NumFavorites int `json:"num_favorites"`
 }
 
 const site = "https://nhentai.net"
 const cdn = "https://i.nhentai.net/galleries/"
-
-var reJSONString = regexp.MustCompile(`("{\\u0022[\s\S]*?}")`)
+const api = "https://nhentai.net/api/gallery/"
 
 type extractor struct{}
 
@@ -117,25 +121,20 @@ func parseURL(URL string) ([]string, string) {
 }
 
 func extractData(id string, page string) (*static.Data, error) {
-	URL := fmt.Sprintf("https://nhentai.net/g/%s/", id)
-	htmlString, err := request.Get(URL)
+	URL := api + id
+
+	apiRes, err := request.Get(URL)
 	if err != nil {
 		return nil, err
 	}
 
-	if utils.GetH1(&htmlString, 0) == "429 Too Many Requests" {
+	if utils.GetH1(&apiRes, 0) == "429 Too Many Requests" {
 		time.Sleep(250 * time.Millisecond)
-		htmlString, _ = request.Get(URL)
+		apiRes, _ = request.Get(URL)
 	}
-
-	matchedJsonString := reJSONString.FindStringSubmatch(htmlString)
-	if len(matchedJsonString) < 2 {
-		return nil, errors.New("invalid JSON for")
-	}
-	jsonString, _ := strconv.Unquote(matchedJsonString[1])
 
 	gData := &gallery{}
-	err = json.Unmarshal([]byte(jsonString), &gData)
+	err = json.Unmarshal([]byte(apiRes), &gData)
 	if err != nil {
 		return nil, err
 	}
@@ -151,9 +150,14 @@ func extractData(id string, page string) (*static.Data, error) {
 
 	URLs := []*static.URL{}
 	for _, p := range pages {
-		ext := "jpg"
-		if gData.Images.Pages[p-1].T == "p" {
+		ext := gData.Images.Pages[p-1].T
+		switch ext {
+		case "j":
+			ext = "jpg"
+		case "p":
 			ext = "png"
+		default:
+			ext = "gif"
 		}
 		URLs = append(URLs, &static.URL{
 			URL: fmt.Sprintf("%s%s/%d.%s", cdn, gData.MediaID, p, ext),
@@ -161,15 +165,10 @@ func extractData(id string, page string) (*static.Data, error) {
 		})
 	}
 
-	title, ok := gData.Title["pretty"]
-	if !ok {
-		return nil, errors.New("cannot find title for")
-	}
-
 	return &static.Data{
 		Site:  site,
-		Title: title,
-		Type:  "image",
+		Title: gData.Title.Pretty,
+		Type:  static.DataTypeImage,
 		Streams: map[string]*static.Stream{
 			"0": {
 				Type: static.DataTypeImage,
