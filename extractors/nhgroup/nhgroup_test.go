@@ -22,6 +22,15 @@ func TestParseURL(t *testing.T) {
 			Want: 4,
 		},
 		{
+			Name: "Single Episode hanime.io/",
+			URL:  "https://hanime.io/soshite-watashi-wa-sensei-ni-episode-1/",
+			Want: 1,
+		}, {
+			Name: "Series",
+			URL:  "https://hanime.io/hentai/kyonyuu-onna-senshi-dogeza-saimin/",
+			Want: 2,
+		},
+		{
 			Name: "Single Episode hentaihaven.com",
 			URL:  "https://hentaihaven.com/soshite-watashi-wa-sensei-ni-episode-1/",
 			Want: 1,
@@ -84,7 +93,17 @@ func TestExtract(t *testing.T) {
 				Quality: "1920x1080",
 				Size:    0,
 			},
-		}, {
+		},
+		{
+			Name: "Single Episode hanime.io",
+			Args: test.Args{
+				URL:     "https://hanime.io/soshite-watashi-wa-sensei-ni-episode-1/",
+				Title:   "Soshite Watashi wa Sensei ni… Episode 1",
+				Quality: "1920x1080",
+				Size:    0,
+			},
+		},
+		{
 			Name: "Single Episode hentaihaven.com",
 			Args: test.Args{
 				URL:     "https://hentaihaven.com/usamimi-bouken-tan-sekuhara-shinagara-sekai-o-sukue-episode-3/",
