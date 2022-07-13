@@ -13,13 +13,13 @@ func TestParseURL(t *testing.T) {
 		Want int
 	}{
 		{
-			Name: "Single Episode hanime.io/",
-			URL:  "https://hanime.io/watch/torokase-orgasm-the-animation-episode-1/",
+			Name: "Single Episode",
+			URL:  "https://hanime.tv/videos/hentai/inkou-kyoushi-no-saimin-seikatsu-shidouroku-2",
 			Want: 1,
 		}, {
-			Name: "Series",
-			URL:  "https://hanime.io/hentai/kyonyuu-elf-oyako-saimin/",
-			Want: 2,
+			Name: "Overview",
+			URL:  "https://hanime.tv/browse/tags/fantasy",
+			Want: 24,
 		},
 	}
 	for _, tt := range tests {
@@ -40,10 +40,10 @@ func TestExtract(t *testing.T) {
 		{
 			Name: "Single Episode",
 			Args: test.Args{
-				URL:     "https://hanime.io/watch/torokase-orgasm-the-animation-episode-1/",
-				Title:   "Torokase Orgasm The Animation Episode 1",
-				Quality: "1920x1080",
-				Size:    485130240,
+				URL:     "https://hanime.tv/videos/hentai/inkou-kyoushi-no-saimin-seikatsu-shidouroku-2",
+				Title:   "Inkou Kyoushi no Saimin Seikatsu Shidouroku 2",
+				Quality: "720p; 1280 x 720",
+				Size:    115000000,
 			},
 		},
 	}
