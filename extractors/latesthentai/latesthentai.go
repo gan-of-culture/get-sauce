@@ -12,8 +12,8 @@ import (
 
 const site = "https://latesthentai.com/"
 
-var reEpisodeURL = regexp.MustCompile(site + `[^/]*?episode-\d+/`)
-var reParseURLShow = regexp.MustCompile(site + `hentai/[\w-%]+/`)
+var reEpisodeURL = regexp.MustCompile(site + `watch/[^"]+`)
+var reParseURLShow = regexp.MustCompile(site + `anime/[\w-%]+`)
 var reVideoURL = regexp.MustCompile(`[^"]+htstreaming[^"]+`)
 
 type extractor struct{}
@@ -48,8 +48,8 @@ func parseURL(URL string) []string {
 		return nil
 	}
 
-	if strings.Contains(URL, "/hentai/") {
-		htmlString = strings.Split(htmlString, `<div class="bixbox"`)[0]
+	if strings.Contains(URL, "/anime/") {
+		htmlString = strings.Split(htmlString, `<div class="eplister"`)[0]
 		return utils.RemoveAdjDuplicates(reEpisodeURL.FindAllString(htmlString, -1))
 	}
 
