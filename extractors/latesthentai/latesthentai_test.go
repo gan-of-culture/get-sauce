@@ -14,17 +14,17 @@ func TestParseURL(t *testing.T) {
 	}{
 		{
 			Name: "Single Episode Eng Sub",
-			URL:  "https://latesthentai.com/hajimete-no-hitozuma-episode-1/",
+			URL:  "https://latesthentai.com/watch/hajimete-no-hitozumaepisode-1-sub",
 			Want: 1,
 		}, {
 			Name: "Series",
-			URL:  "https://latesthentai.com/hentai/hajimete-no-hitozuma/",
+			URL:  "https://latesthentai.com/anime/hajimete-no-hitozuma",
 			Want: 4,
 		}, {
 			// this is the same logic for all extensions that group shows e.g. /genres/
 			// its hard to make a test for the other groups since the number of episodes always changes
 			Name: "Studio",
-			URL:  "https://latesthentai.com/studio/new-generation/",
+			URL:  "https://latesthentai.com/studio/new-generation",
 			Want: 33,
 		},
 	}
@@ -46,8 +46,8 @@ func TestExtract(t *testing.T) {
 		{
 			Name: "Single Episode",
 			Args: test.Args{
-				URL:     "https://latesthentai.com/hajimete-no-hitozuma-episode-1/",
-				Title:   "Hajimete no Hitozuma Episode 1",
+				URL:     "https://latesthentai.com/watch/hajimete-no-hitozumaepisode-1-sub",
+				Title:   "Hajimete no Hitozuma - Episode 1 (Sub)",
 				Quality: "1280x720",
 				Size:    0,
 			},
