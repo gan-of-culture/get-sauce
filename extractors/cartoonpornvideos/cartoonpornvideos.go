@@ -11,7 +11,7 @@ import (
 
 const site = "https://www.cartoonpornvideos.com/"
 
-var reEpisodeURL = regexp.MustCompile(`https://www\.cartoonpornvideos\.com/(?:click/\d-\d/)*video/.+\w{11}\.html`)
+var reEpisodeURL = regexp.MustCompile(`https://www\.cartoonpornvideos\.com/(?:click/\d-\d+/)*video/.+\w{11}\.html`)
 var reHLSURL = regexp.MustCompile(`https://hls\.cartoonpornvideos\.com/[^"]+`)
 
 type extractor struct{}
