@@ -2,11 +2,9 @@ package jwplayer
 
 import (
 	"testing"
-
-	"github.com/gan-of-culture/get-sauce/test"
 )
 
-func TestExtract(t *testing.T) {
+/*func TestExtract(t *testing.T) {
 	tests := []struct {
 		Name string
 		Args test.Args
@@ -28,7 +26,7 @@ func TestExtract(t *testing.T) {
 			test.Check(t, tt.Args, data[0])
 		})
 	}
-}
+}*/
 
 func TestFindJWPlayerURL(t *testing.T) {
 	tests := []struct {
