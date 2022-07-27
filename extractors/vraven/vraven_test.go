@@ -30,7 +30,7 @@ func TestParseURL(t *testing.T) {
 			URL:  "https://hentaistream.tv/watch/kyonyuu-elf-oyako-saimin/",
 			Want: 2,
 		},
-		{
+		/*{
 			Name: "Single Episode hentaistream.io",
 			URL:  "https://hentaistream.io/watch/kyonyuu-elf-oyako-saimin/episode-1/",
 			Want: 1,
@@ -38,7 +38,7 @@ func TestParseURL(t *testing.T) {
 			Name: "Series hentaistream.io",
 			URL:  "https://hentaistream.io/watch/kyonyuu-elf-oyako-saimin/",
 			Want: 2,
-		},
+		},*/
 	}
 	for _, tt := range tests {
 		t.Run(tt.Name, func(t *testing.T) {
@@ -63,7 +63,7 @@ func TestExtract(t *testing.T) {
 				Quality: "1920x1080",
 				Size:    135890160,
 			},
-		}, {
+		}, /*{
 			Name: "Single Episode hentaistream.io",
 			Args: test.Args{
 				URL:     "https://hentaistream.io/watch/onaho-kyoushitsu-joshi-zenin-ninshin-keikaku-the-animation/episode-1/",
@@ -71,7 +71,7 @@ func TestExtract(t *testing.T) {
 				Quality: "1920x1080",
 				Size:    275457600,
 			},
-		}, {
+		},*/{
 			Name: "Single Episode hentaistream.tv",
 			Args: test.Args{
 				URL:     "https://hentaistream.tv/watch/papa-katsu/episode-1/",
