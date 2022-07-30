@@ -3,6 +3,7 @@ package nhgroup
 import (
 	"log"
 	"regexp"
+	"sort"
 	"strings"
 
 	"github.com/gan-of-culture/get-sauce/extractors/animestream"
@@ -62,12 +63,15 @@ func parseURL(URL string) []string {
 		matchedURLs = animestream.ParseURLwoSite(URL)
 	}
 
+	sort.Strings(matchedURLs)
+	matchedURLs = utils.RemoveAdjDuplicates(matchedURLs)
+
 	out := []string{}
 	for _, u := range matchedURLs {
 		out = append(out, strings.Trim(u, `"`))
 	}
 
-	return utils.RemoveAdjDuplicates(out)
+	return out
 }
 
 // ExtractData of a nhplayer

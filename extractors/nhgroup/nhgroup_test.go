@@ -27,7 +27,7 @@ func TestParseURL(t *testing.T) {
 			Want: 1,
 		}, {
 			Name: "Series",
-			URL:  "https://hanime.io/hentai/kyonyuu-onna-senshi-dogeza-saimin/",
+			URL:  "https://hanime.io/anime/kyonyuu-onna-senshi-dogeza-saimin",
 			Want: 2,
 		},
 		{
