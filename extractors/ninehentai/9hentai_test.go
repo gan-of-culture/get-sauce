@@ -28,7 +28,7 @@ func TestParseURL(t *testing.T) {
 			Want: 18,
 		}, {
 			Name: "Complex search",
-			in:   "https://9hentai.to/t/71/#~(text~'~page~0~sort~0~pages~(range~(~0~2000))~tag~(text~'AN~type~1~tags~(~)~items~(included~(~(id~71~name~'Alice~description~null~type~5~books_count~25)~(id~30~name~'Anal~description~null~type~1))~excluded~(~))))#",
+			in:   "yo/t/71/#~(text~'~page~0~sort~0~pages~(range~(~0~2000))~tag~(text~'AN~type~1~tags~(~)~items~(included~(~(id~71~name~'Alice~description~null~type~5~books_count~25)~(id~30~name~'Anal~description~null~type~1))~excluded~(~))))#",
 			Want: 18,
 		},
 	}
