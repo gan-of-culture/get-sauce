@@ -23,7 +23,7 @@ func TestParseURL(t *testing.T) {
 		},
 		{
 			Name: "Single Episode hanime.io/",
-			URL:  "https://hanime.io/soshite-watashi-wa-sensei-ni-episode-1/",
+			URL:  "https://hanime.io/watch/harem-cultepisode-2-sub",
 			Want: 1,
 		}, {
 			Name: "Series",
@@ -97,9 +97,9 @@ func TestExtract(t *testing.T) {
 		{
 			Name: "Single Episode hanime.io",
 			Args: test.Args{
-				URL:     "https://hanime.io/soshite-watashi-wa-sensei-ni-episode-1/",
-				Title:   "Soshite Watashi wa Sensei ni… Episode 1",
-				Quality: "1920x1080",
+				URL:     "https://hanime.io/watch/harem-cultepisode-2-sub",
+				Title:   "Harem Cult Episode 2",
+				Quality: "1280x720",
 				Size:    0,
 			},
 		},

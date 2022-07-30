@@ -22,7 +22,7 @@ func TestParseURL(t *testing.T) {
 			Want: 1,
 		}, {
 			Name: "Tag",
-			URL:  "https://koushoku.org/tags/huge-boobs",
+			URL:  "https://koushoku.org/tags/box-set",
 			Want: 25,
 		},
 	}
