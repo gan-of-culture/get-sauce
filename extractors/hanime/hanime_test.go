@@ -1,4 +1,4 @@
-package koushoku
+package hanime
 
 import (
 	"testing"
@@ -13,17 +13,13 @@ func TestParseURL(t *testing.T) {
 		Want int
 	}{
 		{
-			Name: "Single Gallery",
-			URL:  "https://koushoku.org/archive/8411/intercourse-inn",
+			Name: "Single Episode",
+			URL:  "https://hanime.tv/videos/hentai/inkou-kyoushi-no-saimin-seikatsu-shidouroku-2",
 			Want: 1,
 		}, {
-			Name: "Single Page",
-			URL:  "https://koushoku.org/archive/8411/intercourse-inn/10",
-			Want: 1,
-		}, {
-			Name: "Tag",
-			URL:  "https://koushoku.org/tags/box-set",
-			Want: 25,
+			Name: "Overview",
+			URL:  "https://hanime.tv/browse/tags/fantasy",
+			Want: 24,
 		},
 	}
 	for _, tt := range tests {
@@ -42,12 +38,12 @@ func TestExtract(t *testing.T) {
 		Args test.Args
 	}{
 		{
-			Name: "Single Gallery",
+			Name: "Single Episode",
 			Args: test.Args{
-				URL:     "https://koushoku.org/archive/7915/no-virgins-allowed-the-time-a-creepy-otaku-like-me-helped-the-class-gyarus-lose-their-virginity",
-				Title:   "No Virgins Allowed - The Time a Creepy Otaku Like Me Helped the Class Gyarus Lose Their Virginity",
-				Quality: "",
-				Size:    99300000,
+				URL:     "https://hanime.tv/videos/hentai/inkou-kyoushi-no-saimin-seikatsu-shidouroku-2",
+				Title:   "Inkou Kyoushi no Saimin Seikatsu Shidouroku 2",
+				Quality: "720p; 1280 x 720",
+				Size:    115000000,
 			},
 		},
 	}

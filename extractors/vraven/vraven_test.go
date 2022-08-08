@@ -30,15 +30,6 @@ func TestParseURL(t *testing.T) {
 			URL:  "https://hentaistream.tv/watch/kyonyuu-elf-oyako-saimin/",
 			Want: 2,
 		},
-		{
-			Name: "Single Episode hentaistream.io",
-			URL:  "https://hentaistream.io/watch/kyonyuu-elf-oyako-saimin/episode-1/",
-			Want: 1,
-		}, {
-			Name: "Series hentaistream.io",
-			URL:  "https://hentaistream.io/watch/kyonyuu-elf-oyako-saimin/",
-			Want: 2,
-		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.Name, func(t *testing.T) {
@@ -62,14 +53,6 @@ func TestExtract(t *testing.T) {
 				Title:   "Showtime! Uta no Onee-san Datte Shitai - Episode 3",
 				Quality: "1920x1080",
 				Size:    135890160,
-			},
-		}, {
-			Name: "Single Episode hentaistream.io",
-			Args: test.Args{
-				URL:     "https://hentaistream.io/watch/onaho-kyoushitsu-joshi-zenin-ninshin-keikaku-the-animation/episode-1/",
-				Title:   "Onaho Kyoushitsu: Joshi Zenin Ninshin Keikaku The Animation - Episode 1",
-				Quality: "1920x1080",
-				Size:    275457600,
 			},
 		}, {
 			Name: "Single Episode hentaistream.tv",

@@ -19,7 +19,6 @@ import (
 	"github.com/gan-of-culture/get-sauce/extractors/hentaidude"
 	"github.com/gan-of-culture/get-sauce/extractors/hentaiff"
 	"github.com/gan-of-culture/get-sauce/extractors/hentaifoundry"
-	"github.com/gan-of-culture/get-sauce/extractors/hentaiguru"
 	"github.com/gan-of-culture/get-sauce/extractors/hentaihavenred"
 	"github.com/gan-of-culture/get-sauce/extractors/hentaihd"
 	"github.com/gan-of-culture/get-sauce/extractors/hentaimama"
@@ -32,7 +31,6 @@ import (
 	"github.com/gan-of-culture/get-sauce/extractors/hitomi"
 	"github.com/gan-of-culture/get-sauce/extractors/htdoujin"
 	"github.com/gan-of-culture/get-sauce/extractors/iwara"
-	"github.com/gan-of-culture/get-sauce/extractors/koushoku"
 	"github.com/gan-of-culture/get-sauce/extractors/latesthentai"
 	"github.com/gan-of-culture/get-sauce/extractors/miohentai"
 	"github.com/gan-of-culture/get-sauce/extractors/muchohentai"
@@ -73,9 +71,7 @@ func init() {
 		"ecchi.iwara.tv":            iwara.New(),
 		"exhentai.org":              exhentai.New(),
 		"haho.moe":                  haho.New(),
-		"hanime.io":                 nhgroupExtractor,
 		"hanime.tv":                 hanime.New(),
-		"hentai.guru":               hentaiguru.New(),
 		"hentai.tv":                 nhgroupExtractor,
 		"hentai-moon.com":           hentaimoon.New(),
 		"hentai2read.com":           hentai2read.New(),
@@ -95,7 +91,6 @@ func init() {
 		"hentaipulse.com":           hentaipulse.New(),
 		"hentairox.com":             htdoujinExtractor,
 		"hentaistream.moe":          hentaistream.New(),
-		"hentaistream.io":           vravenExtractor,
 		"hentaistream.tv":           vravenExtractor,
 		"hentaistream.xxx":          nhgroupExtractor,
 		"hentaivideos.net":          hentaivideos.New(),
@@ -103,7 +98,6 @@ func init() {
 		"hentaiyes.com":             hentaiyes.New(),
 		"hitomi.la":                 hitomi.New(),
 		"imhentai.xxx":              htdoujinExtractor,
-		"koushoku.org":              koushoku.New(),
 		"latesthentai.com":          latesthentai.New(),
 		"miohentai.com":             miohentai.New(),
 		"muchohentai.com":           muchohentai.New(),

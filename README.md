@@ -267,9 +267,7 @@ The following links will direct you to adult content. Please keep that in mind!
 | [ecchi.iwara.tv](https://ecchi.iwara.tv/)                                                 | :heavy_check_mark: |:heavy_check_mark:|
 | [exhentai.org*](http://exhentai.org/)                                                     | :heavy_check_mark: |        ?         |
 | [haho.moe (1080p, 720p, 480p, 360p)](https://haho.moe)                                    |         ?          |:heavy_check_mark:|
-| [hanime.io (1080p, 720p, 480p, 360p)](https://hanime.io)                                  |         ?          |:heavy_check_mark:|
 | [hanime.tv (720p, 480p, 360p)](https://hanime.tv)                                         |         ?          |:heavy_check_mark:|
-| [hentai.guru (1080p, 720p, 480p)](https://hentai.guru/)                                   |         ?          |:heavy_check_mark:|
 | [hentai.tv (1080p, 720p, 480p, 360p)](https://hentai.tv/)                                 |         ?          |:heavy_check_mark:|
 | [hentai-moon.com (720p, 480p)](https://hentai-moon.com)                                   |         ?          |:heavy_check_mark:|
 | [hentai2read.com](https://hentai2read.com)                                                | :heavy_check_mark: |        ?         |
@@ -288,7 +286,6 @@ The following links will direct you to adult content. Please keep that in mind!
 | [hentaipulse.com(720p, 420p)](https://hentaipulse.com)                                    |         ?          |:heavy_check_mark:|
 | [hentairox.com](https://hentairox.com)                                                    | :heavy_check_mark: |         ?        |
 | [hentais.tube (720p, 480p, 360p)](https://www.hentais.tube/)                              |         ?          |:heavy_check_mark:|
-| [hentaistream.io (1080p, 720p, 480p, 360p)](https://hentaistream.io)                      |         ?          |:heavy_check_mark:|
 | [hentaistream.moe (2160p, 1080p, 480p)](https://hentaistream.moe/)                        |         ?          |:heavy_check_mark:|
 | [hentaistream.tv (1080p, 720p, 480p, 360p)](https://hentaistream.tv)                      |         ?          |:heavy_check_mark:|
 | [hentaistream.xxx (1080p, 720, 480p, 360p)](https://hentaistream.xxx/)                    |         ?          |:heavy_check_mark:|
@@ -297,7 +294,6 @@ The following links will direct you to adult content. Please keep that in mind!
 | [hentaiyes.com (1080p, 720p, 480p, 360p)](https://hentaiyes.com/)                         |         ?          |:heavy_check_mark:|
 | [hitomi.la](https://hitomi.la/)                                                           | :heavy_check_mark: |        ?         |
 | [imhentai.com](https://imhentai.xxx)                                                      | :heavy_check_mark: |        ?         |
-| [koushoku.org](https://koushoku.org/)                                                     | :heavy_check_mark: |        ?         |
 | [konachan.com](https://konachan.com/post?tags=)                                           | :heavy_check_mark: |        ?         |
 | [latesthentai.com (1080p, 720p, 480p, 360p)](https://latesthentai.com/)                   |         ?          |:heavy_check_mark:|
 | [miohentai.com (1080p, 720p, 480p)](https://miohentai.com/)                               | :heavy_check_mark: |:heavy_check_mark:|

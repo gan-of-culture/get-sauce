@@ -22,15 +22,6 @@ func TestParseURL(t *testing.T) {
 			Want: 4,
 		},
 		{
-			Name: "Single Episode hanime.io/",
-			URL:  "https://hanime.io/watch/harem-cultepisode-2-sub",
-			Want: 1,
-		}, {
-			Name: "Series",
-			URL:  "https://hanime.io/anime/kyonyuu-onna-senshi-dogeza-saimin",
-			Want: 2,
-		},
-		{
 			Name: "Single Episode hentaihaven.com",
 			URL:  "https://hentaihaven.com/soshite-watashi-wa-sensei-ni-episode-1/",
 			Want: 1,
@@ -91,15 +82,6 @@ func TestExtract(t *testing.T) {
 				URL:     "https://animeidhentai.com/36364/usamimi-bouken-tan-sekuhara-shinagara-sekai-o-sukue-episode-3/",
 				Title:   "Usamimi Bouken-Tan Sekuhara Shinagara Sekai O Sukue Episode 3",
 				Quality: "1920x1080",
-				Size:    0,
-			},
-		},
-		{
-			Name: "Single Episode hanime.io",
-			Args: test.Args{
-				URL:     "https://hanime.io/watch/harem-cultepisode-2-sub",
-				Title:   "Harem Cult Episode 2",
-				Quality: "1280x720",
 				Size:    0,
 			},
 		},
