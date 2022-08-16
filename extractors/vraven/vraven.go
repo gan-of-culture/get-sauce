@@ -13,7 +13,7 @@ import (
 )
 
 var site string
-var reJWPlayerURL = regexp.MustCompile(`https://[^/]+.*/player[\./](?:php\?data=)?[^"\s]+`)
+var reJWPlayerURL = regexp.MustCompile(`https://[^/]+[a-zA-Z0-9/-]*/player[\./](?:php\?data=)?[^"\s]+`)
 
 type extractor struct{}
 
