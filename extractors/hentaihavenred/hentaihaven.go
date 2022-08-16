@@ -13,7 +13,6 @@ import (
 const site = "https://hentaihaven.red/"
 
 var reEpisodeURL = regexp.MustCompile(site + `hentai/[\w-%]+/`)
-var reParseURLShow = regexp.MustCompile(site + `watch/[\w-%]+/`)
 
 type extractor struct{}
 
@@ -50,16 +49,8 @@ func parseURL(URL string) []string {
 		return nil
 	}
 
-	if strings.Contains(URL, "/watch/") {
-		htmlString = strings.Split(htmlString, `<div class="bixbox"`)[0]
-		return utils.RemoveAdjDuplicates(reEpisodeURL.FindAllString(htmlString, -1))
-	}
-
-	// contains list of show that need to be derefenced to episode level
-	htmlString = strings.Split(htmlString, `<div id="sidebar">`)[0]
-
 	out := []string{}
-	for _, anime := range reParseURLShow.FindAllString(htmlString, -1) {
+	for _, anime := range reEpisodeURL.FindAllString(htmlString, -1) {
 		out = append(out, parseURL(anime)...)
 	}
 	return out
