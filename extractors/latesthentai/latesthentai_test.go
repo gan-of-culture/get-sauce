@@ -46,8 +46,8 @@ func TestExtract(t *testing.T) {
 		{
 			Name: "Single Episode",
 			Args: test.Args{
-				URL:     "https://latesthentai.com/watch/hajimete-no-hitozumaepisode-1-sub",
-				Title:   "Hajimete no Hitozuma - Episode 1 (Sub)",
+				URL:     "https://latesthentai.com/watch/hajimete-no-hitozuma-episode-1/",
+				Title:   "Hajimete no Hitozuma Episode 1",
 				Quality: "1280x720",
 				Size:    0,
 			},
