@@ -11,6 +11,7 @@ import (
 	"net/textproto"
 	"net/url"
 	"regexp"
+	"strings"
 
 	"github.com/gan-of-culture/get-sauce/request"
 	"github.com/gan-of-culture/get-sauce/static"
@@ -30,8 +31,11 @@ type mediaData struct {
 }
 
 var reJWPlayerURL = regexp.MustCompile(`[^"]+/wp-content/plugins/player-logic/player\.php[^"]+`)
-var reMultiPartParams = regexp.MustCompile(`append\('([abc])', ?'([^']*)`) //1=a : some string b : some other string
-var reAPIURL = regexp.MustCompile(`fetch\(['"]([^'"]+)`)
+var reMultiPartParams = regexp.MustCompile(`append\('([abc])', ?([^\)]*)`) //1=a : some string b : some other string
+var reAPIURL = regexp.MustCompile("fetch\\(['`\"]([^'`\"]+api\\.php)")
+var reVariable = regexp.MustCompile(`\$\{\w+\}`)
+
+const findVarible = `var %s = '([^']+)`
 
 type extractor struct{}
 
@@ -60,6 +64,15 @@ func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 		return nil, static.ErrURLParseFailed
 	}
 
+	if variable := reVariable.FindString(htmlString); variable != "" {
+		variableValue, err := findVariable(variable, &htmlString)
+		if err != nil {
+			return nil, err
+		}
+
+		matchedAPIURL[1] = strings.ReplaceAll(matchedAPIURL[1], variable, variableValue)
+	}
+
 	apiURL := matchedAPIURL[1]
 
 	// --- Begin of multipart creation
@@ -73,6 +86,12 @@ func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 		mimeHeader := textproto.MIMEHeader{}
 		mimeHeader.Set("Content-Disposition", fmt.Sprintf("form-data; name=\"%s\"", v[1]))
 		part, _ := writer.CreatePart(mimeHeader)
+
+		variableValue, _ := findVariable(v[2], &htmlString)
+		if variableValue != "" {
+			v[2] = variableValue
+		}
+
 		part.Write([]byte(v[2]))
 	}
 	writer.Close()
@@ -137,4 +156,18 @@ func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 // FindJWPlayerURL in HTML page
 func FindJWPlayerURL(htmlString *string) string {
 	return reJWPlayerURL.FindString(*htmlString)
+}
+
+func findVariable(variable string, htmlString *string) (string, error) {
+	variable = strings.ReplaceAll(variable, "$", "")
+	variable = strings.ReplaceAll(variable, "{", "")
+	variable = strings.ReplaceAll(variable, "}", "")
+
+	re := regexp.MustCompile(fmt.Sprintf(findVarible, variable))
+	matchedVariable := re.FindStringSubmatch(*htmlString)
+	if len(matchedVariable) < 1 {
+		return "", fmt.Errorf("could not match any for variable '%s'", variable)
+	}
+
+	return matchedVariable[1], nil
 }
