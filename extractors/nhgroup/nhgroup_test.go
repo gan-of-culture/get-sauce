@@ -41,7 +41,7 @@ func TestParseURL(t *testing.T) {
 		}, {
 			Name: "Overview hentaistream.xxx",
 			URL:  "https://hentaistream.xxx/genres/ahegao/",
-			Want: 18,
+			Want: 36,
 		}, {
 			Name: "Single Episode uncensoredhentai.xxx",
 			URL:  "https://uncensoredhentai.xxx/watch/mako-chan-kaihatsu-nikki-episode-1/",
@@ -49,7 +49,7 @@ func TestParseURL(t *testing.T) {
 		}, {
 			Name: "Overview uncensoredhentai.xxx",
 			URL:  "https://uncensoredhentai.xxx/genres/ahegao/",
-			Want: 18,
+			Want: 36,
 		},
 	}
 	for _, tt := range tests {
