@@ -2,7 +2,6 @@ package latesthentai
 
 import (
 	"regexp"
-	"strings"
 
 	"github.com/gan-of-culture/get-sauce/extractors/htstreaming"
 	"github.com/gan-of-culture/get-sauce/request"
@@ -13,7 +12,6 @@ import (
 const site = "https://latesthentai.com/"
 
 var reEpisodeURL = regexp.MustCompile(site + `watch/[^"]+`)
-var reParseURLShow = regexp.MustCompile(site + `anime/[\w-%]+`)
 var reVideoURL = regexp.MustCompile(`[^"]+htstreaming[^"]+`)
 
 type extractor struct{}
@@ -48,16 +46,8 @@ func parseURL(URL string) []string {
 		return nil
 	}
 
-	if strings.Contains(URL, "/anime/") {
-		htmlString = strings.Split(htmlString, `<div class="eplister"`)[0]
-		return utils.RemoveAdjDuplicates(reEpisodeURL.FindAllString(htmlString, -1))
-	}
-
-	// contains list of show that need to be derefenced to episode level
-	htmlString = strings.Split(htmlString, `<div id="sidebar">`)[0]
-
 	out := []string{}
-	for _, anime := range reParseURLShow.FindAllString(htmlString, -1) {
+	for _, anime := range reEpisodeURL.FindAllString(htmlString, -1) {
 		out = append(out, parseURL(anime)...)
 	}
 	return out
