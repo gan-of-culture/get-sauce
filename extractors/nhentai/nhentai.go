@@ -123,7 +123,10 @@ func parseURL(URL string) ([]string, string) {
 func extractData(id string, page string) (*static.Data, error) {
 	URL := api + id
 
-	apiRes, err := request.Get(URL)
+	apiRes, err := request.GetWithHeaders(URL, map[string]string{
+		"Accept":     "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8",
+		"User-Agent": "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Mobile Safari/537.36",
+	})
 	if err != nil {
 		return nil, err
 	}
