@@ -19,7 +19,6 @@ import (
 	"github.com/gan-of-culture/get-sauce/extractors/hentaidude"
 	"github.com/gan-of-culture/get-sauce/extractors/hentaiff"
 	"github.com/gan-of-culture/get-sauce/extractors/hentaifoundry"
-	"github.com/gan-of-culture/get-sauce/extractors/hentaihavenred"
 	"github.com/gan-of-culture/get-sauce/extractors/hentaihd"
 	"github.com/gan-of-culture/get-sauce/extractors/hentaimama"
 	"github.com/gan-of-culture/get-sauce/extractors/hentaimoon"
@@ -31,7 +30,6 @@ import (
 	"github.com/gan-of-culture/get-sauce/extractors/hitomi"
 	"github.com/gan-of-culture/get-sauce/extractors/htdoujin"
 	"github.com/gan-of-culture/get-sauce/extractors/iwara"
-	"github.com/gan-of-culture/get-sauce/extractors/latesthentai"
 	"github.com/gan-of-culture/get-sauce/extractors/miohentai"
 	"github.com/gan-of-culture/get-sauce/extractors/muchohentai"
 	"github.com/gan-of-culture/get-sauce/extractors/nhentai"
@@ -84,7 +82,7 @@ func init() {
 		"hentaiff.com":              hentaiff.New(),
 		"hentaifox.com":             htdoujinExtractor,
 		"hentaihaven.com":           nhgroupExtractor,
-		"hentaihaven.red":           hentaihavenred.New(),
+		"hentaihaven.red":           nhgroupExtractor,
 		"hentaihaven.xxx":           vravenExtractor,
 		"v2.hentaihd.net":           hentaihd.New(),
 		"hentaimama.io":             hentaimama.New(),
@@ -98,7 +96,7 @@ func init() {
 		"hentaiyes.com":             hentaiyes.New(),
 		"hitomi.la":                 hitomi.New(),
 		"imhentai.xxx":              htdoujinExtractor,
-		"latesthentai.com":          latesthentai.New(),
+		"latesthentai.com":          nhgroupExtractor,
 		"miohentai.com":             miohentai.New(),
 		"muchohentai.com":           muchohentai.New(),
 		"nhentai.net":               nhentai.New(),

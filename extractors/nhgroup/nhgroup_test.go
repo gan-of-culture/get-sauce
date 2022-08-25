@@ -20,13 +20,19 @@ func TestParseURL(t *testing.T) {
 			Name: "Series animeidhentai.com",
 			URL:  "https://animeidhentai.com/hentai/mako-chan-kaihatsu-nikki/",
 			Want: 4,
-		},
-		{
+		}, {
 			Name: "Single Episode hentaihaven.com",
 			URL:  "https://hentaihaven.com/soshite-watashi-wa-sensei-ni-episode-1/",
 			Want: 1,
-		},
-		{
+		}, {
+			Name: "Single Episode hentaihaven.red/",
+			URL:  "https://hentaihaven.red/hentai/joshi-luck-episode-1/",
+			Want: 1,
+		}, {
+			Name: "Overview hentaihaven.red/",
+			URL:  "https://hentaihaven.red/brand/bunnywalker/",
+			Want: 36,
+		}, {
 			Name: "Single Episode hentai.tv",
 			URL:  "https://hentai.tv/hentai/chiisana-tsubomi-no-sono-oku-ni-episode-1/",
 			Want: 1,
@@ -41,6 +47,20 @@ func TestParseURL(t *testing.T) {
 		}, {
 			Name: "Overview hentaistream.xxx",
 			URL:  "https://hentaistream.xxx/genres/ahegao/",
+			Want: 36,
+		}, {
+			Name: "Single Episode Eng Sub",
+			URL:  "https://latesthentai.com/watch/hajimete-no-hitozumaepisode-1-sub",
+			Want: 1,
+		}, {
+			Name: "Series",
+			URL:  "https://latesthentai.com/serie/hajimete-no-hitozuma/",
+			Want: 4,
+		}, {
+			// this is the same logic for all extensions that group shows e.g. /genres/
+			// its hard to make a test for the other groups since the number of episodes always changes
+			Name: "Studio",
+			URL:  "https://latesthentai.com/genre/ahegao/",
 			Want: 36,
 		}, {
 			Name: "Single Episode uncensoredhentai.xxx",
@@ -95,6 +115,24 @@ func TestExtract(t *testing.T) {
 			},
 		},
 		{
+			Name: "Single Episode",
+			Args: test.Args{
+				URL:     "https://hentaihaven.red/hentai/bitch-na-inane-sama-episode-4/",
+				Title:   "Bitch na Inane-sama Episode 4",
+				Quality: "1920x1080",
+				Size:    358198092,
+			},
+		},
+		{
+			Name: "[OLD] Single Episode",
+			Args: test.Args{
+				URL:     "https://hentaihaven.red/hentai/mako-chan-kaihatsu-nikki-episode-2/",
+				Title:   "Mako chan Kaihatsu Nikki Episode 2",
+				Quality: "1920x1080",
+				Size:    0,
+			},
+		},
+		{
 			Name: "Single Episode hentai.tv",
 			Args: test.Args{
 				URL:     "https://hentai.tv/hentai/usamimi-bouken-tan-sekuhara-shinagara-sekai-o-sukue-episode-3/",
@@ -110,6 +148,15 @@ func TestExtract(t *testing.T) {
 				Title:   "Mako chan Kaihatsu Nikki Episode 1",
 				Quality: "1920x1080",
 				Size:    558305856,
+			},
+		},
+		{
+			Name: "Single Episode",
+			Args: test.Args{
+				URL:     "https://latesthentai.com/watch/hajimete-no-hitozuma-episode-1/",
+				Title:   "Hajimete no Hitozuma Episode 1",
+				Quality: "1280x720",
+				Size:    0,
 			},
 		},
 		{
