@@ -33,7 +33,7 @@ func TestParseURL(t *testing.T) {
 			// its hard to make a test for the other groups since the number of episodes always changes
 			Name: "Studio",
 			URL:  "https://v2.hentaihd.net/studio/flavors-soft/",
-			Want: 17,
+			Want: 23,
 		},
 	}
 	for _, tt := range tests {

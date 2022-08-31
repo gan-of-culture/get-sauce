@@ -27,8 +27,6 @@ const site = "https://v2.hentaihd.net/"
 const videoProvider = "https://amhentai.com/"
 const videoProviderAPI = videoProvider + "api/source/"
 
-var reEpisodeURL = regexp.MustCompile(site + `\d+/.+/`)
-var reParseURLShow = regexp.MustCompile(site + `anime/[\w-%]+/`)
 var reVideoURL = regexp.MustCompile(videoProvider + `v/([^"]+)`)
 
 type extractor struct{}
