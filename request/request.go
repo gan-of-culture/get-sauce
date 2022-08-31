@@ -23,7 +23,7 @@ type LogRedirects struct {
 	Transport http.RoundTripper
 }
 
-//RoundTrip implementation
+// RoundTrip implementation
 func (l LogRedirects) RoundTrip(req *http.Request) (resp *http.Response, err error) {
 	t := l.Transport
 	if t == nil {
@@ -44,7 +44,7 @@ func (l LogRedirects) RoundTrip(req *http.Request) (resp *http.Response, err err
 	return
 }
 
-//DefaultClient to use in the scraper
+// DefaultClient to use in the scraper
 func DefaultClient() *http.Client {
 	return &http.Client{
 		Transport: LogRedirects{&http.Transport{
@@ -63,7 +63,7 @@ func DefaultClient() *http.Client {
 	}
 }
 
-//Request http
+// Request http
 func Request(method string, URL string, headers map[string]string, body io.Reader) (*http.Response, error) {
 
 	client := DefaultClient()
@@ -400,6 +400,7 @@ func ExtractHLS(URL string, headers map[string]string) (map[string]*static.Strea
 		return nil, err
 	}
 
+	canBeSortedBySize := true
 	// complete mediaURLs
 	for _, stream := range mediaStreams {
 		if strings.HasPrefix(stream.URLs[0].URL, "https://") {
@@ -428,8 +429,9 @@ func ExtractHLS(URL string, headers map[string]string) (map[string]*static.Strea
 		// thats why a part from the middle is used. Still some site don't expose content-length
 		// in the header so stream.Size will be 0
 		parts := len(stream.URLs)
-		stream.Size, _ = Size(stream.URLs[parts/2].URL, headers["Referer"])
-		if stream.Size == 0 {
+		stream.Size, err = Size(stream.URLs[parts/2].URL, headers["Referer"])
+		if stream.Size == 0 || err != nil {
+			canBeSortedBySize = false
 			continue
 		}
 
@@ -446,7 +448,7 @@ func ExtractHLS(URL string, headers map[string]string) (map[string]*static.Strea
 
 	// SORT streams
 
-	if mediaStreams[0].Size > 0 {
+	if canBeSortedBySize {
 
 		sort.Slice(mediaStreams, func(i, j int) bool {
 			return mediaStreams[i].Size > mediaStreams[j].Size
