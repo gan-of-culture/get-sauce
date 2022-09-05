@@ -93,7 +93,7 @@ func TestExtract(t *testing.T) {
 				URL:     "https://animeidhentai.com/31821/usamimi-bouken-tan-sekuhara-shinagara-sekai-o-sukue-episode-2-subbed/",
 				Title:   "Usamimi Bouken-tan: Sekuhara Shinagara Sekai o Sukue Episode 2",
 				Quality: "1920x1080",
-				Size:    0,
+				Size:    143517696,
 			},
 		},
 		{
@@ -102,7 +102,7 @@ func TestExtract(t *testing.T) {
 				URL:     "https://animeidhentai.com/36364/usamimi-bouken-tan-sekuhara-shinagara-sekai-o-sukue-episode-3/",
 				Title:   "Usamimi Bouken-Tan Sekuhara Shinagara Sekai O Sukue Episode 3",
 				Quality: "1920x1080",
-				Size:    0,
+				Size:    143517696,
 			},
 		},
 		{
@@ -111,7 +111,7 @@ func TestExtract(t *testing.T) {
 				URL:     "https://hentaihaven.com/usamimi-bouken-tan-sekuhara-shinagara-sekai-o-sukue-episode-3/",
 				Title:   "Usamimi Bouken-Tan Sekuhara Shinagara Sekai O Sukue Episode 3",
 				Quality: "1920x1080",
-				Size:    0,
+				Size:    143517696,
 			},
 		},
 		{
@@ -129,7 +129,7 @@ func TestExtract(t *testing.T) {
 				URL:     "https://hentaihaven.red/hentai/mako-chan-kaihatsu-nikki-episode-2/",
 				Title:   "Mako chan Kaihatsu Nikki Episode 2",
 				Quality: "1920x1080",
-				Size:    0,
+				Size:    306057984,
 			},
 		},
 		{
@@ -138,7 +138,7 @@ func TestExtract(t *testing.T) {
 				URL:     "https://hentai.tv/hentai/usamimi-bouken-tan-sekuhara-shinagara-sekai-o-sukue-episode-3/",
 				Title:   "Usamimi Bouken-Tan Sekuhara Shinagara Sekai O Sukue Episode 3",
 				Quality: "1920x1080",
-				Size:    0,
+				Size:    143517696,
 			},
 		},
 		{
