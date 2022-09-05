@@ -70,12 +70,12 @@ func printStream(key string, stream *static.Stream) {
 	}
 
 	// for HLS streams the size is only approximated
-	sizeFString := "%.2f MB (%d Bytes)\n"
+	sizeFString := "%s\n"
 	if stream.Ext != "" && stream.Size > 0 {
-		sizeFString = "~" + sizeFString
+		sizeFString = "~ " + sizeFString
 	}
 	fmt.Printf("\n     Size:            ")
-	fmt.Printf(sizeFString, float64(stream.Size)/(1_000_000), stream.Size)
+	fmt.Printf(sizeFString, utils.ByteCountSI(stream.Size))
 	fmt.Printf("     # download with: ")
 	fmt.Printf("get-sauce -s %s ...\n\n", key)
 }

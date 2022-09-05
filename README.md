@@ -306,7 +306,6 @@ The following links will direct you to adult content. Please keep that in mind!
 | [uncensoredhentai.xxx (1080p, 720p, 480p, 360p)](https://uncensoredhentai.xxx/)           |         ?          |:heavy_check_mark:|
 | [v2.hentaihd.net (1080p, 720p, 480p)](https://v2.hentaihd.net)                            |         ?          |:heavy_check_mark:|
 | [yandere.re](https://yande.re/post)                                                       | :heavy_check_mark: |        ?         |
-| [zhentube.com (1080p, 720p)](https://zhentube.com)                                        |         ?          |:heavy_check_mark:|
 
 *you need a login for this site. You can supply it via the parameters -un and -up
 
