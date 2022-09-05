@@ -57,6 +57,29 @@ func TestCalcSizeInByte(t *testing.T) {
 	}
 }
 
+func TestByteCountSI(t *testing.T) {
+	tests := []struct {
+		Name   string
+		number int64
+		Want   string
+	}{
+		{
+			Name:   "To Kilobytes",
+			number: 752000,
+			Want:   "752.0 kB",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.Name, func(t *testing.T) {
+			bytes := ByteCountSI(tt.number)
+
+			if bytes != tt.Want {
+				t.Errorf("Got: %v - Want: %v", bytes, tt.Want)
+			}
+		})
+	}
+}
+
 func TestNeedDownloadList(t *testing.T) {
 	type args struct {
 		len int
