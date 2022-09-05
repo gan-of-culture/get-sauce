@@ -39,7 +39,7 @@ func TestExtract(t *testing.T) {
 				URL:     "https://nhplayer.com/v/zFXGrn9SlmjqDEi/",
 				Title:   "Usamimi Bouken-Tan Sekuhara Shinagara Sekai O Sukue Episode 3",
 				Quality: "1920x1080",
-				Size:    0,
+				Size:    143517696,
 			},
 		},
 	}
