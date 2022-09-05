@@ -69,7 +69,7 @@ get-sauce -i https://hentaimama.io/episodes/torokase-orgasm-animation-episode-1/
      Info:            Mirror 1
      Quality:         1280x720
      Parts:           562
-     Size:            ~427.59 MB (427589832 Bytes)
+     Size:            ~ 427.6 MB
      # download with: get-sauce -s 0 ...
 
 
@@ -78,7 +78,7 @@ get-sauce -i https://hentaimama.io/episodes/torokase-orgasm-animation-episode-1/
      Info:            Mirror 1
      Quality:         842x480
      Parts:           562
-     Size:            ~123.83 MB (123828832 Bytes)
+     Size:            ~ 123.8 MB
      # download with: get-sauce -s 1 ...
 
 
@@ -87,7 +87,7 @@ get-sauce -i https://hentaimama.io/episodes/torokase-orgasm-animation-episode-1/
      Info:            Mirror 1
      Quality:         640x360
      Parts:           562
-     Size:            ~120.66 MB (120659152 Bytes)
+     Size:            ~ 120.7 MB
      # download with: get-sauce -s 2 ...
 
 
@@ -95,7 +95,7 @@ get-sauce -i https://hentaimama.io/episodes/torokase-orgasm-animation-episode-1/
      Type:            video
      Info:            Mirror 2
      Quality:         unknown
-     Size:            186.26 MB (186261816 Bytes)
+     Size:            186.3 MB
      # download with: get-sauce -s 3 ...
 
 
@@ -103,7 +103,7 @@ get-sauce -i https://hentaimama.io/episodes/torokase-orgasm-animation-episode-1/
      Type:            video
      Info:            Mirror 3
      Quality:         unknown
-     Size:            186.26 MB (186261816 Bytes)
+     Size:            186.3 MB
      # download with: get-sauce -s 4 ...
 ```
 
@@ -124,7 +124,7 @@ get-sauce -i https://nhentai.net/g/364616/ https://nhentai.net/g/364591/
      Type:            image
      Quality:         unknown
      Parts:           31
-     Size:            0.00 MB (0 Bytes)
+     Size:            0 B
      # download with: get-sauce -s 0 ...
 
 
@@ -136,7 +136,7 @@ get-sauce -i https://nhentai.net/g/364616/ https://nhentai.net/g/364591/
      Type:            image
      Quality:         unknown
      Parts:           36
-     Size:            0.00 MB (0 Bytes)
+     Size:            0 B
      # download with: get-sauce -s 0 ...
 ```
 
@@ -165,7 +165,7 @@ get-sauce -i https://hentai-moon.com/videos/285/isekai-harem-monogatari-ep-1/
      [0]  -------------------
      Type:            video
      Quality:         unknown
-     Size:            78.44 MB (78441598 Bytes)
+     Size:            75.6 MB
      # download with: get-sauce -s 0 ...
 ```
 
