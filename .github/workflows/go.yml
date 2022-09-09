@@ -20,7 +20,7 @@ jobs:
     - name: Set up Go
       uses: actions/setup-go@v3
       with:
-        go-version-file: "./go.mod"
+        go-version-file: "../../go.mod"
       id: go
 
     - name: Check out code into the Go module directory
