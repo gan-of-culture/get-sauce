@@ -124,8 +124,8 @@ func ExtractData(URL string) (*static.Data, error) {
 	}
 
 	streams, err := request.ExtractHLS(pData.VideoSource, map[string]string{
-		"referer": playerURL,
-		"accept":  "*/*",
+		"Referer": playerURL,
+		"Accept":  "*/*",
 	})
 	if err != nil {
 		return nil, err
