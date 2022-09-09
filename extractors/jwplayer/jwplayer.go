@@ -163,7 +163,10 @@ func findVariable(variable string, htmlString *string) (string, error) {
 	variable = strings.ReplaceAll(variable, "{", "")
 	variable = strings.ReplaceAll(variable, "}", "")
 
-	re := regexp.MustCompile(fmt.Sprintf(findVarible, variable))
+	re, err := regexp.Compile(fmt.Sprintf(findVarible, variable))
+	if err != nil {
+		return "", err
+	}
 	matchedVariable := re.FindStringSubmatch(*htmlString)
 	if len(matchedVariable) < 1 {
 		return "", fmt.Errorf("could not match any for variable '%s'", variable)
