@@ -93,7 +93,7 @@ func TestExtract(t *testing.T) {
 				URL:     "https://animeidhentai.com/31821/usamimi-bouken-tan-sekuhara-shinagara-sekai-o-sukue-episode-2-subbed/",
 				Title:   "Usamimi Bouken-tan: Sekuhara Shinagara Sekai o Sukue Episode 2",
 				Quality: "1920x1080",
-				Size:    143517696,
+				Size:    319661100,
 			},
 		},
 		{
@@ -156,7 +156,7 @@ func TestExtract(t *testing.T) {
 				URL:     "https://latesthentai.com/watch/hajimete-no-hitozuma-episode-1/",
 				Title:   "Hajimete no Hitozuma Episode 1",
 				Quality: "1280x720",
-				Size:    0,
+				Size:    177363336,
 			},
 		},
 		{
