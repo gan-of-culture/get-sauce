@@ -14,15 +14,15 @@ func TestParseURL(t *testing.T) {
 	}{
 		{
 			Name: "Single Episode",
-			URL:  "https://miohentai.com/video/enjo-kouhai-episode-2/",
+			URL:  "https://miohentai.com/enjo-kouhai-episode-2/",
 			Want: 1,
 		}, {
 			Name: "Tag",
 			URL:  "https://miohentai.com/tag/1080p/",
-			Want: 22,
+			Want: 20,
 		}, {
 			Name: "Image",
-			URL:  "https://miohentai.com/image-library/the-latest-influencers-2020-dress/",
+			URL:  "https://miohentai.com/image-library/my-favorite-sexy-lingerie/",
 			Want: 1,
 		},
 	}
@@ -44,7 +44,7 @@ func TestExtract(t *testing.T) {
 		{
 			Name: "Single Episode",
 			Args: test.Args{
-				URL:     "https://miohentai.com/video/enjo-kouhai-episode-2/",
+				URL:     "https://miohentai.com/enjo-kouhai-episode-2/",
 				Title:   "Enjo Kouhai – Episode 2",
 				Quality: "",
 				Size:    131533561,

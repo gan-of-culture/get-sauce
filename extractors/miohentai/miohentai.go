@@ -12,6 +12,7 @@ import (
 
 const site = "https://miohentai.com/"
 
+var reShortLink = regexp.MustCompile(site + `\?p=\d+`)
 var reSourceURL = regexp.MustCompile(`[^"]*cdn\.miohentai[^"]*`)
 var reImageSourceURL = regexp.MustCompile(`async data-src="([^"]*)`)
 
@@ -41,24 +42,20 @@ func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 }
 
 func parseURL(URL string) []string {
-	if strings.HasPrefix(URL, site+"video/") || strings.HasPrefix(URL, site+"image-library/") {
-		return []string{URL}
-	}
-
-	if !strings.HasPrefix(URL, site+"tag/") {
-		return []string{}
-	}
-
 	htmlString, err := request.Get(URL)
 	if err != nil {
-		return []string{}
+		return nil
 	}
 
-	re := regexp.MustCompile(`post.*"([^"]*/video/[^"]*)`)
-	episodes := re.FindAllStringSubmatch(htmlString, -1)
+	if matchedShortLink := reShortLink.FindString(htmlString); matchedShortLink != "" {
+		return []string{matchedShortLink}
+	}
+
+	re := regexp.MustCompile(`post-\d+`)
+	posts := re.FindAllString(htmlString, -1)
 	URLs := []string{}
-	for _, v := range episodes {
-		URLs = append(URLs, v[1])
+	for _, v := range utils.RemoveAdjDuplicates(posts) {
+		URLs = append(URLs, site+"?p="+strings.Split(v, "-")[1])
 	}
 	return URLs
 }
@@ -71,7 +68,7 @@ func extractData(URL string) (*static.Data, error) {
 
 	title := html.UnescapeString(utils.GetH1(&htmlString, -1))
 	if title == "" {
-		splitURL := strings.Split(URL, "/")
+		splitURL := strings.Split(utils.GetMeta(&htmlString, "og:url"), "/")
 		title = splitURL[len(splitURL)-2]
 	}
 
