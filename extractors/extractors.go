@@ -80,6 +80,7 @@ func init() {
 		"www.hentai-foundry.com":    hentaifoundry.New(),
 		"hentaiff.com":              hentaiff.New(),
 		"hentaifox.com":             htdoujinExtractor,
+		"hentaihaven.co":            nhgroupExtractor,
 		"hentaihaven.com":           nhgroupExtractor,
 		"hentaihaven.red":           nhgroupExtractor,
 		"hentaihaven.xxx":           vravenExtractor,
