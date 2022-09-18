@@ -25,6 +25,14 @@ func TestParseURL(t *testing.T) {
 			URL:  "https://hentaihaven.com/soshite-watashi-wa-sensei-ni-episode-1/",
 			Want: 1,
 		}, {
+			Name: "Single Episode hentaihaven.co/",
+			URL:  "https://hentaihaven.co/watch/seika-jogakuin-koutoubu-kounin-sao-oji-san-episode-3/",
+			Want: 1,
+		}, {
+			Name: "Overview hentaihaven.co/",
+			URL:  "https://hentaihaven.co/brand/bunnywalker/",
+			Want: 36,
+		}, {
 			Name: "Single Episode hentaihaven.red/",
 			URL:  "https://hentaihaven.red/hentai/joshi-luck-episode-1/",
 			Want: 1,
@@ -103,6 +111,15 @@ func TestExtract(t *testing.T) {
 				Title:   "Usamimi Bouken-Tan Sekuhara Shinagara Sekai O Sukue Episode 3",
 				Quality: "1920x1080",
 				Size:    143517696,
+			},
+		},
+		{
+			Name: "Single Episode hentaihaven.co",
+			Args: test.Args{
+				URL:     "https://hentaihaven.co/watch/seika-jogakuin-koutoubu-kounin-sao-oji-san-episode-3/",
+				Title:   "Seika Jogakuin Koutoubu Kounin Sao Oji-San Episode 3",
+				Quality: "1280x720",
+				Size:    424461512,
 			},
 		},
 		{
