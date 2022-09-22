@@ -5,8 +5,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"io"
-	"net/http"
 	"net/url"
 	"regexp"
 	"strconv"
@@ -110,23 +108,17 @@ func parseURL(URL string) []string {
 
 	startByte := (pageNumber - 1) * galleriesPerPage * 4
 	endByte := startByte + galleriesPerPage*4 - 1
-	resp, err := request.Request(http.MethodGet, nozomiURL, map[string]string{
+	htmlData, err := request.GetAsBytesWithHeaders(nozomiURL, map[string]string{
 		"Range": fmt.Sprintf("bytes=%d-%d", startByte, endByte),
-	}, nil)
+	})
 	if err != nil {
-		return []string{}
-	}
-	defer resp.Body.Close()
-
-	buffer, err := io.ReadAll(resp.Body)
-	if err != nil {
-		return []string{}
+		return nil
 	}
 
 	URLs := []string{}
 	from := 0
-	for i := 4; i <= int(resp.ContentLength); i += 4 {
-		URLs = append(URLs, fmt.Sprintf("%sgalleries/%d.js", nozomi, binary.BigEndian.Uint32(buffer[from:i])))
+	for i := 4; i <= int(len(htmlData)); i += 4 {
+		URLs = append(URLs, fmt.Sprintf("%sgalleries/%d.js", nozomi, binary.BigEndian.Uint32(htmlData[from:i])))
 		from = i
 	}
 	return URLs
@@ -250,8 +242,8 @@ func inGGValues(num int) int {
 	}
 	for _, value := range ggValues {
 		if *value == num {
-			return 0
+			return 1
 		}
 	}
-	return 1
+	return 0
 }
