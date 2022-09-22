@@ -34,7 +34,7 @@ var sites map[string]siteConfig = map[string]siteConfig{
 		ReaderURLPrefix:     "view",
 	},
 	"hentaiera.com": {
-		CDNPrefixSrcURLPart: "js/main_92xw36.js",
+		CDNPrefixSrcURLPart: "js/main_g2kqxa.js",
 		ReaderURLPrefix:     "view",
 	},
 	"hentaifox.com": {
@@ -209,7 +209,7 @@ func getCDNPrefix(gID string) (string, error) {
 		}
 	}
 
-	return "", errors.New("no CDN prefix was found")
+	return "", errors.New("no CDN prefix was found. Check if CDNPrefixLevels have been parsed correctly")
 }
 
 func parseCDNPrefixLevels() ([]int, error) {
