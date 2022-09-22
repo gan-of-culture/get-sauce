@@ -1,9 +1,12 @@
 package hentaimoon
 
 import (
+	"io/ioutil"
+	"net/http"
 	"net/url"
 	"regexp"
 
+	"github.com/gan-of-culture/get-sauce/config"
 	"github.com/gan-of-culture/get-sauce/extractors/kvsplayer"
 	"github.com/gan-of-culture/get-sauce/request"
 	"github.com/gan-of-culture/get-sauce/static"
@@ -53,10 +56,19 @@ func parseURL(URL string) []string {
 
 func extractData(URL string) (*static.Data, error) {
 
-	htmlString, err := request.Get(URL)
+	req, _ := http.NewRequest(http.MethodGet, URL, nil)
+
+	for k, v := range config.FakeHeaders {
+		req.Header.Set(k, v)
+	}
+
+	res, err := http.DefaultClient.Do(req)
 	if err != nil {
 		return nil, err
 	}
+	defer res.Body.Close()
+	body, _ := ioutil.ReadAll(res.Body)
+	htmlString := string(body)
 
 	data, err := kvsplayer.ExtractFromHTML(&htmlString)
 	if err != nil {
