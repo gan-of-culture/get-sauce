@@ -1,7 +1,7 @@
 package hentaimoon
 
 import (
-	"io/ioutil"
+	"io"
 	"net/http"
 	"net/url"
 	"regexp"
@@ -67,7 +67,7 @@ func extractData(URL string) (*static.Data, error) {
 		return nil, err
 	}
 	defer res.Body.Close()
-	body, _ := ioutil.ReadAll(res.Body)
+	body, _ := io.ReadAll(res.Body)
 	htmlString := string(body)
 
 	data, err := kvsplayer.ExtractFromHTML(&htmlString)
