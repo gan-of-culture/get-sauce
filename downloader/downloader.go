@@ -76,6 +76,46 @@ func (downloader *downloaderStruct) Download(data *static.Data) error {
 		return fmt.Errorf("stream %s not found", config.SelectStream)
 	}
 
+	fileURI, err := downloader.downloadStream(data)
+	if err != nil {
+		return err
+	}
+
+	// everything besides of video streams doesn't need the following logic to merge using FFmpeg
+	if downloader.stream.Type != static.DataTypeVideo {
+		return nil
+	}
+	var files []string
+	files = append(files, fileURI)
+
+	audioFilePath, err := downloader.downloadExtraAudio(data)
+	if err != nil {
+		return err
+	}
+
+	captionFilePath, err := downloader.downloadCaption(data)
+	if err != nil {
+		return err
+	}
+
+	if config.Keep {
+		return nil
+	}
+
+	if audioFilePath != "" {
+		files = append(files, audioFilePath)
+	}
+	if captionFilePath != "" {
+		files = append(files, captionFilePath)
+	}
+
+	if downloader.stream.Ext == "" {
+		downloader.stream.Ext = downloader.stream.URLs[0].Ext
+	}
+	return mergeMediaFiles(files, filepath.Join(downloader.filePath, data.Title+"_merged."+data.Streams[config.SelectStream].Ext))
+}
+
+func (downloader *downloaderStruct) downloadStream(data *static.Data) (string, error) {
 	if !config.Quiet {
 		printStreamInfo(data, config.SelectStream)
 	}
@@ -84,11 +124,11 @@ func (downloader *downloaderStruct) Download(data *static.Data) error {
 	if downloader.stream.Ext != "" {
 		// ensure a different tmpDir for each download so concurrent processes won't colide
 		h := sha1.New()
-		h.Write([]byte(data.Title))
+		h.Write([]byte(data.Title + config.SelectStream))
 		downloader.tmpFilePath = filepath.Join(downloader.filePath, fmt.Sprintf("%x/", h.Sum(nil)[15:]))
 		err := os.MkdirAll(downloader.tmpFilePath, os.ModePerm)
 		if err != nil {
-			return err
+			return "", err
 		}
 		streamNeedsMerge = true
 	}
@@ -151,7 +191,7 @@ func (downloader *downloaderStruct) Download(data *static.Data) error {
 	close(URLchan)
 	wg.Wait()
 	if saveErr != nil {
-		return saveErr
+		return "", saveErr
 	}
 
 	// build final file URI
@@ -159,42 +199,11 @@ func (downloader *downloaderStruct) Download(data *static.Data) error {
 		fileURI = filepath.Join(downloader.filePath, data.Title+"."+downloader.stream.Ext)
 		err := downloader.MergeFilesWithSameExtension(fileURI)
 		if err != nil {
-			return err
+			return "", err
 		}
 	}
 
-	// everything besides of video streams doesn't need the following logic to merge using FFmpeg
-	if downloader.stream.Type != static.DataTypeVideo {
-		return nil
-	}
-	var files []string
-	files = append(files, fileURI)
-
-	audioFilePath, err := downloader.downloadExtraAudio(data)
-	if err != nil {
-		return err
-	}
-
-	captionFilePath, err := downloader.downloadCaption(data)
-	if err != nil {
-		return err
-	}
-
-	if config.Keep {
-		return nil
-	}
-
-	if audioFilePath != "" {
-		files = append(files, audioFilePath)
-	}
-	if captionFilePath != "" {
-		files = append(files, captionFilePath)
-	}
-
-	if downloader.stream.Ext == "" {
-		downloader.stream.Ext = downloader.stream.URLs[0].Ext
-	}
-	return mergeMediaFiles(files, filepath.Join(downloader.filePath, data.Title+"_merged."+data.Streams[config.SelectStream].Ext))
+	return fileURI, nil
 }
 
 func (downloader *downloaderStruct) save(URL static.URL, fileURI string) error {
