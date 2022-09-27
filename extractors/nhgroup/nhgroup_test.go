@@ -2,6 +2,8 @@ package nhgroup
 
 import (
 	"testing"
+
+	"github.com/gan-of-culture/get-sauce/test"
 )
 
 func TestParseURL(t *testing.T) {
@@ -88,7 +90,7 @@ func TestParseURL(t *testing.T) {
 	}
 }
 
-/*func TestExtract(t *testing.T) {
+func TestExtract(t *testing.T) {
 	tests := []struct {
 		Name string
 		Args test.Args
@@ -191,4 +193,4 @@ func TestParseURL(t *testing.T) {
 			test.Check(t, tt.Args, data[0])
 		})
 	}
-}*/
+}
