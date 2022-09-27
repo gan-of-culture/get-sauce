@@ -1,5 +1,11 @@
 package nhentai
 
+import (
+	"testing"
+
+	"github.com/gan-of-culture/get-sauce/test"
+)
+
 /*import (
 	"testing"
 
@@ -58,7 +64,7 @@ func TestParseURL(t *testing.T) {
 			}
 		})
 	}
-}
+}*/
 
 func TestExtract(t *testing.T) {
 	tests := []struct {
@@ -91,4 +97,4 @@ func TestExtract(t *testing.T) {
 			test.Check(t, tt.Args, data[0])
 		})
 	}
-}*/
+}
