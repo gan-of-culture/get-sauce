@@ -70,12 +70,6 @@ func (downloader *downloaderStruct) Download(data *static.Data) error {
 	// sanitize filename here
 	data.Title = strings.TrimSpace(reSanitizeTitle.ReplaceAllString(data.Title, " "))
 
-	// select stream to download
-	var ok bool
-	if downloader.stream, ok = data.Streams[config.SelectStream]; !ok {
-		return fmt.Errorf("stream %s not found", config.SelectStream)
-	}
-
 	fileURI, err := downloader.downloadStream(data)
 	if err != nil {
 		return err
@@ -116,6 +110,12 @@ func (downloader *downloaderStruct) Download(data *static.Data) error {
 }
 
 func (downloader *downloaderStruct) downloadStream(data *static.Data) (string, error) {
+	// select stream to download
+	var ok bool
+	if downloader.stream, ok = data.Streams[config.SelectStream]; !ok {
+		return "", fmt.Errorf("stream %s not found", config.SelectStream)
+	}
+
 	if !config.Quiet {
 		printStreamInfo(data, config.SelectStream)
 	}
@@ -454,11 +454,6 @@ func (downloader *downloaderStruct) downloadExtraAudio(data *static.Data) (strin
 	// normally audio is included in the video streams. With this only special cases where this is not
 	// the case are handled.
 
-	if downloader.stream.Type == static.DataTypeAudio {
-		// stop infinite recursion
-		return "", nil
-	}
-
 	streamID := ""
 	for k, v := range data.Streams {
 		if v.Type != static.DataTypeAudio {
@@ -472,13 +467,13 @@ func (downloader *downloaderStruct) downloadExtraAudio(data *static.Data) (strin
 	selectStreamOld := config.SelectStream
 	config.SelectStream = streamID
 
-	err := downloader.Download(data)
-	config.SelectStream = selectStreamOld
+	fileURI, err := downloader.downloadStream(data)
 	if err != nil {
 		return "", err
 	}
+	config.SelectStream = selectStreamOld
 
-	return filepath.Join(downloader.filePath, data.Title+"."+data.Streams[streamID].Ext), nil
+	return fileURI, nil
 }
 
 func (downloader *downloaderStruct) downloadCaption(data *static.Data) (string, error) {
