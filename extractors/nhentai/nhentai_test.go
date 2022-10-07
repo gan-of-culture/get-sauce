@@ -1,16 +1,9 @@
 package nhentai
 
-import (
-	"testing"
-
-	"github.com/gan-of-culture/get-sauce/test"
-)
-
-/*import (
-	"testing"
-
-	"github.com/gan-of-culture/get-sauce/test"
-)
+/*
+// make sure that User-Agent makes the browser that did the CF challenge
+const userHeader = `cookie: cf_clearance=k2TGEnkzhz_PtHs09vMryROlD4O3UZhrDFrU4svgjdM-1665105987-0-150; csrftoken=bLiwSENr0mqSZZ27wan1xdjLazVFoXnnABJu7DtrhbNRUacpbEZhV0Eggc5lD8m5
+user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36`
 
 func TestParseURL(t *testing.T) {
 	type Want struct {
@@ -52,6 +45,7 @@ func TestParseURL(t *testing.T) {
 			},
 		},
 	}
+	config.UserHeaders = userHeader
 	for _, tt := range tests {
 		t.Run(tt.Name, func(t *testing.T) {
 			magicNumber, page := parseURL(tt.URL)
@@ -64,7 +58,7 @@ func TestParseURL(t *testing.T) {
 			}
 		})
 	}
-}*/
+}
 
 func TestExtract(t *testing.T) {
 	tests := []struct {
@@ -74,7 +68,7 @@ func TestExtract(t *testing.T) {
 		{
 			Name: "Complete extraction of a doujinshi",
 			Args: test.Args{
-				URL:     "https://nhentai.net/g/297485/",
+				URL:     "https://nhentai.net/g/422956/",
 				Title:   "Isekai Shoukan IIsan no Tomodachi wa Suki desu ka?",
 				Quality: "",
 				Size:    0,
@@ -90,6 +84,7 @@ func TestExtract(t *testing.T) {
 			},
 		},
 	}
+	config.UserHeaders = userHeader
 	for _, tt := range tests {
 		t.Run(tt.Name, func(t *testing.T) {
 			data, err := New().Extract(tt.Args.URL)
@@ -97,4 +92,4 @@ func TestExtract(t *testing.T) {
 			test.Check(t, tt.Args, data[0])
 		})
 	}
-}
+}*/

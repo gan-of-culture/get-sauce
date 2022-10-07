@@ -25,9 +25,11 @@ var (
 	Timeout int
 	// Truncate file if it already exists
 	Truncate bool
-	// Username for exhentai.org
+	// UserHeaders for the HTTP requests. To bypass Cloudflare or DDOS-GUARD protection
+	UserHeaders string
+	// Username for authorization
 	Username string
-	// UserPassword for exhentai.org
+	// UserPassword for authorization
 	UserPassword string
 	// Workers for downloading
 	Workers int
@@ -35,7 +37,7 @@ var (
 
 // FakeHeaders fake http headers
 var FakeHeaders = map[string]string{
-	"Accept":          "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+	"Accept":          "*/*",
 	"Accept-Language": "en-US,en;q=0.8",
 	"User-Agent":      "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.81 Safari/537.36",
 }
