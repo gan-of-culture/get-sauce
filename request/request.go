@@ -57,7 +57,7 @@ func DefaultClient() *http.Client {
 				CurvePreferences:         []tls.CurveID{tls.CurveP256, tls.CurveP384, tls.CurveP521, tls.X25519},
 			},
 			IdleConnTimeout: 5 * time.Second,
-			//DisableKeepAlives:   true,
+			//DisableKeepAlives: true,
 		}},
 		Timeout: time.Duration(config.Timeout) * time.Minute,
 	}
@@ -81,6 +81,17 @@ func Request(method string, URL string, headers map[string]string, body io.Reade
 	}
 	if _, ok := headers["Referer"]; !ok {
 		req.Header.Set("Referer", URL)
+	}
+
+	if config.UserHeaders != "" {
+		values := strings.Split(config.UserHeaders, "\n")
+		for _, val := range values {
+			keyValue := strings.Split(val, ":")
+			if len(keyValue) < 2 {
+				continue
+			}
+			req.Header.Set(keyValue[0], keyValue[1])
+		}
 	}
 
 	resp, err := client.Do(req)

@@ -12,6 +12,7 @@ Is a hentai scraper that is not using official APIs if they are restrictive. Thi
   - [Captions](#captions)
 - [Options](#options)
 - [Supported sites](#supported-sites)
+  - [Site requirements](#site-requirements)
 - [Credit](#credit)
 - [Donate](#donate)
 - [Licencse](#licencse)
@@ -177,72 +178,79 @@ get-sauce -i https://hentai-moon.com/videos/285/isekai-harem-monogatari-ep-1/
 
  get-sauce -a 5000 http...
 
---------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------
 
  -c             Download caption if separate to a extra file
 
  get-sauce -c 0 http...
 
---------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------
+
+ -h             UserHeaders for the http requests. To bypass Cloudflare or DDOS-GUARD protection
+
+ get-sauce -C "cf_clearance=..." http...
+
+
+------------------------------------------------------------------------------------------------
  
  -i             Show info for the provided URL
 
  get-sauce -i http...
 
---------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------
 
  -j             Show extracted data as json
 
  get-sauce -j http...
 
---------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------
 
  -k             Keep video, audio and subtitles. Don't merge using ffmpeg
 
  get-sauce -k http...
 
---------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------
  -o             Output name of the file
 
  get-sauce -o myfilename http...
 
---------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------
 
  -O             Output path of the files
 
  get-sauce -O C://Users//User//Downloads// http...
 
---------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------
 
  -p             Enter pages like 1,2,3-4,6,7,8-9 for doujins
 
  get-sauce -p 1,2,3-4 http...
 
---------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------
 
  -q             Quiet mode - show minimal information 
 
  get-sauce -q http...
 
---------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------
 
  -s             Select a specific stream | 0 is default and has the best quality
 
  get-sauce -s 0 http...
 
---------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------
 
  -t             Truncate file if it already exists
 
  get-sauce -t http...
 
---------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------
 
  -T             Set a custom timeout (in minutes) for the http.client
 
  get-sauce -T 15 http...
 
---------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------
  -w             Number of download workers
 
  get-sauce -w 4 http...
@@ -253,8 +261,8 @@ get-sauce -i https://hentai-moon.com/videos/285/isekai-harem-monogatari-ep-1/
 
 The following links will direct you to adult content. Please keep that in mind!
 
-| Site                                                                                      | Images             | Videos           |
-| ------------------------------------------------------------------------------------------|:------------------:|:----------------:|
+| Site                                                                                      | Images             | Videos           | Requirements         |
+| ------------------------------------------------------------------------------------------|:------------------:|:----------------:|:--------------------:|
 | [9hentai.to/ru](https://9hentai.to/)                                                      | :heavy_check_mark: |        ?         |
 | [animeidhentai.com (1080p, 720p, 480p, 360p)](https://animeidhentai.com)                  |         ?          |:heavy_check_mark:|
 | [booruproject (ex. rule34, gelbooru)](https://booru.org/top)                              | :heavy_check_mark: |:heavy_check_mark:|
@@ -265,7 +273,7 @@ The following links will direct you to adult content. Please keep that in mind!
 | [doujin.sexy](https://doujin.sexy)                                                        | :heavy_check_mark: |        ?         |
 | [e-hentai.org](http://e-hentai.org/)                                                      | :heavy_check_mark: |        ?         |
 | [ecchi.iwara.tv](https://ecchi.iwara.tv/)                                                 | :heavy_check_mark: |:heavy_check_mark:|
-| [exhentai.org*](http://exhentai.org/)                                                     | :heavy_check_mark: |        ?         |
+| [exhentai.org*](http://exhentai.org/)                                                     | :heavy_check_mark: |        ?         |:closed_lock_with_key:|
 | [haho.moe (1080p, 720p, 480p, 360p)](https://haho.moe)                                    |         ?          |:heavy_check_mark:|
 | [hanime.tv (720p, 480p, 360p)](https://hanime.tv)                                         |         ?          |:heavy_check_mark:|
 | [hentai.tv (1080p, 720p, 480p, 360p)](https://hentai.tv/)                                 |         ?          |:heavy_check_mark:|
@@ -298,7 +306,7 @@ The following links will direct you to adult content. Please keep that in mind!
 | [konachan.com](https://konachan.com/post?tags=)                                           | :heavy_check_mark: |        ?         |
 | [latesthentai.com (1080p, 720p, 480p, 360p)](https://latesthentai.com/)                   |         ?          |:heavy_check_mark:|
 | [miohentai.com (1080p, 720p, 480p)](https://miohentai.com/)                               | :heavy_check_mark: |:heavy_check_mark:|
-| [nhentai.net](https://nhentai.net)                                                        |        :x:         |        ?         |
+| [nhentai.net](https://nhentai.net)                                                        | :heavy_check_mark: |        ?         |:cookie:|
 | [ohentai.org (1080p, 720p, 480p)](https://ohentai.org/)                                   |         ?          |:heavy_check_mark:|
 | [pururin.to](https://pururin.to)                                                          | :heavy_check_mark: |        ?         |
 | [rule34.paheal.net](https://rule34.paheal.net)                                            | :heavy_check_mark: |:heavy_check_mark:|
@@ -308,9 +316,24 @@ The following links will direct you to adult content. Please keep that in mind!
 | [v2.hentaihd.net (1080p, 720p, 480p)](https://v2.hentaihd.net)                            |         ?          |:heavy_check_mark:|
 | [yandere.re](https://yande.re/post)                                                       | :heavy_check_mark: |        ?         |
 
-*you need a login for this site. You can supply it via the parameters -un and -up
-
 You can still try to use the universal downloader, if your site is not listed.
+
+### Site requirements
+
+🍪
+--> you need to supply cookies for this extractor to work. Most likely it is used to bypass some kind of Cloudflare or DDOS-Guard protection
+> Note: separate the different header values using a newline
+
+```console
+get-sauce -h "cookie: cf_clearance=k2TGEnkzhz_PtHs09vMryROlD4O3UZhrDFrU4svgjdM-1665105987-0-150; csrftoken=bLiwSENr0mqSZZ27wan1xdjLazVFoXnnABJu7DtrhbNRUacpbEZhV0Eggc5lD8m5
+user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36" http...
+```
+
+🔐
+--> you need to supply login credentials for this extractor to work
+```console
+get-sauce -un "MyUserName" -up "MyUserPassword" http...
+```
 
 ## Credit
 

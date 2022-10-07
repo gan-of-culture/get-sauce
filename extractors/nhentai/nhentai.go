@@ -13,7 +13,7 @@ import (
 )
 
 type gallery struct {
-	ID      int    `json:"id"`
+	ID      string `json:"id"`
 	MediaID string `json:"media_id"`
 	Title   struct {
 		English  string `json:"english"`
@@ -123,10 +123,7 @@ func parseURL(URL string) ([]string, string) {
 func extractData(id string, page string) (*static.Data, error) {
 	URL := api + id
 
-	apiRes, err := request.GetWithHeaders(URL, map[string]string{
-		"Accept":     "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8",
-		"User-Agent": "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Mobile Safari/537.36",
-	})
+	apiRes, err := request.Get(URL)
 	if err != nil {
 		return nil, err
 	}
