@@ -33,6 +33,10 @@ var sites map[string]siteConfig = map[string]siteConfig{
 		CDNPrefixSrcURLPart: "js/main.985451.js",
 		ReaderURLPrefix:     "view",
 	},
+	"hentaienvy.com": {
+		CDNPrefixSrcURLPart: "js/main_v3.js",
+		ReaderURLPrefix:     "g",
+	},
 	"hentaiera.com": {
 		CDNPrefixSrcURLPart: "js/main_g2kqxa.js",
 		ReaderURLPrefix:     "view",
@@ -44,6 +48,10 @@ var sites map[string]siteConfig = map[string]siteConfig{
 	"hentairox.com": {
 		CDNPrefixSrcURLPart: "js/main_v7.js",
 		ReaderURLPrefix:     "view",
+	},
+	"hentaizap.com": {
+		CDNPrefixSrcURLPart: "js/main_v19.js",
+		ReaderURLPrefix:     "g",
 	},
 }
 
@@ -60,6 +68,19 @@ var reJSONData *regexp.Regexp = regexp.MustCompile(`'{[^']+`)
 var reImgDir *regexp.Regexp = regexp.MustCompile(`image_dir" value="([^"]*)`)
 var reGalleryID *regexp.Regexp = regexp.MustCompile(`gallery_id" value="([^"]*)`)
 var reUID *regexp.Regexp = regexp.MustCompile(`u_id" value="([^"]*)`)
+var reServerID *regexp.Regexp = regexp.MustCompile(`server_id" value="([^"]*)`)
+var reServerIDLevels *regexp.Regexp = regexp.MustCompile(`server_id\s*==\s*(\d+)`)
+
+type CDNDetermenationID string
+
+const (
+	// ServerID is used to get the correct CDN prefix
+	ServerID CDNDetermenationID = "server_id"
+	// uID is used to get the correct CDN prefix
+	UID CDNDetermenationID = "u_id"
+	// Unknown CDN prefix identifier
+	Unknown CDNDetermenationID = "unknown"
+)
 
 type extractor struct{}
 
@@ -149,9 +170,12 @@ func extractData(ID string) (*static.Data, error) {
 		return &static.Data{}, errors.New("cannot find gallery_id for")
 	}
 
-	uID := utils.GetLastItemString(reUID.FindStringSubmatch(htmlString))
+	prefixSelectionID := utils.GetLastItemString(reUID.FindStringSubmatch(htmlString))
+	if prefixSelectionID == "" {
+		prefixSelectionID = utils.GetLastItemString(reServerID.FindStringSubmatch(htmlString))
+	}
 
-	CDNPrefix, err := getCDNPrefix(uID)
+	CDNPrefix, err := getCDNPrefix(prefixSelectionID)
 	if err != nil {
 		return nil, err
 	}
@@ -193,12 +217,12 @@ func extractData(ID string) (*static.Data, error) {
 	}, nil
 }
 
-func getCDNPrefix(gID string) (string, error) {
+func getCDNPrefix(prefixSelectionID string) (string, error) {
 	if host == "hentaifox.com" {
 		return "i", nil
 	}
 
-	IDAsNumber, err := strconv.Atoi(gID)
+	IDAsNumber, err := strconv.Atoi(prefixSelectionID)
 	if err != nil {
 		return "", err
 	}
@@ -218,12 +242,22 @@ func parseCDNPrefixLevels() ([]int, error) {
 		return nil, err
 	}
 
+	cdID := UID
 	levels := reUIDLevels.FindAllStringSubmatch(jsString, -1)
+	if len(levels) == 0 {
+		cdID = ServerID
+		levels = reServerIDLevels.FindAllStringSubmatch(jsString, -1)
+	}
+
 	var out []int
 	for _, uID := range levels {
 		IDAsNumber, err := strconv.Atoi(uID[1])
 		if err != nil {
 			return nil, err
+		}
+		if cdID == ServerID {
+			// subtract one since for server_id the JS operation is ==
+			IDAsNumber -= 1
 		}
 		out = append(out, IDAsNumber)
 	}
