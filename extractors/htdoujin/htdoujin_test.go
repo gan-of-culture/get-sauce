@@ -103,8 +103,8 @@ func TestExtract(t *testing.T) {
 		{
 			Name: "Single Gallery HentaiEnvy",
 			Args: test.Args{
-				URL:     "https://hentaienvy.com/gallery/808737/",
-				Title:   "Patreon Rewards 07-2022",
+				URL:     "https://hentaienvy.com/gallery/273160/",
+				Title:   "Makura Eigyou de Oshioki yo! ~Ano Sailor Senshi ga Makura Eigyou Halation~",
 				Quality: "",
 				Size:    0,
 			},
