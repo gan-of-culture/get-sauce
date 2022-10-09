@@ -14,10 +14,10 @@ func TestExtract(t *testing.T) {
 		{
 			Name: "Single Episode www.kvs-demo.com",
 			Args: test.Args{
-				URL:     "https://www.kvs-demo.com/videos/105/kelis-4th-of-july/",
-				Title:   "kelis-4th-of-july",
-				Quality: "720p",
-				Size:    104777803,
+				URL:     "https://hentaibar.com/videos/2688/soshite-watashi-wa-ojisan-ni-episode-4-english-subbed/",
+				Title:   "soshite-watashi-wa-ojisan-ni-episode-4-english-subbed",
+				Quality: "1080p",
+				Size:    550603331,
 			},
 		},
 	}
