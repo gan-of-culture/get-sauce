@@ -188,7 +188,7 @@ get-sauce -i https://hentai-moon.com/videos/285/isekai-harem-monogatari-ep-1/
 
  -h             UserHeaders for the http requests. To bypass Cloudflare or DDOS-GUARD protection
 
- get-sauce -C "cf_clearance=..." http...
+ get-sauce -h "cf_clearance=..." http...
 
 
 ------------------------------------------------------------------------------------------------
