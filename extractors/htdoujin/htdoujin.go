@@ -58,6 +58,7 @@ var sites map[string]siteConfig = map[string]siteConfig{
 var host string
 var site string
 var cdn string
+var cdnDetermenationID CDNDetermenationID
 var cdnPrefixLevels []int
 var readerURLPrefix string
 
@@ -108,7 +109,7 @@ func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 	}
 
 	readerURLPrefix = sites[host].ReaderURLPrefix
-	cdnPrefixLevels, err = parseCDNPrefixLevels()
+	cdnPrefixLevels, cdnDetermenationID, err = parseCDNPrefixLevels()
 	if err != nil {
 		return nil, err
 	}
@@ -175,7 +176,7 @@ func extractData(ID string) (*static.Data, error) {
 		prefixSelectionID = utils.GetLastItemString(reServerID.FindStringSubmatch(htmlString))
 	}
 
-	CDNPrefix, err := getCDNPrefix(prefixSelectionID)
+	CDNPrefix, err := getCDNPrefix(prefixSelectionID, cdnDetermenationID)
 	if err != nil {
 		return nil, err
 	}
@@ -217,7 +218,7 @@ func extractData(ID string) (*static.Data, error) {
 	}, nil
 }
 
-func getCDNPrefix(prefixSelectionID string) (string, error) {
+func getCDNPrefix(prefixSelectionID string, cdnDetId CDNDetermenationID) (string, error) {
 	if host == "hentaifox.com" {
 		return "i", nil
 	}
@@ -227,19 +228,26 @@ func getCDNPrefix(prefixSelectionID string) (string, error) {
 		return "", err
 	}
 
-	for i := len(cdnPrefixLevels); i > 1; i-- {
-		if IDAsNumber > cdnPrefixLevels[i-1] {
-			return fmt.Sprintf("m%d", i), nil
+	for i := len(cdnPrefixLevels); i >= 1; i-- {
+		switch cdnDetId {
+		case ServerID:
+			if IDAsNumber == cdnPrefixLevels[i-1] {
+				return fmt.Sprintf("m%d", i), nil
+			}
+		default:
+			if IDAsNumber > cdnPrefixLevels[i-1] {
+				return fmt.Sprintf("m%d", i), nil
+			}
 		}
 	}
 
 	return "", errors.New("no CDN prefix was found. Check if CDNPrefixLevels have been parsed correctly")
 }
 
-func parseCDNPrefixLevels() ([]int, error) {
+func parseCDNPrefixLevels() ([]int, CDNDetermenationID, error) {
 	jsString, err := request.Get(site + sites[host].CDNPrefixSrcURLPart)
 	if err != nil {
-		return nil, err
+		return nil, Unknown, err
 	}
 
 	cdID := UID
@@ -253,14 +261,10 @@ func parseCDNPrefixLevels() ([]int, error) {
 	for _, uID := range levels {
 		IDAsNumber, err := strconv.Atoi(uID[1])
 		if err != nil {
-			return nil, err
-		}
-		if cdID == ServerID {
-			// subtract one since for server_id the JS operation is ==
-			IDAsNumber -= 1
+			return nil, cdID, err
 		}
 		out = append(out, IDAsNumber)
 	}
 
-	return out, nil
+	return out, cdID, nil
 }
