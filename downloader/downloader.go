@@ -159,7 +159,7 @@ func (downloader *downloaderStruct) downloadStream(data *static.Data) (string, e
 				if !ok {
 					return
 				}
-				err := downloader.save(dlInfo.URL, dlInfo.Title)
+				err := downloader.save(dlInfo.URL, data.URL, dlInfo.Title)
 				if err != nil {
 					lock.Lock()
 					saveErr = err
@@ -206,7 +206,7 @@ func (downloader *downloaderStruct) downloadStream(data *static.Data) (string, e
 	return fileURI, nil
 }
 
-func (downloader *downloaderStruct) save(URL static.URL, fileURI string) error {
+func (downloader *downloaderStruct) save(URL static.URL, referer, fileURI string) error {
 
 	openOpts := os.O_RDWR | os.O_CREATE
 	if config.Truncate {
@@ -231,15 +231,18 @@ func (downloader *downloaderStruct) save(URL static.URL, fileURI string) error {
 		return nil
 	}
 
+	headers := config.FakeHeaders
+	headers["Referer"] = referer
+
 	//if stream size bigger than 10MB then use concurWrite
 	if downloader.stream.Size > 10_000_000 && config.Workers > 1 && downloader.stream.Ext == "" {
-		return downloader.concurWriteFile(URL.URL, file)
+		return downloader.concurWriteFile(URL.URL, file, headers)
 	}
 
-	return downloader.writeFile(URL.URL, file)
+	return downloader.writeFile(URL.URL, file, headers)
 }
 
-func (downloader *downloaderStruct) concurWriteFile(URL string, file *os.File) error {
+func (downloader *downloaderStruct) concurWriteFile(URL string, file *os.File, headers map[string]string) error {
 	fileSize := downloader.stream.Size
 	pieceSize := int64(10_000_000)
 
@@ -265,11 +268,10 @@ func (downloader *downloaderStruct) concurWriteFile(URL string, file *os.File) e
 					lock.Unlock()
 				}
 
-				for k, v := range config.FakeHeaders {
+				for k, v := range headers {
 					req.Header.Set(k, v)
 				}
 
-				req.Header.Set("Referer", URL)
 				req.Header.Set("Range", fmt.Sprintf("bytes=%d-%d", d.offset, d.length))
 				//fmt.Println(req.Header.Get("Range"))
 
@@ -335,19 +337,15 @@ func (downloader *downloaderStruct) concurWriteFile(URL string, file *os.File) e
 	return nil
 }
 
-func (downloader *downloaderStruct) writeFile(URL string, file *os.File) error {
+func (downloader *downloaderStruct) writeFile(URL string, file *os.File, headers map[string]string) error {
 	// Supply http request with headers to ensure a higher possibility of success
 	req, err := http.NewRequest(http.MethodGet, URL, nil)
 	if err != nil {
 		return err
 	}
 
-	for k, v := range config.FakeHeaders {
+	for k, v := range headers {
 		req.Header.Set(k, v)
-	}
-
-	if ref := req.Header.Get("Referer"); ref == "" {
-		req.Header.Set("Referer", URL)
 	}
 
 	res, err := downloader.client.Do(req)
@@ -482,7 +480,7 @@ func (downloader *downloaderStruct) downloadCaption(data *static.Data) (string, 
 	}
 
 	fileURI := filepath.Join(downloader.filePath, fmt.Sprintf("%s_caption_%s.%s", data.Title, data.Captions[config.Caption].Language, data.Captions[config.Caption].URL.Ext))
-	err := downloader.save(data.Captions[config.Caption].URL, fileURI)
+	err := downloader.save(data.Captions[config.Caption].URL, data.URL, fileURI)
 	if err != nil {
 		return "", err
 	}
