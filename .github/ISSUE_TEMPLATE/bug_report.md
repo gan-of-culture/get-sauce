@@ -25,7 +25,7 @@ If applicable, add screenshots to help explain your problem.
 
 **Desktop (please complete the following information):**
  - OS: [e.g. iOS]
- - Can the video be played on the website?
+ - Can the video or image be viewed on the website?
 
 **Additional context**
 Add any other context about the problem here.
