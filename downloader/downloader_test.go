@@ -57,21 +57,21 @@ func TestDownload(t *testing.T) {
 				URL: "https://muchohentai.com/aBo4Rk/167062/",
 			},
 		}, {
-			Name: "hentaistream.moe 4k episode concurWriter",
+			Name: "hstream.moe 4k episode concurWriter",
 			data: &static.Data{
-				Site:  "https://hentaistream.moe/",
-				Title: "Overflow 1",
+				Site:  "https://hstream.moe/",
+				Title: "Wizard Girl Ambitious – 1",
 				Type:  static.DataTypeVideo,
 				Streams: map[string]*static.Stream{
 					"0": {
 						Type: static.DataTypeVideo,
 						URLs: []*static.URL{
 							{
-								URL: "https://01cdn.hentaistream.moe/2021/02/Overflow/E01/av1.2160p.webm",
+								URL: "https://stream.hstream.moe/2021/Wizard.Girl.Ambitious/av1.2160p.webm",
 								Ext: "webm",
 							},
 						},
-						Size: int64(96865295),
+						Size: int64(804660690),
 					},
 				},
 			},

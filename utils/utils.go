@@ -92,22 +92,28 @@ func GetMediaType(t string) static.DataType {
 
 // GetH1 of html - file idx -1 = last h1 found - if index out of range set to last h1
 func GetH1(htmlString *string, idx int) string {
-	re := regexp.MustCompile(`[^>]*</h1>`)
-	h1s := re.FindAllString(*htmlString, -1)
+	return GetSectionHeadingElement(htmlString, 1, idx)
+}
 
-	h1sLen := len(h1s)
+func GetSectionHeadingElement(htmlString *string, level, idx int) string {
+	closingSectionHeadingTag := fmt.Sprintf("</h%d>", level)
+
+	re := regexp.MustCompile(fmt.Sprintf(`[^>]*%s`, closingSectionHeadingTag))
+	sectionHeadingElements := re.FindAllString(*htmlString, -1)
+
+	sectionHeadingElementsLen := len(sectionHeadingElements)
 	if idx == -1 {
-		idx = h1sLen
+		idx = sectionHeadingElementsLen
 	}
 
 	// if index out of range set last
-	if h1sLen < idx+1 {
-		idx = h1sLen - 1
+	if sectionHeadingElementsLen < idx+1 {
+		idx = sectionHeadingElementsLen - 1
 		if idx == -1 {
 			return ""
 		}
 	}
-	return html.UnescapeString(strings.TrimSuffix(h1s[idx], "</h1>"))
+	return html.UnescapeString(strings.TrimSuffix(sectionHeadingElements[idx], closingSectionHeadingTag))
 }
 
 // GetMeta of html file
