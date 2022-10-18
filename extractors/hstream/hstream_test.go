@@ -49,9 +49,9 @@ func TestExtract(t *testing.T) {
 			Name: "Single Episode 4k",
 			Args: test.Args{
 				URL:     "https://hstream.moe/hentai/wizard-girl-ambitious/1",
-				Title:   "Overflow 1",
+				Title:   "Wizard Girl Ambitious – 1",
 				Quality: "av1.2160p.webm",
-				Size:    96865295,
+				Size:    804660690,
 			},
 		},
 		{
@@ -60,7 +60,7 @@ func TestExtract(t *testing.T) {
 				URL:     "https://hstream.moe/hentai/maki-chan-to-now/1",
 				Title:   "Maki-chan to Now. – 1",
 				Quality: "av1.1080p.webm",
-				Size:    219251128,
+				Size:    180211896,
 			},
 		},
 	}
