@@ -236,6 +236,68 @@ func TestGetH1(t *testing.T) {
 	}
 }
 
+func TestGetSectionHeadingElement(t *testing.T) {
+	tests := []struct {
+		Name       string
+		htmlString string
+		level      int
+		idx        int
+		Want       string
+	}{
+		{
+			Name:       "h1",
+			htmlString: `<h1>Overflow 8</h1>`,
+			level:      1,
+			idx:        0,
+			Want:       "Overflow 8",
+		},
+		{
+			Name:       "h2",
+			htmlString: `<h2>Overflow 8</h2>`,
+			level:      2,
+			idx:        0,
+			Want:       "Overflow 8",
+		},
+		{
+			Name:       "h3",
+			htmlString: `<h3>Overflow 8</h3>`,
+			level:      3,
+			idx:        0,
+			Want:       "Overflow 8",
+		},
+		{
+			Name:       "h4",
+			htmlString: `<h4>Overflow 8</h4>`,
+			level:      4,
+			idx:        0,
+			Want:       "Overflow 8",
+		},
+		{
+			Name:       "h5",
+			htmlString: `<h5>Overflow 8</h5>`,
+			level:      5,
+			idx:        0,
+			Want:       "Overflow 8",
+		},
+		{
+			Name:       "h6",
+			htmlString: `<h6>Overflow 8</h6>`,
+			level:      6,
+			idx:        0,
+			Want:       "Overflow 8",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.Name, func(t *testing.T) {
+			h1 := GetSectionHeadingElement(&tt.htmlString, tt.level, tt.idx)
+
+			if h1 != tt.Want {
+				t.Errorf("Got: %v - Want: %v", h1, tt.Want)
+			}
+		})
+	}
+}
+
 func TestMeta(t *testing.T) {
 	tests := []struct {
 		htmlString string

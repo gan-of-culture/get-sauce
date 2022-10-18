@@ -1,4 +1,4 @@
-package hentaistream
+package hstream
 
 import (
 	"testing"
@@ -14,26 +14,26 @@ func TestParseURL(t *testing.T) {
 	}{
 		{
 			Name: "Single Episode",
-			URL:  "https://hentaistream.moe/593/kateikyoushi-no-oneesan-2-the-animation-1/",
+			URL:  "https://hstream.moe/hentai/maki-chan-to-now/1",
 			Want: 1,
 		}, {
 			Name: "Series",
-			URL:  "https://hentaistream.moe/anime/kateikyoushi-no-oneesan-2-the-animation/",
-			Want: 2,
+			URL:  "https://hstream.moe/hentai/maki-chan-to-now",
+			Want: 4,
 		}, {
 			Name: "Single Episode 4k",
-			URL:  "https://hentaistream.moe/515/overflow-1/",
+			URL:  "https://hstream.moe/hentai/aku-no-onna-kanbu-full-moon-night-r/1",
 			Want: 1,
 		}, {
 			Name: "Series 4k",
-			URL:  "https://hentaistream.moe/anime/overflow/",
-			Want: 8,
+			URL:  "https://hstream.moe/hentai/aku-no-onna-kanbu-full-moon-night-r",
+			Want: 2,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.Name, func(t *testing.T) {
 			URLs := parseURL(tt.URL)
-			if len(URLs) > tt.Want && tt.Want != 0 {
+			if len(URLs) > tt.Want || len(URLs) == 0 {
 				t.Errorf("Got: %v - Want: %v", len(URLs), tt.Want)
 			}
 		})
@@ -46,18 +46,9 @@ func TestExtract(t *testing.T) {
 		Args test.Args
 	}{
 		{
-			Name: "Single Episode 8k",
-			Args: test.Args{
-				URL:     "https://hentaistream.moe/816/oneshota-1/",
-				Title:   "Oneshota 1",
-				Quality: "av1.4320p.webm",
-				Size:    1073734107,
-			},
-		},
-		{
 			Name: "Single Episode 4k",
 			Args: test.Args{
-				URL:     "https://hentaistream.moe/515/overflow-1/",
+				URL:     "https://hstream.moe/hentai/wizard-girl-ambitious/1",
 				Title:   "Overflow 1",
 				Quality: "av1.2160p.webm",
 				Size:    96865295,
@@ -66,8 +57,8 @@ func TestExtract(t *testing.T) {
 		{
 			Name: "Single Episode",
 			Args: test.Args{
-				URL:     "https://hentaistream.moe/593/kateikyoushi-no-oneesan-2-the-animation-1/",
-				Title:   "Kateikyoushi no Oneesan 2 The Animation 1",
+				URL:     "https://hstream.moe/hentai/maki-chan-to-now/1",
+				Title:   "Maki-chan to Now. – 1",
 				Quality: "av1.1080p.webm",
 				Size:    219251128,
 			},
