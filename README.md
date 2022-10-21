@@ -267,13 +267,12 @@ The following links will direct you to adult content. Please keep that in mind!
 | [animeidhentai.com (1080p, 720p, 480p, 360p)](https://animeidhentai.com)                  |         ?          |:heavy_check_mark:|
 | [booruproject (ex. rule34, gelbooru)](https://booru.org/top)                              | :heavy_check_mark: |:heavy_check_mark:|
 | [booru.io](https://booru.io/)                                                             | :heavy_check_mark: |        ?         |
-| [www.cartoonpornvideos.com (1080p, 720p, 480p, 360p)](https://www.cartoonpornvideos.com)  |        :x:         |:heavy_check_mark:|
 | [comicporn.xxx](https://comicporn.xxx)                                                    | :heavy_check_mark: |        ?         |
 | [danbooru.donmai.us](https://danbooru.donmai.us)                                          | :heavy_check_mark: |        ?         |
 | [doujin.sexy](https://doujin.sexy)                                                        | :heavy_check_mark: |        ?         |
 | [e-hentai.org](http://e-hentai.org/)                                                      | :heavy_check_mark: |        ?         |
 | [ecchi.iwara.tv](https://ecchi.iwara.tv/)                                                 | :heavy_check_mark: |:heavy_check_mark:|
-| [exhentai.org](http://exhentai.org/)                                                     | :heavy_check_mark: |        ?         |:closed_lock_with_key:|
+| [exhentai.org](http://exhentai.org/)                                                      | :heavy_check_mark: |        ?         |:closed_lock_with_key:|
 | [haho.moe (1080p, 720p, 480p, 360p)](https://haho.moe)                                    |         ?          |:heavy_check_mark:|
 | [hanime.tv (720p, 480p, 360p)](https://hanime.tv)                                         |         ?          |:heavy_check_mark:|
 | [hentai.tv (1080p, 720p, 480p, 360p)](https://hentai.tv/)                                 |         ?          |:heavy_check_mark:|
