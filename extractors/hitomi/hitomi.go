@@ -54,6 +54,8 @@ var rePathFromHash = regexp.MustCompile(`(..)(.)$`)
 
 var ggValues []*int
 var b string
+var ggMatchedValue int
+var ggNonMatchedValue int
 
 type extractor struct{}
 
@@ -68,7 +70,10 @@ func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 		return nil, static.ErrURLParseFailed
 	}
 
-	initGGValues()
+	err := initGGValues()
+	if err != nil {
+		return nil, err
+	}
 
 	data := []*static.Data{}
 	for _, u := range URLs {
@@ -222,10 +227,25 @@ func fullPathFromHash(hash string) string {
 	return fmt.Sprintf("%s%d/%s", b, dec, hash)
 }
 
-func initGGValues() {
+func initGGValues() error {
 	jsStr, _ := request.GetWithHeaders(ggURL, map[string]string{"Referer": site})
 
 	b = regexp.MustCompile(`\d+/`).FindString(jsStr)
+
+	matchedLimitValues := regexp.MustCompile(`\d;`).FindAllString(jsStr, -1)
+	if len(matchedLimitValues) < 2 {
+		return fmt.Errorf("no limit values found in: %s", ggURL)
+	}
+
+	var err error
+	ggNonMatchedValue, err = strconv.Atoi(strings.Trim(matchedLimitValues[0], ";"))
+	if err != nil {
+		return err
+	}
+	ggMatchedValue, _ = strconv.Atoi(strings.Trim(matchedLimitValues[1], ";"))
+	if err != nil {
+		return err
+	}
 
 	re := regexp.MustCompile(`case (\d+)`)
 	matchedCases := re.FindAllStringSubmatch(jsStr, -1)
@@ -235,16 +255,18 @@ func initGGValues() {
 
 		ggValues[idx] = &n
 	}
+
+	return nil
 }
 
 func inGGValues(num int) int {
 	if ggValues == nil {
-		return 1
+		return ggNonMatchedValue
 	}
 	for _, value := range ggValues {
 		if *value == num {
-			return 0
+			return ggMatchedValue
 		}
 	}
-	return 1
+	return ggNonMatchedValue
 }
