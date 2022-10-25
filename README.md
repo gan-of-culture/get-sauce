@@ -333,6 +333,7 @@ user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML,
 
 🔐
 --> you need to supply login credentials for this extractor to work
+
 ```console
 get-sauce -un "MyUserName" -up "MyUserPassword" http...
 ```
