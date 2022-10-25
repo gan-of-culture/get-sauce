@@ -43,6 +43,7 @@ type gallery struct {
 
 const site = "https://hitomi.la/"
 const nozomi = "https://ltn.hitomi.la/"
+const readerURL = "https://hitomi.la/reader/"
 const nozomiExt = "nozomi"
 const galleriesPerPage = 25
 const ggURL = nozomi + "gg.js"
@@ -169,7 +170,7 @@ func extractData(URL string) (*static.Data, error) {
 				URLs: URLs,
 			},
 		},
-		URL: URL,
+		URL: fmt.Sprintf("%s%s.html", readerURL, galleryData.ID),
 	}, nil
 }
 
@@ -238,12 +239,12 @@ func initGGValues() {
 
 func inGGValues(num int) int {
 	if ggValues == nil {
-		return 0
+		return 1
 	}
 	for _, value := range ggValues {
 		if *value == num {
-			return 1
+			return 0
 		}
 	}
-	return 0
+	return 1
 }
