@@ -12,7 +12,7 @@ import (
 )
 
 const site = "https://pururin.to/"
-const cdn = "https://cdn.pururin.io/assets/images/data/%s/%d.jpg"
+const cdn = "https://cdn.pururin.to/assets/images/data/%s/%d.jpg"
 
 var reID = regexp.MustCompile(fmt.Sprintf("%sgallery/(\\d*)/[^\"]*", site))
 var rePageInfo = regexp.MustCompile(`(\d+) \( [\d.]+ \w \)`)
