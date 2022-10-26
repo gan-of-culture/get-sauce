@@ -27,8 +27,9 @@ type filePiece struct {
 }
 
 type downloadInfo struct {
-	URL   static.URL
-	Title string
+	URL     static.URL
+	Referer string
+	Title   string
 }
 
 // downloaderStruct instance
@@ -159,7 +160,7 @@ func (downloader *downloaderStruct) downloadStream(data *static.Data) (string, e
 				if !ok {
 					return
 				}
-				err := downloader.save(dlInfo.URL, data.URL, dlInfo.Title)
+				err := downloader.save(dlInfo.URL, dlInfo.Referer, dlInfo.Title)
 				if err != nil {
 					lock.Lock()
 					saveErr = err
@@ -186,7 +187,7 @@ func (downloader *downloaderStruct) downloadStream(data *static.Data) (string, e
 			fileURI = filepath.Join(downloader.tmpFilePath, fmt.Sprintf("%d.%s", pageNumbers[idx], URL.Ext))
 		}
 
-		URLchan <- downloadInfo{*URL, fileURI}
+		URLchan <- downloadInfo{*URL, data.URL, fileURI}
 	}
 	close(URLchan)
 	wg.Wait()
