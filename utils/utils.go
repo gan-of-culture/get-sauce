@@ -126,10 +126,10 @@ func GetMeta(htmlString *string, property string) string {
 	return metaTags[0][1]
 }
 
-// RemoveAdjDuplicates of string slice
-func RemoveAdjDuplicates(slice []string) []string {
-	out := []string{}
-	var last string
+// RemoveAdjDuplicates of slice
+func RemoveAdjDuplicates[T string | int](slice []T) []T {
+	out := []T{}
+	var last T
 	for _, s := range slice {
 		if s != last {
 			out = append(out, s)
