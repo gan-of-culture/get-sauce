@@ -36,6 +36,7 @@ import (
 	"github.com/gan-of-culture/get-sauce/extractors/nhgroup"
 	"github.com/gan-of-culture/get-sauce/extractors/ninehentai"
 	"github.com/gan-of-culture/get-sauce/extractors/ohentai"
+	"github.com/gan-of-culture/get-sauce/extractors/orzqwq"
 	"github.com/gan-of-culture/get-sauce/extractors/pururin"
 	"github.com/gan-of-culture/get-sauce/extractors/rule34"
 	"github.com/gan-of-culture/get-sauce/extractors/simplyhentai"
@@ -103,6 +104,7 @@ func init() {
 		"muchohentai.com":        muchohentai.New(),
 		"nhentai.net":            nhentai.New(),
 		"ohentai.org":            ohentai.New(),
+		"orzqwq.com":             orzqwq.New(),
 		"pururin.to":             pururin.New(),
 		"rule34.paheal.net":      rule34.New(),
 		"www.simply-hentai.com":  simplyhentai.New(),
