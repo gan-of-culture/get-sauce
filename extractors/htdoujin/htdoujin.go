@@ -26,26 +26,32 @@ type siteConfig struct {
 
 var sites map[string]siteConfig = map[string]siteConfig{
 	"comicporn.xxx": {
-		ReaderURLPrefix: "view",
+		CDNPrefixSrcURLPart: "js/main_v7.js",
+		ReaderURLPrefix:     "view",
 	},
 	"imhentai.xxx": {
-		ReaderURLPrefix: "view",
+		CDNPrefixSrcURLPart: "js/main_94xa9x.js",
+		ReaderURLPrefix:     "view",
 	},
 	"hentaienvy.com": {
-		ReaderURLPrefix: "g",
+		CDNPrefixSrcURLPart: "js/main_v4.js",
+		ReaderURLPrefix:     "g",
 	},
 	"hentaiera.com": {
-		ReaderURLPrefix: "view",
+		CDNPrefixSrcURLPart: "js/main_g2kqxa.js",
+		ReaderURLPrefix:     "view",
 	},
 	"hentaifox.com": {
 		CDNPrefixSrcURLPart: "i",
 		ReaderURLPrefix:     "g",
 	},
 	"hentairox.com": {
-		ReaderURLPrefix: "view",
+		CDNPrefixSrcURLPart: "js/main_v8.js",
+		ReaderURLPrefix:     "view",
 	},
 	"hentaizap.com": {
-		ReaderURLPrefix: "g",
+		CDNPrefixSrcURLPart: "js/main_v19.js",
+		ReaderURLPrefix:     "g",
 	},
 }
 
@@ -56,7 +62,6 @@ var cdnDetermenationID CDNDetermenationID
 var cdnPrefixLevels []int
 var readerURLPrefix string
 
-var reMainJsPath *regexp.Regexp = regexp.MustCompile(`js/main_\w+\.js`)
 var reGID *regexp.Regexp = regexp.MustCompile(`/gallery/(\d+)/`)
 var reUIDLevels *regexp.Regexp = regexp.MustCompile(`u_id\s*>\s*(\d+)`)
 var reTitle *regexp.Regexp = regexp.MustCompile(`<title>(.+)</title>`)
@@ -240,17 +245,7 @@ func getCDNPrefix(prefixSelectionID string, cdnDetId CDNDetermenationID) (string
 }
 
 func parseCDNPrefixLevels() ([]int, CDNDetermenationID, error) {
-	htmlString, err := request.Get(site)
-	if err != nil {
-		return nil, Unknown, err
-	}
-
-	mainJsPathPart := reMainJsPath.FindString(htmlString)
-	if mainJsPathPart == "" {
-		return nil, Unknown, errors.New("no main_*.js file was found linked from the homepage")
-	}
-
-	jsString, err := request.Get(site + mainJsPathPart)
+	jsString, err := request.Get(site + sites[host].CDNPrefixSrcURLPart)
 	if err != nil {
 		return nil, Unknown, err
 	}
