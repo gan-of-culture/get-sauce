@@ -3,6 +3,7 @@ package orzqwq
 import (
 	"fmt"
 	"regexp"
+	"sort"
 	"strconv"
 	"strings"
 
@@ -13,8 +14,7 @@ import (
 
 const site = "https://orzqwq.com/"
 
-var reImageURL = regexp.MustCompile(`image-0" src="([^"]+/)\d+\.(\w{3})`)
-var reNumPages = regexp.MustCompile(`(\d+) pages`)
+var reImageURL = regexp.MustCompile(`image-\d+"\ssrc="([^"]+)`)
 
 type extractor struct{}
 
@@ -61,27 +61,35 @@ func extractData(URL string) (*static.Data, error) {
 		return nil, err
 	}
 
-	imageTemplateURL := reImageURL.FindStringSubmatch(htmlString)
-	if len(imageTemplateURL) < 3 {
-		return nil, static.ErrDataSourceParseFailed
+	re := regexp.MustCompile(URL + `p(\d+)`)
+	pages := []int{}
+	for _, pageNum := range re.FindAllStringSubmatch(htmlString, -1) {
+		numAsInt, err := strconv.Atoi(pageNum[1])
+		if err != nil {
+			return nil, err
+		}
+		pages = append(pages, numAsInt)
 	}
 
-	matchedNumPages := reNumPages.FindStringSubmatch(htmlString)
-	if len(matchedNumPages) < 2 {
-		return nil, static.ErrDataSourceParseFailed
+	sort.Ints(pages)
+	allImageURLs := []*static.URL{}
+	for _, pageNum := range utils.RemoveAdjDuplicates(pages) {
+		pageHtml, err := request.Get(fmt.Sprintf("%s/p%d", URL, pageNum))
+		if err != nil {
+			return nil, err
+		}
+		for _, imgUrl := range reImageURL.FindAllStringSubmatch(pageHtml, -1) {
+			allImageURLs = append(allImageURLs, &static.URL{
+				URL: imgUrl[1],
+				Ext: utils.GetFileExt(imgUrl[1]),
+			})
+		}
 	}
 
-	numberOfPages, err := strconv.Atoi(matchedNumPages[1])
-	if err != nil {
-		return nil, err
-	}
-
+	wantedImages := utils.NeedDownloadList(len(allImageURLs))
 	URLs := []*static.URL{}
-	for page := 1; page <= numberOfPages; page++ {
-		URLs = append(URLs, &static.URL{
-			URL: fmt.Sprintf("%s%03d.%s", imageTemplateURL[1], page, imageTemplateURL[2]),
-			Ext: imageTemplateURL[2],
-		})
+	for _, i := range wantedImages {
+		URLs = append(URLs, allImageURLs[i-1])
 	}
 
 	return &static.Data{
