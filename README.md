@@ -294,7 +294,6 @@ The following links will direct you to adult content. Please keep that in mind!
 | [hentaimama.io(1080p, 720p)](https://hentaimama.io)                                       |         ?          |:heavy_check_mark:|
 | [hentaipulse.com(720p, 420p)](https://hentaipulse.com)                                    |         ?          |:heavy_check_mark:|
 | [hentairox.com](https://hentairox.com)                                                    | :heavy_check_mark: |         ?        |
-| [hentais.tube (720p, 480p, 360p)](https://www.hentais.tube/)                              |         ?          |:heavy_check_mark:|
 | [hentaistream.moe (2160p, 1080p, 480p)](https://hentaistream.moe/)                        |         ?          |:heavy_check_mark:|
 | [hentaistream.tv (1080p, 720p, 480p, 360p)](https://hentaistream.tv)                      |         ?          |:heavy_check_mark:|
 | [hentaistream.xxx (1080p, 720, 480p, 360p)](https://hentaistream.xxx/)                    |         ?          |:heavy_check_mark:|
