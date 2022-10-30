@@ -28,8 +28,8 @@ type filePiece struct {
 
 type downloadInfo struct {
 	URL     static.URL
-	Referer string
 	Title   string
+	Headers map[string]string
 }
 
 // downloaderStruct instance
@@ -134,6 +134,9 @@ func (downloader *downloaderStruct) downloadStream(data *static.Data) (string, e
 		streamNeedsMerge = true
 	}
 
+	headers := config.FakeHeaders
+	headers["Referer"] = data.URL
+
 	lenOfUrls := len(downloader.stream.URLs)
 	appendEnum := false
 	if lenOfUrls > 1 || config.Pages != "" {
@@ -160,7 +163,7 @@ func (downloader *downloaderStruct) downloadStream(data *static.Data) (string, e
 				if !ok {
 					return
 				}
-				err := downloader.save(dlInfo.URL, dlInfo.Referer, dlInfo.Title)
+				err := downloader.save(dlInfo.URL, dlInfo.Title, dlInfo.Headers)
 				if err != nil {
 					lock.Lock()
 					saveErr = err
@@ -187,7 +190,7 @@ func (downloader *downloaderStruct) downloadStream(data *static.Data) (string, e
 			fileURI = filepath.Join(downloader.tmpFilePath, fmt.Sprintf("%d.%s", pageNumbers[idx], URL.Ext))
 		}
 
-		URLchan <- downloadInfo{*URL, data.URL, fileURI}
+		URLchan <- downloadInfo{*URL, fileURI, headers}
 	}
 	close(URLchan)
 	wg.Wait()
@@ -207,7 +210,7 @@ func (downloader *downloaderStruct) downloadStream(data *static.Data) (string, e
 	return fileURI, nil
 }
 
-func (downloader *downloaderStruct) save(URL static.URL, referer, fileURI string) error {
+func (downloader *downloaderStruct) save(URL static.URL, fileURI string, headers map[string]string) error {
 
 	openOpts := os.O_RDWR | os.O_CREATE
 	if config.Truncate {
@@ -231,9 +234,6 @@ func (downloader *downloaderStruct) save(URL static.URL, referer, fileURI string
 		}
 		return nil
 	}
-
-	headers := config.FakeHeaders
-	headers["Referer"] = referer
 
 	//if stream size bigger than 10MB then use concurWrite
 	if downloader.stream.Size > 10_000_000 && config.Workers > 1 && downloader.stream.Ext == "" {
@@ -480,8 +480,11 @@ func (downloader *downloaderStruct) downloadCaption(data *static.Data) (string, 
 		return "", nil
 	}
 
+	headers := config.FakeHeaders
+	headers["Referer"] = data.URL
+
 	fileURI := filepath.Join(downloader.filePath, fmt.Sprintf("%s_caption_%s.%s", data.Title, data.Captions[config.Caption].Language, data.Captions[config.Caption].URL.Ext))
-	err := downloader.save(data.Captions[config.Caption].URL, data.URL, fileURI)
+	err := downloader.save(data.Captions[config.Caption].URL, fileURI, headers)
 	if err != nil {
 		return "", err
 	}
