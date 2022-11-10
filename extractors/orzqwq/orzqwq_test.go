@@ -40,8 +40,8 @@ func TestExtract(t *testing.T) {
 		{
 			Name: "Single Gallery",
 			Args: test.Args{
-				URL:     "https://orzqwq.com/manga/nalnal_baby_naked-in-the-sky-p/",
-				Title:   "Nalnal_baby_Naked in the sky (P)",
+				URL:     "https://orzqwq.com/manga/%E5%96%B5%E5%B0%8F%E5%90%8910%E6%9C%88-%E9%95%9C%E8%8A%B1%E6%B0%B4%E6%9C%88/",
+				Title:   "喵小吉10月 镜花水月",
 				Quality: "",
 				Size:    0,
 			},
