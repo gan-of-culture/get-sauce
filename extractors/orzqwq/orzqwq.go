@@ -61,7 +61,7 @@ func extractData(URL string) (*static.Data, error) {
 		return nil, err
 	}
 
-	re := regexp.MustCompile(URL + `p(\d+)`)
+	re := regexp.MustCompile(strings.ToLower(URL) + `p(\d+)`)
 	pages := []int{}
 	for _, pageNum := range re.FindAllStringSubmatch(htmlString, -1) {
 		numAsInt, err := strconv.Atoi(pageNum[1])
