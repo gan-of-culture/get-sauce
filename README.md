@@ -1,6 +1,6 @@
 # get-sauce <!-- omit in toc -->
 
-[![GitHub Workflow Status](https://img.shields.io/github/workflow/status/gan-of-culture/get-sauce/Go)](https://github.com/gan-of-culture/get-sauce/actions/workflows/go.yml)
+[![Build](https://github.com/gan-of-culture/get-sauce/actions/workflows/go.yml/badge.svg?branch=master)](https://github.com/gan-of-culture/get-sauce/actions/workflows/go.yml)
 [![Go Report Card](https://goreportcard.com/badge/github.com/gan-of-culture/get-sauce)](https://goreportcard.com/report/github.com/gan-of-culture/get-sauce)
 
 Is a hentai scraper that is not using official APIs if they are restrictive. This also means that for some sites it might take longer to download content, because the download speed might be limited. Some sites only provide single downloads, downloads to lesser qualities or no downloads at all, but this scraper will always give you the opportunity to download the best available quality from each site. It's also possible to input links to a category and get-sauce will download all media under said category.
