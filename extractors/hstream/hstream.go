@@ -13,8 +13,8 @@ import (
 
 const site = "https://hstream.moe/"
 
-var reVideoSources = regexp.MustCompile(`https://stream.hstream.moe/\d+/[\w.]+/[\w./]+\.(?:mp4|webm)`)
-var reCaptionSource = regexp.MustCompile(`https://stream.hstream.moe/\d+/[\w.]+/[\w./]+\.ass`)
+var reVideoSources = regexp.MustCompile(`https://.+/\d+/[\w.]+/[\w./]+\.(?:mp4|webm)`)
+var reCaptionSource = regexp.MustCompile(`https://.+/\d+/[\w.]+/[\w./]+\.ass`)
 
 type extractor struct{}
 

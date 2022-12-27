@@ -19,7 +19,7 @@ func TestParseURL(t *testing.T) {
 		}, {
 			Name: "Landing page",
 			URL:  "https://hentaidude.com/",
-			Want: 20,
+			Want: 30,
 		}, {
 			Name: "Orderby",
 			URL:  "https://hentaidude.com/?orderby=date",
