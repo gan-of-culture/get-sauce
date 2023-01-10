@@ -14,7 +14,7 @@ import (
 
 const site = "https://orzqwq.com/"
 
-var reImageURL = regexp.MustCompile(`image-\d+"\ssrc="([^"]+)`)
+var reImageURL = regexp.MustCompile(`image-\d+"\s.+data-src="([^"]+)`)
 
 type extractor struct{}
 
