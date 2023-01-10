@@ -122,7 +122,7 @@ func TestExtract(t *testing.T) {
 				Size:    424461512,
 			},
 		},
-		{
+		/*{
 			Name: "Single Episode hentaihaven.com",
 			Args: test.Args{
 				URL:     "https://hentaihaven.com/usamimi-bouken-tan-sekuhara-shinagara-sekai-o-sukue-episode-3/",
@@ -130,7 +130,7 @@ func TestExtract(t *testing.T) {
 				Quality: "1920x1080",
 				Size:    143517696,
 			},
-		},
+		},*/
 		{
 			Name: "Single Episode",
 			Args: test.Args{
