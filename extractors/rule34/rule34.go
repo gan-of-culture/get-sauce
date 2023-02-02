@@ -126,7 +126,7 @@ func extractData(URL string) (*static.Data, error) {
 	}
 
 	dataType := static.DataTypeImage
-	if strings.Contains(htmlString, "#Videomain") {
+	if strings.Contains(htmlString, "Videomain") {
 		dataType = static.DataTypeVideo
 	}
 

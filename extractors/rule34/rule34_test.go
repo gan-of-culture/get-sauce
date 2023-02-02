@@ -109,7 +109,7 @@ func TestMassExtract(t *testing.T) {
 			config.Amount = 10
 			elements, err := New().Extract(tt.URL)
 			if err != nil {
-				t.Error("elements has error or is too big for single tests")
+				test.CheckError(t, err)
 			}
 			if len(elements) != tt.Want {
 				t.Errorf("Got: %v - Want: %v", len(elements), tt.Want)
