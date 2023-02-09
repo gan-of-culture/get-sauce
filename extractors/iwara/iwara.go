@@ -22,13 +22,13 @@ const site = "https://ecchi.iwara.tv/"
 const videoAPI = "https://ecchi.iwara.tv/api/video/"
 
 var reImgSource *regexp.Regexp = regexp.MustCompile(`([^"]+large/public/photos/[^"]+)"(?: width="([^"]*)[^=]+="([^"]*))`)
-var reExt *regexp.Regexp = regexp.MustCompile(`(\w+)\?itok=[a-zA-Z\d]+$`)
+var reExt *regexp.Regexp = regexp.MustCompile(`(\w+)\?itok=[^\s]+$`)
 var reTitle *regexp.Regexp = regexp.MustCompile(`<title>([^|]+)`)
 var reVideoID *regexp.Regexp = regexp.MustCompile(`https://ecchi.iwara.tv/videos/(.+)`)
 
 type extractor struct{}
 
-// New returns a thehentaiworld extractor.
+// New returns a iwara extractor.
 func New() static.Extractor {
 	return &extractor{}
 }
