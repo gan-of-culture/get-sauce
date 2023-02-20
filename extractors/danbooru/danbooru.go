@@ -26,6 +26,9 @@ func New() static.Extractor {
 // Extract for danbooru pages
 func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 	config.FakeHeaders["User-Agent"] = "Mozilla/4.0 (compatible; MSIE 9.0; Windows NT 6.1)"
+	defer func() {
+		config.FakeHeaders["User-Agent"] = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.81 Safari/537.36"
+	}()
 
 	posts, err := parseURL(URL)
 	if err != nil {
