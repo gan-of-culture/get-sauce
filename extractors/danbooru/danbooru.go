@@ -6,6 +6,7 @@ import (
 	"regexp"
 	"strings"
 
+	"github.com/gan-of-culture/get-sauce/config"
 	"github.com/gan-of-culture/get-sauce/request"
 	"github.com/gan-of-culture/get-sauce/static"
 	"github.com/gan-of-culture/get-sauce/utils"
@@ -24,6 +25,8 @@ func New() static.Extractor {
 
 // Extract for danbooru pages
 func (e *extractor) Extract(URL string) ([]*static.Data, error) {
+	config.FakeHeaders["User-Agent"] = "Mozilla/4.0 (compatible; MSIE 9.0; Windows NT 6.1)"
+
 	posts, err := parseURL(URL)
 	if err != nil {
 		return nil, err
