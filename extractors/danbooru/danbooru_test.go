@@ -3,6 +3,7 @@ package danbooru
 import (
 	"testing"
 
+	"github.com/gan-of-culture/get-sauce/config"
 	"github.com/gan-of-culture/get-sauce/test"
 )
 
@@ -22,6 +23,10 @@ func TestParseURL(t *testing.T) {
 			Want: 1,
 		},
 	}
+	config.FakeHeaders["User-Agent"] = "Mozilla/4.0 (compatible; MSIE 9.0; Windows NT 6.1)"
+	defer func() {
+		config.FakeHeaders["User-Agent"] = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.81 Safari/537.36"
+	}()
 	for _, tt := range tests {
 		t.Run(tt.Name, func(t *testing.T) {
 			URLs, err := parseURL(tt.URL)
