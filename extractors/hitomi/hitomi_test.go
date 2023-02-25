@@ -59,6 +59,24 @@ func TestExtract(t *testing.T) {
 				Size:    0,
 			},
 		},
+		{
+			Name: "Single Game CG",
+			Args: test.Args{
+				URL:     "https://hitomi.la/gamecg/taimanin-rpgx-2194813.html#1",
+				Title:   "Taimanin RPGX",
+				Quality: "",
+				Size:    0,
+			},
+		},
+		{
+			Name: "Single Artist CG",
+			Args: test.Args{
+				URL:     "https://hitomi.la/cg/%E3%82%A6%E3%83%81%E3%81%AE%E5%BC%9F%E3%83%9E%E3%82%B8%E3%81%A7%E3%83%87%E3%82%AB%E3%82%A4%E3%82%93%E3%81%A0%E3%81%91%E3%81%A9%E8%A6%8B%E3%81%AB%E3%81%93%E3%81%AA%E3%81%84%EF%BC%9F-%E6%97%A5%E6%9C%AC%E8%AA%9E-1258357.html#1",
+				Title:   "Uchi no Otouto Maji de Dekain dakedo Mi ni Konai?",
+				Quality: "",
+				Size:    0,
+			},
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.Name, func(t *testing.T) {

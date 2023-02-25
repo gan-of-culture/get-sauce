@@ -88,7 +88,7 @@ func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 }
 
 func parseURL(URL string) []string {
-	if ok, _ := regexp.MatchString(fmt.Sprintf("%s(?:manga|doujinshi)/", site), URL); ok {
+	if ok, _ := regexp.MatchString(fmt.Sprintf("%s(?:manga|doujinshi|cg|gamecg)/", site), URL); ok {
 		re := regexp.MustCompile(`(\d*).html#*\d*$`)
 		id := re.FindStringSubmatch(URL)[1]
 		return []string{fmt.Sprintf("%sgalleries/%s.js", nozomi, id)}
