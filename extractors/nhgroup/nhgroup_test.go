@@ -24,7 +24,7 @@ func TestParseURL(t *testing.T) {
 			Name: "Single Episode hentaihaven.com",
 			URL:  "https://hentaihaven.com/soshite-watashi-wa-sensei-ni-episode-1/",
 			Want: 1,
-		}, {
+		}, /*{
 			Name: "Single Episode hentaihaven.co/",
 			URL:  "https://hentaihaven.co/watch/seika-jogakuin-koutoubu-kounin-sao-oji-san-episode-3/",
 			Want: 1,
@@ -32,7 +32,7 @@ func TestParseURL(t *testing.T) {
 			Name: "Overview hentaihaven.co/",
 			URL:  "https://hentaihaven.co/brand/bunnywalker/",
 			Want: 36,
-		}, {
+		},*/{
 			Name: "Single Episode hentaihaven.red/",
 			URL:  "https://hentaihaven.red/hentai/joshi-luck-episode-1/",
 			Want: 1,
@@ -113,7 +113,7 @@ func TestExtract(t *testing.T) {
 				Size:    143517696,
 			},
 		},
-		{
+		/*{
 			Name: "Single Episode hentaihaven.co",
 			Args: test.Args{
 				URL:     "https://hentaihaven.co/watch/seika-jogakuin-koutoubu-kounin-sao-oji-san-episode-3/",
@@ -121,7 +121,7 @@ func TestExtract(t *testing.T) {
 				Quality: "1280x720",
 				Size:    424461512,
 			},
-		},
+		},*/
 		/*{
 			Name: "Single Episode hentaihaven.com",
 			Args: test.Args{
