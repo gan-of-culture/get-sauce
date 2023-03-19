@@ -271,7 +271,6 @@ The following links will direct you to adult content. Please keep that in mind!
 | [danbooru.donmai.us](https://danbooru.donmai.us)                                          | :heavy_check_mark: |        ?         |
 | [doujin.sexy](https://doujin.sexy)                                                        | :heavy_check_mark: |        ?         |
 | [e-hentai.org](http://e-hentai.org/)                                                      | :heavy_check_mark: |        ?         |
-| [ecchi.iwara.tv](https://ecchi.iwara.tv/)                                                 | :heavy_check_mark: |:heavy_check_mark:|
 | [exhentai.org](http://exhentai.org/)                                                      | :heavy_check_mark: |        ?         |:closed_lock_with_key:|
 | [haho.moe (1080p, 720p, 480p, 360p)](https://haho.moe)                                    |         ?          |:heavy_check_mark:|
 | [hanime.tv (720p, 480p, 360p)](https://hanime.tv)                                         |         ?          |:heavy_check_mark:|
@@ -302,6 +301,7 @@ The following links will direct you to adult content. Please keep that in mind!
 | [hentaizap.com](https://hentaizap.com)                                                    | :heavy_check_mark: |        ?         |
 | [hitomi.la](https://hitomi.la/)                                                           | :heavy_check_mark: |        ?         |
 | [imhentai.com](https://imhentai.xxx)                                                      | :heavy_check_mark: |        ?         |
+| [www.iwara.tv](https://www.iwara.tv/)                                                     | :heavy_check_mark: |:heavy_check_mark:|
 | [konachan.com](https://konachan.com/post?tags=)                                           | :heavy_check_mark: |        ?         |
 | [latesthentai.com (1080p, 720p, 480p, 360p)](https://latesthentai.com/)                   |         ?          |:heavy_check_mark:|
 | [miohentai.com (1080p, 720p, 480p)](https://miohentai.com/)                               | :heavy_check_mark: |        ?         |
