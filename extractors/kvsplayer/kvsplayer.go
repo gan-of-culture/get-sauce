@@ -55,7 +55,7 @@ func ExtractFromHTML(htmlString *string) ([]*static.Data, error) {
 		return nil, static.ErrDataSourceParseFailed
 	}
 
-	if matchedKVSPlayer[0][2] != "4" && matchedKVSPlayer[0][2] != "5" {
+	if matchedKVSPlayer[0][2] != "4" && matchedKVSPlayer[0][2] != "5" && matchedKVSPlayer[0][2] != "9" && matchedKVSPlayer[0][2] != "11" {
 		fmt.Printf("Untested major version (%s) in player engine--Download may fail.", matchedKVSPlayer[0][2])
 	}
 

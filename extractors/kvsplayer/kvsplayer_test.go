@@ -14,10 +14,10 @@ func TestExtract(t *testing.T) {
 		{
 			Name: "Single Episode www.kvs-demo.com",
 			Args: test.Args{
-				URL:     "https://hentaibar.com/videos/2688/soshite-watashi-wa-ojisan-ni-episode-4-english-subbed/",
-				Title:   "soshite-watashi-wa-ojisan-ni-episode-4-english-subbed",
-				Quality: "1080p",
-				Size:    550603331,
+				URL:     "https://www.kvs-demo.com/videos/1029/nicky-romero-premieres-linkin-park-remix-at-ultra-miami/",
+				Title:   "nicky-romero-premieres-linkin-park-remix-at-ultra-miami",
+				Quality: "720p",
+				Size:    42274789,
 			},
 		},
 	}
