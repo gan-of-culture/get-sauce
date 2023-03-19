@@ -38,6 +38,7 @@ import (
 	"github.com/gan-of-culture/get-sauce/extractors/orzqwq"
 	"github.com/gan-of-culture/get-sauce/extractors/pururin"
 	"github.com/gan-of-culture/get-sauce/extractors/rule34"
+	"github.com/gan-of-culture/get-sauce/extractors/rule34video"
 	"github.com/gan-of-culture/get-sauce/extractors/simplyhentai"
 	"github.com/gan-of-culture/get-sauce/extractors/thehentaiworld"
 	"github.com/gan-of-culture/get-sauce/extractors/universal"
@@ -105,6 +106,7 @@ func init() {
 		"orzqwq.com":             orzqwq.New(),
 		"pururin.to":             pururin.New(),
 		"rule34.paheal.net":      rule34.New(),
+		"rule34video.com":        rule34video.New(),
 		"www.simply-hentai.com":  simplyhentai.New(),
 		"thehentaiworld.com":     thehentaiworld.New(),
 		"uncensoredhentai.xxx":   nhgroupExtractor,
