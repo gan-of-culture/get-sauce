@@ -21,10 +21,6 @@ func TestParseURL(t *testing.T) {
 			URL:  "https://animeidhentai.com/hentai/mako-chan-kaihatsu-nikki/",
 			Want: 4,
 		}, {
-			Name: "Single Episode hentaihaven.com",
-			URL:  "https://hentaihaven.com/soshite-watashi-wa-sensei-ni-episode-1/",
-			Want: 1,
-		}, /*{
 			Name: "Single Episode hentaihaven.co/",
 			URL:  "https://hentaihaven.co/watch/seika-jogakuin-koutoubu-kounin-sao-oji-san-episode-3/",
 			Want: 1,
@@ -32,7 +28,7 @@ func TestParseURL(t *testing.T) {
 			Name: "Overview hentaihaven.co/",
 			URL:  "https://hentaihaven.co/brand/bunnywalker/",
 			Want: 36,
-		},*/{
+		}, {
 			Name: "Single Episode hentaihaven.red/",
 			URL:  "https://hentaihaven.red/hentai/joshi-luck-episode-1/",
 			Want: 1,
@@ -82,7 +78,7 @@ func TestParseURL(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.Name, func(t *testing.T) {
-			URLs := parseURL(tt.URL)
+			URLs := ParseURL(tt.URL)
 			if len(URLs) > tt.Want || len(URLs) == 0 {
 				t.Errorf("Got: %v - Want: %v", len(URLs), tt.Want)
 			}
@@ -113,7 +109,7 @@ func TestExtract(t *testing.T) {
 				Size:    143517696,
 			},
 		},
-		/*{
+		{
 			Name: "Single Episode hentaihaven.co",
 			Args: test.Args{
 				URL:     "https://hentaihaven.co/watch/seika-jogakuin-koutoubu-kounin-sao-oji-san-episode-3/",
@@ -121,16 +117,7 @@ func TestExtract(t *testing.T) {
 				Quality: "1280x720",
 				Size:    424461512,
 			},
-		},*/
-		/*{
-			Name: "Single Episode hentaihaven.com",
-			Args: test.Args{
-				URL:     "https://hentaihaven.com/usamimi-bouken-tan-sekuhara-shinagara-sekai-o-sukue-episode-3/",
-				Title:   "Usamimi Bouken-Tan Sekuhara Shinagara Sekai O Sukue Episode 3",
-				Quality: "1920x1080",
-				Size:    143517696,
-			},
-		},*/
+		},
 		{
 			Name: "Single Episode",
 			Args: test.Args{
