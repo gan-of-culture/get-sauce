@@ -1,12 +1,12 @@
 package ninehentai
 
-/*import (
+import (
 	"testing"
 
 	"github.com/gan-of-culture/get-sauce/test"
 )
 
-//9hentai
+// 9hentai
 func TestParseURL(t *testing.T) {
 	tests := []struct {
 		Name string
@@ -65,4 +65,4 @@ func TestExtract(t *testing.T) {
 			test.Check(t, tt.Args, data[0])
 		})
 	}
-}*/
+}
