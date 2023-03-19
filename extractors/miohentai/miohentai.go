@@ -14,7 +14,6 @@ const site = "https://miohentai.com/"
 
 var reShortLink = regexp.MustCompile(site + `\?p=\d+`)
 var reSourceURL = regexp.MustCompile(`[^"]*cdn\.miohentai[^"]*`)
-var reImageSourceURL = regexp.MustCompile(`async data-src="([^"]*)`)
 
 type extractor struct{}
 
@@ -73,9 +72,6 @@ func extractData(URL string) (*static.Data, error) {
 	}
 
 	srcURL := reSourceURL.FindString(htmlString)
-	if srcURL == "" {
-		srcURL = reImageSourceURL.FindStringSubmatch(htmlString)[1]
-	}
 
 	headers, err := request.Headers(srcURL, URL)
 	if err != nil {
