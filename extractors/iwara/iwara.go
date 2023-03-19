@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"regexp"
 	"strings"
+	"time"
 
 	"github.com/gan-of-culture/get-sauce/config"
 	"github.com/gan-of-culture/get-sauce/request"
@@ -12,19 +13,151 @@ import (
 	"github.com/gan-of-culture/get-sauce/utils"
 )
 
-type stream struct {
-	Resolution string
-	URI        string
-	Mime       string
+type File struct {
+	ID            string      `json:"id"`
+	Type          string      `json:"type"`
+	Path          string      `json:"path"`
+	Name          string      `json:"name"`
+	Mime          string      `json:"mime"`
+	Size          int         `json:"size"`
+	Width         interface{} `json:"width"`
+	Height        interface{} `json:"height"`
+	Duration      interface{} `json:"duration"`
+	NumThumbnails int         `json:"numThumbnails"`
+	CreatedAt     time.Time   `json:"createdAt"`
+	UpdatedAt     time.Time   `json:"updatedAt"`
 }
 
-const site = "https://ecchi.iwara.tv/"
-const videoAPI = "https://ecchi.iwara.tv/api/video/"
+type MediaInfo struct {
+	ID              string      `json:"id"`
+	Slug            string      `json:"slug"`
+	Title           string      `json:"title"`
+	Body            string      `json:"body"`
+	Status          string      `json:"status"`
+	Rating          string      `json:"rating"`
+	Private         bool        `json:"private"`
+	Unlisted        bool        `json:"unlisted"`
+	Thumbnail       interface{} `json:"thumbnail"`
+	EmbedURL        interface{} `json:"embedUrl"`
+	Liked           bool        `json:"liked"`
+	NumLikes        int         `json:"numLikes"`
+	NumViews        int         `json:"numViews"`
+	NumComments     int         `json:"numComments"`
+	File            File        `json:"file"`
+	CustomThumbnail interface{} `json:"customThumbnail"`
+	User            struct {
+		ID         string    `json:"id"`
+		Name       string    `json:"name"`
+		Username   string    `json:"username"`
+		Status     string    `json:"status"`
+		Role       string    `json:"role"`
+		FollowedBy bool      `json:"followedBy"`
+		Following  bool      `json:"following"`
+		Friend     bool      `json:"friend"`
+		Premium    bool      `json:"premium"`
+		SeenAt     time.Time `json:"seenAt"`
+		Avatar     struct {
+			ID            string      `json:"id"`
+			Type          string      `json:"type"`
+			Path          string      `json:"path"`
+			Name          string      `json:"name"`
+			Mime          string      `json:"mime"`
+			Size          int         `json:"size"`
+			Width         interface{} `json:"width"`
+			Height        interface{} `json:"height"`
+			Duration      interface{} `json:"duration"`
+			NumThumbnails interface{} `json:"numThumbnails"`
+			CreatedAt     time.Time   `json:"createdAt"`
+			UpdatedAt     time.Time   `json:"updatedAt"`
+		} `json:"avatar"`
+		CreatedAt time.Time   `json:"createdAt"`
+		UpdatedAt time.Time   `json:"updatedAt"`
+		DeletedAt interface{} `json:"deletedAt"`
+	} `json:"user"`
+	Tags []struct {
+		ID   string `json:"id"`
+		Type string `json:"type"`
+	} `json:"tags"`
+	CreatedAt time.Time   `json:"createdAt"`
+	UpdatedAt time.Time   `json:"updatedAt"`
+	DeletedAt interface{} `json:"deletedAt"`
+	Files     []File      `json:"files"`
+	FileURL   string      `json:"fileUrl"`
+}
 
-var reImgSource *regexp.Regexp = regexp.MustCompile(`([^"]+large/public/photos/[^"]+)"(?: width="([^"]*)[^=]+="([^"]*))`)
-var reExt *regexp.Regexp = regexp.MustCompile(`(\w+)\?itok=[^\s]+$`)
-var reTitle *regexp.Regexp = regexp.MustCompile(`<title>([^|]+)`)
-var reVideoID *regexp.Regexp = regexp.MustCompile(`https://ecchi.iwara.tv/videos/(.+)`)
+type SearchResult struct {
+	Count   int `json:"count"`
+	Limit   int `json:"limit"`
+	Page    int `json:"page"`
+	Results []struct {
+		ID        string      `json:"id"`
+		Slug      string      `json:"slug"`
+		Title     string      `json:"title"`
+		Body      interface{} `json:"body"`
+		Thumbnail struct {
+			ID            string      `json:"id"`
+			Type          string      `json:"type"`
+			Path          string      `json:"path"`
+			Name          string      `json:"name"`
+			Mime          string      `json:"mime"`
+			Size          int         `json:"size"`
+			Width         int         `json:"width"`
+			Height        int         `json:"height"`
+			Duration      interface{} `json:"duration"`
+			NumThumbnails interface{} `json:"numThumbnails"`
+			CreatedAt     time.Time   `json:"createdAt"`
+			UpdatedAt     time.Time   `json:"updatedAt"`
+		} `json:"thumbnail"`
+		Rating      string        `json:"rating"`
+		Liked       bool          `json:"liked"`
+		NumImages   int           `json:"numImages"`
+		NumLikes    int           `json:"numLikes"`
+		NumViews    int           `json:"numViews"`
+		NumComments int           `json:"numComments"`
+		File        File          `json:"file"`
+		CreatedAt   time.Time     `json:"createdAt"`
+		UpdatedAt   time.Time     `json:"updatedAt"`
+		DeletedAt   interface{}   `json:"deletedAt"`
+		Files       []interface{} `json:"files"`
+		Tags        []struct {
+			ID   string `json:"id"`
+			Type string `json:"type"`
+		} `json:"tags"`
+		User struct {
+			ID         string    `json:"id"`
+			Name       string    `json:"name"`
+			Username   string    `json:"username"`
+			Status     string    `json:"status"`
+			Role       string    `json:"role"`
+			FollowedBy bool      `json:"followedBy"`
+			Following  bool      `json:"following"`
+			Friend     bool      `json:"friend"`
+			Premium    bool      `json:"premium"`
+			SeenAt     time.Time `json:"seenAt"`
+			Avatar     struct {
+				ID            string      `json:"id"`
+				Type          string      `json:"type"`
+				Path          string      `json:"path"`
+				Name          string      `json:"name"`
+				Mime          string      `json:"mime"`
+				Size          int         `json:"size"`
+				Width         int         `json:"width"`
+				Height        int         `json:"height"`
+				Duration      interface{} `json:"duration"`
+				NumThumbnails interface{} `json:"numThumbnails"`
+				CreatedAt     time.Time   `json:"createdAt"`
+				UpdatedAt     time.Time   `json:"updatedAt"`
+			} `json:"avatar"`
+			CreatedAt time.Time   `json:"createdAt"`
+			UpdatedAt time.Time   `json:"updatedAt"`
+			DeletedAt interface{} `json:"deletedAt"`
+		} `json:"user"`
+	} `json:"results"`
+}
+
+const site = "https://www.iwara.tv/"
+const api = "https://api.iwara.tv/"
+const files = "https://files.iwara.tv/"
 
 type extractor struct{}
 
@@ -52,7 +185,7 @@ func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 }
 
 func parseURL(URL string) []string {
-	if ok, _ := regexp.MatchString(site+`(?:videos|images)/`, URL); ok {
+	if ok, _ := regexp.MatchString(site+`(?:video|image)/`, URL); ok {
 		return []string{URL}
 	}
 
@@ -61,10 +194,12 @@ func parseURL(URL string) []string {
 		tmpURL = URL + "&page=%d"
 	}
 
+	tmpURL = strings.Replace(tmpURL, "www", "api", 1)
+
 	out := []string{}
 	count := 0
 	for i := 0; ; {
-		htmlString, err := request.Get(fmt.Sprintf(tmpURL, i))
+		res, err := request.GetAsBytes(fmt.Sprintf(tmpURL, i))
 		if err != nil {
 			return nil
 		}
@@ -72,12 +207,19 @@ func parseURL(URL string) []string {
 			fmt.Println(count)
 		}
 
-		re := regexp.MustCompile(`/(?:videos|images)/[a-zA-Z0-9%=?-]+"`)
-		matchedURLs := re.FindAllString(htmlString, -1)
+		searchResult := SearchResult{}
+		err = json.Unmarshal(res, &searchResult)
+		if err != nil {
+			return nil
+		}
 
 		URLs := []string{}
-		for _, matchedURL := range utils.RemoveAdjDuplicates(matchedURLs) {
-			URLs = append(URLs, site+strings.Trim(matchedURL, `/"`))
+		for _, result := range searchResult.Results {
+			mediaType := "image"
+			if result.File.Type == "video" {
+				mediaType = result.File.Type
+			}
+			URLs = append(URLs, fmt.Sprintf("%s%s/%s/%s", site, mediaType, result.ID, result.Slug))
 		}
 		count += len(URLs)
 		i += 1
@@ -95,89 +237,63 @@ func parseURL(URL string) []string {
 }
 
 func extractData(URL string) ([]*static.Data, error) {
-	resString, err := request.Get(URL)
-	if err != nil {
-		return nil, err
-	}
-
-	title := utils.GetLastItemString(reTitle.FindStringSubmatch(resString))
-	title = title[:len(title)-1]
-
-	matchedImages := reImgSource.FindAllStringSubmatch(resString, -1)
-	if len(matchedImages) > 0 {
-		data := []*static.Data{}
-		for i, img := range matchedImages {
-			img[1] = "https:" + img[1]
-
-			quality := ""
-			if len(img) > 2 {
-				quality = fmt.Sprintf("%s x %s", img[2], img[3])
-			}
-
-			size, _ := request.Size(img[1], site)
-
-			data = append(data, &static.Data{
-				Site:  site,
-				Type:  "image",
-				Title: fmt.Sprintf("%s_%d", title, i+1),
-				Streams: map[string]*static.Stream{
-					"0": {
-						URLs: []*static.URL{
-							{
-								URL: img[1],
-								Ext: reExt.FindStringSubmatch(img[1])[1],
-							},
-						},
-						Quality: quality,
-						Size:    size,
-					},
-				},
-				URL: URL,
-			})
-		}
-		return data, nil
-	}
-
-	videoID := utils.GetLastItemString(reVideoID.FindStringSubmatch(URL))
-	if videoID == "" {
+	splitURL := strings.Split(URL, "/")
+	if len(splitURL) < 5 {
 		return nil, static.ErrURLParseFailed
 	}
 
-	jsonData, err := request.GetAsBytes(videoAPI + videoID)
+	mediaType := splitURL[3]
+	id := splitURL[4]
+
+	resJson, err := request.GetAsBytesWithHeaders(fmt.Sprintf("%s%s/%s", api, mediaType, id), map[string]string{
+		"Referer": site,
+	})
 	if err != nil {
 		return nil, err
 	}
 
-	vStreams := []stream{}
-	err = json.Unmarshal(jsonData, &vStreams)
+	mediaInfo := MediaInfo{}
+	err = json.Unmarshal(resJson, &mediaInfo)
 	if err != nil {
 		return nil, err
+	}
+
+	if mediaInfo.File.ID != "" {
+		mediaInfo.Files = append(mediaInfo.Files, mediaInfo.File)
 	}
 
 	streams := map[string]*static.Stream{}
-	for i, stream := range vStreams {
-		stream.URI = "https:" + stream.URI
+	for idx, file := range mediaInfo.Files {
+		fileExt := utils.GetFileExt(file.Name)
+		fileType := file.Type
+		fileFormat := "large/"
+		if fileType != "image" {
+			fileType = "file"
+			fileFormat = ""
+		}
+		quality := ""
+		if file.Height != nil && file.Width != nil {
+			quality = fmt.Sprintf("%vx%v", file.Width, file.Height)
+		}
 
-		size, _ := request.Size(stream.URI, site)
-
-		streams[fmt.Sprint(i)] = &static.Stream{
-			Type: static.DataTypeVideo,
+		streams[fmt.Sprint(idx)] = &static.Stream{
+			Type: utils.GetMediaType(fileExt),
 			URLs: []*static.URL{
 				{
-					URL: stream.URI,
-					Ext: utils.GetLastItemString(strings.Split(stream.Mime, "/")),
+					URL: fmt.Sprintf("%s%s/%s%s/%s", files, fileType, fileFormat, file.ID, file.Name),
+					Ext: fileExt,
 				},
 			},
-			Quality: stream.Resolution,
-			Size:    size,
+			Quality: quality,
+			Size:    int64(file.Size),
 		}
 	}
 
 	return []*static.Data{
 		{
 			Site:    site,
-			Title:   title,
-			Type:    static.DataTypeVideo,
+			Title:   mediaInfo.Title,
+			Type:    static.DataType(mediaType),
 			Streams: streams,
 			URL:     URL,
 		},

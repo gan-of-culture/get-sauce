@@ -15,17 +15,17 @@ func TestParseURL(t *testing.T) {
 	}{
 		{
 			Name: "Single video",
-			URL:  "https://ecchi.iwara.tv/videos/kmnzvsa75uzbaw36?language=en",
+			URL:  "https://www.iwara.tv/video/gz8d8ik2zlhoqjk1w/rbq",
 			Want: 1,
 		}, {
 			Name: "Single images",
-			URL:  "https://ecchi.iwara.tv/images/%E6%B9%AF%E4%B8%8A%E3%81%8C%E3%82%8A%E3%82%86%E3%81%84%E3%81%A1%E3%82%83%E3%82%93?language=en",
-			Want: 2,
-		}, /*{
+			URL:  "https://www.iwara.tv/image/WThZZG81z25j4I/hell-apocalypsemash-kyrielight-edition004",
+			Want: 1,
+		}, {
 			Name: "Mass",
-			URL:  "https://ecchi.iwara.tv/images?language=en&f%5B0%5D=field_image_categories%3A5&page=1",
+			URL:  "https://www.iwara.tv/images?sort=date&rating=ecchi&page=1",
 			Want: 40,
-		},*/
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.Name, func(t *testing.T) {
@@ -49,19 +49,18 @@ func TestExtract(t *testing.T) {
 		{
 			Name: "Single video",
 			Args: test.Args{
-				URL:     "https://ecchi.iwara.tv/videos/6ko96tzl3toom77v?language=en",
-				Title:   "キズナアイのおしりでイキます！",
-				Quality: "Source",
-				Size:    140325515,
+				URL:   "https://www.iwara.tv/video/gz8d8ik2zlhoqjk1w/rbq",
+				Title: "抖音风-十位RBQ的联合参演！",
+				Size:  185614559,
 			},
 		},
 		{
 			Name: "Single images post",
 			Args: test.Args{
-				URL:     "https://ecchi.iwara.tv/images/%E6%B9%AF%E4%B8%8A%E3%81%8C%E3%82%8A%E3%82%86%E3%81%84%E3%81%A1%E3%82%83%E3%82%93?language=en",
-				Title:   "湯上がりゆいちゃん_1",
-				Quality: "940 x 480",
-				Size:    50745,
+				URL:     "https://www.iwara.tv/image/x6hVrNaf0WVdLE/nico-tomoare-provocation-dance-preview-mmdd",
+				Title:   "【コイカツ】 Nico Tomoare Provocation Dance Preview 【MMDD】",
+				Quality: "1280x720",
+				Size:    294562,
 			},
 		},
 	}
