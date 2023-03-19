@@ -18,14 +18,14 @@ var reNHPlayerURL = regexp.MustCompile(`https:\\?/\\?/nhplayer\.com\\?/v\\?/[^/"
 
 type extractor struct{}
 
-// New returns a animeidhentai extractor.
+// New returns a nhgroup extractor.
 func New() static.Extractor {
 	return &extractor{}
 }
 
 func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 
-	URLs := parseURL(URL)
+	URLs := ParseURL(URL)
 	if len(URLs) == 0 {
 		return nil, static.ErrURLParseFailed
 	}
@@ -46,7 +46,7 @@ func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 	return data, nil
 }
 
-func parseURL(URL string) []string {
+func ParseURL(URL string) []string {
 	if ok, _ := regexp.MatchString(`episode-\d+[/_\-]*`, URL); ok {
 		return []string{URL}
 	}
