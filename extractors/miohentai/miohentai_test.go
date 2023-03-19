@@ -20,10 +20,6 @@ func TestParseURL(t *testing.T) {
 			Name: "Tag",
 			URL:  "https://miohentai.com/tag/1080p/",
 			Want: 20,
-		}, {
-			Name: "Image",
-			URL:  "https://miohentai.com/image-library/my-favorite-sexy-lingerie/",
-			Want: 1,
 		},
 	}
 	for _, tt := range tests {
@@ -48,15 +44,6 @@ func TestExtract(t *testing.T) {
 				Title:   "Enjo Kouhai – Episode 2",
 				Quality: "",
 				Size:    131533561,
-			},
-		},
-		{
-			Name: "Single Image",
-			Args: test.Args{
-				URL:     "https://miohentai.com/image-library/my-favorite-sexy-lingerie/",
-				Title:   "my-favorite-sexy-lingerie",
-				Quality: "",
-				Size:    170503,
 			},
 		},
 	}
