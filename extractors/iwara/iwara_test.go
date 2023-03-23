@@ -15,15 +15,15 @@ func TestParseURL(t *testing.T) {
 	}{
 		{
 			Name: "Single video",
-			URL:  "https://www.iwara.tv/video/gz8d8ik2zlhoqjk1w/rbq",
+			URL:  "https://iwara.tv/video/1ye3vfv2bpfmpe0k2",
 			Want: 1,
 		}, {
 			Name: "Single images",
-			URL:  "https://www.iwara.tv/image/WThZZG81z25j4I/hell-apocalypsemash-kyrielight-edition004",
+			URL:  "https://iwara.tv/image/x6hVrNaf0WVdLE/nico-tomoare-provocation-dance-preview-mmdd",
 			Want: 1,
 		}, {
 			Name: "Mass",
-			URL:  "https://www.iwara.tv/images?sort=date&rating=ecchi&page=1",
+			URL:  "https://iwara.tv/images?sort=date&rating=ecchi&page=1",
 			Want: 40,
 		},
 	}
@@ -49,15 +49,16 @@ func TestExtract(t *testing.T) {
 		{
 			Name: "Single video",
 			Args: test.Args{
-				URL:   "https://www.iwara.tv/video/gz8d8ik2zlhoqjk1w/rbq",
-				Title: "抖音风-十位RBQ的联合参演！",
-				Size:  185614559,
+				URL:     "https://iwara.tv/video/1ye3vfv2bpfmpe0k2",
+				Title:   "女武神的日常",
+				Quality: "Source",
+				Size:    306465871,
 			},
 		},
 		{
 			Name: "Single images post",
 			Args: test.Args{
-				URL:     "https://www.iwara.tv/image/x6hVrNaf0WVdLE/nico-tomoare-provocation-dance-preview-mmdd",
+				URL:     "https://iwara.tv/image/x6hVrNaf0WVdLE/nico-tomoare-provocation-dance-preview-mmdd",
 				Title:   "【コイカツ】 Nico Tomoare Provocation Dance Preview 【MMDD】",
 				Quality: "1280x720",
 				Size:    294562,

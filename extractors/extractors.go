@@ -97,7 +97,7 @@ func init() {
 		"hentaizap.com":          htdoujinExtractor,
 		"hitomi.la":              hitomi.New(),
 		"imhentai.xxx":           htdoujinExtractor,
-		"www.iwara.tv":           iwara.New(),
+		"iwara.tv":               iwara.New(),
 		"latesthentai.com":       nhgroupExtractor,
 		"miohentai.com":          miohentai.New(),
 		"muchohentai.com":        muchohentai.New(),

@@ -1,9 +1,13 @@
 package iwara
 
 import (
+	"crypto/sha1"
 	"encoding/json"
 	"fmt"
+	"io"
+	"net/url"
 	"regexp"
+	"strconv"
 	"strings"
 	"time"
 
@@ -85,6 +89,18 @@ type MediaInfo struct {
 	FileURL   string      `json:"fileUrl"`
 }
 
+type VideoSource struct {
+	ID   string `json:"id"`
+	Name string `json:"name"`
+	Src  struct {
+		View     string `json:"view"`
+		Download string `json:"download"`
+	} `json:"src"`
+	CreatedAt time.Time `json:"createdAt"`
+	UpdatedAt time.Time `json:"updatedAt"`
+	Type      string    `json:"type"`
+}
+
 type SearchResult struct {
 	Count   int `json:"count"`
 	Limit   int `json:"limit"`
@@ -155,7 +171,7 @@ type SearchResult struct {
 	} `json:"results"`
 }
 
-const site = "https://www.iwara.tv/"
+const site = "https://iwara.tv/"
 const api = "https://api.iwara.tv/"
 const files = "https://files.iwara.tv/"
 
@@ -194,7 +210,7 @@ func parseURL(URL string) []string {
 		tmpURL = URL + "&page=%d"
 	}
 
-	tmpURL = strings.Replace(tmpURL, "www", "api", 1)
+	tmpURL = strings.Replace(tmpURL, "https://", "https://api.", 1)
 
 	out := []string{}
 	count := 0
@@ -263,29 +279,19 @@ func extractData(URL string) ([]*static.Data, error) {
 	}
 
 	streams := map[string]*static.Stream{}
+	mediaStreams := map[string]*static.Stream{}
 	for idx, file := range mediaInfo.Files {
-		fileExt := utils.GetFileExt(file.Name)
-		fileType := file.Type
-		fileFormat := "large/"
-		if fileType != "image" {
-			fileType = "file"
-			fileFormat = ""
+		switch file.Type {
+		case "image":
+			mediaStreams, err = imageFileInfoToStream(&file, idx)
+		case "video":
+			mediaStreams, err = videoFileInfoToStream(&file, mediaInfo.FileURL, idx)
 		}
-		quality := ""
-		if file.Height != nil && file.Width != nil {
-			quality = fmt.Sprintf("%vx%v", file.Width, file.Height)
+		if err != nil {
+			return nil, err
 		}
-
-		streams[fmt.Sprint(idx)] = &static.Stream{
-			Type: utils.GetMediaType(fileExt),
-			URLs: []*static.URL{
-				{
-					URL: fmt.Sprintf("%s%s/%s%s/%s", files, fileType, fileFormat, file.ID, file.Name),
-					Ext: fileExt,
-				},
-			},
-			Quality: quality,
-			Size:    int64(file.Size),
+		for k, v := range mediaStreams {
+			streams[k] = v
 		}
 	}
 
@@ -298,4 +304,79 @@ func extractData(URL string) ([]*static.Data, error) {
 			URL:     URL,
 		},
 	}, nil
+}
+
+func imageFileInfoToStream(fileInfo *File, idx int) (map[string]*static.Stream, error) {
+	fileExt := utils.GetFileExt(fileInfo.Name)
+
+	quality := ""
+	if fileInfo.Height != nil && fileInfo.Width != nil {
+		quality = fmt.Sprintf("%vx%v", fileInfo.Width, fileInfo.Height)
+	}
+
+	return map[string]*static.Stream{
+		fmt.Sprint(idx): {
+			Type: utils.GetMediaType(fileExt),
+			URLs: []*static.URL{
+				{
+					URL: fmt.Sprintf("%s%s/large/%s/%s", files, fileInfo.Type, fileInfo.ID, fileInfo.Name),
+					Ext: fileExt,
+				},
+			},
+			Quality: quality,
+			Size:    int64(fileInfo.Size),
+		},
+	}, nil
+
+}
+
+func videoFileInfoToStream(fileInfo *File, fileURL string, idx int) (map[string]*static.Stream, error) {
+	u, err := url.Parse(fileURL)
+	if err != nil {
+		return nil, err
+	}
+
+	// https://www.iwara.tv/main.c0260392c56cd1aad6a4.js contains the hash salt
+	// if you search for X-Version it should be above
+	h := sha1.New()
+	io.WriteString(h, fmt.Sprintf("%s_%s_5nFp9kmbNnHdAFhaqMvt", fileInfo.ID, u.Query().Get("expires")))
+
+	res, err := request.GetAsBytesWithHeaders(fileURL, map[string]string{
+		"Referer":   site,
+		"X-Version": fmt.Sprintf("%x", h.Sum(nil)),
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	videoSources := []VideoSource{}
+	err = json.Unmarshal(res, &videoSources)
+	if err != nil {
+		return nil, err
+	}
+
+	fileExt := utils.GetFileExt(fileInfo.Name)
+
+	out := map[string]*static.Stream{}
+	for i, source := range videoSources {
+		fileSize, _ := request.Size("https:"+source.Src.View, site)
+		quality := source.Name
+		if _, err := strconv.ParseInt(quality, 10, 64); err == nil {
+			quality = quality + "p"
+		}
+
+		out[fmt.Sprint(idx+len(videoSources)-i-1)] = &static.Stream{
+			Type: utils.GetMediaType(fileExt),
+			URLs: []*static.URL{
+				{
+					URL: "https:" + source.Src.View,
+					Ext: fileExt,
+				},
+			},
+			Quality: quality,
+			Size:    fileSize,
+		}
+	}
+
+	return out, nil
 }
