@@ -14,7 +14,7 @@ func TestParseURL(t *testing.T) {
 	}{
 		{
 			Name: "Single Episode",
-			URL:  "https://hentaipulse.com/toshoshitsu-no-kanojo-seiso-na-kimi-ga-ochiru-made-the-animation-episode-04-english-subbed/",
+			URL:  "https://hentaipulse.com/bonyuu-chan-wa-dashitai-episode-02-english-subbed/",
 			Want: 1,
 		}, {
 			Name: "Overview",
@@ -40,10 +40,10 @@ func TestExtract(t *testing.T) {
 		{
 			Name: "Single Episode",
 			Args: test.Args{
-				URL:     "https://hentaipulse.com/toshoshitsu-no-kanojo-seiso-na-kimi-ga-ochiru-made-the-animation-episode-04-english-subbed/",
-				Title:   "toshoshitsu-no-kanojo-seiso-na-kimi-ga-ochiru-made-the-animation-episode-04-english-subbed",
+				URL:     "https://hentaipulse.com/bonyuu-chan-wa-dashitai-episode-02-english-subbed/",
+				Title:   "bonyuu-chan-wa-dashitai-episode-02-english-subbed",
 				Quality: "",
-				Size:    105955403,
+				Size:    96398241,
 			},
 		},
 	}
