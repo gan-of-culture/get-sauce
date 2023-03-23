@@ -266,10 +266,24 @@ func Size(URL, refer string) (int64, error) {
 
 	headers, err := Headers(URL, refer)
 	if err != nil {
-		return 0, err
+		return 0, nil
 	}
 
 	size, err := GetSizeFromHeaders(&headers)
+	if err == nil {
+		return size, nil
+	}
+
+	res, err := Request(http.MethodGet, URL, map[string]string{
+		"Referer": refer,
+		"Range":   "bytes=0-1",
+	}, nil)
+	if err != nil {
+		return 0, err
+	}
+	defer res.Body.Close()
+
+	size, err = GetSizeFromHeaders(&res.Header)
 	if err != nil {
 		return 0, err
 	}

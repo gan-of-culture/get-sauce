@@ -2,8 +2,8 @@ package nhentai
 
 /*
 // make sure that User-Agent makes the browser that did the CF challenge
-const userHeader = `cookie: cf_clearance=k2TGEnkzhz_PtHs09vMryROlD4O3UZhrDFrU4svgjdM-1665105987-0-150; csrftoken=bLiwSENr0mqSZZ27wan1xdjLazVFoXnnABJu7DtrhbNRUacpbEZhV0Eggc5lD8m5
-user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36`
+const userHeader = `cookie: cf_clearance=9UCJIdzC1kYvx6K6M.28ll3g18jJcFsZsuEzw6ytS1E-1679236491-0-160; csrftoken=nOYv9IsEXsHD5zuAqN7etILnTyUiv1OIRSet8UFgb79JXlSCKG9oL6uI2SCVwM1j
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/111.0`
 
 func TestParseURL(t *testing.T) {
 	type Want struct {
