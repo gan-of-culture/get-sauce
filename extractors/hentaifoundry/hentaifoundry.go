@@ -19,7 +19,7 @@ var jar request.Myjar
 
 type extractor struct{}
 
-// New returns a hentai-foundry extractor.
+// New returns a hentai-foundry extractor
 func New() static.Extractor {
 	return &extractor{}
 }
