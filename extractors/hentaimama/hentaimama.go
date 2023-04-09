@@ -10,6 +10,7 @@ import (
 	"regexp"
 	"strings"
 
+	"github.com/gan-of-culture/get-sauce/parsers/hls"
 	"github.com/gan-of-culture/get-sauce/request"
 	"github.com/gan-of-culture/get-sauce/static"
 	"github.com/gan-of-culture/get-sauce/utils"
@@ -111,7 +112,7 @@ func extractData(URL string) (*static.Data, error) {
 			continue
 		}
 
-		streams, err = request.ExtractHLS(src.URL, map[string]string{"Referer": src.Referer})
+		streams, err = hls.ExtractHLS(src.URL, map[string]string{"Referer": src.Referer})
 		if err != nil {
 			return nil, err
 		}

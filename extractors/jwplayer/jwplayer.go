@@ -13,6 +13,7 @@ import (
 	"regexp"
 	"strings"
 
+	"github.com/gan-of-culture/get-sauce/parsers/hls"
 	"github.com/gan-of-culture/get-sauce/request"
 	"github.com/gan-of-culture/get-sauce/static"
 )
@@ -133,7 +134,7 @@ func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 		return nil, errors.New("the jwplayer api request for the streams did not return successful for")
 	}
 
-	streams, err := request.ExtractHLS(sources.Data.Sources[0].Src, nil)
+	streams, err := hls.ExtractHLS(sources.Data.Sources[0].Src, nil)
 	if err != nil {
 		return nil, err
 	}

@@ -3,18 +3,14 @@ package request
 import (
 	"crypto/tls"
 	"errors"
-	"fmt"
 	"io"
 	"net/http"
 	"net/url"
-	"regexp"
-	"sort"
 	"strconv"
 	"strings"
 	"time"
 
 	"github.com/gan-of-culture/get-sauce/config"
-	"github.com/gan-of-culture/get-sauce/static"
 	"github.com/gan-of-culture/get-sauce/utils"
 )
 
@@ -348,155 +344,4 @@ func (p *Myjar) Cookies(u *url.URL) []*http.Cookie {
 	//fmt.Printf("The URL is : %s\n", u.String())
 	//fmt.Printf("Cookie being returned is : %s\n", p.Jar[u.Host])
 	return p.Jar[u.Host]
-}
-
-// ParseHLSMediaStream into URLs and if found it's key
-func ParseHLSMediaStream(mediaStr *string, URL string) ([]*static.URL, []byte, error) {
-	re := regexp.MustCompile(`\s[^#]+\s`) // 1=segment URI
-	matchedSegmentURLs := re.FindAllString(*mediaStr, -1)
-	if len(matchedSegmentURLs) == 0 {
-		fmt.Println(*mediaStr)
-		return nil, nil, errors.New("no segements found")
-	}
-
-	baseURL, err := url.Parse(URL)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	segments := []*static.URL{}
-	segmentURI := ""
-	for _, v := range matchedSegmentURLs {
-		segmentURI = strings.TrimSpace(v)
-		if !strings.Contains(segmentURI, "http") {
-			segmentURL, err := baseURL.Parse(segmentURI)
-			if err != nil {
-				return nil, nil, err
-			}
-			segmentURI = segmentURL.String()
-		}
-		segments = append(segments, &static.URL{
-			URL: segmentURI,
-			Ext: utils.GetFileExt(segmentURI),
-		})
-	}
-
-	re = regexp.MustCompile(`#EXT-X-KEY:METHOD=([^,]*),URI="([^"]*)`) //1=HASH e.g. AES-128 2=KEYURI
-	matchedEncryptionMeta := re.FindStringSubmatch(*mediaStr)
-	if len(matchedEncryptionMeta) != 3 {
-		return segments, nil, nil
-	}
-
-	keyURL := matchedEncryptionMeta[2]
-	if !strings.HasPrefix(matchedEncryptionMeta[2], "http") {
-		keyURI, err := baseURL.Parse(matchedEncryptionMeta[2])
-		if err != nil {
-			return nil, nil, err
-		}
-		keyURL = keyURI.String()
-	}
-
-	key, err := GetAsBytesWithHeaders(keyURL, map[string]string{
-		"Referer": URL,
-	})
-	if err != nil {
-		return nil, nil, err
-	}
-
-	return segments, key, nil
-}
-
-// ExtractHLS contents of a file/URL into the internal stream structure.
-// If the playlist contains multiple streams then each stream will be represented as a unique stream internally
-func ExtractHLS(URL string, headers map[string]string) (map[string]*static.Stream, error) {
-
-	master, err := GetWithHeaders(URL, headers)
-	if err != nil {
-		return nil, err
-	}
-
-	mediaStreams, err := utils.ParseHLSMaster(&master)
-	if err != nil {
-		return nil, err
-	}
-
-	baseURL, err := url.Parse(URL)
-	if err != nil {
-		return nil, err
-	}
-
-	canBeSortedBySize := true
-	// complete mediaURLs
-	for _, stream := range mediaStreams {
-		if strings.HasPrefix(stream.URLs[0].URL, "https://") {
-			continue
-		}
-
-		mediaURL, err := baseURL.Parse(stream.URLs[0].URL)
-		if err != nil {
-			return nil, err
-		}
-		stream.URLs[0].URL = mediaURL.String()
-	}
-
-	for _, stream := range mediaStreams {
-		mediaStr, err := GetWithHeaders(stream.URLs[0].URL, headers)
-		if err != nil {
-			return nil, err
-		}
-
-		stream.URLs, stream.Key, err = ParseHLSMediaStream(&mediaStr, stream.URLs[0].URL)
-		if err != nil {
-			return nil, err
-		}
-
-		// approximate stream size - the first part URLS[0] seems to be larger than the others
-		// thats why a part from the middle is used. Still some site don't expose content-length
-		// in the header so stream.Size will be 0
-		parts := len(stream.URLs)
-		stream.Size, err = Size(stream.URLs[parts/2].URL, headers["Referer"])
-		if stream.Size == 0 || err != nil {
-			canBeSortedBySize = false
-			continue
-		}
-
-		stream.Size = stream.Size * int64(parts)
-	}
-
-	// convert streams from slice to map on func exit
-	streams := make(map[string]*static.Stream, len(mediaStreams))
-	defer func() {
-		for idx, stream := range mediaStreams {
-			streams[fmt.Sprint(idx)] = stream
-		}
-	}()
-
-	// SORT streams
-
-	if canBeSortedBySize {
-
-		sort.Slice(mediaStreams, func(i, j int) bool {
-			return mediaStreams[i].Size > mediaStreams[j].Size
-		})
-		return streams, nil
-	}
-
-	sort.Slice(mediaStreams, func(i, j int) bool {
-		resVal := 0
-		resValI := 0
-		for _, v := range strings.Split(mediaStreams[i].Quality, "x") {
-			resVal, _ = strconv.Atoi(v)
-			resValI += resVal
-		}
-
-		resValJ := 0
-		for _, v := range strings.Split(mediaStreams[j].Quality, "x") {
-			resVal, _ = strconv.Atoi(v)
-			resValJ += resVal
-		}
-
-		return resValI > resValJ
-	})
-
-	return streams, nil
 }

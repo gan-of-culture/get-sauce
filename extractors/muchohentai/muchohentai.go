@@ -16,6 +16,7 @@ import (
 	"regexp"
 	"strings"
 
+	"github.com/gan-of-culture/get-sauce/parsers/hls"
 	"github.com/gan-of-culture/get-sauce/request"
 	"github.com/gan-of-culture/get-sauce/static"
 	"github.com/gan-of-culture/get-sauce/utils"
@@ -101,7 +102,7 @@ func extractData(URL string) (*static.Data, error) {
 
 	m3uMasterURL := baseURL + srcURLParts[0]
 
-	streams, err := request.ExtractHLS(m3uMasterURL, map[string]string{"Referer": site})
+	streams, err := hls.ExtractHLS(m3uMasterURL, map[string]string{"Referer": site})
 	if err != nil {
 		return nil, err
 	}

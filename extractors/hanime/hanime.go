@@ -6,6 +6,7 @@ import (
 	"regexp"
 	"strings"
 
+	"github.com/gan-of-culture/get-sauce/parsers/hls"
 	"github.com/gan-of-culture/get-sauce/request"
 	"github.com/gan-of-culture/get-sauce/static"
 	"github.com/gan-of-culture/get-sauce/utils"
@@ -125,7 +126,7 @@ func extractData(URL string) (*static.Data, error) {
 	for idx, streamData := range vData.State.Data.Video.VideosManifest.Servers[0].Streams {
 		mediaStr, err := request.Get(streamData.URL)
 
-		URLs, key, err := request.ParseHLSMediaStream(&mediaStr, site)
+		URLs, key, err := hls.ParseMediaStream(&mediaStr, site)
 		if err != nil {
 			return nil, err
 		}
