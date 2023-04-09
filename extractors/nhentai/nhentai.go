@@ -56,7 +56,7 @@ const api = "https://nhentai.net/api/gallery/"
 
 type extractor struct{}
 
-// New returns a nhentai extractor.
+// New returns a nhentai extractor
 func New() static.Extractor {
 	return &extractor{}
 }
