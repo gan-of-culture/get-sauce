@@ -97,12 +97,9 @@ const mediaAPI = "https://thehentaiworld.com/wp-json/wp/v2/media?parent="
 var rePost *regexp.Regexp = regexp.MustCompile(`https://thehentaiworld.com/(?:3d-cgi-hentai-images|gif-animated-hentai-images|hentai-cosplay-images|hentai-doujinshi|flash-hentai|hentai-images|videos)/([^/]+)`)
 var rePage *regexp.Regexp = regexp.MustCompile(`https://thehentaiworld.com/(?:tag/([^/]+)/)?(?:page/(\d+)/)?(\?s=[^&\n]+)?`)
 
-// downloading large amount of content with -a might take a while
-// the api call is quite slow
-
 type extractor struct{}
 
-// New returns a thehentaiworld extractor.
+// New returns a thehentaiworld extractor
 func New() static.Extractor {
 	return &extractor{}
 }
@@ -215,7 +212,7 @@ func extractData(pID string) ([]*static.Data, error) {
 		return nil, err
 	}
 
-	// for vids you get thumbnail and video - overwrite with the video instead of the thumb
+	// for vids you get thumbnail and video - discard the thumbnail
 	if len(mS) > 1 {
 		for i, v := range mS {
 			if strings.Contains(v.Slug, "-thumbnail") {
@@ -257,7 +254,7 @@ func extractData(pID string) ([]*static.Data, error) {
 				streams[fmt.Sprint(i)].Info = m.MediaDetails.Audio.string()
 			}
 		}
-		// need to append m.ID because neither title or Post + title is a unique file name
+		// need to append m.ID for unique file name
 		data = append(data, &static.Data{
 			Site:    site,
 			Title:   fmt.Sprintf("%d – %s", m.ID, html.UnescapeString(m.Title.Rendered)),

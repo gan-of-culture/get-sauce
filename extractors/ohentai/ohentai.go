@@ -22,7 +22,7 @@ var reSources = regexp.MustCompile(`\[{.+}\]`)
 
 type extractor struct{}
 
-// New returns a nhentai extractor.
+// New returns a ohentai extractor
 func New() static.Extractor {
 	return &extractor{}
 }
@@ -45,7 +45,6 @@ func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 	return data, nil
 }
 
-// parseURL data
 func parseURL(URL string) []string {
 	re := regexp.MustCompile(`detail.php\?vid=[^\s']+`)
 	URLPart := re.FindString(URL)
@@ -62,7 +61,6 @@ func parseURL(URL string) []string {
 	return utils.RemoveAdjDuplicates(matchedURLs)[1:]
 }
 
-// extractData of URL
 func extractData(URL string) (*static.Data, error) {
 	URL = site + URL
 	htmlString, err := request.Get(URL)

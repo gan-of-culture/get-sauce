@@ -177,7 +177,7 @@ const files = "https://files.iwara.tv/"
 
 type extractor struct{}
 
-// New returns a iwara extractor.
+// New returns a iwara extractor
 func New() static.Extractor {
 	return &extractor{}
 }

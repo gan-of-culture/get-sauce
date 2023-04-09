@@ -15,11 +15,11 @@ const site = "https://www.hentaicloud.com/"
 var defaultCookies = map[string]string{
 	"Cookie": "splash=1",
 }
-var reSourceTags = regexp.MustCompile(`source src="(https://www.hentaicloud.com/media/videos/[^.]+([^"]+)).+res="([^"]*)`) //1=URL 2=ext 3=resolution
+var reSourceTags = regexp.MustCompile(`source src="(https://www.hentaicloud.com/media/videos/[^.]+([^"]+)).+res="([^"]*)`)
 
 type extractor struct{}
 
-// New returns a hentaicloud extractor.
+// New returns a hentaicloud extractor
 func New() static.Extractor {
 	return &extractor{}
 }
@@ -100,7 +100,7 @@ func extractData(URL string) (*static.Data, error) {
 	return &static.Data{
 		Site:    site,
 		Title:   title,
-		Type:    "video",
+		Type:    static.DataTypeVideo,
 		Streams: streams,
 		URL:     URL,
 	}, nil

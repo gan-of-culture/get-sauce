@@ -58,6 +58,8 @@ func TestParseURL(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.Name, func(t *testing.T) {
 			if tt.Name == "Mass" {
+				// downloading large amount of content with -a might take a while
+				// the api call is quite slow
 				config.Amount = 30
 			}
 

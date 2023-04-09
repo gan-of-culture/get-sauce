@@ -9,9 +9,8 @@ import (
 
 func TestPaseURL(t *testing.T) {
 	tests := []struct {
-		Name string
-		URL  string
-		//expect atlest ... galleries
+		Name              string
+		URL               string
 		numberOfGalleries int
 	}{
 		{

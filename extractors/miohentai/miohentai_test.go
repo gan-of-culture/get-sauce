@@ -19,7 +19,7 @@ func TestParseURL(t *testing.T) {
 		}, {
 			Name: "Tag",
 			URL:  "https://miohentai.com/tag/1080p/",
-			Want: 31,
+			Want: 35,
 		},
 	}
 	for _, tt := range tests {

@@ -44,7 +44,7 @@ func (l LogRedirects) RoundTrip(req *http.Request) (resp *http.Response, err err
 	return
 }
 
-// DefaultClient to use in the scraper
+// DefaultClient for HTTP requests
 func DefaultClient() *http.Client {
 	return &http.Client{
 		Transport: LogRedirects{&http.Transport{
@@ -63,7 +63,7 @@ func DefaultClient() *http.Client {
 	}
 }
 
-// Request http
+// Request HTTP
 func Request(method string, URL string, headers map[string]string, body io.Reader) (*http.Response, error) {
 
 	client := DefaultClient()
@@ -112,7 +112,7 @@ func Get(URL string) (string, error) {
 	return string(body), nil
 }
 
-// GetAsBytes content as string
+// GetAsBytes content as bytes
 func GetAsBytes(URL string) ([]byte, error) {
 	resp, err := Request(http.MethodGet, URL, nil, nil)
 	if err != nil {
@@ -130,7 +130,7 @@ func GetAsBytes(URL string) ([]byte, error) {
 	return body, nil
 }
 
-// PostAsBytes content as string
+// PostAsBytes content as bytes
 func PostAsBytes(URL string) ([]byte, error) {
 	resp, err := Request(http.MethodPost, URL, nil, nil)
 	if err != nil {
@@ -158,7 +158,7 @@ func GetWithHeaders(URL string, headers map[string]string) (string, error) {
 	return string(body), nil
 }
 
-// GetAsBytesWithHeaders content as string
+// GetAsBytesWithHeaders content as bytes
 func GetAsBytesWithHeaders(URL string, headers map[string]string) ([]byte, error) {
 	resp, err := Request(http.MethodGet, URL, headers, nil)
 	if err != nil {
@@ -176,7 +176,7 @@ func GetAsBytesWithHeaders(URL string, headers map[string]string) ([]byte, error
 	return body, nil
 }
 
-// PostAsBytesWithHeaders content as string
+// PostAsBytesWithHeaders content as bytes
 func PostAsBytesWithHeaders(URL string, headers map[string]string) ([]byte, error) {
 	resp, err := Request(http.MethodPost, URL, headers, nil)
 	if err != nil {
@@ -231,7 +231,7 @@ func GetWithCookies(URL string, jar *Myjar) (string, error) {
 	return string(body), nil
 }
 
-// Headers return the HTTP Headers of the URL
+// Headers of a HTTP response
 func Headers(URL, refer string) (http.Header, error) {
 	headers := map[string]string{
 		"Referer": refer,
@@ -256,10 +256,10 @@ func Headers(URL, refer string) (http.Header, error) {
 	return res.Header, nil
 }
 
-// Size get size of the URL
+// Size of a HTTP response
 func Size(URL, refer string) (int64, error) {
 	// if you are trying to scrape more than one thing
-	// sending size request just make it slower thinking of image boards etc.
+	// sending size request just make it slower
 	if config.Amount != 0 {
 		return 0, nil
 	}

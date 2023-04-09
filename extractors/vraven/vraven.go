@@ -17,7 +17,7 @@ var reJWPlayerURL = regexp.MustCompile(`https://[^/]+[a-zA-Z0-9/-]*/player[\./](
 
 type extractor struct{}
 
-// New returns a vraven extractor.
+// New returns a vraven extractor
 func New() static.Extractor {
 	return &extractor{}
 }

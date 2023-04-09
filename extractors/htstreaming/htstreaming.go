@@ -36,7 +36,7 @@ var site string
 
 type extractor struct{}
 
-// New returns a htstreaming extractor.
+// New returns a htstreaming extractor
 func New() static.Extractor {
 	return &extractor{}
 }
@@ -74,7 +74,6 @@ func parseURL(URL string) []string {
 		return []string{URL}
 	}
 
-	//check if it's an overview/series page maybe
 	htmlString, err := request.Get(URL)
 	if err != nil {
 		return []string{}

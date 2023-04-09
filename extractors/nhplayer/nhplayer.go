@@ -14,7 +14,7 @@ var reHTStreamingVideoURL = regexp.MustCompile(`https://htstreaming.com/video/([
 
 type extractor struct{}
 
-// New returns a nhplayer extractor.
+// New returns a nhplayer extractor
 func New() static.Extractor {
 	return &extractor{}
 }

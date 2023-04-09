@@ -17,7 +17,7 @@ var reSourceURL = regexp.MustCompile(`main_video_url"[^"]+"([^"]+)`)
 
 type extractor struct{}
 
-// New returns a hentaipulse extractor.
+// New returns a hentaipulse extractor
 func New() static.Extractor {
 	return &extractor{}
 }

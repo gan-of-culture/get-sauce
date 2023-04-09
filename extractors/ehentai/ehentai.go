@@ -21,7 +21,7 @@ var reSourceURL = regexp.MustCompile(`<img id="img" src="([^"]+)`)
 
 type extractor struct{}
 
-// New returns a e-hentai extractor.
+// New returns a e-hentai extractor
 func New() static.Extractor {
 	return &extractor{}
 }
@@ -44,7 +44,6 @@ func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 	return data, nil
 }
 
-// parseURL to gallery URL
 func parseURL(URL string) []string {
 	if strings.Contains(URL, "https://e-hentai.org/g/") {
 		return []string{URL}
@@ -123,13 +122,12 @@ func extractData(URL string) ([]*static.Data, error) {
 			return nil, static.ErrDataSourceParseFailed
 		}
 
-		// size will be empty if err occurs
 		fSize, _ := strconv.ParseFloat(fileInfo[3], 64)
 
 		data = append(data, &static.Data{
 			Site:  site,
 			Title: fmt.Sprintf("%s - %d", title, idx),
-			Type:  "image",
+			Type:  static.DataTypeImage,
 			Streams: map[string]*static.Stream{
 				"0": {
 					Type: static.DataTypeImage,
@@ -140,8 +138,7 @@ func extractData(URL string) ([]*static.Data, error) {
 						},
 					},
 					Quality: fileInfo[2],
-					// ex						735       KB 	== 735000Bytes
-					Size: utils.CalcSizeInByte(fSize, fileInfo[4]),
+					Size:    utils.CalcSizeInByte(fSize, fileInfo[4]),
 				},
 			},
 			URL: imgURLs[idx-1],

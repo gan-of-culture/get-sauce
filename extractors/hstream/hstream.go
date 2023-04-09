@@ -18,7 +18,7 @@ var reCaptionSource = regexp.MustCompile(`https://.+/\d+/[\w.]+/[\w./]+\.ass`)
 
 type extractor struct{}
 
-// New returns a hstream extractor.
+// New returns a hstream extractor
 func New() static.Extractor {
 	return &extractor{}
 }
@@ -100,7 +100,7 @@ func extractData(URL string) (*static.Data, error) {
 	return &static.Data{
 		Site:    site,
 		Title:   utils.GetSectionHeadingElement(&htmlString, 6, -1),
-		Type:    "video",
+		Type:    static.DataTypeVideo,
 		Streams: streams,
 		Captions: []*static.Caption{
 			{

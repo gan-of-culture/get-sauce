@@ -39,7 +39,7 @@ const findVarible = `var %s = '([^']+)`
 
 type extractor struct{}
 
-// New returns a jwplayer extractor.
+// New returns a jwplayer extractor
 func New() static.Extractor {
 	return &extractor{}
 }
@@ -75,7 +75,6 @@ func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 
 	apiURL := matchedAPIURL[1]
 
-	// --- Begin of multipart creation
 	body := &bytes.Buffer{}
 	writer := multipart.NewWriter(body)
 
