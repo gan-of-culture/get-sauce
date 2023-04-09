@@ -140,69 +140,6 @@ func RemoveAdjDuplicates[T string | int](slice []T) []T {
 	return out
 }
 
-// ParseHLSMaster into static.Stream to prefill the structure
-// returns a pre filled structure where URLs[0].URL is the media stream URI
-func ParseHLSMaster(master *string) ([]*static.Stream, error) {
-	re := regexp.MustCompile(`#EXT-X-STREAM-INF:([^\n]*)\n([^\n]+)`) // 1=PARAMS 2=MEDIAURI
-	matchedStreams := re.FindAllStringSubmatch(*master, -1)
-	if len(matchedStreams) < 1 {
-		return nil, fmt.Errorf("unable to parse any stream in m3u master: %s", *master)
-	}
-
-	out := []*static.Stream{}
-	for _, stream := range matchedStreams {
-		s := &static.Stream{
-			Type: static.DataTypeVideo,
-			URLs: []*static.URL{
-				{
-					URL: strings.TrimSpace(stream[2]),
-					Ext: "",
-				},
-			},
-		}
-
-		re = regexp.MustCompile(`[A-Z\-]+=(?:"[^"]*"|[^,]*)`) // PARAMETERNAME=VALUE
-		for _, streamParam := range re.FindAllString(stream[1], -1) {
-
-			splitParam := strings.Split(streamParam, "=")
-			splitParam[1] = strings.Trim(splitParam[1], `",`)
-			switch splitParam[0] {
-			case "RESOLUTION":
-				s.Quality = splitParam[1]
-			case "CODECS":
-				s.Info = splitParam[1]
-			}
-		}
-
-		out = append(out, s)
-	}
-
-	// AUDIO
-	re = regexp.MustCompile(`#EXT-X-MEDIA:([^\n]*)\n`) // 1=PARAMS
-	matchedAudioStream := re.FindStringSubmatch(*master)
-	if len(matchedAudioStream) < 2 {
-		return out, nil
-	}
-
-	params := map[string]string{}
-	for _, param := range strings.Split(matchedAudioStream[1], ",") {
-		splitParam := strings.Split(param, "=")
-		params[splitParam[0]] = strings.Trim(splitParam[1], `"`)
-	}
-
-	out = append(out, &static.Stream{
-		Type: static.DataTypeAudio,
-		URLs: []*static.URL{
-			{
-				URL: params["URI"],
-			},
-		},
-		Info: params["LANGUAGE"],
-	})
-
-	return out, nil
-}
-
 // Wrap error with context
 func Wrap(err error, ctx string) error {
 	return errors.New(err.Error() + ": " + ctx)

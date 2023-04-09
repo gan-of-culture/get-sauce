@@ -11,6 +11,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/gan-of-culture/get-sauce/parsers/hls"
 	"github.com/gan-of-culture/get-sauce/request"
 	"github.com/gan-of-culture/get-sauce/static"
 	"github.com/gan-of-culture/get-sauce/utils"
@@ -122,7 +123,7 @@ func ExtractData(URL string) (*static.Data, error) {
 		return nil, err
 	}
 
-	streams, err := request.ExtractHLS(pData.VideoSource, map[string]string{
+	streams, err := hls.ExtractHLS(pData.VideoSource, map[string]string{
 		"Referer": playerURL,
 		"Accept":  "*/*",
 	})
