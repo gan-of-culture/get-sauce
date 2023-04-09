@@ -6,6 +6,7 @@ import (
 	"strings"
 	"time"
 
+	mpegdash "github.com/gan-of-culture/get-sauce/parsers/mpeg_dash"
 	"github.com/gan-of-culture/get-sauce/request"
 	"github.com/gan-of-culture/get-sauce/static"
 	"github.com/gan-of-culture/get-sauce/utils"
@@ -13,7 +14,7 @@ import (
 
 const site = "https://hstream.moe/"
 
-var reVideoSources = regexp.MustCompile(`https://.+/\d+/[\w.]+/[\w./]+\.(?:mp4|webm)`)
+var reVideoSources = regexp.MustCompile(`https://.+/\d+/[\w.]+/[\w./]+\.(?:mpd|mp4|webm)`)
 var reCaptionSource = regexp.MustCompile(`https://.+/\d+/[\w.]+/[\w./]+\.ass`)
 
 type extractor struct{}
@@ -73,10 +74,41 @@ func extractData(URL string) (*static.Data, error) {
 		htmlString, _ = request.Get(URL)
 	}
 
-	videoSources := reVideoSources.FindAllString(htmlString, -1)
+	videoSources := reverse(reVideoSources.FindAllString(htmlString, -1))
 
 	streams := make(map[string]*static.Stream)
-	for i, sourceURL := range reverse(videoSources) {
+	counter := 0
+	// only keep one audio stream
+	foundAudioStream := false
+	for _, sourceURL := range videoSources {
+		if !strings.HasSuffix(sourceURL, ".mpd") {
+			continue
+		}
+
+		streamsTmp, err := mpegdash.ExtractDASHManifest(sourceURL, map[string]string{"Referer": site})
+		if err != nil {
+			return nil, err
+		}
+		for _, streamTmp := range streamsTmp {
+			if streamTmp.Type == static.DataTypeAudio {
+				if foundAudioStream {
+					continue
+				} else {
+					foundAudioStream = true
+				}
+			}
+
+			streams[fmt.Sprint(counter)] = streamTmp
+			counter += 1
+		}
+	}
+
+	// skip direct file downloads if newer mpd is supplied
+	if len(streams) > 0 {
+		videoSources = []string{}
+	}
+
+	for i, sourceURL := range videoSources {
 		size, err := request.Size(sourceURL, site)
 		if err != nil {
 			return nil, err
