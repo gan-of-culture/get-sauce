@@ -12,7 +12,7 @@ const site = "https://hentaihaven.com/"
 
 type extractor struct{}
 
-// New returns a hentaihaven extractor.
+// New returns a hentaihaven extractor
 func New() static.Extractor {
 	return &extractor{}
 }

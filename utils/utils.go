@@ -116,7 +116,7 @@ func GetSectionHeadingElement(htmlString *string, level, idx int) string {
 	return html.UnescapeString(strings.TrimSuffix(sectionHeadingElements[idx], closingSectionHeadingTag))
 }
 
-// GetMeta of html file
+// GetMeta of HTML file
 func GetMeta(htmlString *string, property string) string {
 	re := regexp.MustCompile(fmt.Sprintf("<meta property=[\"']*%s[\"']* content=[\"']([^\"']*)", property))
 	metaTags := re.FindAllStringSubmatch(*htmlString, -1)

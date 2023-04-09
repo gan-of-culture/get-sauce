@@ -14,7 +14,7 @@ const site = "https://rule34video.com/"
 
 type extractor struct{}
 
-// New returns a rule34video extractor.
+// New returns a rule34video extractor
 func New() static.Extractor {
 	return &extractor{}
 }

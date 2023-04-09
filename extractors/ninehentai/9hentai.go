@@ -16,8 +16,6 @@ import (
 	"github.com/gan-of-culture/jsurl"
 )
 
-//9hentai
-
 type resultSearch struct {
 	TotalCount int       `json:"total_count"`
 	Results    []gallery `json:"results"`
@@ -80,7 +78,7 @@ const apiURLGetBook = "https://9hentai.to/api/getBook"
 
 type extractor struct{}
 
-// New returns a 9hentai extractor.
+// New returns a 9hentai extractor
 func New() static.Extractor {
 	return &extractor{}
 }
@@ -119,7 +117,7 @@ func parseURL(URL string) ([]gallery, error) {
 		return []gallery{g}, nil
 
 	case "t":
-		// one tag is supplied
+		// a tag is supplied
 		if !strings.Contains(URL, "#") {
 			t, err := getTagByID(matchedURLParams[2])
 			if err != nil {

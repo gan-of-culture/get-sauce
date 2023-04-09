@@ -14,7 +14,7 @@ import (
 
 const site = "https://danbooru.donmai.us"
 
-var reIMGData = regexp.MustCompile(`data-width="([^"]+)"[ ]+data-height="([^"]+)"[\s\S]*?alt="([^"]+)".+src="([^"]+)"`) // [1] = img original width [2] image original height [3] image name [4] src URL
+var reIMGData = regexp.MustCompile(`data-width="([^"]+)"[ ]+data-height="([^"]+)"[\s\S]*?alt="([^"]+)".+src="([^"]+)"`)
 
 type extractor struct{}
 
@@ -99,7 +99,7 @@ func extractData(postURL string) (*static.Data, error) {
 	return &static.Data{
 		Site:  site,
 		Title: matchedImgData[3],
-		Type:  "image",
+		Type:  static.DataTypeImage,
 		Streams: map[string]*static.Stream{
 			"0": {
 				Type: static.DataTypeImage,

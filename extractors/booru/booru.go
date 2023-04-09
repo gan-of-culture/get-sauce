@@ -61,7 +61,6 @@ func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 	return data, nil
 }
 
-// parseURL for danbooru pages
 func parseURL(URL string) (string, error) {
 	if strings.HasPrefix(URL, "https://booru.io/p/") {
 		re := regexp.MustCompile(`https://booru\.io/p/(.+)`)

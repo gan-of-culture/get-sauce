@@ -24,7 +24,7 @@ var reVideoQuality = regexp.MustCompile(`id='main_image'.+\n[^0-9]+([0-9]+)[^0-9
 
 type extractor struct{}
 
-// New returns a rule34 extractor.
+// New returns a rule34 extractor
 func New() static.Extractor {
 	return &extractor{}
 }
@@ -46,15 +46,12 @@ func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 	return data, nil
 }
 
-// parseURL data
 func parseURL(URL string) []string {
 
-	// if it's single post return
 	if strings.Contains(URL, "/post/view/") {
 		return []string{URL}
 	}
 
-	// everything other than a overview page gets returned
 	if !strings.Contains(URL, "/post/list/") {
 		return nil
 	}
@@ -101,7 +98,7 @@ func extractData(URL string) (*static.Data, error) {
 	matchedPostSrcURL := reSourceURL.FindStringSubmatch(htmlString)
 	if len(matchedPostSrcURL) != 2 {
 
-		// maybe it's a video - try to get source URL
+		// check if video
 		matchedPostSrcURL = reVideoSourceURL.FindStringSubmatch(htmlString)
 		if len(matchedPostSrcURL) != 2 {
 			return nil, static.ErrDataSourceParseFailed

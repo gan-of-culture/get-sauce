@@ -16,7 +16,7 @@ var reSlug = regexp.MustCompile(`/watch/([^"\s]*?episode-\d*)/`)
 
 type extractor struct{}
 
-// New returns a hentaiyes extractor.
+// New returns a hentaiyes extractor
 func New() static.Extractor {
 	return &extractor{}
 }
@@ -44,7 +44,6 @@ func parseURL(URL string) []string {
 		return []string{URL}
 	}
 
-	//check if it's an overview/series page maybe
 	htmlString, err := request.Get(URL)
 	if err != nil {
 		return []string{}

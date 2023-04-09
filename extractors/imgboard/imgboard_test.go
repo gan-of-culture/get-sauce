@@ -12,12 +12,12 @@ func TestParseURL(t *testing.T) {
 	tests := []struct {
 		Name string
 		URL  string
-		Want int
+		Want int // atleast more than x
 	}{
 		{
 			Name: "Single Page",
 			URL:  "https://rule34.xxx/index.php?page=post&s=list&tags=world_of_warcraft+video+draenei&pid=378",
-			// atleast more than 2
+
 			Want: 2,
 		}, {
 			Name: "Mass extract page booru project",
@@ -31,17 +31,14 @@ func TestParseURL(t *testing.T) {
 		}, {
 			Name: "Overview page booru project",
 			URL:  "https://rule34.xxx/index.php?page=post&s=list&tags=all",
-			// atleast more than 2
 			Want: 2,
 		}, {
 			Name: "Mass extract page booru project",
 			URL:  "https://rule34.xxx/index.php?page=post&s=list&tags=all",
-			// atleast more than 2
 			Want: 100,
 		}, {
 			Name: "Mass extract page booru project2",
 			URL:  "https://gelbooru.com/index.php?page=post&s=list&tags=all",
-			// atleast more than 2
 			Want: 100,
 		}, {
 			Name: "Single image",
@@ -50,17 +47,14 @@ func TestParseURL(t *testing.T) {
 		}, {
 			Name: "Overview page booru project",
 			URL:  "https://konachan.com/post?tags=uncensored",
-			// atleast more than 2
 			Want: 2,
 		}, {
 			Name: "Mass extract page",
 			URL:  "https://konachan.com/post?tags=uncensored",
-			// atleast more than 2
 			Want: 100,
 		}, {
 			Name: "Mass extract page2",
 			URL:  "https://yande.re/post?tags=tateha&page=2",
-			// atleast more than 2
 			Want: 100,
 		},
 	}

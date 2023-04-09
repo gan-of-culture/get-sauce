@@ -20,7 +20,7 @@ var reCaptions = regexp.MustCompile(`<track.+label="([^"]+)"\ssrc="([^"]+)`) // 
 
 type extractor struct{}
 
-// New returns a oppai.stream extractor.
+// New returns a oppai.stream extractor
 func New() static.Extractor {
 	return &extractor{}
 }

@@ -25,7 +25,7 @@ var mass bool
 
 type extractor struct{}
 
-// New returns a booru imgboard extractor.
+// New returns a booru imgboard extractor
 func New() static.Extractor {
 	return &extractor{}
 }
@@ -59,7 +59,6 @@ func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 	return data, nil
 }
 
-// parseURL of input
 func parseURL(URL string) []string {
 
 	re := regexp.MustCompile(`(?:show/|&id=)[0-9]*`)

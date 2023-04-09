@@ -31,7 +31,7 @@ var reVideoURL = regexp.MustCompile(videoProvider + `v/([^"]+)`)
 
 type extractor struct{}
 
-// New returns a hentaihd extractor.
+// New returns a hentaihd extractor
 func New() static.Extractor {
 	return &extractor{}
 }

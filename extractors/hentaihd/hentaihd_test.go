@@ -29,9 +29,7 @@ func TestParseURL(t *testing.T) {
 			URL:  "https://v2.hentaihd.net/anime/accelerando-datenshi-tachi-no-sasayaki/",
 			Want: 11,
 		}, {
-			// this is the same logic for all extensions that group shows e.g. /genres/
-			// its hard to make a test for the other groups since the number of episodes always changes
-			Name: "Studio",
+			Name: "Overview",
 			URL:  "https://v2.hentaihd.net/studio/flavors-soft/",
 			Want: 23,
 		},

@@ -59,7 +59,7 @@ var ggNonMatchedValue int
 
 type extractor struct{}
 
-// New returns a hitomi extractor.
+// New returns a hitomi extractor
 func New() static.Extractor {
 	return &extractor{}
 }

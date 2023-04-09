@@ -66,7 +66,7 @@ var reAppState *regexp.Regexp = regexp.MustCompile(`__SERVER_APP_STATE__ =  ({[^
 
 type extractor struct{}
 
-// New returns a doujin.sexy extractor.
+// New returns a doujin.sexy extractor
 func New() static.Extractor {
 	return &extractor{}
 }

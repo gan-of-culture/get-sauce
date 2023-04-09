@@ -16,12 +16,12 @@ var reFileInfoBackup = regexp.MustCompile(`src='(.*\.(mp4*)).*`)              //
 
 type extractor struct{}
 
-// New returns a hentaiworld extractor.
+// New returns a hentaiworld extractor
 func New() static.Extractor {
 	return &extractor{}
 }
 
-// Extract data of provided url
+// Extract data of provided URL
 func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 	URLs := parseURL(URL)
 	if len(URLs) == 0 {
@@ -39,7 +39,6 @@ func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 	return data, nil
 }
 
-// parseURL for data extraction
 func parseURL(URL string) []string {
 	re := regexp.MustCompile(`(?:https://hentaiworld.tv/)(?:all-episodes|uncensored|3d|hentai-videos/category|hentai-videos/tag)/`)
 	validMassURL := re.FindString(URL)
@@ -67,7 +66,6 @@ func parseURL(URL string) []string {
 	return URLs
 }
 
-//extractData of hentai
 func extractData(URL string) (*static.Data, error) {
 	postHTMLpage, err := request.Get(URL)
 	if err != nil {
@@ -94,7 +92,7 @@ func extractData(URL string) (*static.Data, error) {
 	return &static.Data{
 		Site:  site,
 		Title: title,
-		Type:  "video",
+		Type:  static.DataTypeVideo,
 		Streams: map[string]*static.Stream{
 			"0": {
 				Type: static.DataTypeVideo,

@@ -139,7 +139,7 @@ func extractData(URL string) (*static.Data, error) {
 	return &static.Data{
 		Site:    site,
 		Title:   title,
-		Type:    "video",
+		Type:    static.DataTypeVideo,
 		Streams: streams,
 		URL:     URL,
 	}, nil

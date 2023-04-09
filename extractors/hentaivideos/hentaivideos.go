@@ -16,7 +16,7 @@ var reVideoSource = regexp.MustCompile(`[^"]+\.mp4`)
 
 type extractor struct{}
 
-// New returns a hentaivideos extractor.
+// New returns a hentaivideos extractor
 func New() static.Extractor {
 	return &extractor{}
 }

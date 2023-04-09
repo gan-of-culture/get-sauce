@@ -18,7 +18,7 @@ var reNHPlayerURL = regexp.MustCompile(`https:\\?/\\?/nhplayer\.com\\?/v\\?/[^/"
 
 type extractor struct{}
 
-// New returns a nhgroup extractor.
+// New returns a nhgroup extractor
 func New() static.Extractor {
 	return &extractor{}
 }
@@ -51,7 +51,6 @@ func ParseURL(URL string) []string {
 		return []string{URL}
 	}
 
-	//check if it's an overview/series page maybe
 	htmlString, err := request.Get(URL)
 	if err != nil {
 		return []string{}

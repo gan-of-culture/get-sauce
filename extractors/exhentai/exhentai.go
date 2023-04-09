@@ -29,7 +29,6 @@ type extractor struct {
 	client *http.Client
 }
 
-// login your user
 func (e *extractor) login() error {
 
 	if config.Username == "" || config.UserPassword == "" {
@@ -48,8 +47,6 @@ func (e *extractor) login() error {
 		"Upgrade-Insecure-Requests": "1",
 	}
 
-	//data := fmt.Sprintf("{ 'referer': 'https://forums.e-hentai.org/index.php?act=Login&CODE=00', 'b': '', 'bt': '', 'UserName': '%s', 'PassWord': '%s', 'CookieDate': '1'}", config.Username, config.UserPassword)
-	//data := "referer=https%3A%2F%2Fforums.e-hentai.org%2Findex.php%3Fact%3DLogin%26CODE%3D00&b=&bt=&UserName=config.UserName&PassWord=config.UserPassword&CookieDate=1"
 	params := url.Values{}
 	params.Add("CookieDate", "1")
 	params.Add("PassWord", config.UserPassword)
@@ -86,7 +83,7 @@ func (e *extractor) login() error {
 
 }
 
-//Request http
+// Request http
 func (e *extractor) Request(method string, URL string, headers map[string]string) (*http.Response, error) {
 
 	req, err := http.NewRequest(method, URL, nil)
@@ -113,7 +110,6 @@ func (e *extractor) Request(method string, URL string, headers map[string]string
 
 }
 
-// get content as string
 func (e *extractor) get(URL string) (string, error) {
 	resp, err := e.Request(http.MethodGet, URL, nil)
 	if err != nil {
@@ -131,9 +127,8 @@ func (e *extractor) get(URL string) (string, error) {
 	return string(body), nil
 }
 
-// parseURL to gallery URL
 func (e *extractor) parseURL(URL string) []string {
-	//typical URL
+
 	if ok, _ := regexp.MatchString("https://exhentai.org/[gs]/", URL); ok {
 		return []string{URL}
 	}
@@ -187,9 +182,6 @@ func (e *extractor) extractData(URLs []string) ([]*static.Data, error) {
 			}
 			srcURL = []string{matchedSrcURL[0][1]}
 		}
-		//fmt.Println(srcURL[0])
-
-		// size will be empty if err occurs
 		fSize, _ := strconv.ParseFloat(fileInfo[3], 64)
 
 		//get direct image full size download link by resolving the redirect
@@ -213,7 +205,7 @@ func (e *extractor) extractData(URLs []string) ([]*static.Data, error) {
 		data = append(data, &static.Data{
 			Site:  site,
 			Title: fmt.Sprintf("%s - %d", title, idx+1),
-			Type:  "image",
+			Type:  static.DataTypeImage,
 			Streams: map[string]*static.Stream{
 				"0": {
 					Type: static.DataTypeImage,
@@ -224,8 +216,7 @@ func (e *extractor) extractData(URLs []string) ([]*static.Data, error) {
 						},
 					},
 					Quality: fileInfo[2],
-					// ex						735       KB 	== 735000Bytes
-					Size: utils.CalcSizeInByte(fSize, fileInfo[4]),
+					Size:    utils.CalcSizeInByte(fSize, fileInfo[4]),
 				},
 			},
 			URL: URL,

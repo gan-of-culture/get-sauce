@@ -30,7 +30,7 @@ var rePostID = regexp.MustCompile(`a:'(\d+)'`)
 
 type extractor struct{}
 
-// New returns a hentaimama extractor.
+// New returns a hentaimama extractor
 func New() static.Extractor {
 	return &extractor{}
 }
@@ -177,8 +177,7 @@ func getMirrorURLs(htmlString *string, URL string) ([][]string, error) {
 	params.Add("a", matchedID[1])
 
 	res, err := request.Request(http.MethodPost, api, map[string]string{
-		"Referer": URL,
-		//		"Content-Length": len(params.Encode()),
+		"Referer":      URL,
 		"Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
 	}, strings.NewReader(params.Encode()))
 	if err != nil {

@@ -14,7 +14,7 @@ import (
 
 type extractor struct{}
 
-// New returns a universal extractor.
+// New returns a universal extractor
 func New() static.Extractor {
 	return &extractor{}
 }

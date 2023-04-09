@@ -18,7 +18,7 @@ var reImageURL = regexp.MustCompile(`image-\d+"\s.+data-src="([^"]+)`)
 
 type extractor struct{}
 
-// New returns a orzqwq extractor.
+// New returns a orzqwq extractor
 func New() static.Extractor {
 	return &extractor{}
 }

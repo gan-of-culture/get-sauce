@@ -11,10 +11,6 @@ import (
 	"github.com/gan-of-culture/get-sauce/utils"
 )
 
-/*
-yet another hentai/porn site group with multiple sites same content different page layout
-*/
-
 type state struct {
 	Props struct {
 		PageProps struct {
@@ -83,7 +79,7 @@ var reAppState *regexp.Regexp = regexp.MustCompile(`__NEXT_DATA__.*?({[^<]+)`)
 
 type extractor struct{}
 
-// New returns a simply-hentai extractor.
+// New returns a simply-hentai extractor
 func New() static.Extractor {
 	return &extractor{}
 }

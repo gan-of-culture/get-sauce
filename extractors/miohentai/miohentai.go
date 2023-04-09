@@ -17,7 +17,7 @@ var reSourceURL = regexp.MustCompile(`[^"]*cdn\.miohentai[^"]*`)
 
 type extractor struct{}
 
-// New returns a miohentai extractor.
+// New returns a miohentai extractor
 func New() static.Extractor {
 	return &extractor{}
 }

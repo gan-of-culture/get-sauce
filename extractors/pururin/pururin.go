@@ -19,7 +19,7 @@ var rePageInfo = regexp.MustCompile(`(\d+) \( [\d.]+ \w \)`)
 
 type extractor struct{}
 
-// New returns a pururin extractor.
+// New returns a pururin extractor
 func New() static.Extractor {
 	return &extractor{}
 }
