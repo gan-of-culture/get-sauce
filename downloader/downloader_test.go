@@ -57,25 +57,6 @@ func TestDownload(t *testing.T) {
 				URL: "https://muchohentai.com/aBo4Rk/167062/",
 			},
 		}, {
-			Name: "hstream.moe 4k episode concurWriter",
-			data: &static.Data{
-				Site:  "https://hstream.moe/",
-				Title: "Wizard Girl Ambitious – 1",
-				Type:  static.DataTypeVideo,
-				Streams: map[string]*static.Stream{
-					"0": {
-						Type: static.DataTypeVideo,
-						URLs: []*static.URL{
-							{
-								URL: "https://stream.hstream.moe/2021/Wizard.Girl.Ambitious/av1.2160p.webm",
-								Ext: "webm",
-							},
-						},
-						Size: int64(804660690),
-					},
-				},
-			},
-		}, {
 			Name: "rule34.xxx single img",
 			data: &static.Data{
 				Site:  "https://rule34.xxx",

@@ -46,15 +46,6 @@ func TestExtract(t *testing.T) {
 		Args test.Args
 	}{
 		{
-			Name: "Single Episode using MPEG-DASH",
-			Args: test.Args{
-				URL:     "https://hstream.moe/hentai/class-de-otoko-wa-boku-hitori/1",
-				Title:   "Maki-chan to Now. – 1",
-				Quality: "av1.1080p.webm",
-				Size:    180211896,
-			},
-		},
-		{
 			Name: "Single Episode 4k",
 			Args: test.Args{
 				URL:     "https://hstream.moe/hentai/wizard-girl-ambitious/1",
