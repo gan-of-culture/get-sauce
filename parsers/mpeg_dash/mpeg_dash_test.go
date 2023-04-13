@@ -49,7 +49,7 @@ func TestReplaceIdentifier(t *testing.T) {
 	}
 }
 
-func TestParseAdaptionSet(t *testing.T) {
+func TestExtractDASHManifest(t *testing.T) {
 	tests := []struct {
 		Name string
 		URL  string
@@ -57,7 +57,7 @@ func TestParseAdaptionSet(t *testing.T) {
 	}{
 		{
 			Name: "Default",
-			URL:  "https://hstream.moe/hentai/class-de-otoko-wa-boku-hitori/1",
+			URL:  "https://str.h-dl.xyz/2023/Class.de.Otoko.wa.Boku.Hitori/E01/2160/manifest.mpd",
 			Args: static.Stream{
 				Type:    static.DataTypeVideo,
 				Quality: "3840x2160",
