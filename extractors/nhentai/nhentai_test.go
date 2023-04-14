@@ -2,8 +2,8 @@ package nhentai
 
 /*
 // make sure that User-Agent makes the browser that did the CF challenge
-const userHeader = `cookie: cf_clearance=9UCJIdzC1kYvx6K6M.28ll3g18jJcFsZsuEzw6ytS1E-1679236491-0-160; csrftoken=nOYv9IsEXsHD5zuAqN7etILnTyUiv1OIRSet8UFgb79JXlSCKG9oL6uI2SCVwM1j
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/111.0`
+const userHeader = `Cookie: cf_clearance=pScTgd92T67tqxJkpQNkbuQ6A4cA.auLs9KaKtECOBE-1681481968-0-160; csrftoken=Exvbm0X8mhEXx02g6hzDkEOfFRb841cgmldz9UewkFWgEXX7fDsalXalHglyrCh0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/112.0`
 
 func TestParseURL(t *testing.T) {
 	type Want struct {
@@ -69,7 +69,7 @@ func TestExtract(t *testing.T) {
 			Name: "Complete extraction of a doujinshi",
 			Args: test.Args{
 				URL:     "https://nhentai.net/g/422956/",
-				Title:   "Isekai Shoukan IIsan no Tomodachi wa Suki desu ka?",
+				Title:   "Onaho Hanbaiin no Oshigoto wa Taihen desu!",
 				Quality: "",
 				Size:    0,
 			},
