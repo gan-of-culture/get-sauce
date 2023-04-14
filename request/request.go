@@ -86,7 +86,7 @@ func Request(method string, URL string, headers map[string]string, body io.Reade
 			if len(keyValue) < 2 {
 				continue
 			}
-			req.Header.Set(keyValue[0], keyValue[1])
+			req.Header.Set(keyValue[0], strings.Join(keyValue[1:], ":"))
 		}
 	}
 
