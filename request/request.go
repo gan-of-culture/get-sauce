@@ -252,7 +252,7 @@ func Headers(URL, refer string) (http.Header, error) {
 	return res.Header, nil
 }
 
-// Size of a HTTP response
+// Size of a HTTP content in response
 func Size(URL, refer string) (int64, error) {
 	// if you are trying to scrape more than one thing
 	// sending size request just make it slower
