@@ -278,7 +278,6 @@ The following links will direct you to adult content. Please keep that in mind!
 | [hentai-moon.com (720p, 480p)](https://hentai-moon.com)                                   |         ?          |:heavy_check_mark:|
 | [hentai2read.com](https://hentai2read.com)                                                | :heavy_check_mark: |        ?         |
 | [hentai2w.com(720p, 480p, 360p)](https://hentai2w.com)                                    |         ?          |:heavy_check_mark:|
-| [hentaibar.com (1080p, 720p, 480p, 360p)](https://hentaibar.com)                          |         ?          |:heavy_check_mark:|
 | [hentaicloud.com(720p)](https://www.hentaicloud.com)                                      |        :x:         |:heavy_check_mark:|
 | [hentaidude.com(720p, 480, 360p)](https://hentaidude.com/)                                |         ?          |:heavy_check_mark:|
 | [hentaiera.com](https://hentaiera.com)                                                    | :heavy_check_mark: |         ?        |
