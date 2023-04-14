@@ -13,8 +13,8 @@ import (
 )
 
 type gallery struct {
-	ID      string `json:"id"`
-	MediaID string `json:"media_id"`
+	ID      json.RawMessage `json:"id"`
+	MediaID string          `json:"media_id"`
 	Title   struct {
 		English  string `json:"english"`
 		Japanese string `json:"japanese"`
