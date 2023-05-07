@@ -1,7 +1,6 @@
-*.vscode/
+*.vscode
 *DS_Store
 dist*
-torrent*
 
 *.exe
 *.test
