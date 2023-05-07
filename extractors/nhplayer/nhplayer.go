@@ -1,7 +1,10 @@
 package nhplayer
 
 import (
+	"encoding/base64"
+	"net/url"
 	"regexp"
+	"strings"
 
 	"github.com/gan-of-culture/get-sauce/extractors/htstreaming"
 	"github.com/gan-of-culture/get-sauce/request"
@@ -9,7 +12,8 @@ import (
 	"github.com/gan-of-culture/get-sauce/utils"
 )
 
-var rePlayerURL = regexp.MustCompile(`https://nhplayer\.com/v/[^/"]+`)
+var reNHPlayerURL = regexp.MustCompile(`https://nhplayer\.com/v/[^/"]+`)
+var rePlayerURL = regexp.MustCompile(`/player.php\?u=([^"&]+)`)
 var reHTStreamingVideoURL = regexp.MustCompile(`https://htstreaming.com/video/([^"]*)`)
 
 type extractor struct{}
@@ -39,9 +43,8 @@ func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 }
 
 func parseURL(URL string) []string {
-	if !rePlayerURL.MatchString(URL) {
+	if !reNHPlayerURL.MatchString(URL) {
 		return nil
-
 	}
 	return []string{URL}
 }
@@ -54,9 +57,47 @@ func extractData(URL string) (*static.Data, error) {
 	}
 
 	videoURL := reHTStreamingVideoURL.FindString(htmlString)
-	if videoURL == "" {
-		return nil, static.ErrURLParseFailed
+	if videoURL != "" {
+		return htstreaming.ExtractData(videoURL)
 	}
 
-	return htstreaming.ExtractData(videoURL)
+	playerURL := rePlayerURL.FindStringSubmatch(htmlString)
+	if len(playerURL) < 2 {
+		return nil, static.ErrDataSourceParseFailed
+	}
+
+	b64Path, err := base64.StdEncoding.DecodeString(playerURL[1])
+	if err != nil {
+		return nil, err
+	}
+	videoURL = string(b64Path)
+
+	baseURL, err := url.Parse(URL)
+	if err != nil {
+		return nil, err
+	}
+
+	title := utils.GetLastItemString(strings.Split(videoURL, "/"))
+	title = strings.Split(title, ".")[0]
+
+	size, _ := request.Size(videoURL, URL)
+
+	return &static.Data{
+		Site:  baseURL.Host,
+		Title: title,
+		Type:  static.DataTypeVideo,
+		Streams: map[string]*static.Stream{
+			"0": {
+				Type: static.DataTypeVideo,
+				URLs: []*static.URL{
+					{
+						URL: videoURL,
+						Ext: utils.GetFileExt(videoURL),
+					},
+				},
+				Size: size,
+			},
+		},
+		URL: URL,
+	}, nil
 }

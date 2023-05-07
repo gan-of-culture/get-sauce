@@ -2,6 +2,7 @@ package nhgroup
 
 import (
 	"log"
+	"net/url"
 	"regexp"
 	"sort"
 	"strings"
@@ -89,6 +90,14 @@ func ExtractData(URL string) (*static.Data, error) {
 		data, err := nhplayer.New().Extract(playerURL)
 		if err != nil {
 			return nil, err
+		}
+		if data[0].Title == strings.ToLower(data[0].Title) {
+			data[0].Title = utils.GetH1(&htmlString, -1)
+			baseURL, err := url.Parse(URL)
+			if err != nil {
+				return nil, err
+			}
+			data[0].Site = baseURL.Host
 		}
 		return data[0], err
 	}
