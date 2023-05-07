@@ -21,7 +21,7 @@ func TestParseURL(t *testing.T) {
 			URL:  "https://hentaihaven.xxx/watch/ero-konbini-tenchou/",
 			Want: 4,
 		},
-		/*{
+		{
 			Name: "Single Episode hentaistream.tv",
 			URL:  "https://hentaistream.tv/watch/papa-katsu/episode-1/",
 			Want: 1,
@@ -29,7 +29,7 @@ func TestParseURL(t *testing.T) {
 			Name: "Series hentaistream.tv",
 			URL:  "https://hentaistream.tv/watch/kyonyuu-elf-oyako-saimin/",
 			Want: 2,
-		},*/
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.Name, func(t *testing.T) {
@@ -54,7 +54,7 @@ func TestExtract(t *testing.T) {
 				Quality: "1920x1080",
 				Size:    135890160,
 			},
-		}, /*{
+		}, {
 			Name: "Single Episode hentaistream.tv",
 			Args: test.Args{
 				URL:     "https://hentaistream.tv/watch/papa-katsu/episode-1/",
@@ -62,7 +62,7 @@ func TestExtract(t *testing.T) {
 				Quality: "1920x1080",
 				Size:    365561300,
 			},
-		},*/
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.Name, func(t *testing.T) {
