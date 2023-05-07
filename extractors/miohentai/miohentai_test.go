@@ -19,7 +19,7 @@ func TestParseURL(t *testing.T) {
 		}, {
 			Name: "Tag",
 			URL:  "https://miohentai.com/tag/1080p/",
-			Want: 36,
+			Want: 42,
 		},
 	}
 	for _, tt := range tests {
@@ -43,7 +43,7 @@ func TestExtract(t *testing.T) {
 				URL:     "https://miohentai.com/enjo-kouhai-episode-2/",
 				Title:   "Enjo Kouhai – Episode 2",
 				Quality: "",
-				Size:    131533561,
+				Size:    133204909,
 			},
 		},
 	}
