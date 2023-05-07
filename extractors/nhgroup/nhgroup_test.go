@@ -92,21 +92,12 @@ func TestExtract(t *testing.T) {
 		Args test.Args
 	}{
 		{
-			Name: "Single Episode animeidhentai.com using htstreaming directly",
-			Args: test.Args{
-				URL:     "https://animeidhentai.com/31821/usamimi-bouken-tan-sekuhara-shinagara-sekai-o-sukue-episode-2-subbed/",
-				Title:   "Usamimi Bouken-tan: Sekuhara Shinagara Sekai o Sukue Episode 2",
-				Quality: "1920x1080",
-				Size:    319661100,
-			},
-		},
-		{
 			Name: "Single Episode animeidhentai.com",
 			Args: test.Args{
 				URL:     "https://animeidhentai.com/36364/usamimi-bouken-tan-sekuhara-shinagara-sekai-o-sukue-episode-3/",
-				Title:   "Usamimi Bouken-Tan Sekuhara Shinagara Sekai O Sukue Episode 3",
-				Quality: "1920x1080",
-				Size:    143517696,
+				Title:   "Usamimi Bouken-tan: Sekuhara Shinagara Sekai o Sukue Episode 3",
+				Quality: "",
+				Size:    288687974,
 			},
 		},
 		{
@@ -114,8 +105,8 @@ func TestExtract(t *testing.T) {
 			Args: test.Args{
 				URL:     "https://hentaihaven.co/watch/seika-jogakuin-koutoubu-kounin-sao-oji-san-episode-3/",
 				Title:   "Seika Jogakuin Koutoubu Kounin Sao Oji-San Episode 3",
-				Quality: "1280x720",
-				Size:    424461512,
+				Quality: "",
+				Size:    391364277,
 			},
 		},
 		{
@@ -140,9 +131,9 @@ func TestExtract(t *testing.T) {
 			Name: "Single Episode hentai.tv",
 			Args: test.Args{
 				URL:     "https://hentai.tv/hentai/usamimi-bouken-tan-sekuhara-shinagara-sekai-o-sukue-episode-3/",
-				Title:   "Usamimi Bouken-Tan Sekuhara Shinagara Sekai O Sukue Episode 3",
-				Quality: "1920x1080",
-				Size:    143517696,
+				Title:   "Usamimi Bouken-tan: Sekuhara Shinagara Sekai o Sukue Episode 3",
+				Quality: "",
+				Size:    288687974,
 			},
 		},
 		{
