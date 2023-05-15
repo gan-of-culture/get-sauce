@@ -48,7 +48,7 @@ func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 }
 
 func parseURL(URL string) []string {
-	if ok, _ := regexp.MatchString(`/episode-\d*/?$`, URL); ok {
+	if ok, _ := regexp.MatchString(`/watch/[\w-]+/[\w-]+/?$`, URL); ok {
 		return []string{URL}
 	}
 
@@ -61,7 +61,7 @@ func parseURL(URL string) []string {
 		return []string{}
 	}
 	slug := strings.Split(URL, "watch/")[1]
-	re := regexp.MustCompile(fmt.Sprintf("[^\"]*%s/?episode-\\d*", slug))
+	re := regexp.MustCompile(fmt.Sprintf("[^\"]*%s/?[\\w-]+\\d+", slug))
 	return re.FindAllString(htmlString, -1)
 }
 

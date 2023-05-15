@@ -16,7 +16,18 @@ func TestParseURL(t *testing.T) {
 			Name: "Single Episode hentaihaven.xxx",
 			URL:  "https://hentaihaven.xxx/watch/ero-konbini-tenchou/episode-4/",
 			Want: 1,
-		}, {
+		},
+		{
+			Name: "Single OVA hentaihaven.xxx",
+			URL:  "https://hentaihaven.xxx/watch/fuyu-no-semi/ova-1/",
+			Want: 1,
+		},
+		{
+			Name: "Single Episode with year number hentaihaven.xxx",
+			URL:  "https://hentaihaven.xxx/watch/ai-no-kusabi/episode-1-1999/",
+			Want: 1,
+		},
+		{
 			Name: "Series hentaihaven.xxx",
 			URL:  "https://hentaihaven.xxx/watch/ero-konbini-tenchou/",
 			Want: 4,
