@@ -131,7 +131,7 @@ func extractData(URL string) (*static.Data, error) {
 
 	return &static.Data{
 		Site:    site,
-		Title:   utils.GetSectionHeadingElement(&htmlString, 6, -1),
+		Title:   utils.GetSectionHeadingElement(&htmlString, 6, 0),
 		Type:    static.DataTypeVideo,
 		Streams: streams,
 		Captions: []*static.Caption{
