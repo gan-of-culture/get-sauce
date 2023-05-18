@@ -14,7 +14,7 @@ import (
 	"github.com/gan-of-culture/get-sauce/utils"
 )
 
-// ParseHLSMaster into static.Stream to prefill the structure
+// ParseMaster into static.Stream to prefill the structure
 // returns a pre filled structure where URLs[0].URL is the media stream URI
 func ParseMaster(master *string) ([]*static.Stream, error) {
 	re := regexp.MustCompile(`#EXT-X-STREAM-INF:([^\n]*)\n([^\n]+)`) // 1=PARAMS 2=MEDIAURI
@@ -133,9 +133,9 @@ func ParseMediaStream(mediaStr *string, URL string) ([]*static.URL, []byte, erro
 	return segments, key, nil
 }
 
-// ExtractHLS contents of a file/URL into the internal stream structure.
+// Extract contents of a file/URL into the internal stream structure.
 // If the playlist contains multiple streams then each stream will be represented as a unique stream internally
-func ExtractHLS(URL string, headers map[string]string) (map[string]*static.Stream, error) {
+func Extract(URL string, headers map[string]string) (map[string]*static.Stream, error) {
 
 	master, err := request.GetWithHeaders(URL, headers)
 	if err != nil {

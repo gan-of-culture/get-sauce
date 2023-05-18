@@ -134,7 +134,7 @@ func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 		return nil, errors.New("the jwplayer api request for the streams did not return successful for")
 	}
 
-	streams, err := hls.ExtractHLS(sources.Data.Sources[0].Src, nil)
+	streams, err := hls.Extract(sources.Data.Sources[0].Src, nil)
 	if err != nil {
 		return nil, err
 	}

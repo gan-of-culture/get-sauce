@@ -102,7 +102,7 @@ func extractData(URL string) (*static.Data, error) {
 
 	m3uMasterURL := baseURL + srcURLParts[0]
 
-	streams, err := hls.ExtractHLS(m3uMasterURL, map[string]string{"Referer": site})
+	streams, err := hls.Extract(m3uMasterURL, map[string]string{"Referer": site})
 	if err != nil {
 		return nil, err
 	}
