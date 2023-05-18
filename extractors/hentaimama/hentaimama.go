@@ -112,7 +112,7 @@ func extractData(URL string) (*static.Data, error) {
 			continue
 		}
 
-		streams, err = hls.ExtractHLS(src.URL, map[string]string{"Referer": src.Referer})
+		streams, err = hls.Extract(src.URL, map[string]string{"Referer": src.Referer})
 		if err != nil {
 			return nil, err
 		}

@@ -123,7 +123,7 @@ func ExtractData(URL string) (*static.Data, error) {
 		return nil, err
 	}
 
-	streams, err := hls.ExtractHLS(pData.VideoSource, map[string]string{
+	streams, err := hls.Extract(pData.VideoSource, map[string]string{
 		"Referer": playerURL,
 		"Accept":  "*/*",
 	})

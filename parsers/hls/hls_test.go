@@ -7,7 +7,7 @@ import (
 	"github.com/gan-of-culture/get-sauce/test"
 )
 
-func TestParseHLSMaster(t *testing.T) {
+func TestParseMaster(t *testing.T) {
 	tests := []struct {
 		Name   string
 		master string
@@ -93,7 +93,7 @@ func TestParseHLSMaster(t *testing.T) {
 	}
 }
 
-func TestExtractHLS(t *testing.T) {
+func TestExtract(t *testing.T) {
 	tests := []struct {
 		Name    string
 		URL     string
@@ -124,7 +124,7 @@ func TestExtractHLS(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.Name, func(t *testing.T) {
-			streams, err := ExtractHLS(tt.URL, tt.Headers)
+			streams, err := Extract(tt.URL, tt.Headers)
 			test.CheckError(t, err)
 			for k, v := range streams {
 				if v.Quality != tt.Want[k].Quality {
