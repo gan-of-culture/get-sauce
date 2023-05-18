@@ -3,7 +3,7 @@
 [![Build](https://github.com/gan-of-culture/get-sauce/actions/workflows/go.yml/badge.svg?branch=master)](https://github.com/gan-of-culture/get-sauce/actions/workflows/go.yml)
 [![Go Report Card](https://goreportcard.com/badge/github.com/gan-of-culture/get-sauce)](https://goreportcard.com/report/github.com/gan-of-culture/get-sauce)
 
-Is a hentai scraper that is not using official APIs if they are restrictive. This also means that for some sites it might take longer to download content, because the download speed might be limited. Some sites only provide single downloads, downloads to lesser qualities or no downloads at all, but this scraper will always give you the opportunity to download the best available quality from each site. It's also possible to input links to a category and get-sauce will download all media under said category.
+Is a command line program to download Hentai videos and images from multiple websites. Most sites have very intrusive advertisements, disable downloading of content, limit download speeds or only provide lesser video resolutions, but this tool will always give you the opportunity to download the best available quality from each site. It's also possible to input URLs to a category or multiple URLs and get-sauce will download it all.
 
 - [Installation](#installation)
 - [Getting started](#getting-started)
