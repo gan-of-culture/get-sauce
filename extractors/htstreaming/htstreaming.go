@@ -196,7 +196,9 @@ func getPlayerURL(URL *string) (string, error) {
 		return playerURL, nil
 	}
 
-	htmlString, err := request.Get(*URL)
+	htmlString, err := request.GetWithHeaders(*URL, map[string]string{
+		"Cookie": "inter=1",
+	})
 	if err != nil {
 		log.Println(htmlString)
 		return "", err
