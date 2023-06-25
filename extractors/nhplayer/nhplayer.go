@@ -13,7 +13,7 @@ import (
 )
 
 var reNHPlayerURL = regexp.MustCompile(`https://nhplayer\.com/v/[^/"]+`)
-var rePlayerURL = regexp.MustCompile(`/player.php\?u=([^"&]+)`)
+var rePlayerURL = regexp.MustCompile(`/player.php\?[^"]+`)
 var reHTStreamingVideoURL = regexp.MustCompile(`https://htstreaming.com/video/([^"]*)`)
 
 type extractor struct{}
@@ -61,12 +61,19 @@ func extractData(URL string) (*static.Data, error) {
 		return htstreaming.ExtractData(videoURL)
 	}
 
-	playerURL := rePlayerURL.FindStringSubmatch(htmlString)
-	if len(playerURL) < 2 {
+	// non htstreaming video
+
+	matchedPlayerURL := rePlayerURL.FindString(htmlString)
+	if len(matchedPlayerURL) < 2 {
 		return nil, static.ErrDataSourceParseFailed
 	}
 
-	b64Path, err := base64.StdEncoding.DecodeString(playerURL[1])
+	playerURL, err := url.Parse(matchedPlayerURL)
+	if err != nil {
+		return nil, err
+	}
+
+	b64Path, err := base64.StdEncoding.DecodeString(playerURL.Query().Get("u"))
 	if err != nil {
 		return nil, err
 	}
@@ -81,6 +88,23 @@ func extractData(URL string) (*static.Data, error) {
 	title = strings.Split(title, ".")[0]
 
 	size, _ := request.Size(videoURL, URL)
+
+	captions := []*static.Caption{}
+	subtitleQuery := playerURL.Query().Get("s")
+	if subtitleQuery != "" {
+		b64Path, err := base64.StdEncoding.DecodeString(subtitleQuery)
+		if err != nil {
+			return nil, err
+		}
+		subtitleURL := string(b64Path)
+		captions = append(captions, &static.Caption{
+			URL: static.URL{
+				URL: subtitleURL,
+				Ext: utils.GetFileExt(subtitleURL),
+			},
+			Language: "English",
+		})
+	}
 
 	return &static.Data{
 		Site:  baseURL.Host,
@@ -98,6 +122,7 @@ func extractData(URL string) (*static.Data, error) {
 				Size: size,
 			},
 		},
-		URL: URL,
+		Captions: captions,
+		URL:      URL,
 	}, nil
 }

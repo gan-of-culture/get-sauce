@@ -163,6 +163,15 @@ func TestExtract(t *testing.T) {
 				Size:    558305856,
 			},
 		},
+		{
+			Name: "[New] Single Episode uncensoredhentai.xxx",
+			Args: test.Args{
+				URL:     "https://uncensoredhentai.xxx/watch/joshi-luck-episode-5/",
+				Title:   "Joshi Luck! Episode 5",
+				Quality: "",
+				Size:    423727631,
+			},
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.Name, func(t *testing.T) {
