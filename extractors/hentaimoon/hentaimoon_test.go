@@ -40,10 +40,10 @@ func TestExtract(t *testing.T) {
 		{
 			Name: "Single Episode",
 			Args: test.Args{
-				URL:     "https://hentai-moon.com/videos/4911/oneshota-the-animation/",
-				Title:   "Oneshota The Animation",
-				Quality: "",
-				Size:    115514424,
+				URL:     "https://hentai-moon.com/videos/7164/joshi-luck-ep-6/",
+				Title:   "Joshi Luck - Ep.6",
+				Quality: "1080p",
+				Size:    217934450,
 			},
 		},
 	}
