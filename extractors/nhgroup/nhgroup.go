@@ -52,7 +52,7 @@ func ParseURL(URL string) []string {
 		return []string{URL}
 	}
 
-	// TODO: Implemented a more generic way to handle such links that don't match the first regex:
+	// TODO: Implement a more generic way to handle such links that don't match the first regex:
 	// https://hentai.tv/hentai/night-shift-nurses-2-kazama-mana/
 	if ok, _ := regexp.MatchString(`/hentai/((\w+)-?)+/?`, URL); ok {
 		return []string{URL}
