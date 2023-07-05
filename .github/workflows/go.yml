@@ -5,6 +5,7 @@ on:
       - master
     paths-ignore:
       - '**.md'
+      - '**.yml'
   pull_request:
     branches:
       - master
@@ -13,7 +14,7 @@ on:
 jobs:
 
   build:
-    name: Build
+
     runs-on: ubuntu-latest
     steps:
 
@@ -21,7 +22,7 @@ jobs:
       uses: actions/checkout@v3
 
     - name: Set up Go
-      uses: actions/setup-go@v3
+      uses: actions/setup-go@v4
       with:
         go-version-file: "./go.mod"
       id: go
