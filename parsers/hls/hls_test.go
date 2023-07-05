@@ -102,7 +102,7 @@ func TestExtract(t *testing.T) {
 	}{
 		{
 			Name: "HLS where stream order is from small to high",
-			URL:  "https://na-03.javprovider.com/hls/K/kuroinu-ii-animation/1/playlist.m3u8",
+			URL:  "https://na-02.javprovider.com/hls/K/kuroinu-ii-animation/1/playlist.m3u8",
 			Headers: map[string]string{
 				"Referer": "https://hentaimama.io",
 			},
