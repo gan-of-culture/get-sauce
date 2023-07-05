@@ -14,7 +14,7 @@ func TestParseURL(t *testing.T) {
 	}{
 		{
 			Name: "Single Episode hentaihaven.com",
-			URL:  "https://hentaihaven.com/soshite-watashi-wa-sensei-ni-episode-1/",
+			URL:  "https://hentaihaven.com/video/soshite-watashi-wa-sensei-ni/episode-1/",
 			Want: 1,
 		},
 	}
@@ -36,7 +36,7 @@ func TestExtract(t *testing.T) {
 		{
 			Name: "Single Episode hentaihaven.com",
 			Args: test.Args{
-				URL:     "https://hentaihaven.com/usamimi-bouken-tan-sekuhara-shinagara-sekai-o-sukue-episode-3/",
+				URL:     "https://hentaihaven.com/video/usamimi-bouken-tan-sekuhara-shinagara-sekai-o-sukue/episode-3/",
 				Title:   "Usamimi Bouken-tan: Sekuhara Shinagara Sekai o Sukue - Episode 3",
 				Quality: "1920x1080",
 			},
