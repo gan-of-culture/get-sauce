@@ -58,7 +58,7 @@ func TestExtract(t *testing.T) {
 			Name: "Single video",
 			Args: test.Args{
 				URL:     "https://rule34.paheal.net/post/view/3464181",
-				Title:   "Hv54rDSL Nier_(series) Nier_Automata YoRHa_No.2_Type_B animated audiodude blender sound webm 3464181",
+				Title:   "animated audiodude blender Hv54rDSL Nier_(series) Nier_Automata sound webm YoRHa_No.2_Type_B 3464181",
 				Quality: "540 x 1280",
 				Size:    7503936,
 			},
@@ -76,7 +76,7 @@ func TestExtract(t *testing.T) {
 			Name: "Single GIF",
 			Args: test.Args{
 				URL:     "https://rule34.paheal.net/post/view/3461411",
-				Title:   "World_of_Warcraft animated blood_elf 3461411",
+				Title:   "animated blood_elf World_of_Warcraft 3461411",
 				Quality: "480 x 854",
 				Size:    7811055,
 			},

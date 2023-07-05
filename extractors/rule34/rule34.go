@@ -14,7 +14,7 @@ import (
 
 const site = "https://rule34.paheal.net"
 
-var reParsePostID = regexp.MustCompile(`data-post-id="([^"]+)`)
+var reParsePostID = regexp.MustCompile(`data-post-id=["']([^"']+)`)
 var rePostID = regexp.MustCompile(`[0-9]{3,}`)
 var reSourceURL = regexp.MustCompile(`id='main_image' src='([^']+)`)
 var reVideoSourceURL = regexp.MustCompile(`<source src='([^']+)`)
