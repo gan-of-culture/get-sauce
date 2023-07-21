@@ -14,10 +14,10 @@ func TestExtract(t *testing.T) {
 		{
 			Name: "Imigur",
 			Args: test.Args{
-				URL:     "http://i.imgur.com/06YTAjg.jpg",
-				Title:   "06YTAjg",
+				URL:     "https://i.imgur.com/CVTp6cK.jpeg",
+				Title:   "CVTp6cK",
 				Quality: "",
-				Size:    582917,
+				Size:    384586,
 			},
 		},
 		{
