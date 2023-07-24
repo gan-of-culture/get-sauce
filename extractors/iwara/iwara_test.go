@@ -59,7 +59,7 @@ func TestExtract(t *testing.T) {
 			Name: "Single images post",
 			Args: test.Args{
 				URL:     "https://iwara.tv/image/x6hVrNaf0WVdLE/nico-tomoare-provocation-dance-preview-mmdd",
-				Title:   "【コイカツ】 Nico Tomoare Provocation Dance Preview 【MMDD】",
+				Title:   "【コイカツ】 Nico Thick Tomoare Provocation Dance Preview 【MMDD】",
 				Quality: "1280x720",
 				Size:    294562,
 			},
