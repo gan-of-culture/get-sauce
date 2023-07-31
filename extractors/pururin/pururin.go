@@ -51,8 +51,9 @@ func parseURL(URL string) []string {
 	if err != nil {
 		return []string{}
 	}
+	htmlString = strings.Split(htmlString, "Popular right now")[0]
 
-	re := regexp.MustCompile(fmt.Sprintf("%sgallery/\\d*/[^\"]*\">", site))
+	re := regexp.MustCompile(fmt.Sprintf(`%sgallery/\d+/[^\"]*\"`, site))
 
 	URLs := []string{}
 	for _, v := range re.FindAllString(htmlString, -1) {
