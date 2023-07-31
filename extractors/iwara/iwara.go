@@ -201,7 +201,7 @@ func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 }
 
 func parseURL(URL string) []string {
-	if ok, _ := regexp.MatchString(site+`(?:video|image)/`, URL); ok {
+	if ok, _ := regexp.MatchString(`https://[w.]*iwara.tv/(?:video|image)/`, URL); ok {
 		return []string{URL}
 	}
 
