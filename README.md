@@ -307,7 +307,6 @@ The following links will direct you to adult content. Please keep that in mind!
 | [nhentai.net](https://nhentai.net)                                                        | :heavy_check_mark: |        ?         |:cookie:|
 | [ohentai.org (1080p, 720p, 480p)](https://ohentai.org/)                                   |         ?          |:heavy_check_mark:|
 | [oppai.stream (2160p, 1080p, 720p)](https://oppai.stream/)                                |         ?          |:heavy_check_mark:|
-| [orzqwq.com](https://orzqwq.com/)                                                         | :heavy_check_mark: |        ?         |
 | [pururin.to](https://pururin.to)                                                          | :heavy_check_mark: |        ?         |
 | [rule34.paheal.net](https://rule34.paheal.net)                                            | :heavy_check_mark: |:heavy_check_mark:|
 | [rule34video.com (2160p, 1080p, 720p, 480p, 360p)](https://rule34video.com/)              | :heavy_check_mark: |:heavy_check_mark:|
