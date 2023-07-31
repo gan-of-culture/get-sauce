@@ -19,7 +19,7 @@ func TestParseURL(t *testing.T) {
 		}, {
 			Name: "Tag",
 			URL:  "https://pururin.to/browse/tags/contents/1563/stockings.html",
-			Want: 20,
+			Want: 25,
 		},
 	}
 	for _, tt := range tests {
