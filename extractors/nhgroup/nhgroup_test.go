@@ -139,28 +139,25 @@ func TestExtract(t *testing.T) {
 		{
 			Name: "Single Episode hentaistream.xxx",
 			Args: test.Args{
-				URL:     "https://hentaistream.xxx/watch/mako-chan-kaihatsu-nikki-episode-1/",
-				Title:   "Mako chan Kaihatsu Nikki Episode 1",
-				Quality: "1920x1080",
-				Size:    558305856,
+				URL:   "https://hentaistream.xxx/watch/mako-chan-kaihatsu-nikki-episode-1/",
+				Title: "Mako-chan Kaihatsu Nikki Episode 1",
+				Size:  398919647,
 			},
 		},
 		{
 			Name: "Single Episode",
 			Args: test.Args{
-				URL:     "https://latesthentai.com/watch/hajimete-no-hitozuma-episode-1/",
-				Title:   "Hajimete no Hitozuma Episode 1",
-				Quality: "1280x720",
-				Size:    177363336,
+				URL:   "https://latesthentai.com/watch/hajimete-no-hitozuma-episode-1/",
+				Title: "Hajimete no Hitozuma Episode 1",
+				Size:  278979392,
 			},
 		},
 		{
 			Name: "Single Episode uncensoredhentai.xxx",
 			Args: test.Args{
-				URL:     "https://uncensoredhentai.xxx/watch/mako-chan-kaihatsu-nikki-episode-1/",
-				Title:   "Mako chan Kaihatsu Nikki Episode 1",
-				Quality: "1920x1080",
-				Size:    558305856,
+				URL:   "https://uncensoredhentai.xxx/watch/mako-chan-kaihatsu-nikki-episode-1/",
+				Title: "Mako-chan Kaihatsu Nikki Episode 1",
+				Size:  398919647,
 			},
 		},
 		{
