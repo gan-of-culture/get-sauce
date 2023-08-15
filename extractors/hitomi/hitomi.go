@@ -30,15 +30,15 @@ type tag struct {
 }
 
 type gallery struct {
-	Date              string `json:"date"`
-	Files             []img  `json:"files"`
-	JapaneseTitle     string `json:"japanese_title"`
-	Type              string `json:"type"`
-	ID                string `json:"id"`
-	Tags              []tag  `json:"tags"`
-	LanguageLocalName string `json:"language_localname"`
-	Language          string `json:"language"`
-	Title             string `json:"title"`
+	Date              string          `json:"date"`
+	Files             []img           `json:"files"`
+	JapaneseTitle     string          `json:"japanese_title"`
+	Type              string          `json:"type"`
+	ID                json.RawMessage `json:"id"`
+	Tags              []tag           `json:"tags"`
+	LanguageLocalName string          `json:"language_localname"`
+	Language          string          `json:"language"`
+	Title             string          `json:"title"`
 }
 
 const site = "https://hitomi.la/"
@@ -175,7 +175,7 @@ func extractData(URL string) (*static.Data, error) {
 				URLs: URLs,
 			},
 		},
-		URL: fmt.Sprintf("%s%s.html", readerURL, galleryData.ID),
+		URL: fmt.Sprintf("%s%s.html", readerURL, string(galleryData.ID)),
 	}, nil
 }
 
