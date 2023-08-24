@@ -32,7 +32,7 @@ func TestGet(t *testing.T) {
 
 func TestPost(t *testing.T) {
 	t.Run("Default test", func(t *testing.T) {
-		data, err := PostAsBytesWithHeaders("https://www.google.com/", map[string]string{"Referer": "https://google.com"})
+		data, err := PostAsBytesWithHeaders("https://www.google.com/", map[string]string{"Referer": "https://google.com"}, nil)
 		test.CheckError(t, err)
 
 		if len(data) < 1 {
