@@ -173,21 +173,21 @@ func GetAsBytesWithHeaders(URL string, headers map[string]string) ([]byte, error
 }
 
 // PostAsBytesWithHeaders content as bytes
-func PostAsBytesWithHeaders(URL string, headers map[string]string) ([]byte, error) {
-	resp, err := Request(http.MethodPost, URL, headers, nil)
+func PostAsBytesWithHeaders(URL string, headers map[string]string, body io.Reader) ([]byte, error) {
+	resp, err := Request(http.MethodPost, URL, headers, body)
 	if err != nil {
 		return nil, err
 	}
 	defer resp.Body.Close()
 
-	body, err := io.ReadAll(resp.Body)
+	resBody, err := io.ReadAll(resp.Body)
 	if err != nil {
 		if err != io.ErrUnexpectedEOF {
 			return nil, err
 		}
 	}
 
-	return body, nil
+	return resBody, nil
 }
 
 // GetWithCookies content as string

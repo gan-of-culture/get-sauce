@@ -1,7 +1,13 @@
 package hstream
 
 import (
+	"bytes"
+	"encoding/json"
+	"errors"
 	"fmt"
+	"io"
+	"net/http"
+	"net/url"
 	"regexp"
 	"strings"
 	"time"
@@ -10,11 +16,26 @@ import (
 	"github.com/gan-of-culture/get-sauce/request"
 	"github.com/gan-of-culture/get-sauce/static"
 	"github.com/gan-of-culture/get-sauce/utils"
+	"golang.org/x/exp/slices"
 )
 
 const site = "https://hstream.moe/"
+const api = "https://hstream.moe/player/api"
+const fileProvider = "https://str.h-dl.xyz"
 
-var reVideoSources = regexp.MustCompile(`https://.+/\d+/[\w.]+/[\w./]+\.(?:mpd|mp4|webm)`)
+type APIResponse struct {
+	Title      string `json:"title"`
+	Poster     string `json:"poster"`
+	Legacy     int    `json:"legacy"`
+	Resolution string `json:"resolution"`
+	StreamURL  string `json:"stream_url"`
+}
+
+type APIPayload struct {
+	EpisodeID string `json:"episode_id"`
+}
+
+var reEpisodeID = regexp.MustCompile(`e_id" type="hidden" value="([^"]*)`)
 var reCaptionSource = regexp.MustCompile(`https://.+/\d+/[\w.]+/[\w./]+\.ass`)
 
 type extractor struct{}
@@ -44,8 +65,8 @@ func parseURL(URL string) []string {
 		return []string{URL}
 	}
 
-	if ok, _ := regexp.MatchString(site+`hentai/[\w\-]+/?`, URL); !ok {
-		return []string{}
+	if ok, _ := regexp.MatchString(site+`hentai/[\w\-]+/?`, URL); ok {
+		return []string{URL}
 	}
 
 	htmlString, err := request.Get(URL)
@@ -64,17 +85,90 @@ func parseURL(URL string) []string {
 }
 
 func extractData(URL string) (*static.Data, error) {
-	htmlString, err := request.Get(URL)
+	resp, err := request.Request(http.MethodGet, URL, nil, nil)
 	if err != nil {
 		return nil, err
 	}
+	defer resp.Body.Close()
+
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		if err != io.ErrUnexpectedEOF {
+			return nil, err
+		}
+	}
+
+	htmlString := string(body)
+	cookies := resp.Cookies()
+	xsrf := cookies[slices.IndexFunc(cookies, func(cookie *http.Cookie) bool {
+		return cookie.Name == "XSRF-TOKEN"
+	})]
+	hstreamSession := cookies[slices.IndexFunc(cookies, func(cookie *http.Cookie) bool {
+		return cookie.Name == "hstream_session"
+	})]
 
 	if strings.Contains(htmlString, "<title>DDOS-GUARD</title>") {
 		time.Sleep(300 * time.Millisecond)
 		htmlString, _ = request.Get(URL)
 	}
 
-	videoSources := reverse(reVideoSources.FindAllString(htmlString, -1))
+	matchedEpisodeID := reEpisodeID.FindStringSubmatch(htmlString)
+	if len(matchedEpisodeID) < 2 {
+		return nil, errors.New("cannot find e_id for")
+	}
+
+	payload := APIPayload{EpisodeID: strings.TrimSpace(matchedEpisodeID[1])}
+	payloadBytes, err := json.Marshal(payload)
+	if err != nil {
+		return nil, err
+	}
+
+	xsrfValueEscaped, err := url.PathUnescape(xsrf.Value)
+	if err != nil {
+		return nil, err
+	}
+
+	jsonString, err := request.PostAsBytesWithHeaders(api, map[string]string{
+		"Content-Length":   fmt.Sprint(len(payloadBytes)),
+		"Content-Type":     "application/json",
+		"Cookie":           fmt.Sprintf("%s=%s; %s=%s", xsrf.Name, xsrf.Value, hstreamSession.Name, hstreamSession.Value),
+		"Referer":          URL,
+		"X-Requested-With": "XMLHttpRequest",
+		"X-Xsrf-Token":     xsrfValueEscaped,
+	}, bytes.NewReader(payloadBytes))
+	if err != nil {
+		return nil, err
+	}
+
+	res := APIResponse{}
+	err = json.Unmarshal(jsonString, &res)
+	if err != nil {
+		return nil, err
+	}
+
+	videoSourceBaseURL := fmt.Sprintf("%s/%s", fileProvider, res.StreamURL)
+	videoSources := []string{
+		videoSourceBaseURL + "/x264.720p.mp4",
+	}
+
+	if res.Resolution == "1080p" {
+		videoSources = append(videoSources, videoSourceBaseURL+"/av1.1080p.webm")
+	}
+
+	if res.Resolution == "4k" {
+		videoSources = append(videoSources, videoSourceBaseURL+"/av1.1080p.webm")
+		videoSources = append(videoSources, videoSourceBaseURL+"/av1.2160p.webm")
+	}
+
+	if res.Legacy == 0 {
+		videoSources = append(videoSources, []string{
+			videoSourceBaseURL + "/720/manifest.mpd",
+			videoSourceBaseURL + "/1080/manifest.mpd",
+			videoSourceBaseURL + "/2160/manifest.mpd",
+		}...)
+	}
+
+	videoSources = reverse(videoSources)
 
 	streams := make(map[string]*static.Stream)
 	counter := 0
@@ -127,11 +221,11 @@ func extractData(URL string) (*static.Data, error) {
 		}
 	}
 
-	captionURL := reCaptionSource.FindString(htmlString)
+	captionURL := videoSourceBaseURL + "/eng.ass"
 
 	return &static.Data{
 		Site:    site,
-		Title:   utils.GetSectionHeadingElement(&htmlString, 6, 0),
+		Title:   strings.TrimSpace(utils.GetSectionHeadingElement(&htmlString, 1, 0)),
 		Type:    static.DataTypeVideo,
 		Streams: streams,
 		Captions: []*static.Caption{

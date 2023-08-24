@@ -48,8 +48,17 @@ func TestExtract(t *testing.T) {
 		{
 			Name: "Single Episode 4k",
 			Args: test.Args{
+				URL:     "https://hstream.moe/hentai/natural-vacation-the-animation-1",
+				Title:   "Natural Vacation The Animation - 1",
+				Quality: "2880x1920",
+				Size:    804660690,
+			},
+		},
+		{
+			Name: "Single Episode 4k legacy",
+			Args: test.Args{
 				URL:     "https://hstream.moe/hentai/wizard-girl-ambitious/1",
-				Title:   "Wizard Girl Ambitious – 1",
+				Title:   "Wizard Girl Ambitious - 1",
 				Quality: "av1.2160p.webm",
 				Size:    804660690,
 			},
@@ -58,7 +67,7 @@ func TestExtract(t *testing.T) {
 			Name: "Single Episode",
 			Args: test.Args{
 				URL:     "https://hstream.moe/hentai/maki-chan-to-now/1",
-				Title:   "Maki-chan to Now. – 1",
+				Title:   "Maki-chan to Now. - 1",
 				Quality: "av1.1080p.webm",
 				Size:    180211896,
 			},
