@@ -40,10 +40,10 @@ func TestExtract(t *testing.T) {
 		{
 			Name: "Single Episode",
 			Args: test.Args{
-				URL:     "https://hentai2w.com/video/youkoso-sukebe-elf-no-mori-e-episode-2-3693.html",
-				Title:   "Youkoso! Sukebe Elf No Mori E - Episode 2",
+				URL:     "https://hentai2w.com/video/fela-pure-episode-1-1189.html",
+				Title:   "Fela Pure - Episode 1",
 				Quality: "",
-				Size:    243175159,
+				Size:    168993383,
 			},
 		},
 	}
