@@ -94,46 +94,25 @@ func TestExtract(t *testing.T) {
 		{
 			Name: "Single Episode animeidhentai.com",
 			Args: test.Args{
-				URL:     "https://animeidhentai.com/36364/usamimi-bouken-tan-sekuhara-shinagara-sekai-o-sukue-episode-3/",
-				Title:   "Usamimi Bouken-tan: Sekuhara Shinagara Sekai o Sukue Episode 3",
-				Quality: "",
-				Size:    288687974,
+				URL:   "https://animeidhentai.com/36364/usamimi-bouken-tan-sekuhara-shinagara-sekai-o-sukue-episode-3/",
+				Title: "Usamimi Bouken-tan: Sekuhara Shinagara Sekai o Sukue Episode 3",
+				Size:  288687974,
 			},
 		},
 		{
 			Name: "Single Episode hentaihaven.co",
 			Args: test.Args{
-				URL:     "https://hentaihaven.co/watch/seika-jogakuin-koutoubu-kounin-sao-oji-san-episode-3/",
-				Title:   "Seika Jogakuin Koutoubu Kounin Sao Oji-San Episode 3",
-				Quality: "",
-				Size:    391364277,
-			},
-		},
-		{
-			Name: "Single Episode",
-			Args: test.Args{
-				URL:     "https://hentaihaven.red/hentai/bitch-na-inane-sama-episode-4/",
-				Title:   "Bitch na Inane-sama Episode 4",
-				Quality: "1920x1080",
-				Size:    358198092,
-			},
-		},
-		{
-			Name: "[OLD] Single Episode",
-			Args: test.Args{
-				URL:     "https://hentaihaven.red/hentai/mako-chan-kaihatsu-nikki-episode-2/",
-				Title:   "Mako chan Kaihatsu Nikki Episode 2",
-				Quality: "1920x1080",
-				Size:    306057984,
+				URL:   "https://hentaihaven.co/watch/seika-jogakuin-koutoubu-kounin-sao-oji-san-episode-3/",
+				Title: "Seika Jogakuin Koutoubu Kounin Sao Oji-San Episode 3",
+				Size:  391364277,
 			},
 		},
 		{
 			Name: "Single Episode hentai.tv",
 			Args: test.Args{
-				URL:     "https://hentai.tv/hentai/usamimi-bouken-tan-sekuhara-shinagara-sekai-o-sukue-episode-3/",
-				Title:   "Usamimi Bouken-tan: Sekuhara Shinagara Sekai o Sukue Episode 3",
-				Quality: "",
-				Size:    288687974,
+				URL:   "https://hentai.tv/hentai/usamimi-bouken-tan-sekuhara-shinagara-sekai-o-sukue-episode-3/",
+				Title: "Usamimi Bouken-tan: Sekuhara Shinagara Sekai o Sukue Episode 3",
+				Size:  288687974,
 			},
 		},
 		{
@@ -163,10 +142,9 @@ func TestExtract(t *testing.T) {
 		{
 			Name: "[New] Single Episode uncensoredhentai.xxx",
 			Args: test.Args{
-				URL:     "https://uncensoredhentai.xxx/watch/joshi-luck-episode-5/",
-				Title:   "Joshi Luck! Episode 5",
-				Quality: "",
-				Size:    423727631,
+				URL:   "https://uncensoredhentai.xxx/watch/joshi-luck-episode-5/",
+				Title: "Joshi Luck! Episode 5",
+				Size:  423727631,
 			},
 		},
 	}
