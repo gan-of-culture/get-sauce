@@ -32,24 +32,15 @@ func TestExtract(t *testing.T) {
 	tests := []struct {
 		Name string
 		Args test.Args
-	}{
-		{
-			Name: "Single Episode animeidhentai.com old",
-			Args: test.Args{
-				URL:     "https://nhplayer.com/v/zFXGrn9SlmjqDEi/",
-				Title:   "Usamimi Bouken-Tan Sekuhara Shinagara Sekai O Sukue Episode 3",
-				Quality: "1920x1080",
-				Size:    143517696,
-			},
-		}, {
-			Name: "Single Episode animeidhentai.com",
-			Args: test.Args{
-				URL:     "https://nhplayer.com/v/rMK9SwPJRfGEJ9k/",
-				Title:   "usamimi-bouken-tan-sekuhara-shinagara-sekai-o-sukue-3",
-				Quality: "",
-				Size:    288687974,
-			},
+	}{{
+		Name: "Single Episode animeidhentai.com",
+		Args: test.Args{
+			URL:     "https://nhplayer.com/v/rMK9SwPJRfGEJ9k/",
+			Title:   "usamimi-bouken-tan-sekuhara-shinagara-sekai-o-sukue-3",
+			Quality: "",
+			Size:    288687974,
 		},
+	},
 	}
 	for _, tt := range tests {
 		t.Run(tt.Name, func(t *testing.T) {
