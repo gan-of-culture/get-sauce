@@ -21,14 +21,14 @@ import (
 
 const site = "https://hstream.moe/"
 const api = "https://hstream.moe/player/api"
-const fileProvider = "https://str.h-dl.xyz"
 
 type APIResponse struct {
-	Title      string `json:"title"`
-	Poster     string `json:"poster"`
-	Legacy     int    `json:"legacy"`
-	Resolution string `json:"resolution"`
-	StreamURL  string `json:"stream_url"`
+	Title         string   `json:"title"`
+	Poster        string   `json:"poster"`
+	Legacy        int      `json:"legacy"`
+	Resolution    string   `json:"resolution"`
+	StreamURL     string   `json:"stream_url"`
+	StreamDomains []string `json:"stream_domains"`
 }
 
 type APIPayload struct {
@@ -36,7 +36,6 @@ type APIPayload struct {
 }
 
 var reEpisodeID = regexp.MustCompile(`e_id" type="hidden" value="([^"]*)`)
-var reCaptionSource = regexp.MustCompile(`https://.+/\d+/[\w.]+/[\w./]+\.ass`)
 
 type extractor struct{}
 
@@ -146,7 +145,7 @@ func extractData(URL string) (*static.Data, error) {
 		return nil, err
 	}
 
-	videoSourceBaseURL := fmt.Sprintf("%s/%s", fileProvider, res.StreamURL)
+	videoSourceBaseURL := fmt.Sprintf("%s/%s", res.StreamDomains[0], res.StreamURL)
 	videoSources := []string{
 		videoSourceBaseURL + "/x264.720p.mp4",
 	}
