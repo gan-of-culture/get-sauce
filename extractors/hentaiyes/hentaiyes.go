@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"regexp"
 
-	"github.com/gan-of-culture/get-sauce/extractors/htstreaming"
+	"github.com/gan-of-culture/get-sauce/extractors/nhgroup"
 	"github.com/gan-of-culture/get-sauce/request"
 	"github.com/gan-of-culture/get-sauce/static"
 	"github.com/gan-of-culture/get-sauce/utils"
@@ -60,9 +60,9 @@ func parseURL(URL string) []string {
 
 func extractData(URL string) (*static.Data, error) {
 	slug := reSlug.FindStringSubmatch(URL)
-	embedURL := fmt.Sprintf("%sembed.php?name=%s&source=1", site, slug[1])
+	embedURL := fmt.Sprintf("%sembed_new.php?name=%s&source=1", site, slug[1])
 
-	data, err := htstreaming.ExtractData(embedURL)
+	data, err := nhgroup.ExtractData(embedURL)
 	if err != nil {
 		return nil, err
 	}

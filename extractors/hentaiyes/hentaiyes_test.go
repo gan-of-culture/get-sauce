@@ -46,8 +46,8 @@ func TestExtract(t *testing.T) {
 			Args: test.Args{
 				URL:     "https://hentaiyes.com/watch/kanpeki-ojou-sama-no-watakushi-ga-dogeza-de-mazo-ochisuru-choroin-na-wakenai-desu-wa-episode-03/",
 				Title:   "kanpeki-ojou-sama-no-watakushi-ga-dogeza-de-mazo-ochisuru-choroin-na-wakenai-desu-wa-episode-03",
-				Quality: "1280x720",
-				Size:    123142820,
+				Quality: "",
+				Size:    419430132,
 			},
 		},
 	}
