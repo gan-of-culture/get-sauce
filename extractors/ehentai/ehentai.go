@@ -16,7 +16,7 @@ const site = "https://e-hentai.org/"
 
 var reNumbOfPages = regexp.MustCompile(`([0-9]+) pages`)
 var reIMGURLs = regexp.MustCompile(`https://e-hentai.org/s[^"]+-[0-9]+`)
-var reFileInfo = regexp.MustCompile(`<div>[^.]+\.([^::]+):: ([^::]+) :: ([^.]+.[0-9]+) ([A-Z]{2})`)
+var reFileInfo = regexp.MustCompile(`<div>[^.]+\.([^::]+):: ([^::]+) :: ([^.]+.[0-9]+) ([A-Za-z]{2,3})`)
 var reSourceURL = regexp.MustCompile(`<img id="img" src="([^"]+)`)
 
 type extractor struct{}

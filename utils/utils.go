@@ -29,6 +29,12 @@ func CalcSizeInByte(number float64, unit string) int64 {
 		number *= 1000000
 	case "GB":
 		number *= 10000000000
+	case "KiB":
+		number *= 1024
+	case "MiB":
+		number *= 1048576
+	case "GiB":
+		number *= 1073741824
 	}
 	return int64(number)
 }
