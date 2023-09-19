@@ -19,7 +19,7 @@ import (
 const site = "https://exhentai.org/"
 const loginFormURL = "https://forums.e-hentai.org/index.php?act=Login&CODE=01"
 
-var reFileInfo = regexp.MustCompile(`<div>[^.]+\.([^::]+):: ([^::]+) :: ([^.]+.[0-9]+) ([A-Z]{2})`)
+var reFileInfo = regexp.MustCompile(`<div>[^.]+\.([^::]+):: ([^::]+) :: ([^.]+.[0-9]+) ([A-Za-z]{2,3})`)
 var reSourceURL = regexp.MustCompile(`https://exhentai.org/fullimg[^"]+`)
 var reSourceURLBackup = regexp.MustCompile(`<img id="img" src="([^"]+)`)
 var reNumbOfPages = regexp.MustCompile(`([0-9]+) pages`)
