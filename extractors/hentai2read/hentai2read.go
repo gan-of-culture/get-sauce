@@ -12,6 +12,7 @@ import (
 )
 
 type gData struct {
+	MangaID      int
 	Title        string
 	Index        int
 	Images       []string
@@ -22,7 +23,7 @@ type gData struct {
 const site = "https://hentai2read.com/"
 const cdn = "https://static.hentaicdn.com/hentai"
 
-var reJSONString = regexp.MustCompile(`{\s*'title'[\s\S]*?}`)
+var reJSONString = regexp.MustCompile(`{\s*'mangaID'[\s\S]*?}`)
 var reTitle = regexp.MustCompile(`[^[(|]*`)
 
 type extractor struct{}
