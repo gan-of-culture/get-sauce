@@ -23,8 +23,9 @@ import (
 )
 
 const site = "https://muchohentai.com/"
+const urlPart = "Ygh1ZX"
 
-var reEpisodeURL = regexp.MustCompile(site + `aBo4Rk/\d+/`)
+var reEpisodeURL = regexp.MustCompile(site + urlPart + `/\d+/`)
 var reServerPrefixes = regexp.MustCompile(`va\d\d`)
 var reSrcURLBaseParts = regexp.MustCompile(`(https://)"[^"]+"([^"]+)`) // 1=https 2=second part of domain
 var reSrcURLParts = regexp.MustCompile(`\\/wp-content[^"]+`)           // 1=m3u8 2=subs 3=thumbs
