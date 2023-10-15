@@ -1,6 +1,7 @@
 package oppai
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/url"
 	"regexp"
@@ -15,8 +16,8 @@ import (
 const site = "https://oppai.stream/"
 const episodeURLTemplate = "https://oppai.stream/watch.php?e="
 
-var reSources = regexp.MustCompile(`<source\ssrc=["']([^"']+)["']\ssize=["']([^"']+)`) // 1=srcURL 2=Resolution
-var reCaptions = regexp.MustCompile(`<track.+label="([^"]+)"\ssrc="([^"]+)`)           // 1=Language 2=srcURL
+var reSources = regexp.MustCompile(`var availableres = ({[^}]+})`)           // 1=srcURL 2=Resolution
+var reCaptions = regexp.MustCompile(`<track.+label="([^"]+)"\ssrc="([^"]+)`) // 1=Language 2=srcURL
 
 type extractor struct{}
 
@@ -65,22 +66,32 @@ func extractData(episodeSlug string) (*static.Data, error) {
 		return nil, err
 	}
 
-	sources := map[string]string{}
+	matchedSources := map[string]string{}
 	sourcesKeys := []int{}
-	for _, matchedSource := range reSources.FindAllStringSubmatch(htmlString, -1) {
-		sourceKey, err := strconv.Atoi(matchedSource[2])
+	err = json.Unmarshal([]byte(reSources.FindStringSubmatch(htmlString)[1]), &matchedSources)
+	if err != nil {
+		return nil, err
+	}
+
+	sources := map[int]string{}
+	for res, matchedURL := range matchedSources {
+		resKey := res
+		if resKey == "4k" {
+			resKey = "2160"
+		}
+		resKeyAsInt, err := strconv.Atoi(resKey)
 		if err != nil {
 			return nil, err
 		}
-		sources[matchedSource[2]] = matchedSource[1]
-		sourcesKeys = append(sourcesKeys, sourceKey)
+		sources[resKeyAsInt] = matchedURL
+		sourcesKeys = append(sourcesKeys, resKeyAsInt)
 	}
 
 	sort.Sort(sort.Reverse(sort.IntSlice(sourcesKeys)))
 
 	streams := map[string]*static.Stream{}
 	for idx, sourceKey := range sourcesKeys {
-		srcURL := sources[fmt.Sprint(sourceKey)]
+		srcURL := sources[sourceKey]
 		size, _ := request.Size(srcURL, episodeSlug)
 
 		streams[fmt.Sprint(idx)] = &static.Stream{
