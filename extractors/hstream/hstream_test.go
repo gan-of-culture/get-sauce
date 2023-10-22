@@ -57,10 +57,10 @@ func TestExtract(t *testing.T) {
 		{
 			Name: "Single Episode 4k legacy",
 			Args: test.Args{
-				URL:     "https://hstream.moe/hentai/wizard-girl-ambitious/1",
-				Title:   "Wizard Girl Ambitious - 1",
+				URL:     "https://hstream.moe/hentai/aku-no-onna-kanbu-full-moon-night-r-1",
+				Title:   "Aku no Onna Kanbu: Full Moon Night R - 1",
 				Quality: "av1.2160p.webm",
-				Size:    804660690,
+				Size:    397722506,
 			},
 		},
 		{
