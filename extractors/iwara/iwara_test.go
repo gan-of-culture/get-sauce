@@ -49,10 +49,10 @@ func TestExtract(t *testing.T) {
 		{
 			Name: "Single video",
 			Args: test.Args{
-				URL:     "https://www.iwara.tv/video/jemn7sgm7wuw0oqv9/r-18-observation-diary",
-				Title:   "【R-18】電ちん観察日記 OBSERVATION DIARY",
+				URL:     "https://www.iwara.tv/video/zwkobu5eevi17m309/14",
+				Title:   "14.舞夜の侍奉Ⅱ💕",
 				Quality: "Source",
-				Size:    232156387,
+				Size:    90608128,
 			},
 		},
 		{
