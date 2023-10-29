@@ -5,6 +5,7 @@ go 1.21
 require (
 	github.com/gan-of-culture/jsurl v0.0.0-20221216084718-9978d7873326
 	github.com/schollz/progressbar/v3 v3.13.1
+	github.com/google/brotli/go/cbrotli v0.0.0-20231026090320-9b83be233e0e
 )
 
 require (

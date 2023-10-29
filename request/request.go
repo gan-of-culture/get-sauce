@@ -1,6 +1,8 @@
 package request
 
 import (
+	"compress/flate"
+	"compress/gzip"
 	"crypto/tls"
 	"errors"
 	"io"
@@ -12,6 +14,7 @@ import (
 
 	"github.com/gan-of-culture/get-sauce/config"
 	"github.com/gan-of-culture/get-sauce/utils"
+	"github.com/google/brotli/go/cbrotli"
 )
 
 // LogRedirects to sanitize "Location" URLs
@@ -116,13 +119,25 @@ func GetAsBytes(URL string) ([]byte, error) {
 	}
 	defer resp.Body.Close()
 
-	body, err := io.ReadAll(resp.Body)
+	var reader io.ReadCloser
+	switch resp.Header.Get("Content-Encoding") {
+	case "br":
+		reader = cbrotli.NewReader(resp.Body)
+	case "gzip":
+		reader, _ = gzip.NewReader(resp.Body)
+	case "deflate":
+		reader = flate.NewReader(resp.Body)
+	default:
+		reader = resp.Body
+	}
+	defer reader.Close()
+
+	body, err := io.ReadAll(reader)
 	if err != nil {
 		if err != io.ErrUnexpectedEOF {
 			return nil, err
 		}
 	}
-
 	return body, nil
 }
 
