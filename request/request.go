@@ -12,9 +12,9 @@ import (
 	"strings"
 	"time"
 
+	"github.com/andybalholm/brotli"
 	"github.com/gan-of-culture/get-sauce/config"
 	"github.com/gan-of-culture/get-sauce/utils"
-	"github.com/google/brotli/go/cbrotli"
 )
 
 // LogRedirects to sanitize "Location" URLs
@@ -122,7 +122,7 @@ func GetAsBytes(URL string) ([]byte, error) {
 	var reader io.ReadCloser
 	switch resp.Header.Get("Content-Encoding") {
 	case "br":
-		reader = cbrotli.NewReader(resp.Body)
+		reader = io.NopCloser(brotli.NewReader(resp.Body))
 	case "gzip":
 		reader, _ = gzip.NewReader(resp.Body)
 	case "deflate":

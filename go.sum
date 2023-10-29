@@ -1,10 +1,10 @@
+github.com/andybalholm/brotli v1.0.6 h1:Yf9fFpf49Zrxb9NlQaluyE92/+X7UVHlhMNJN2sxfOI=
+github.com/andybalholm/brotli v1.0.6/go.mod h1:fO7iG3H7G2nSZ7m0zPUDn85XEX2GTukHGRSepvi9Eig=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/gan-of-culture/jsurl v0.0.0-20221216084718-9978d7873326 h1:UUgYxgCE9R7KU5b530r1MCKrwAm161C5rJLVlojtWtU=
 github.com/gan-of-culture/jsurl v0.0.0-20221216084718-9978d7873326/go.mod h1:2cT4Y46i0jdInrUftQvudioJAkCZAhuLbHK9cL1v51s=
-github.com/google/brotli/go/cbrotli v0.0.0-20231026090320-9b83be233e0e h1:q7hxkkc0sikXStQES2u4sYPVuNGMj8NUagcKAZp0sDI=
-github.com/google/brotli/go/cbrotli v0.0.0-20231026090320-9b83be233e0e/go.mod h1:nOPhAkwVliJdNTkj3gXpljmWhjc4wCaVqbMJcPKWP4s=
 github.com/k0kubun/go-ansi v0.0.0-20180517002512-3bf9e2903213/go.mod h1:vNUNkEQ1e29fT/6vq2aBdFsgNPmy8qMdSay1npru+Sw=
 github.com/mattn/go-isatty v0.0.17/go.mod h1:kYGgaQfpe5nmfYZH+SKPsOc2e4SrIfOl2e/yFXSvRLM=
 github.com/mattn/go-runewidth v0.0.14/go.mod h1:Jdepj2loyihRzMpdS35Xk/zdY8IAYHsh153qUoGf23w=
