@@ -4,11 +4,9 @@ go 1.21
 
 require (
 	github.com/gan-of-culture/jsurl v0.0.0-20221216084718-9978d7873326
-	github.com/google/brotli/go/cbrotli v0.0.0-20231026090320-9b83be233e0e
+	github.com/andybalholm/brotli v1.0.6
 	github.com/schollz/progressbar/v3 v3.13.1
 )
-
-require github.com/andybalholm/brotli v1.0.6 // indirect
 
 require (
 	github.com/mattn/go-runewidth v0.0.15 // indirect
