@@ -1,10 +1,12 @@
 package kvsplayer
 
 import (
+	"cmp"
 	"errors"
 	"fmt"
 	"math"
 	"regexp"
+	"slices"
 	"strconv"
 	"strings"
 
@@ -19,7 +21,7 @@ import (
 */
 
 var reHasKVSPlayer = regexp.MustCompile(`<script [^>]*?src="https://.+?/kt_player\.js\?v=(?P<ver>(?P<maj_ver>\d+)(\.\d+)+)".*?>`)
-var reFlashVars = regexp.MustCompile(`var\s+flashvars\s*=\s*\{[^}]*?\}`)
+var reFlashVars = regexp.MustCompile(`var\s+(?:flashvars|[\w]{11})\s*=[\s\S]*?};`)
 var reFlashVarsValues = regexp.MustCompile(`(\w+): ['"](.*?)['"],`)
 var reTitle = regexp.MustCompile(`<link href="https?://[^"]+/(.+?)/?" rel="canonical"\s*/?>`)
 
@@ -56,7 +58,7 @@ func ExtractFromHTML(htmlString *string) ([]*static.Data, error) {
 	}
 
 	switch matchedKVSPlayer[0][2] {
-	case "4", "5", "9", "11":
+	case "4", "5", "9", "11", "15":
 		break
 	default:
 		fmt.Printf("Untested major version (%s) in player engine--Download may fail.", matchedKVSPlayer[0][2])
@@ -202,7 +204,12 @@ func getLicenseToken(license string) string {
 }
 
 func parseFlashVars(htmlString *string) (map[string]string, error) {
-	htmlFlashvars := reFlashVars.FindString(*htmlString)
+	matchedHtmlFlashvars := reFlashVars.FindAllString(*htmlString, -1)
+	slices.SortFunc(matchedHtmlFlashvars, func(a, b string) int {
+		return cmp.Compare(len(a), len(b))
+	})
+	slices.Reverse(matchedHtmlFlashvars)
+	htmlFlashvars := matchedHtmlFlashvars[0]
 	if htmlFlashvars == "" {
 		return nil, static.ErrDataSourceParseFailed
 	}

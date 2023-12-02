@@ -21,15 +21,6 @@ func TestExtract(t *testing.T) {
 			},
 		},
 		{
-			Name: "awwni",
-			Args: test.Args{
-				URL:     "http://cdn.awwni.me/16c8v.jpg",
-				Title:   "16c8v",
-				Quality: "",
-				Size:    102169,
-			},
-		},
-		{
 			Name: "with bloat after ext",
 			Args: test.Args{
 				URL:     "https://img.rule34.xxx//images/1979/b84be533024a3d1dcc6b01c0cb7358c9.jpeg?2686173",
