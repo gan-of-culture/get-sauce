@@ -35,6 +35,7 @@ func Check(t *testing.T, args Args, data *static.Data) {
 
 	if defaultData == nil {
 		t.Errorf("Data contains no streams or no default stream")
+		return
 	}
 
 	temp := Args{

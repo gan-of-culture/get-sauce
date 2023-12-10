@@ -58,7 +58,7 @@ func ExtractFromHTML(htmlString *string) ([]*static.Data, error) {
 	}
 
 	switch matchedKVSPlayer[0][2] {
-	case "4", "5", "9", "11", "15":
+	case "4", "5", "8", "9", "11", "12", "13", "15":
 		break
 	default:
 		fmt.Printf("Untested major version (%s) in player engine--Download may fail.", matchedKVSPlayer[0][2])
@@ -209,6 +209,15 @@ func parseFlashVars(htmlString *string) (map[string]string, error) {
 		return cmp.Compare(len(a), len(b))
 	})
 	slices.Reverse(matchedHtmlFlashvars)
+	idxFlashVars := slices.IndexFunc(matchedHtmlFlashvars, func(matchedString string) bool {
+		return strings.HasPrefix(matchedString, "var flashvars")
+	})
+	// if one of the matches starts with flashvars -> take that one
+	// if said match is already at idx 0 you don't need to reassign
+	// if idx == -1 move on normally
+	if idxFlashVars > 0 {
+		matchedHtmlFlashvars[0] = matchedHtmlFlashvars[idxFlashVars]
+	}
 	htmlFlashvars := matchedHtmlFlashvars[0]
 	if htmlFlashvars == "" {
 		return nil, static.ErrDataSourceParseFailed
