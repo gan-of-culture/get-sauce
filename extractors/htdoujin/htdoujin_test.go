@@ -14,7 +14,7 @@ func TestParseURL(t *testing.T) {
 		URL  string
 		Want int
 	}{
-		/*{
+		{
 			Name: "Single Gallery HentaiEra",
 			URL:  "https://hentaiera.com/gallery/150354/",
 			Want: 1,
@@ -26,7 +26,7 @@ func TestParseURL(t *testing.T) {
 			Name: "Tag HentaiEra",
 			URL:  "https://hentaiera.com/tag/ahegao/",
 			Want: 25,
-		},*/{
+		}, {
 			Name: "Single Gallery HentaiEnvy",
 			URL:  "https://hentaienvy.com/gallery/808735/",
 			Want: 1,
@@ -91,7 +91,7 @@ func TestExtract(t *testing.T) {
 		Name string
 		Args test.Args
 	}{
-		/*{
+		{
 			Name: "Single Gallery HentaiEra",
 			Args: test.Args{
 				URL:     "https://hentaiera.com/gallery/610929/",
@@ -99,7 +99,7 @@ func TestExtract(t *testing.T) {
 				Quality: "",
 				Size:    0,
 			},
-		},*/
+		},
 		{
 			Name: "Single Gallery HentaiEnvy",
 			Args: test.Args{
