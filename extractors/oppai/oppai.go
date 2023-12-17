@@ -76,6 +76,9 @@ func extractData(episodeSlug string) (*static.Data, error) {
 	sources := map[int]string{}
 	for res, matchedURL := range matchedSources {
 		resKey := res
+		if resKey == "" {
+			continue
+		}
 		if resKey == "4k" {
 			resKey = "2160"
 		}
@@ -92,7 +95,7 @@ func extractData(episodeSlug string) (*static.Data, error) {
 	streams := map[string]*static.Stream{}
 	for idx, sourceKey := range sourcesKeys {
 		srcURL := sources[sourceKey]
-		size, _ := request.Size(srcURL, episodeSlug)
+		size, _ := request.Size(srcURL, site)
 
 		streams[fmt.Sprint(idx)] = &static.Stream{
 			Type: static.DataTypeVideo,
