@@ -1,6 +1,7 @@
 package test
 
 import (
+	"encoding/json"
 	"testing"
 
 	"github.com/gan-of-culture/get-sauce/static"
@@ -44,6 +45,8 @@ func Check(t *testing.T, args Args, data *static.Data) {
 		Size:    defaultData.Size,
 	}
 	if !CheckData(args, temp) {
+		jsonData, _ := json.MarshalIndent(defaultData, "", "    ")
+		t.Log(jsonData)
 		t.Errorf("Got: %v\nExpected: %v", temp, args)
 	}
 }
