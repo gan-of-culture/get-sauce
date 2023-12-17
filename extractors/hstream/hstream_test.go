@@ -66,7 +66,7 @@ func TestExtract(t *testing.T) {
 		{
 			Name: "Single Episode",
 			Args: test.Args{
-				URL:     "https://hstream.moe/hentai/maki-chan-to-now/1",
+				URL:     "https://hstream.moe/hentai/maki-chan-to-now-1",
 				Title:   "Maki-chan to Now. - 1",
 				Quality: "3840x2160",
 				Size:    0,
