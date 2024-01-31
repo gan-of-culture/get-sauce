@@ -268,7 +268,7 @@ The following links will direct you to adult content. Please keep that in mind!
 | [booruproject (ex. rule34, gelbooru)](https://booru.org/top)                              | :heavy_check_mark: |:heavy_check_mark:|
 | [booru.io](https://booru.io/)                                                             | :heavy_check_mark: |        ?         |
 | [comicporn.xxx](https://comicporn.xxx)                                                    | :heavy_check_mark: |        ?         |
-| [danbooru.donmai.us](https://danbooru.donmai.us)                                          | :heavy_check_mark: |        ?         |
+| [danbooru.donmai.us](https://danbooru.donmai.us)                                          | :heavy_check_mark: |        ?         |:car:|
 | [doujin.sexy](https://doujin.sexy)                                                        | :heavy_check_mark: |        ?         |
 | [e-hentai.org](http://e-hentai.org/)                                                      | :heavy_check_mark: |        ?         |
 | [exhentai.org](http://exhentai.org/)                                                      | :heavy_check_mark: |        ?         |:closed_lock_with_key:|
@@ -334,6 +334,9 @@ user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML,
 ```console
 get-sauce -un "MyUserName" -up "MyUserPassword" http...
 ```
+
+🚗
+--> requires [geckodriver](https://github.com/mozilla/geckodriver) to workaround DDOS protection
 
 ## Credit
 

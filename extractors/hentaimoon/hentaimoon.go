@@ -76,7 +76,7 @@ func extractData(URL string) (*static.Data, error) {
 	}
 
 	data[0].Site = site
-	data[0].Title = utils.GetH1(&htmlString, -1)
+	data[0].Title = utils.GetH1(&htmlString, 0)
 
 	matchedSubtitleURL := reSubtitles.FindString(htmlString)
 	if matchedSubtitleURL != "" {

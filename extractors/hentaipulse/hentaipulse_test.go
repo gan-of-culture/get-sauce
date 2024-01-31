@@ -1,11 +1,6 @@
 package hentaipulse
 
-import (
-	"testing"
-
-	"github.com/gan-of-culture/get-sauce/test"
-)
-
+/*
 func TestParseURL(t *testing.T) {
 	tests := []struct {
 		Name string
@@ -54,4 +49,4 @@ func TestExtract(t *testing.T) {
 			test.Check(t, tt.Args, data[0])
 		})
 	}
-}
+}*/

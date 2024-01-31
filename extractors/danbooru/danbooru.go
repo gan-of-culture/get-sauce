@@ -1,13 +1,13 @@
 package danbooru
 
 import (
-	"errors"
 	"fmt"
+	"log"
 	"regexp"
 	"strings"
 
 	"github.com/gan-of-culture/get-sauce/config"
-	"github.com/gan-of-culture/get-sauce/request"
+	"github.com/gan-of-culture/get-sauce/request/webdriver"
 	"github.com/gan-of-culture/get-sauce/static"
 	"github.com/gan-of-culture/get-sauce/utils"
 )
@@ -25,10 +25,7 @@ func New() static.Extractor {
 
 // Extract for danbooru pages
 func (e *extractor) Extract(URL string) ([]*static.Data, error) {
-	config.FakeHeaders["User-Agent"] = "Mozilla/4.0 (compatible; MSIE 9.0; Windows NT 6.1)"
-	defer func() {
-		config.FakeHeaders["User-Agent"] = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.81 Safari/537.36"
-	}()
+	config.FakeHeaders["User-Agent"] = "Mozilla/5.0 (X11; Linux x86_64; rv:121.0) Gecko/20100101 Firefox/121.0"
 
 	posts, err := parseURL(URL)
 	if err != nil {
@@ -63,7 +60,13 @@ func parseURL(URL string) ([]string, error) {
 		return []string{linkToPost}, nil
 	}
 
-	htmlString, err := request.Get(URL)
+	wd, err := webdriver.New()
+	if err != nil {
+		return nil, err
+	}
+	defer wd.Close()
+
+	htmlString, err := wd.Get(URL)
 	if err != nil {
 		return nil, err
 	}
@@ -80,21 +83,23 @@ func parseURL(URL string) ([]string, error) {
 }
 
 func extractData(postURL string) (*static.Data, error) {
-	htmlString, err := request.Get(postURL)
+	wd, err := webdriver.New()
+	if err != nil {
+		return nil, err
+	}
+	defer wd.Close()
+
+	htmlString, err := wd.Get(postURL)
 	if err != nil {
 		return nil, err
 	}
 
 	matchedImgData := reIMGData.FindStringSubmatch(htmlString)
 	if len(matchedImgData) != 5 {
+		log.Println(htmlString)
 		return nil, static.ErrDataSourceParseFailed
 	}
 	// [1] = img original width [2] image original height [3] image name [4] src URL
-
-	size, err := request.Size(matchedImgData[4], postURL)
-	if err != nil {
-		return nil, errors.New("no image size not found")
-	}
 
 	return &static.Data{
 		Site:  site,
@@ -110,7 +115,7 @@ func extractData(postURL string) (*static.Data, error) {
 					},
 				},
 				Quality: fmt.Sprintf("%s x %s", matchedImgData[1], matchedImgData[2]),
-				Size:    size,
+				Size:    0,
 			},
 		},
 		URL: postURL,

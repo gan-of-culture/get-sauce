@@ -107,7 +107,7 @@ func TestDownload(t *testing.T) {
 						Type: static.DataTypeImage,
 						URLs: []*static.URL{
 							{
-								URL: "https://lotus.paheal.net/_images/cf21c36b64db166b1e1aac9f3243d3ec/4698365%20-%20Ahri%20Cian_Yo%20League_of_Legends.jpg",
+								URL: "https://r34i.paheal-cdn.net/cf/21/cf21c36b64db166b1e1aac9f3243d3ec",
 								Ext: "jpg",
 							},
 						},

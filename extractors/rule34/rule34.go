@@ -18,9 +18,9 @@ var reParsePostID = regexp.MustCompile(`data-post-id=["']([^"']+)`)
 var rePostID = regexp.MustCompile(`[0-9]{3,}`)
 var reSourceURL = regexp.MustCompile(`id='main_image' src='([^']+)`)
 var reVideoSourceURL = regexp.MustCompile(`<source src='([^']+)`)
-var reTagBox = regexp.MustCompile(`tag_edit__tags' value='([^']+)`)
+var reTagBox = regexp.MustCompile(`tag'[^>]+>([^<]+)`)
 var reQuality = regexp.MustCompile(`data-(width|height)='([0-9]+)`)
-var reVideoQuality = regexp.MustCompile(`id='main_image'.+\n[^0-9]+([0-9]+)[^0-9]+([0-9]+)`)
+var reVideoQuality = regexp.MustCompile(`id='main_image'.+?: ([0-9]+)[^0-9]+([0-9]+)`)
 
 type extractor struct{}
 
@@ -107,12 +107,16 @@ func extractData(URL string) (*static.Data, error) {
 
 	postSrcURL := matchedPostSrcURL[1]
 
-	matchedTagBox := reTagBox.FindStringSubmatch(htmlString)
-	if len(matchedTagBox) != 2 {
+	matchedTagBox := reTagBox.FindAllStringSubmatch(htmlString, -1)
+	if len(matchedTagBox) < 1 {
 		return nil, errors.New("couldn't extract tags for post")
 	}
+	tags := []string{}
+	for _, tag := range matchedTagBox {
+		tags = append(tags, tag[1])
+	}
 
-	title := fmt.Sprintf("%s %s", matchedTagBox[1], id[0])
+	title := fmt.Sprintf("%s %s", strings.Join(tags, " "), id[0])
 
 	var size int64
 	if config.Amount == 0 {

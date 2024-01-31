@@ -49,7 +49,7 @@ func TestExtract(t *testing.T) {
 				URL:     "https://danbooru.donmai.us/posts/3749687",
 				Title:   "konpaku youmu and konpaku youmu (touhou) drawn by niwashi_(yuyu)",
 				Quality: "1782 x 2048",
-				Size:    157584,
+				Size:    0,
 			},
 		},
 	}
