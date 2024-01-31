@@ -52,6 +52,7 @@ func init() {
 	ninehentaiExtractor := ninehentai.New()
 	vravenExtractor := vraven.New()
 	nhgroupExtractor := nhgroup.New()
+	iwaraExtractor := iwara.New()
 
 	extractorsMap = map[string]static.Extractor{
 		"": universal.New(),
@@ -93,7 +94,8 @@ func init() {
 		"hentaizap.com":          htdoujinExtractor,
 		"hitomi.la":              hitomi.New(),
 		"imhentai.xxx":           htdoujinExtractor,
-		"iwara.tv":               iwara.New(),
+		"iwara.tv":               iwaraExtractor,
+		"www.iwara.tv":           iwaraExtractor,
 		"latesthentai.com":       nhgroupExtractor,
 		"miohentai.com":          miohentai.New(),
 		"muchohentai.com":        muchohentai.New(),

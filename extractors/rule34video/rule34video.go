@@ -47,7 +47,7 @@ func parseURL(URL string) []string {
 		return []string{URL}
 	}
 
-	re := regexp.MustCompile(site + `videos/\d+/[^"]+`)
+	re := regexp.MustCompile(site + `video/\d+/[^?"]+`)
 	return re.FindAllString(htmlString, -1)
 }
 

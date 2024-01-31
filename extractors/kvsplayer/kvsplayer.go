@@ -58,7 +58,7 @@ func ExtractFromHTML(htmlString *string) ([]*static.Data, error) {
 	}
 
 	switch matchedKVSPlayer[0][2] {
-	case "4", "5", "8", "9", "11", "12", "13", "15":
+	case "4", "5", "6", "8", "9", "11", "12", "13", "15":
 		break
 	default:
 		fmt.Printf("Untested major version (%s) in player engine--Download may fail.", matchedKVSPlayer[0][2])
