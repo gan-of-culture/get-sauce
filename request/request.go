@@ -4,7 +4,6 @@ import (
 	"compress/flate"
 	"compress/gzip"
 	"crypto/tls"
-	"errors"
 	"io"
 	"net/http"
 	"net/url"
@@ -15,6 +14,7 @@ import (
 	"github.com/andybalholm/brotli"
 	"github.com/gan-of-culture/get-sauce/config"
 	"github.com/gan-of-culture/get-sauce/utils"
+	"github.com/pkg/errors"
 )
 
 // LogRedirects to sanitize "Location" URLs
@@ -48,17 +48,38 @@ func DefaultClient() *http.Client {
 	return &http.Client{
 		Transport: LogRedirects{&http.Transport{
 			Proxy:               http.ProxyFromEnvironment,
-			DisableCompression:  true,
 			TLSHandshakeTimeout: 10 * time.Second,
 			TLSClientConfig: &tls.Config{
-				InsecureSkipVerify:       true,
-				PreferServerCipherSuites: false,
-				CurvePreferences:         []tls.CurveID{tls.CurveP256, tls.CurveP384, tls.CurveP521, tls.X25519},
+				InsecureSkipVerify: true,
+				CurvePreferences:   []tls.CurveID{tls.CurveP256, tls.CurveP384, tls.CurveP521, tls.X25519},
 			},
 			IdleConnTimeout: 5 * time.Second,
 			//DisableKeepAlives: true,
 		}},
 		Timeout: time.Duration(config.Timeout) * time.Minute,
+	}
+}
+
+// Firefox117Client tries to impersonate firefox117 https://github.com/lwthiker/curl-impersonate/blob/main/firefox/curl_ff117
+func Firefox117Client() *http.Client {
+	return &http.Client{
+		Transport: &http.Transport{
+			Proxy: http.ProxyFromEnvironment,
+			TLSClientConfig: &tls.Config{
+				CipherSuites: []uint16{
+					tls.TLS_AES_128_GCM_SHA256, tls.TLS_CHACHA20_POLY1305_SHA256, tls.TLS_AES_256_GCM_SHA384, tls.TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256, tls.TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,
+					tls.TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256, tls.TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256, tls.TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384, tls.TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,
+					tls.TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA, tls.TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA, tls.TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA, tls.TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA, tls.TLS_RSA_WITH_AES_128_GCM_SHA256,
+					tls.TLS_RSA_WITH_AES_256_GCM_SHA384, tls.TLS_RSA_WITH_AES_128_CBC_SHA, tls.TLS_RSA_WITH_AES_256_CBC_SHA,
+				},
+			},
+			DisableCompression:    false,
+			ForceAttemptHTTP2:     true,
+			MaxIdleConns:          100,
+			IdleConnTimeout:       90 * time.Second,
+			TLSHandshakeTimeout:   10 * time.Second,
+			ExpectContinueTimeout: 1 * time.Second,
+		},
 	}
 }
 
@@ -119,25 +140,56 @@ func GetAsBytes(URL string) ([]byte, error) {
 	}
 	defer resp.Body.Close()
 
-	var reader io.ReadCloser
-	switch resp.Header.Get("Content-Encoding") {
-	case "br":
-		reader = io.NopCloser(brotli.NewReader(resp.Body))
-	case "gzip":
-		reader, _ = gzip.NewReader(resp.Body)
-	case "deflate":
-		reader = flate.NewReader(resp.Body)
-	default:
-		reader = resp.Body
+	decompressedBody, err := DecompressHttpResponse(resp.Body, resp.Header.Get("Content-Encoding"))
+	if err != nil {
+		return nil, errors.WithStack(err)
 	}
-	defer reader.Close()
+	defer decompressedBody.Close()
 
-	body, err := io.ReadAll(reader)
+	body, err := io.ReadAll(decompressedBody)
 	if err != nil {
 		if err != io.ErrUnexpectedEOF {
 			return nil, err
 		}
 	}
+	return body, nil
+}
+
+// GetAsBytes content as bytes using a custom client
+func GetAsBytesWithClient(client *http.Client, URL string, referer string) ([]byte, error) {
+
+	req, err := http.NewRequest(http.MethodGet, URL, nil)
+	if err != nil {
+		return nil, errors.WithStack(err)
+	}
+
+	for key, val := range config.FakeHeadersFirefox117 {
+		req.Header.Set(key, val)
+	}
+
+	if referer != "" {
+		req.Header.Set("Referer", referer)
+	}
+
+	res, err := client.Do(req)
+	if err != nil {
+		return nil, errors.WithStack(err)
+	}
+	defer res.Body.Close()
+
+	decompressedBody, err := DecompressHttpResponse(res.Body, res.Header.Get("Content-Encoding"))
+	if err != nil {
+		return nil, errors.WithStack(err)
+	}
+	defer decompressedBody.Close()
+
+	body, err := io.ReadAll(decompressedBody)
+	if err != nil {
+		if err != io.ErrUnexpectedEOF {
+			return nil, err
+		}
+	}
+
 	return body, nil
 }
 
@@ -319,6 +371,27 @@ func GetSizeFromHeaders(headers *http.Header) (int64, error) {
 	return size, nil
 }
 
+// DecompressHttpResponse to read it's contents (missing zlib)
+func DecompressHttpResponse(body io.ReadCloser, contentEncoding string) (io.ReadCloser, error) {
+	var reader io.ReadCloser
+	var err error
+	switch contentEncoding {
+	case "br":
+		reader = io.NopCloser(brotli.NewReader(body))
+	case "gzip":
+		reader, err = gzip.NewReader(body)
+		if err != nil {
+			return nil, errors.WithStack(err)
+		}
+	case "deflate":
+		reader = flate.NewReader(body)
+	default:
+		reader = body
+	}
+
+	return reader, nil
+}
+
 // Myjar of client
 type Myjar struct {
 	Jar map[string][]*http.Cookie
@@ -330,13 +403,6 @@ func (p *Myjar) New() {
 
 // SetCookies of client
 func (p *Myjar) SetCookies(u *url.URL, cookies []*http.Cookie) {
-	// swap cookie assignment after login
-	if u.Host == "forums.e-hentai.org" {
-		u.Host = "exhentai.org"
-	}
-	//fmt.Printf("The URL is : %s\n", u.String())
-	//fmt.Printf("The cookie being set is : %s\n", cookies)
-
 	//preserve old cookies and overwrite old ones with new cookies
 	isInJar := false
 	for k, cookie := range cookies {

@@ -29,8 +29,6 @@ func init() {
 	flag.StringVar(&config.SelectStream, "s", "0", "Select a stream")
 	flag.BoolVar(&config.Truncate, "t", false, "Truncate file if it already exists")
 	flag.IntVar(&config.Timeout, "T", 10, "Timeout for the http.client in minutes")
-	flag.StringVar(&config.Username, "un", "", "Username for authorization")
-	flag.StringVar(&config.UserPassword, "up", "", "User password for authorization")
 	flag.IntVar(&config.Workers, "w", 1, "Number of workers used for downloading")
 }
 
@@ -45,7 +43,7 @@ func download(URL string) {
 
 	data, err := extractors.Extract(URL)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalf("%+v", err)
 	}
 
 	if config.ShowExtractedData {
