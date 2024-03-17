@@ -261,59 +261,58 @@ get-sauce -i https://hentai-moon.com/videos/285/isekai-harem-monogatari-ep-1/
 
 The following links will direct you to adult content. Please keep that in mind!
 
-| Site                                                                                      | Images             | Videos           | Requirements         |
-| ------------------------------------------------------------------------------------------|:------------------:|:----------------:|:--------------------:|
-| [9hentai.to/ru](https://9hentai.to/)                                                      | :heavy_check_mark: |        ?         |
-| [animeidhentai.com (1080p, 720p, 480p, 360p)](https://animeidhentai.com)                  |         ?          |:heavy_check_mark:|
-| [booruproject (ex. rule34, gelbooru)](https://booru.org/top)                              | :heavy_check_mark: |:heavy_check_mark:|
-| [booru.io](https://booru.io/)                                                             | :heavy_check_mark: |        ?         |
-| [comicporn.xxx](https://comicporn.xxx)                                                    | :heavy_check_mark: |        ?         |
-| [danbooru.donmai.us](https://danbooru.donmai.us)                                          | :heavy_check_mark: |        ?         |:car:|
-| [doujin.sexy](https://doujin.sexy)                                                        | :heavy_check_mark: |        ?         |
-| [e-hentai.org](http://e-hentai.org/)                                                      | :heavy_check_mark: |        ?         |
-| [exhentai.org](http://exhentai.org/)                                                      | :heavy_check_mark: |        ?         |:closed_lock_with_key:|
-| [haho.moe (1080p, 720p, 480p, 360p)](https://haho.moe)                                    |         ?          |:heavy_check_mark:|
-| [hanime.tv (720p, 480p, 360p)](https://hanime.tv)                                         |         ?          |:heavy_check_mark:|
-| [hentai.tv (1080p, 720p, 480p, 360p)](https://hentai.tv/)                                 |         ?          |:heavy_check_mark:|
-| [hentai-moon.com (720p, 480p)](https://hentai-moon.com)                                   |         ?          |:heavy_check_mark:|
-| [hentai2read.com](https://hentai2read.com)                                                | :heavy_check_mark: |        ?         |
-| [hentai2w.com(720p, 480p, 360p)](https://hentai2w.com)                                    |         ?          |:heavy_check_mark:|
-| [hentaicloud.com(720p)](https://www.hentaicloud.com)                                      |        :x:         |:heavy_check_mark:|
-| [hentaidude.com(720p, 480, 360p)](https://hentaidude.com/)                                |         ?          |:heavy_check_mark:|
-| [hentaiera.com](https://hentaiera.com)                                                    | :heavy_check_mark: |         ?        |
-| [hentaienvy.com](https://hentaienvy.com)                                                  | :heavy_check_mark: |         ?        |
-| [www.hentai-foundry.com](https://www.hentai-foundry.com/)                                 | :heavy_check_mark: |         ?        |
-| [hentaifox.com](https://hentaifox.com)                                                    | :heavy_check_mark: |         ?        |
-| [hentaihaven.co (1080p, 720p, 480p, 360p)](https://hentaihaven.co)                        |         ?          |:heavy_check_mark:|
-| [hentaihaven.com (1080p, 720p, 480p, 360p)](https://hentaihaven.com)                      |         ?          |:heavy_check_mark:|
-| [hentaihaven.red (1080p, 720p, 480p, 360p)](https://hentaihaven.red)                      |         ?          |:heavy_check_mark:|
-| [hentaihaven.xxx (1080p, 720p, 480p, 360p)](https://hentaihaven.xxx)                      |         ?          |:heavy_check_mark:|
-| [hentaimama.io(1080p, 720p)](https://hentaimama.io)                                       |         ?          |:heavy_check_mark:|
-| [hentaipulse.com(720p, 420p)](https://hentaipulse.com)                                    |         ?          |:heavy_check_mark:|
-| [hentairox.com](https://hentairox.com)                                                    | :heavy_check_mark: |         ?        |
-| [hentaistream.moe (2160p, 1080p, 480p)](https://hentaistream.moe/)                        |         ?          |:heavy_check_mark:|
-| [hentaistream.tv (1080p, 720p, 480p, 360p)](https://hentaistream.tv)                      |         ?          |:heavy_check_mark:|
-| [hentaistream.xxx (1080p, 720, 480p, 360p)](https://hentaistream.xxx/)                    |         ?          |:heavy_check_mark:|
-| [hentaivideos.net (1080p, 720p, 480p, 360p)](https://hentaivideos.net/)                   |         ?          |:heavy_check_mark:|
-| [hentaiworld.tv (1080p, 720p, 480p)](https://hentaiworld.tv/)                             |         ?          |:heavy_check_mark:|
-| [hentaiyes.com (1080p, 720p, 480p, 360p)](https://hentaiyes.com/)                         |         ?          |:heavy_check_mark:|
-| [hentaizap.com](https://hentaizap.com)                                                    | :heavy_check_mark: |        ?         |
-| [hitomi.la](https://hitomi.la/)                                                           | :heavy_check_mark: |        ?         |
-| [imhentai.com](https://imhentai.xxx)                                                      | :heavy_check_mark: |        ?         |
-| [iwara.tv](https://iwara.tv/)                                                             | :heavy_check_mark: |:heavy_check_mark:|
-| [konachan.com](https://konachan.com/post?tags=)                                           | :heavy_check_mark: |        ?         |
-| [latesthentai.com (1080p, 720p, 480p, 360p)](https://latesthentai.com/)                   |         ?          |:heavy_check_mark:|
-| [miohentai.com (1080p, 720p, 480p)](https://miohentai.com/)                               | :heavy_check_mark: |        ?         |
-| [nhentai.net](https://nhentai.net)                                                        | :heavy_check_mark: |        ?         |:cookie:|
-| [ohentai.org (1080p, 720p, 480p)](https://ohentai.org/)                                   |         ?          |:heavy_check_mark:|
-| [oppai.stream (2160p, 1080p, 720p)](https://oppai.stream/)                                |         ?          |:heavy_check_mark:|
-| [pururin.to](https://pururin.to)                                                          | :heavy_check_mark: |        ?         |
-| [rule34.paheal.net](https://rule34.paheal.net)                                            | :heavy_check_mark: |:heavy_check_mark:|
-| [rule34video.com (2160p, 1080p, 720p, 480p, 360p)](https://rule34video.com/)              | :heavy_check_mark: |:heavy_check_mark:|
-| [simply-hentai.com](https://www.simply-hentai.com)                                        | :heavy_check_mark: |        ?         |
-| [thehentaiworld.com](https://thehentaiworld.com)                                          | :heavy_check_mark: |:heavy_check_mark:|
-| [uncensoredhentai.xxx (1080p, 720p, 480p, 360p)](https://uncensoredhentai.xxx/)           |         ?          |:heavy_check_mark:|
-| [yandere.re](https://yande.re/post)                                                       | :heavy_check_mark: |        ?         |
+| Site                                                                            |       Images       |       Videos       | Requirements |
+| ------------------------------------------------------------------------------- | :----------------: | :----------------: | :----------: |
+| [9hentai.to/ru](https://9hentai.to/)                                            | :heavy_check_mark: |         ?          |
+| [animeidhentai.com (1080p, 720p, 480p, 360p)](https://animeidhentai.com)        |         ?          | :heavy_check_mark: |
+| [booruproject (ex. rule34, gelbooru)](https://booru.org/top)                    | :heavy_check_mark: | :heavy_check_mark: |
+| [booru.io](https://booru.io/)                                                   | :heavy_check_mark: |         ?          |
+| [comicporn.xxx](https://comicporn.xxx)                                          | :heavy_check_mark: |         ?          |
+| [danbooru.donmai.us](https://danbooru.donmai.us)                                | :heavy_check_mark: |         ?          |
+| [doujin.sexy](https://doujin.sexy)                                              | :heavy_check_mark: |         ?          |
+| [e-hentai.org](http://e-hentai.org/)                                            | :heavy_check_mark: |         ?          |
+| [haho.moe (1080p, 720p, 480p, 360p)](https://haho.moe)                          |         ?          | :heavy_check_mark: |
+| [hanime.tv (720p, 480p, 360p)](https://hanime.tv)                               |         ?          | :heavy_check_mark: |
+| [hentai.tv (1080p, 720p, 480p, 360p)](https://hentai.tv/)                       |         ?          | :heavy_check_mark: |
+| [hentai-moon.com (720p, 480p)](https://hentai-moon.com)                         |         ?          | :heavy_check_mark: |
+| [hentai2read.com](https://hentai2read.com)                                      | :heavy_check_mark: |         ?          |
+| [hentai2w.com(720p, 480p, 360p)](https://hentai2w.com)                          |         ?          | :heavy_check_mark: |
+| [hentaicloud.com(720p)](https://www.hentaicloud.com)                            |        :x:         | :heavy_check_mark: |
+| [hentaidude.com(720p, 480, 360p)](https://hentaidude.com/)                      |         ?          | :heavy_check_mark: |
+| [hentaiera.com](https://hentaiera.com)                                          | :heavy_check_mark: |         ?          |
+| [hentaienvy.com](https://hentaienvy.com)                                        | :heavy_check_mark: |         ?          |
+| [www.hentai-foundry.com](https://www.hentai-foundry.com/)                       | :heavy_check_mark: |         ?          |
+| [hentaifox.com](https://hentaifox.com)                                          | :heavy_check_mark: |         ?          |
+| [hentaihaven.co (1080p, 720p, 480p, 360p)](https://hentaihaven.co)              |         ?          | :heavy_check_mark: |
+| [hentaihaven.com (1080p, 720p, 480p, 360p)](https://hentaihaven.com)            |         ?          | :heavy_check_mark: |
+| [hentaihaven.red (1080p, 720p, 480p, 360p)](https://hentaihaven.red)            |         ?          | :heavy_check_mark: |
+| [hentaihaven.xxx (1080p, 720p, 480p, 360p)](https://hentaihaven.xxx)            |         ?          | :heavy_check_mark: |
+| [hentaimama.io(1080p, 720p)](https://hentaimama.io)                             |         ?          | :heavy_check_mark: |
+| [hentaipulse.com(720p, 420p)](https://hentaipulse.com)                          |         ?          | :heavy_check_mark: |
+| [hentairox.com](https://hentairox.com)                                          | :heavy_check_mark: |         ?          |
+| [hentaistream.moe (2160p, 1080p, 480p)](https://hentaistream.moe/)              |         ?          | :heavy_check_mark: |
+| [hentaistream.tv (1080p, 720p, 480p, 360p)](https://hentaistream.tv)            |         ?          | :heavy_check_mark: |
+| [hentaistream.xxx (1080p, 720, 480p, 360p)](https://hentaistream.xxx/)          |         ?          | :heavy_check_mark: |
+| [hentaivideos.net (1080p, 720p, 480p, 360p)](https://hentaivideos.net/)         |         ?          | :heavy_check_mark: |
+| [hentaiworld.tv (1080p, 720p, 480p)](https://hentaiworld.tv/)                   |         ?          | :heavy_check_mark: |
+| [hentaiyes.com (1080p, 720p, 480p, 360p)](https://hentaiyes.com/)               |         ?          | :heavy_check_mark: |
+| [hentaizap.com](https://hentaizap.com)                                          | :heavy_check_mark: |         ?          |
+| [hitomi.la](https://hitomi.la/)                                                 | :heavy_check_mark: |         ?          |
+| [imhentai.com](https://imhentai.xxx)                                            | :heavy_check_mark: |         ?          |
+| [iwara.tv](https://iwara.tv/)                                                   | :heavy_check_mark: | :heavy_check_mark: |
+| [konachan.com](https://konachan.com/post?tags=)                                 | :heavy_check_mark: |         ?          |
+| [latesthentai.com (1080p, 720p, 480p, 360p)](https://latesthentai.com/)         |         ?          | :heavy_check_mark: |
+| [miohentai.com (1080p, 720p, 480p)](https://miohentai.com/)                     | :heavy_check_mark: |         ?          |
+| [nhentai.net](https://nhentai.net)                                              | :heavy_check_mark: |         ?          |   :cookie:   |
+| [ohentai.org (1080p, 720p, 480p)](https://ohentai.org/)                         |         ?          | :heavy_check_mark: |
+| [oppai.stream (2160p, 1080p, 720p)](https://oppai.stream/)                      |         ?          | :heavy_check_mark: |
+| [pururin.to](https://pururin.to)                                                | :heavy_check_mark: |         ?          |
+| [rule34.paheal.net](https://rule34.paheal.net)                                  | :heavy_check_mark: | :heavy_check_mark: |
+| [rule34video.com (2160p, 1080p, 720p, 480p, 360p)](https://rule34video.com/)    | :heavy_check_mark: | :heavy_check_mark: |
+| [simply-hentai.com](https://www.simply-hentai.com)                              | :heavy_check_mark: |         ?          |
+| [thehentaiworld.com](https://thehentaiworld.com)                                | :heavy_check_mark: | :heavy_check_mark: |
+| [uncensoredhentai.xxx (1080p, 720p, 480p, 360p)](https://uncensoredhentai.xxx/) |         ?          | :heavy_check_mark: |
+| [yandere.re](https://yande.re/post)                                             | :heavy_check_mark: |         ?          |
 
 You can still try to use the universal downloader, if your site is not listed.
 
@@ -327,16 +326,6 @@ You can still try to use the universal downloader, if your site is not listed.
 get-sauce -h "cookie: cf_clearance=k2TGEnkzhz_PtHs09vMryROlD4O3UZhrDFrU4svgjdM-1665105987-0-150; csrftoken=bLiwSENr0mqSZZ27wan1xdjLazVFoXnnABJu7DtrhbNRUacpbEZhV0Eggc5lD8m5
 user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36" http...
 ```
-
-🔐
---> you need to supply login credentials for this extractor to work
-
-```console
-get-sauce -un "MyUserName" -up "MyUserPassword" http...
-```
-
-🚗
---> requires [geckodriver](https://github.com/mozilla/geckodriver) to workaround DDOS protection
 
 ## Credit
 

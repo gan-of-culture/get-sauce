@@ -3,40 +3,49 @@ package danbooru
 import (
 	"fmt"
 	"log"
+	"net/http"
 	"regexp"
 	"strings"
 
-	"github.com/gan-of-culture/get-sauce/config"
-	"github.com/gan-of-culture/get-sauce/request/webdriver"
+	"github.com/gan-of-culture/get-sauce/request"
 	"github.com/gan-of-culture/get-sauce/static"
 	"github.com/gan-of-culture/get-sauce/utils"
+	"github.com/pkg/errors"
 )
 
 const site = "https://danbooru.donmai.us"
 
 var reIMGData = regexp.MustCompile(`data-width="([^"]+)"[ ]+data-height="([^"]+)"[\s\S]*?alt="([^"]+)".+src="([^"]+)"`)
 
-type extractor struct{}
+type extractor struct {
+	client *http.Client
+}
 
-// New returns a danbooru extractor.
+// New returns a danbooru extractor
 func New() static.Extractor {
-	return &extractor{}
+	return newForTesting()
+}
+
+func newForTesting() *extractor {
+	return &extractor{
+		client: request.Firefox117Client(),
+	}
 }
 
 // Extract for danbooru pages
 func (e *extractor) Extract(URL string) ([]*static.Data, error) {
-	config.FakeHeaders["User-Agent"] = "Mozilla/5.0 (X11; Linux x86_64; rv:121.0) Gecko/20100101 Firefox/121.0"
 
-	posts, err := parseURL(URL)
+	posts, err := e.parseURL(URL)
 	if err != nil {
 		return nil, err
 	}
 
 	data := []*static.Data{}
 	for _, post := range posts {
-		contentData, err := extractData(site + post)
+		contentData, err := e.extractData(site + post)
 		if err != nil {
-			return nil, utils.Wrap(err, site+post)
+			log.Println(site + post)
+			return nil, err
 		}
 		data = append(data, contentData)
 	}
@@ -45,7 +54,7 @@ func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 }
 
 // parseURL for danbooru pages
-func parseURL(URL string) ([]string, error) {
+func (e *extractor) parseURL(URL string) ([]string, error) {
 	re := regexp.MustCompile(`page=([0-9]+)`)
 	pageNo := re.FindAllString(URL, -1)
 	// pageNo = URL?page=number -> if it's there it means overview page otherwise single post or invalid
@@ -54,50 +63,38 @@ func parseURL(URL string) ([]string, error) {
 		re := regexp.MustCompile(`/posts/[0-9]+`)
 		linkToPost := re.FindString(URL)
 		if linkToPost == "" {
-			return nil, static.ErrURLParseFailed
+			return nil, errors.WithStack(static.ErrURLParseFailed)
 		}
 
 		return []string{linkToPost}, nil
 	}
 
-	wd, err := webdriver.New()
+	htmlString, err := request.GetAsBytesWithClient(e.client, URL, URL)
 	if err != nil {
-		return nil, err
-	}
-	defer wd.Close()
-
-	htmlString, err := wd.Get(URL)
-	if err != nil {
-		return nil, err
+		return nil, errors.WithStack(err)
 	}
 
 	re = regexp.MustCompile(`data-id="([^"]+)`)
-	matchedIDs := re.FindAllStringSubmatch(htmlString, -1)
+	matchedIDs := re.FindAllSubmatch(htmlString, -1)
 
 	out := []string{}
 	for _, submatchID := range matchedIDs {
-		out = append(out, "/posts/"+submatchID[1])
+		out = append(out, "/posts/"+string(submatchID[1]))
 	}
 
 	return out, nil
 }
 
-func extractData(postURL string) (*static.Data, error) {
-	wd, err := webdriver.New()
+func (e *extractor) extractData(postURL string) (*static.Data, error) {
+	htmlString, err := request.GetAsBytesWithClient(e.client, postURL, postURL)
 	if err != nil {
-		return nil, err
-	}
-	defer wd.Close()
-
-	htmlString, err := wd.Get(postURL)
-	if err != nil {
-		return nil, err
+		return nil, errors.WithStack(err)
 	}
 
-	matchedImgData := reIMGData.FindStringSubmatch(htmlString)
+	matchedImgData := reIMGData.FindStringSubmatch(string(htmlString))
 	if len(matchedImgData) != 5 {
 		log.Println(htmlString)
-		return nil, static.ErrDataSourceParseFailed
+		return nil, errors.WithStack(static.ErrDataSourceParseFailed)
 	}
 	// [1] = img original width [2] image original height [3] image name [4] src URL
 
