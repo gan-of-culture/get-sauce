@@ -224,7 +224,7 @@ func extractData(URL string) (*static.Data, error) {
 
 	return &static.Data{
 		Site:    site,
-		Title:   strings.TrimSpace(utils.GetSectionHeadingElement(&htmlString, 1, 0)),
+		Title:   res.Title,
 		Type:    static.DataTypeVideo,
 		Streams: streams,
 		Captions: []*static.Caption{
