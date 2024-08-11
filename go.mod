@@ -8,8 +8,6 @@ require (
 	github.com/schollz/progressbar/v3 v3.13.1
 )
 
-require github.com/klauspost/compress v1.17.9 // indirect
-
 require (
 	github.com/mattn/go-runewidth v0.0.15 // indirect
 	github.com/mitchellh/colorstring v0.0.0-20190213212951-d06e56a500db // indirect
