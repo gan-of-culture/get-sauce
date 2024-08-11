@@ -27,6 +27,7 @@ import (
 	"github.com/gan-of-culture/get-sauce/extractors/hstream"
 	"github.com/gan-of-culture/get-sauce/extractors/htdoujin"
 	"github.com/gan-of-culture/get-sauce/extractors/iwara"
+	"github.com/gan-of-culture/get-sauce/extractors/koharu"
 	"github.com/gan-of-culture/get-sauce/extractors/miohentai"
 	"github.com/gan-of-culture/get-sauce/extractors/muchohentai"
 	"github.com/gan-of-culture/get-sauce/extractors/nhentai"
@@ -94,6 +95,7 @@ func init() {
 		"imhentai.xxx":           htdoujinExtractor,
 		"iwara.tv":               iwaraExtractor,
 		"www.iwara.tv":           iwaraExtractor,
+		"koharu.to":              koharu.New(),
 		"latesthentai.com":       nhgroupExtractor,
 		"miohentai.com":          miohentai.New(),
 		"muchohentai.com":        muchohentai.New(),
