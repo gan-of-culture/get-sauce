@@ -155,7 +155,7 @@ func GetAsBytes(URL string) ([]byte, error) {
 	return body, nil
 }
 
-// GetAsBytes content as bytes using a custom client
+// GetAsBytesWithClient content as bytes using a custom client
 func GetAsBytesWithClient(client *http.Client, URL string, referer string) ([]byte, error) {
 
 	req, err := http.NewRequest(http.MethodGet, URL, nil)
