@@ -300,6 +300,7 @@ The following links will direct you to adult content. Please keep that in mind!
 | [hitomi.la](https://hitomi.la/)                                                 | :heavy_check_mark: |         ?          |
 | [imhentai.com](https://imhentai.xxx)                                            | :heavy_check_mark: |         ?          |
 | [iwara.tv](https://iwara.tv/)                                                   | :heavy_check_mark: | :heavy_check_mark: |
+| [koharu.to](https:/koharu.to/)                                                  | :heavy_check_mark: |         ?          |
 | [konachan.com](https://konachan.com/post?tags=)                                 | :heavy_check_mark: |         ?          |
 | [latesthentai.com (1080p, 720p, 480p, 360p)](https://latesthentai.com/)         |         ?          | :heavy_check_mark: |
 | [miohentai.com (1080p, 720p, 480p)](https://miohentai.com/)                     | :heavy_check_mark: |         ?          |

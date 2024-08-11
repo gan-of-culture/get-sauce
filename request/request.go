@@ -14,6 +14,7 @@ import (
 	"github.com/andybalholm/brotli"
 	"github.com/gan-of-culture/get-sauce/config"
 	"github.com/gan-of-culture/get-sauce/utils"
+	"github.com/klauspost/compress/zstd"
 	"github.com/pkg/errors"
 )
 
@@ -229,7 +230,13 @@ func GetAsBytesWithHeaders(URL string, headers map[string]string) ([]byte, error
 	}
 	defer resp.Body.Close()
 
-	body, err := io.ReadAll(resp.Body)
+	decompressedBody, err := DecompressHttpResponse(resp.Body, resp.Header.Get("Content-Encoding"))
+	if err != nil {
+		return nil, errors.WithStack(err)
+	}
+	defer decompressedBody.Close()
+
+	body, err := io.ReadAll(decompressedBody)
 	if err != nil {
 		if err != io.ErrUnexpectedEOF {
 			return nil, err
@@ -371,7 +378,7 @@ func GetSizeFromHeaders(headers *http.Header) (int64, error) {
 	return size, nil
 }
 
-// DecompressHttpResponse to read it's contents (missing zlib)
+// DecompressHttpResponse to read it's contents
 func DecompressHttpResponse(body io.ReadCloser, contentEncoding string) (io.ReadCloser, error) {
 	var reader io.ReadCloser
 	var err error
@@ -385,6 +392,14 @@ func DecompressHttpResponse(body io.ReadCloser, contentEncoding string) (io.Read
 		}
 	case "deflate":
 		reader = flate.NewReader(body)
+	case "zstd":
+		//TODO: replace with impl of standard lib when change is landed (https://github.com/golang/go/issues/62513)
+		d, err := zstd.NewReader(body)
+		if err != nil {
+			return nil, errors.WithStack(err)
+		}
+
+		reader = io.NopCloser(d)
 	default:
 		reader = body
 	}
