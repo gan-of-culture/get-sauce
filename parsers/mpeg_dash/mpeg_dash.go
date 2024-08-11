@@ -184,11 +184,14 @@ func parseAdaptionSet(aSet *AdaptationSet, URL string) (*static.Stream, error) {
 	}
 
 	stream := &static.Stream{
-		Type:    static.DataType(aSet.ContentType),
-		URLs:    URLs,
-		Quality: fmt.Sprintf("%sx%s", aSet.Representation.Width, aSet.Representation.Height),
-		Info:    aSet.Representation.Codecs,
-		Ext:     utils.GetLastItemString(strings.Split(aSet.Representation.MimeType, "/")),
+		Type: static.DataType(aSet.ContentType),
+		URLs: URLs,
+		Info: aSet.Representation.Codecs,
+		Ext:  utils.GetLastItemString(strings.Split(aSet.Representation.MimeType, "/")),
+	}
+
+	if stream.Type == static.DataTypeVideo {
+		stream.Quality = fmt.Sprintf("%sx%s", aSet.Representation.Width, aSet.Representation.Height)
 	}
 
 	if aSet.Representation.Codecs == "mp4a.40.2" {
