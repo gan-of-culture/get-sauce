@@ -14,7 +14,6 @@ import (
 	"github.com/andybalholm/brotli"
 	"github.com/gan-of-culture/get-sauce/config"
 	"github.com/gan-of-culture/get-sauce/utils"
-	"github.com/klauspost/compress/zstd"
 	"github.com/pkg/errors"
 )
 
@@ -392,14 +391,8 @@ func DecompressHttpResponse(body io.ReadCloser, contentEncoding string) (io.Read
 		}
 	case "deflate":
 		reader = flate.NewReader(body)
-	case "zstd":
-		//TODO: replace with impl of standard lib when change is landed (https://github.com/golang/go/issues/62513)
-		d, err := zstd.NewReader(body)
-		if err != nil {
-			return nil, errors.WithStack(err)
-		}
-
-		reader = io.NopCloser(d)
+	//case "zstd":
+	//TODO: impl of standard lib when change is landed (https://github.com/golang/go/issues/62513)
 	default:
 		reader = body
 	}
