@@ -1,6 +1,6 @@
 package doujin
 
-/*import (
+import (
 	"testing"
 
 	"github.com/gan-of-culture/get-sauce/test"
@@ -54,4 +54,4 @@ func TestExtract(t *testing.T) {
 			test.Check(t, tt.Args, data[0])
 		})
 	}
-}*/
+}
