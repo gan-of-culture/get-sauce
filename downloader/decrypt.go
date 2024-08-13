@@ -55,9 +55,6 @@ func decrypt(key []byte, fileName string) ([]byte, error) {
 	}
 
 	iv := defaultIV(uint64(0))
-	if err != nil {
-		return nil, err
-	}
 	data, err = decryptAES128(data, key, iv)
 	if err != nil {
 		return nil, err
