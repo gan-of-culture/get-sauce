@@ -24,7 +24,7 @@ func TestParseURL(t *testing.T) {
 		}, {
 			Name: "Overview Category",
 			URL:  "https://www.hentai-foundry.com/categories/372/Anime-and-Manga/Chobits/pictures",
-			Want: 15,
+			Want: 16,
 		},
 	}
 	config.Amount = 50
