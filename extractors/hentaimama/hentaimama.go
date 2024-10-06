@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"log"
 	"net/http"
 	"net/url"
 	"regexp"
@@ -83,8 +84,8 @@ func extractData(URL string) (*static.Data, error) {
 		return nil, err
 	}
 
-	sources := make([]source, len(matchedMirrorURLs))
-	for i, u := range matchedMirrorURLs {
+	sources := []source{}
+	for _, u := range matchedMirrorURLs {
 		b64Path, err := base64.StdEncoding.DecodeString(u[1])
 		if err != nil {
 			return nil, err
@@ -97,10 +98,16 @@ func extractData(URL string) (*static.Data, error) {
 		}
 
 		reSrc := regexp.MustCompile(fmt.Sprintf(`[^"']*/%s[^"']*`, string(b64Paths[0])))
-		sources[i] = source{
-			URL:     reSrc.FindString(htmlString),
-			Referer: u[0],
+		videoURL := reSrc.FindString(htmlString)
+		if videoURL == "" {
+			log.Printf("skipping broken source: %s", u)
+			continue
 		}
+		log.Println(htmlString)
+		sources = append(sources, source{
+			URL:     videoURL,
+			Referer: u[0],
+		})
 	}
 
 	mirrorIdx := 0
