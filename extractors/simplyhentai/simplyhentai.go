@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"regexp"
+	"time"
 
 	"github.com/gan-of-culture/get-sauce/request"
 	"github.com/gan-of-culture/get-sauce/static"
@@ -26,9 +27,23 @@ type state struct {
 						Slug     string `json:"slug"`
 						FlagCode string `json:"flag_code"`
 					} `json:"language"`
+					New     bool `json:"new"`
+					Preview struct {
+						ID      int `json:"id"`
+						PageNum int `json:"page_num"`
+						Sizes   struct {
+							Full       string `json:"full"`
+							SmallThumb string `json:"small_thumb"`
+							Thumb      string `json:"thumb"`
+							GiantThumb string `json:"giant_thumb"`
+						} `json:"sizes"`
+					} `json:"preview"`
+					Reactions struct {
+					} `json:"reactions"`
 					Series struct {
 						AlbumCount   int    `json:"album_count"`
 						CommentCount int    `json:"comment_count"`
+						ID           int    `json:"id"`
 						Slug         string `json:"slug"`
 						Title        string `json:"title"`
 						Type         string `json:"type"`
@@ -36,18 +51,86 @@ type state struct {
 					Slug  string `json:"slug"`
 					Title string `json:"title"`
 					Type  string `json:"type"`
-				}
-			}
+				} `json:"albums"`
+				Combinations struct {
+					Tags []struct {
+						ID          int    `json:"id"`
+						Letter      string `json:"letter"`
+						ObjectCount int    `json:"object_count"`
+						Slug        string `json:"slug"`
+						Title       string `json:"title"`
+						Type        string `json:"type"`
+					} `json:"tags"`
+				} `json:"combinations"`
+				CreatedAt    time.Time `json:"created_at"`
+				Description  string    `json:"description"`
+				ID           int       `json:"id"`
+				Interactions struct {
+					Downvotes     int `json:"downvotes"`
+					Subscriptions int `json:"subscriptions"`
+					Upvotes       int `json:"upvotes"`
+				} `json:"interactions"`
+				Letter      string `json:"letter"`
+				ObjectCount int    `json:"object_count"`
+				Preview     struct {
+					ID      int `json:"id"`
+					PageNum int `json:"page_num"`
+					Sizes   struct {
+						Full       string `json:"full"`
+						SmallThumb string `json:"small_thumb"`
+						Thumb      string `json:"thumb"`
+						GiantThumb string `json:"giant_thumb"`
+					} `json:"sizes"`
+				} `json:"preview"`
+				Redirected bool        `json:"redirected"`
+				Related    interface{} `json:"related"`
+				Series     interface{} `json:"series"`
+				Slug       string      `json:"slug"`
+				Title      string      `json:"title"`
+				Type       string      `json:"type"`
+				Views      int         `json:"views"`
+			} `json:"tag"`
 			Manga struct {
-				Description interface{} `json:"description"`
-				ID          int         `json:"id"`
-				ImageCount  int         `json:"image_count"`
-				Language    struct {
-					Name     string `json:"name"`
-					Slug     string `json:"slug"`
-					FlagCode string `json:"flag_code"`
-				} `json:"language"`
-				Images []struct {
+				Anijunky struct {
+					Slug   string `json:"slug"`
+					Banner struct {
+						ID        int    `json:"id"`
+						ImageType string `json:"image_type"`
+						Jpg       struct {
+							Original string `json:"original"`
+						} `json:"jpg"`
+						Webp struct {
+							Original string `json:"original"`
+						} `json:"webp"`
+					} `json:"banner"`
+					Cover struct {
+						ID        int    `json:"id"`
+						ImageType string `json:"image_type"`
+						Jpg       struct {
+							Original string `json:"original"`
+							Full     string `json:"full"`
+							Thumb    string `json:"thumb"`
+							Small    string `json:"small"`
+						} `json:"jpg"`
+						Webp struct {
+							Original string `json:"original"`
+							Full     string `json:"full"`
+							Thumb    string `json:"thumb"`
+							Small    string `json:"small"`
+						} `json:"webp"`
+					} `json:"cover"`
+					Description string   `json:"description"`
+					Native      string   `json:"native"`
+					Romaji      string   `json:"romaji"`
+					Synonyms    []string `json:"synonyms"`
+					Title       string   `json:"title"`
+				} `json:"anijunky"`
+				CommentCount int         `json:"comment_count"`
+				CreatedAt    time.Time   `json:"created_at"`
+				Description  interface{} `json:"description"`
+				ID           int         `json:"id"`
+				ImageCount   int         `json:"image_count"`
+				Images       []struct {
 					ID      int `json:"id"`
 					PageNum int `json:"page_num"`
 					Sizes   struct {
@@ -57,20 +140,110 @@ type state struct {
 						GiantThumb string `json:"giant_thumb"`
 					} `json:"sizes"`
 				} `json:"images"`
-				Slug  string `json:"slug"`
+				Interactions struct {
+					Downvotes int `json:"downvotes"`
+					Favorites int `json:"favorites"`
+					Reactions struct {
+					} `json:"reactions"`
+					Upvotes int `json:"upvotes"`
+				} `json:"interactions"`
+				Language struct {
+					Name     string `json:"name"`
+					Slug     string `json:"slug"`
+					FlagCode string `json:"flag_code"`
+				} `json:"language"`
+				New            bool          `json:"new"`
+				OtherLanguages []interface{} `json:"other_languages"`
+				Parodies       []struct {
+					ID          int    `json:"id"`
+					Letter      string `json:"letter"`
+					ObjectCount int    `json:"object_count"`
+					Slug        string `json:"slug"`
+					Title       string `json:"title"`
+					Type        string `json:"type"`
+				} `json:"parodies"`
+				Preview struct {
+					ID      int `json:"id"`
+					PageNum int `json:"page_num"`
+					Sizes   struct {
+						Full       string `json:"full"`
+						SmallThumb string `json:"small_thumb"`
+						Thumb      string `json:"thumb"`
+						GiantThumb string `json:"giant_thumb"`
+					} `json:"sizes"`
+				} `json:"preview"`
+				Reactions struct {
+				} `json:"reactions"`
+				Redirected bool `json:"redirected"`
+				Related    []struct {
+					CommentCount int         `json:"comment_count"`
+					Description  interface{} `json:"description"`
+					ID           int         `json:"id"`
+					ImageCount   int         `json:"image_count"`
+					Language     struct {
+						Name     string `json:"name"`
+						Slug     string `json:"slug"`
+						FlagCode string `json:"flag_code"`
+					} `json:"language"`
+					New     bool `json:"new"`
+					Preview struct {
+						ID      int `json:"id"`
+						PageNum int `json:"page_num"`
+						Sizes   struct {
+							Full       string `json:"full"`
+							SmallThumb string `json:"small_thumb"`
+							Thumb      string `json:"thumb"`
+							GiantThumb string `json:"giant_thumb"`
+						} `json:"sizes"`
+					} `json:"preview"`
+					Reactions struct {
+					} `json:"reactions"`
+					Series struct {
+						AlbumCount   int    `json:"album_count"`
+						CommentCount int    `json:"comment_count"`
+						ID           int    `json:"id"`
+						Slug         string `json:"slug"`
+						Title        string `json:"title"`
+						Type         string `json:"type"`
+					} `json:"series"`
+					Slug  string `json:"slug"`
+					Title string `json:"title"`
+					Type  string `json:"type"`
+				} `json:"related"`
+				Series struct {
+					AlbumCount   int    `json:"album_count"`
+					CommentCount int    `json:"comment_count"`
+					ID           int    `json:"id"`
+					Slug         string `json:"slug"`
+					Title        string `json:"title"`
+					Type         string `json:"type"`
+				} `json:"series"`
+				Slug string `json:"slug"`
+				Tags []struct {
+					ID          int    `json:"id"`
+					Letter      string `json:"letter"`
+					ObjectCount int    `json:"object_count"`
+					Slug        string `json:"slug"`
+					Title       string `json:"title"`
+					Type        string `json:"type"`
+				} `json:"tags"`
 				Title string `json:"title"`
+				Type  string `json:"type"`
 			} `json:"manga"`
-			Meta struct {
-				Title       string `json:"title"`
-				Description string `json:"description"`
-			} `json:"meta"`
 		} `json:"pageProps"`
 	} `json:"props"`
 	Page  string `json:"page"`
 	Query struct {
-		Series string `json:"series"`
-		Slug   string `json:"slug"`
+		Type string `json:"type"`
+		Slug string `json:"slug"`
 	} `json:"query"`
+	BuildID      string        `json:"buildId"`
+	IsFallback   bool          `json:"isFallback"`
+	DynamicIds   []int         `json:"dynamicIds"`
+	CustomServer bool          `json:"customServer"`
+	Gip          bool          `json:"gip"`
+	AppGip       bool          `json:"appGip"`
+	ScriptLoader []interface{} `json:"scriptLoader"`
 }
 
 const site = "https://www.simply-hentai.com/"
