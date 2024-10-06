@@ -51,8 +51,8 @@ func TestExtract(t *testing.T) {
 			Args: test.Args{
 				URL:     "https://www.iwara.tv/video/zwkobu5eevi17m309/14",
 				Title:   "14.舞夜の侍奉Ⅱ💕",
-				Quality: "540p",
-				Size:    60567929,
+				Quality: "Source",
+				Size:    90608128,
 			},
 		},
 		{

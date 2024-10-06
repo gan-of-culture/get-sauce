@@ -102,22 +102,26 @@ func TestExtract(t *testing.T) {
 	}{
 		{
 			Name: "HLS where stream order is from small to high",
-			URL:  "https://na-02.javprovider.com/hls/K/kuroinu-ii-animation/1/playlist.m3u8",
+			URL:  "https://va04-edge.tmncdn.io/wp-content/uploads/Bubble_de_House_de/episode_1/ja.m3u8",
 			Headers: map[string]string{
-				"Referer": "https://hentaimama.io",
+				"Referer": "https://muchohentai.com/",
 			},
 			Want: map[string]*static.Stream{
 				"0": {
 					Type:    static.DataTypeVideo,
-					Quality: "1280x720",
+					Quality: "1920x1080",
 				},
 				"1": {
 					Type:    static.DataTypeVideo,
-					Quality: "842x480",
+					Quality: "1280x720",
 				},
 				"2": {
 					Type:    static.DataTypeVideo,
-					Quality: "640x360",
+					Quality: "864x486",
+				},
+				"3": {
+					Type:    static.DataTypeAudio,
+					Quality: "",
 				},
 			},
 		},
