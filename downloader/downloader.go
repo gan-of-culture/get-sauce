@@ -114,6 +114,7 @@ func (downloader *downloaderStruct) downloadStream(data *static.Data) (string, e
 	// select stream to download
 	var ok bool
 	if downloader.stream, ok = data.Streams[config.SelectStream]; !ok {
+		log.Println(data.Streams)
 		return "", fmt.Errorf("stream %s not found", config.SelectStream)
 	}
 
@@ -136,6 +137,9 @@ func (downloader *downloaderStruct) downloadStream(data *static.Data) (string, e
 
 	headers := config.FakeHeaders
 	headers["Referer"] = data.URL
+	for k, v := range downloader.stream.Headers {
+		headers[k] = v
+	}
 
 	lenOfUrls := len(downloader.stream.URLs)
 	appendEnum := false

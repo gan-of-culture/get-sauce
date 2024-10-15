@@ -190,10 +190,16 @@ func extractData(URL string) ([]*static.Data, error) {
 
 	streams := make(map[string]*static.Stream)
 	var stream *static.Stream
+	streamIdx := -1
 	for k, v := range entryMetadata.Data {
+		streamIdx++
 		stream = &static.Stream{
 			Type: static.DataTypeImage,
 			Size: int64(v.Size),
+			Headers: map[string]string{
+				"Referer": site,
+				"Origin":  origin,
+			},
 		}
 
 		dataURL := strings.Replace(URL, "detail", "data", 1)
@@ -207,7 +213,7 @@ func extractData(URL string) ([]*static.Data, error) {
 		q.Set("w", k)
 		dURL.RawQuery = q.Encode()
 		res, err = request.GetAsBytesWithHeaders(dURL.String(), map[string]string{
-			"Origin":  "https://koharu.to",
+			"Origin":  origin,
 			"Referer": site,
 		})
 		if err != nil {
@@ -234,18 +240,25 @@ func extractData(URL string) ([]*static.Data, error) {
 
 		urls := make([]*static.URL, numOfEntries)
 		for idx, entry := range dataRes.Entries {
-			dataURL, err := cdnUrl.Parse(entry.Path)
+			strDataURL, err := url.JoinPath(dataRes.Base, entry.Path)
 			if err != nil {
 				return nil, err
 			}
-			strDataURL := dataURL.String()
+			dataURL, err := cdnUrl.Parse(strDataURL)
+			if err != nil {
+				return nil, err
+			}
+			q := url.Values{}
+			q.Set("w", k)
+			dataURL.RawQuery = q.Encode()
+			strDataURL = dataURL.String()
 			urls[idx] = &static.URL{
 				URL: strDataURL,
-				Ext: utils.GetFileExt(strDataURL),
+				Ext: utils.GetFileExt(entry.Path),
 			}
 		}
 		stream.URLs = urls
-		streams[k] = stream
+		streams[fmt.Sprint(streamIdx)] = stream
 	}
 
 	return []*static.Data{

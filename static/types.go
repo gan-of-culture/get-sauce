@@ -24,6 +24,8 @@ type Stream struct {
 	Ext string `json:"ext"`
 	// Key that is needed to decrypt this stream
 	Key []byte `json:"key"`
+	// Headers used for the download request
+	Headers map[string]string `json:"headers"`
 }
 
 // Caption this includes (CC, OC or Subtitles)
