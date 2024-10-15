@@ -35,7 +35,6 @@ import (
 	"github.com/gan-of-culture/get-sauce/extractors/ninehentai"
 	"github.com/gan-of-culture/get-sauce/extractors/ohentai"
 	"github.com/gan-of-culture/get-sauce/extractors/oppai"
-	"github.com/gan-of-culture/get-sauce/extractors/pururin"
 	"github.com/gan-of-culture/get-sauce/extractors/rule34"
 	"github.com/gan-of-culture/get-sauce/extractors/rule34video"
 	"github.com/gan-of-culture/get-sauce/extractors/simplyhentai"
@@ -98,7 +97,6 @@ func init() {
 		"nhentai.net":            nhentai.New(),
 		"ohentai.org":            ohentai.New(),
 		"oppai.stream":           oppai.New(),
-		"pururin.to":             pururin.New(),
 		"rule34.paheal.net":      rule34.New(),
 		"rule34video.com":        rule34video.New(),
 		"www.simply-hentai.com":  simplyhentai.New(),
