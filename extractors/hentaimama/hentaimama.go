@@ -103,7 +103,6 @@ func extractData(URL string) (*static.Data, error) {
 			log.Printf("skipping broken source: %s", u)
 			continue
 		}
-		log.Println(htmlString)
 		sources = append(sources, source{
 			URL:     videoURL,
 			Referer: u[0],
@@ -121,7 +120,9 @@ func extractData(URL string) (*static.Data, error) {
 
 		streams, err = hls.Extract(src.URL, map[string]string{"Referer": src.Referer})
 		if err != nil {
-			return nil, err
+			log.Println(err)
+			log.Printf("skipping broken source: %s", src.URL)
+			continue
 		}
 
 		mirrorIdx += 1
@@ -132,6 +133,9 @@ func extractData(URL string) (*static.Data, error) {
 	}
 
 	idx := len(streams) - 1
+	if idx == -1 {
+		streams = make(map[string]*static.Stream)
+	}
 	// resolve other URLs
 	for _, src := range sources {
 		ext := strings.TrimSuffix(utils.GetLastItemString(reExt.FindStringSubmatch(src.URL)), "?")
@@ -150,6 +154,8 @@ func extractData(URL string) (*static.Data, error) {
 
 		idx += 1
 		mirrorIdx += 1
+		log.Println(streams)
+		log.Println(idx)
 		streams[fmt.Sprint(idx)] = &static.Stream{
 			Type: static.DataTypeVideo,
 			URLs: []*static.URL{
@@ -158,8 +164,9 @@ func extractData(URL string) (*static.Data, error) {
 					Ext: ext,
 				},
 			},
-			Size: size,
-			Info: fmt.Sprintf("Mirror %d", mirrorIdx),
+			Size:    size,
+			Info:    fmt.Sprintf("Mirror %d", mirrorIdx),
+			Headers: map[string]string{},
 		}
 		continue
 	}
