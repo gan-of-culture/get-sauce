@@ -53,15 +53,6 @@ func TestExtract(t *testing.T) {
 		Name string
 		Args test.Args
 	}{
-		/*{
-			Name: "Single 3D Extraction",
-			Args: test.Args{
-				URL:     "https://hentaiworld.tv/hentai-videos/3d/final-fantasy-tifa-7/",
-				Title:   "Final Fantasy – Tifa",
-				Quality: "",
-				Size:    23462163,
-			},
-		},*/
 		{
 			Name: "Single Extraction",
 			Args: test.Args{

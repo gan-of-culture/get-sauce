@@ -144,7 +144,7 @@ func TestExtract(t *testing.T) {
 			Args: test.Args{
 				URL:   "https://uncensoredhentai.xxx/watch/joshi-luck-episode-5/",
 				Title: "Joshi Luck! Episode 5",
-				Size:  423727631,
+				Size:  426231714,
 			},
 		},
 	}

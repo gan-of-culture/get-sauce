@@ -10,9 +10,9 @@ import (
 )
 
 const site = "https://hentaiworld.tv/"
+const videoProvider = "https://www.porn-d.xyz/TbLwA66UuPu4LiuOCsKr/"
 
-var reFileInfo = regexp.MustCompile(`window.open\(\'([^']+\.([0-9a-zA-z]*))`) // 1 = dlURL 2=ext
-var reFileInfoBackup = regexp.MustCompile(`src='(.*\.(mp4*)).*`)              // 1 = dlURL 2=ext
+var reFileInfo = regexp.MustCompile(`https://hentaiworld.tv/video-player.html\?(videos/[^.]+\.([^'"]+))`) // 1 = dlURLPart 2=ext
 
 type extractor struct{}
 
@@ -78,16 +78,9 @@ func extractData(URL string) (*static.Data, error) {
 		title = strings.ReplaceAll(title, "\u0026#8211;", "-")
 	}
 
-	infoAboutFile := reFileInfo.FindStringSubmatch(postHTMLpage) // 1 = dlURL 2=ext
-
-	if len(infoAboutFile) != 3 {
-		infoAboutFile = reFileInfoBackup.FindStringSubmatch(postHTMLpage) // 1 = dlURL 2=ext
-		if len(infoAboutFile) != 3 {
-			return nil, static.ErrDataSourceParseFailed
-		}
-	}
-	infoAboutFile[1] = strings.ReplaceAll(infoAboutFile[1], " ", "%20")
-	size, _ := request.Size(infoAboutFile[1], site)
+	infoAboutFile := reFileInfo.FindStringSubmatch(postHTMLpage)
+	videoURL := videoProvider + infoAboutFile[1]
+	size, _ := request.Size(videoURL, site)
 
 	return &static.Data{
 		Site:  site,
@@ -98,7 +91,7 @@ func extractData(URL string) (*static.Data, error) {
 				Type: static.DataTypeVideo,
 				URLs: []*static.URL{
 					0: {
-						URL: infoAboutFile[1],
+						URL: videoURL,
 						Ext: infoAboutFile[2],
 					},
 				},

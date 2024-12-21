@@ -6,14 +6,12 @@ import (
 
 	"github.com/gan-of-culture/get-sauce/extractors/booru"
 	"github.com/gan-of-culture/get-sauce/extractors/danbooru"
-	"github.com/gan-of-culture/get-sauce/extractors/doujin"
 	"github.com/gan-of-culture/get-sauce/extractors/ehentai"
 	"github.com/gan-of-culture/get-sauce/extractors/haho"
 	"github.com/gan-of-culture/get-sauce/extractors/hanime"
 	"github.com/gan-of-culture/get-sauce/extractors/hentai2read"
 	"github.com/gan-of-culture/get-sauce/extractors/hentai2w"
 	"github.com/gan-of-culture/get-sauce/extractors/hentaicloud"
-	"github.com/gan-of-culture/get-sauce/extractors/hentaidude"
 	"github.com/gan-of-culture/get-sauce/extractors/hentaifoundry"
 	"github.com/gan-of-culture/get-sauce/extractors/hentaihaven"
 	"github.com/gan-of-culture/get-sauce/extractors/hentaihavenred"
@@ -27,12 +25,12 @@ import (
 	"github.com/gan-of-culture/get-sauce/extractors/hstream"
 	"github.com/gan-of-culture/get-sauce/extractors/htdoujin"
 	"github.com/gan-of-culture/get-sauce/extractors/iwara"
-	"github.com/gan-of-culture/get-sauce/extractors/koharu"
 	"github.com/gan-of-culture/get-sauce/extractors/miohentai"
 	"github.com/gan-of-culture/get-sauce/extractors/muchohentai"
 	"github.com/gan-of-culture/get-sauce/extractors/nhentai"
 	"github.com/gan-of-culture/get-sauce/extractors/nhgroup"
 	"github.com/gan-of-culture/get-sauce/extractors/ninehentai"
+	"github.com/gan-of-culture/get-sauce/extractors/niyaniya"
 	"github.com/gan-of-culture/get-sauce/extractors/ohentai"
 	"github.com/gan-of-culture/get-sauce/extractors/oppai"
 	"github.com/gan-of-culture/get-sauce/extractors/rule34"
@@ -60,7 +58,6 @@ func init() {
 		"booru.io":               booru.New(),
 		"comicporn.xxx":          htdoujinExtractor,
 		"danbooru.donmai.us":     danbooru.New(),
-		"doujin.sexy":            doujin.New(),
 		"e-hentai.org":           ehentai.New(),
 		"haho.moe":               haho.New(),
 		"hanime.tv":              hanime.New(),
@@ -69,7 +66,6 @@ func init() {
 		"hentai2read.com":        hentai2read.New(),
 		"hentai2w.com":           hentai2w.New(),
 		"www.hentaicloud.com":    hentaicloud.New(),
-		"hentaidude.com":         hentaidude.New(),
 		"hentaiera.com":          htdoujinExtractor,
 		"hentaienvy.com":         htdoujinExtractor,
 		"www.hentai-foundry.com": hentaifoundry.New(),
@@ -90,10 +86,10 @@ func init() {
 		"imhentai.xxx":           htdoujinExtractor,
 		"iwara.tv":               iwaraExtractor,
 		"www.iwara.tv":           iwaraExtractor,
-		"koharu.to":              koharu.New(),
 		"latesthentai.com":       nhgroupExtractor,
 		"miohentai.com":          miohentai.New(),
 		"muchohentai.com":        muchohentai.New(),
+		"niyaniya.moe":           niyaniya.New(),
 		"nhentai.net":            nhentai.New(),
 		"ohentai.org":            ohentai.New(),
 		"oppai.stream":           oppai.New(),

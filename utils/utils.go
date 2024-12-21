@@ -132,6 +132,16 @@ func GetMeta(htmlString *string, property string) string {
 	return metaTags[0][1]
 }
 
+// GetMeta of HTML file
+func GetMetaByName(htmlString *string, name string) string {
+	re := regexp.MustCompile(fmt.Sprintf("<meta name=[\"']*%s[\"']* content=[\"']([^\"']*)", name))
+	metaTags := re.FindAllStringSubmatch(*htmlString, -1)
+	if len(metaTags) < 1 {
+		return fmt.Sprintf("no matches found for %s", name)
+	}
+	return metaTags[0][1]
+}
+
 // RemoveAdjDuplicates of slice
 func RemoveAdjDuplicates[T string | int](slice []T) []T {
 	out := []T{}
