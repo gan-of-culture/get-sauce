@@ -1,4 +1,4 @@
-package koharu
+package niyaniya
 
 import (
 	"encoding/json"
@@ -11,9 +11,9 @@ import (
 	"github.com/gan-of-culture/get-sauce/utils"
 )
 
-const origin = "https://koharu.to"
+const origin = "https://niyaniya.moe"
 const site = origin + "/"
-const api = "https://api.koharu.to/books"
+const api = "https://api.niyaniya.moe/books"
 const detailAPI = api + "/detail"
 
 type apiSearchResponse struct {
@@ -103,7 +103,7 @@ type apiEntryDataResponse struct {
 
 type extractor struct{}
 
-// New returns a koharu extractor
+// New returns a niyaniya extractor
 func New() static.Extractor {
 	return &extractor{}
 }
@@ -147,7 +147,7 @@ func parseURL(URL string) []string {
 	apiUrl.RawQuery = q.Encode()
 
 	res, err := request.GetAsBytesWithHeaders(apiUrl.String(), map[string]string{
-		"Origin":  "https://koharu.to",
+		"Origin":  origin,
 		"Referer": site,
 	})
 	if err != nil {
@@ -171,7 +171,7 @@ func parseURL(URL string) []string {
 func extractData(URL string) ([]*static.Data, error) {
 
 	res, err := request.GetAsBytesWithHeaders(URL, map[string]string{
-		"Origin":  "https://koharu.to",
+		"Origin":  origin,
 		"Referer": site,
 	})
 	if err != nil {

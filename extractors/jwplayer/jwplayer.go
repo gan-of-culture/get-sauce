@@ -2,6 +2,7 @@ package jwplayer
 
 import (
 	"bytes"
+	"encoding/base64"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -16,6 +17,7 @@ import (
 	"github.com/gan-of-culture/get-sauce/parsers/hls"
 	"github.com/gan-of-culture/get-sauce/request"
 	"github.com/gan-of-culture/get-sauce/static"
+	"github.com/gan-of-culture/get-sauce/utils"
 )
 
 type mediaData struct {
@@ -29,6 +31,12 @@ type mediaData struct {
 			Label string `json:"label"`
 		} `json:"sources"`
 	} `json:"data"`
+}
+
+type decodedData struct {
+	En  string `json:"en"`
+	Iv  string `json:"iv"`
+	URI string `json:"uri"`
 }
 
 var reJWPlayerURL = regexp.MustCompile(`[^"]+/wp-content/plugins/player-logic/player\.php[^"]+`)
@@ -59,10 +67,44 @@ func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 	}
 
 	site := fmt.Sprintf("https://%s/", u.Host)
+	dJson := decodedData{}
 
 	matchedAPIURL := reAPIURL.FindStringSubmatch(htmlString)
 	if len(matchedAPIURL) < 2 {
-		return nil, static.ErrURLParseFailed
+		// gl&hf reverse engineered from load-player.js
+		var chiperAlphabetSlice = []rune("NOPQRSTUVWXYZABCDEFGHIJKLMnopqrstuvwxyzabcdefghijklm")
+		var chiperMap = make(map[rune]rune)
+		for idx, r := range []rune("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz") {
+			chiperMap[r] = chiperAlphabetSlice[idx]
+		}
+		d := strings.TrimPrefix(utils.GetMetaByName(&htmlString, "x-secure-token"), "sha512-")
+		if d == "" {
+			return nil, errors.New("unable to locate neither a API URL nor a x-secure-token")
+		}
+		// first chiper input and then base64 <-- this happens 3 times and then the json is revealed
+		for i := 0; i < 3; i++ {
+			dAfterCipher := []rune{}
+			for _, r := range d {
+				if newR, ok := chiperMap[r]; ok {
+					dAfterCipher = append(dAfterCipher, newR)
+					continue
+				}
+				dAfterCipher = append(dAfterCipher, r)
+			}
+			d = string(dAfterCipher)
+			dDecoded, err := base64.StdEncoding.DecodeString(d)
+			if err != nil {
+				return nil, err
+			}
+			d = string(dDecoded)
+			fmt.Println(d)
+		}
+
+		err = json.Unmarshal([]byte(d), &dJson)
+		if err != nil {
+			return nil, err
+		}
+		matchedAPIURL = append(matchedAPIURL, []string{"", dJson.URI + "api.php"}...)
 	}
 
 	if variable := reVariable.FindString(htmlString); variable != "" {
@@ -80,7 +122,12 @@ func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 	writer := multipart.NewWriter(body)
 
 	vals := [][]string{{"", "action", "zarat_get_data_player_ajax"}}
-	vals = append(vals, reMultiPartParams.FindAllStringSubmatch(htmlString, -1)...)
+	matchedVals := reMultiPartParams.FindAllStringSubmatch(htmlString, -1)
+	if len(matchedVals) == 0 && dJson.En != "" && dJson.Iv != "" {
+		matchedVals = append(matchedVals, []string{"", "a", dJson.En})
+		matchedVals = append(matchedVals, []string{"", "b", dJson.Iv})
+	}
+	vals = append(vals, matchedVals...)
 
 	for _, v := range vals {
 		mimeHeader := textproto.MIMEHeader{}

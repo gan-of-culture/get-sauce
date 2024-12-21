@@ -55,15 +55,16 @@ func TestExtractDASHManifest(t *testing.T) {
 		URL  string
 		Args static.Stream
 	}{
-		{
-			Name: "Default",
-			URL:  "https://str.h-dl.xyz/2023/Class.de.Otoko.wa.Boku.Hitori/E01/2160/manifest.mpd",
-			Args: static.Stream{
-				Type:    static.DataTypeVideo,
-				Quality: "3840x2160",
-				Ext:     "mp4",
-			},
-		},
+		// Add new test URL when issue occours. URL moves too much
+		// {
+		// 	Name: "Default",
+		// 	URL:  "https://str.h-dl.xyz/2023/Class.de.Otoko.wa.Boku.Hitori/E01/2160/manifest.mpd",
+		// 	Args: static.Stream{
+		// 		Type:    static.DataTypeVideo,
+		// 		Quality: "3840x2160",
+		// 		Ext:     "mp4",
+		// 	},
+		// },
 	}
 	for _, tt := range tests {
 		t.Run(tt.Name, func(t *testing.T) {

@@ -14,8 +14,8 @@ import (
 )
 
 var reSiteName = regexp.MustCompile(`http?s://(?:www.)?([^.]*)`)
-var rePostURL = regexp.MustCompile(`<a.+href="([^"]+\.([^"?]+)).+>\s*(?:Original|Download PNG)`)                //1=url 2=ext
-var rePostBackup = regexp.MustCompile(`<a.+href="([^"]+\.([^"?]+)).+>\s*(?:Original|View larger|Download PNG)`) //1=url 2=ext
+var rePostURL = regexp.MustCompile(`<a.+href="([^"]+\.([^"?]+))[^>]+>\s*(?:Original|Download PNG)`)                //1=url 2=ext
+var rePostBackup = regexp.MustCompile(`<a.+href="([^"]+\.([^"?]+))[^>]+>\s*(?:Original|View larger|Download PNG)`) //1=url 2=ext
 var reID = regexp.MustCompile(`Id: [^<]*`)
 var reSize = regexp.MustCompile(`Size: [^<]*`)
 var reDirectLink = regexp.MustCompile(`https://[^/]*/[^/]*/([^/]*)/[^.\s]*\.[^\.\s]*\..*(\w{3,4})$`) //1=title //2=ext

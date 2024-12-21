@@ -1,4 +1,4 @@
-package koharu
+package niyaniya
 
 import (
 	"testing"
@@ -14,13 +14,13 @@ func TestParseURL(t *testing.T) {
 	}{
 		{
 			Name: "Single",
-			URL:  "https://koharu.to/g/13848/85a0f534cb44",
+			URL:  "https://niyaniya.moe/g/24687/4b7e8e4b1936",
 			Want: 1,
 		},
 		{
 			Name: "Overview",
-			URL:  "https://koharu.to/?s=alp",
-			Want: 40,
+			URL:  "https://niyaniya.moe/?s=artist:^alp$",
+			Want: 28,
 		},
 	}
 	for _, tt := range tests {
@@ -41,7 +41,7 @@ func TestExtract(t *testing.T) {
 		{
 			Name: "Single extraction",
 			Args: test.Args{
-				URL:     "https://koharu.to/g/13848/85a0f534cb44",
+				URL:     "https://niyaniya.moe/g/13848/85a0f534cb44",
 				Title:   "[Alp] Reward Poolside (Comic Bavel 2016-08)",
 				Quality: "1360x1920",
 				Size:    17848085,
