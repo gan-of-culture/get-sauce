@@ -101,6 +101,15 @@ func TestExtract(t *testing.T) {
 			},
 		},
 		{
+			Name: "Single Gallery HentaiEra with webp",
+			Args: test.Args{
+				URL:     "https://hentaiera.com/gallery/1372600/",
+				Title:   "Fude Oroshi Saya-chan",
+				Quality: "",
+				Size:    0,
+			},
+		},
+		{
 			Name: "Single Gallery HentaiEnvy",
 			Args: test.Args{
 				URL:     "https://hentaienvy.com/gallery/273160/",

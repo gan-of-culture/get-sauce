@@ -192,6 +192,8 @@ func extractData(ID string) (*static.Data, error) {
 			params[0] = "bmp"
 		case "g":
 			params[0] = "gif"
+		case "w":
+			params[0] = "webp"
 		}
 		URLs = append(URLs, &static.URL{
 			URL: fmt.Sprintf("%s%s/%s/%d.%s", cdn, imageDir[1], gID[1], i, params[0]),
