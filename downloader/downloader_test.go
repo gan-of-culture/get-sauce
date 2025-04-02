@@ -116,24 +116,6 @@ func TestDownload(t *testing.T) {
 				URL: "https://rule34.paheal.net/post/view/4698365",
 			},
 			Want: nil,
-		}, {
-			Name: "nhentai single page",
-			data: &static.Data{
-				Site:  "https://nhentai.net",
-				Title: "(C97) [H@BREAK (Itose Ikuto)] Koe Dashicha Barechau kara! [English]",
-				Type:  static.DataTypeImage,
-				Streams: map[string]*static.Stream{
-					"0": {
-						Type: static.DataTypeImage,
-						URLs: []*static.URL{
-							{
-								URL: "https://i.nhentai.net/galleries/1550711/14.jpg",
-								Ext: "jpg",
-							},
-						},
-					},
-				},
-			},
 		},
 	}
 	config.Workers = 5

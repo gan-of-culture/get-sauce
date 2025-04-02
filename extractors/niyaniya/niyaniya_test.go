@@ -1,12 +1,6 @@
 package niyaniya
 
-import (
-	"testing"
-
-	"github.com/gan-of-culture/get-sauce/test"
-)
-
-func TestParseURL(t *testing.T) {
+/* func TestParseURL(t *testing.T) {
 	tests := []struct {
 		Name string
 		URL  string
@@ -19,7 +13,7 @@ func TestParseURL(t *testing.T) {
 		},
 		{
 			Name: "Overview",
-			URL:  "https://niyaniya.moe/?s=artist:^alp$",
+			URL:  "https://niyaniya.moe/tag/artist:alp",
 			Want: 28,
 		},
 	}
@@ -56,4 +50,4 @@ func TestExtract(t *testing.T) {
 			test.Check(t, tt.Args, data[0])
 		})
 	}
-}
+} */

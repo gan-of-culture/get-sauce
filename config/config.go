@@ -35,7 +35,7 @@ var (
 var FakeHeaders = map[string]string{
 	"Accept":          "*/*",
 	"Accept-Language": "en-US,en;q=0.8",
-	"User-Agent":      "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.3",
+	"User-Agent":      "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.3",
 }
 
 var FakeHeadersFirefox117 = map[string]string{

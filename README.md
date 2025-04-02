@@ -299,7 +299,6 @@ The following links will direct you to adult content. Please keep that in mind!
 | [konachan.com](https://konachan.com/post?tags=)                                 | :heavy_check_mark: |         ?          |
 | [latesthentai.com (1080p, 720p, 480p, 360p)](https://latesthentai.com/)         |         ?          | :heavy_check_mark: |
 | [miohentai.com (1080p, 720p, 480p)](https://miohentai.com/)                     | :heavy_check_mark: |         ?          |
-| [niyaniya.moe](https://niyaniya.moe)                                            | :heavy_check_mark: |         ?          |
 | [nhentai.net](https://nhentai.net)                                              | :heavy_check_mark: |         ?          |   :cookie:   |
 | [ohentai.org (1080p, 720p, 480p)](https://ohentai.org/)                         |         ?          | :heavy_check_mark: |
 | [oppai.stream (2160p, 1080p, 720p)](https://oppai.stream/)                      |         ?          | :heavy_check_mark: |

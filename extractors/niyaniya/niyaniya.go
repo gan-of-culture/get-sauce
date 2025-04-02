@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/url"
+	"path"
 	"strings"
 
 	"github.com/gan-of-culture/get-sauce/request"
@@ -13,26 +14,20 @@ import (
 
 const origin = "https://niyaniya.moe"
 const site = origin + "/"
-const api = "https://api.niyaniya.moe/books"
+const api = "https://api.schale.network/books"
 const detailAPI = api + "/detail"
 
 type apiSearchResponse struct {
 	Entries []struct {
 		ID        int    `json:"id"`
-		PublicKey string `json:"public_key"`
-		CreatedAt int64  `json:"created_at"`
+		Key       string `json:"key"`
 		Title     string `json:"title"`
-		Language  string `json:"language"`
+		Language  int    `json:"language"`
 		Pages     int    `json:"pages"`
 		Thumbnail struct {
 			Path       string `json:"path"`
 			Dimensions []int  `json:"dimensions"`
 		} `json:"thumbnail"`
-		Tags []struct {
-			Namespace int    `json:"namespace,omitempty"`
-			Name      string `json:"name"`
-		} `json:"tags"`
-		Subtitle string `json:"subtitle,omitempty"`
 	} `json:"entries"`
 	Limit   int `json:"limit"`
 	Page    int `json:"page"`
@@ -41,9 +36,53 @@ type apiSearchResponse struct {
 		Query     string `json:"query"`
 		Namespace string `json:"namespace"`
 		Entries   []struct {
-			Value string `json:"value"`
+			Value      string `json:"value"`
+			StartsWith bool   `json:"starts_with"`
+			EndsWith   bool   `json:"ends_with"`
 		} `json:"entries"`
 	} `json:"matches"`
+}
+
+type apiEntryMetaData struct {
+	ID         int    `json:"id"`
+	Key        string `json:"key"`
+	CreatedAt  int64  `json:"created_at"`
+	Title      string `json:"title"`
+	Thumbnails struct {
+		Base string `json:"base"`
+		Main struct {
+			Path       string `json:"path"`
+			Dimensions []int  `json:"dimensions"`
+		} `json:"main"`
+		Entries []struct {
+			Path       string `json:"path"`
+			Dimensions []int  `json:"dimensions"`
+		} `json:"entries"`
+	} `json:"thumbnails"`
+	Tags []struct {
+		Name      string `json:"name"`
+		Count     int    `json:"count"`
+		Namespace int    `json:"namespace,omitempty"`
+	} `json:"tags"`
+}
+
+type apiEntryData struct {
+	Data map[string]struct {
+		ID   int    `json:"id"`
+		Key  string `json:"key"`
+		Size int    `json:"size"`
+	} `json:"data"`
+	Similar []struct {
+		ID        int    `json:"id"`
+		Key       string `json:"key"`
+		Title     string `json:"title"`
+		Language  int    `json:"language"`
+		Pages     int    `json:"pages"`
+		Thumbnail struct {
+			Path       string `json:"path"`
+			Dimensions []int  `json:"dimensions"`
+		} `json:"thumbnail"`
+	} `json:"similar"`
 }
 
 type apiEntryResponse struct {
@@ -143,7 +182,8 @@ func parseURL(URL string) []string {
 		return nil
 	}
 	q := apiUrl.Query()
-	q.Set("s", u.Query().Get("s"))
+	ss := strings.Split(path.Base(u.Path), ":")
+	q.Set("s", fmt.Sprintf("%s:^%s$", ss[0], ss[1]))
 	apiUrl.RawQuery = q.Encode()
 
 	res, err := request.GetAsBytesWithHeaders(apiUrl.String(), map[string]string{
@@ -162,7 +202,7 @@ func parseURL(URL string) []string {
 
 	out := []string{}
 	for _, entry := range apiResponse.Entries {
-		out = append(out, fmt.Sprintf("%s/%d/%s", detailAPI, entry.ID, entry.PublicKey))
+		out = append(out, fmt.Sprintf("%s/%d/%s", detailAPI, entry.ID, entry.Key))
 	}
 
 	return out
@@ -178,20 +218,36 @@ func extractData(URL string) ([]*static.Data, error) {
 		return nil, err
 	}
 
-	entryMetadata := apiEntryResponse{}
-	err = json.Unmarshal(res, &entryMetadata)
+	entryMetadata := &apiEntryMetaData{}
+	err = json.Unmarshal(res, entryMetadata)
 	if err != nil {
 		return nil, err
 	}
 
-	if len(entryMetadata.Data) < 1 {
+	if entryMetadata == nil {
 		return nil, static.ErrDataSourceParseFailed
+	}
+
+	// this request needs a crt which is aquired through a cf challenge
+	res, err = request.PostAsBytesWithHeaders(URL, map[string]string{
+		"Origin":  origin,
+		"Referer": site,
+	}, nil)
+
+	if err != nil {
+		return nil, err
+	}
+
+	entryData := &apiEntryData{}
+	err = json.Unmarshal(res, entryData)
+	if err != nil {
+		return nil, err
 	}
 
 	streams := make(map[string]*static.Stream)
 	var stream *static.Stream
 	streamIdx := -1
-	for k, v := range entryMetadata.Data {
+	for k, v := range entryData.Data {
 		streamIdx++
 		stream = &static.Stream{
 			Type: static.DataTypeImage,
@@ -203,13 +259,13 @@ func extractData(URL string) ([]*static.Data, error) {
 		}
 
 		dataURL := strings.Replace(URL, "detail", "data", 1)
-		dataURL = fmt.Sprintf("%s/%d/%s", dataURL, v.ID, v.PublicKey)
+		dataURL = fmt.Sprintf("%s/%d/%s", dataURL, v.ID, v.Key)
 		dURL, err := url.Parse(dataURL)
 		if err != nil {
 			return nil, err
 		}
 		q := url.Values{}
-		q.Set("v", fmt.Sprint(entryMetadata.UpdatedAt))
+		q.Set("v", fmt.Sprint(entryMetadata.CreatedAt))
 		q.Set("w", k)
 		dURL.RawQuery = q.Encode()
 		res, err = request.GetAsBytesWithHeaders(dURL.String(), map[string]string{

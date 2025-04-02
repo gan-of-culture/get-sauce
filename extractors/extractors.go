@@ -30,7 +30,6 @@ import (
 	"github.com/gan-of-culture/get-sauce/extractors/nhentai"
 	"github.com/gan-of-culture/get-sauce/extractors/nhgroup"
 	"github.com/gan-of-culture/get-sauce/extractors/ninehentai"
-	"github.com/gan-of-culture/get-sauce/extractors/niyaniya"
 	"github.com/gan-of-culture/get-sauce/extractors/ohentai"
 	"github.com/gan-of-culture/get-sauce/extractors/oppai"
 	"github.com/gan-of-culture/get-sauce/extractors/rule34"
@@ -89,7 +88,6 @@ func init() {
 		"latesthentai.com":       nhgroupExtractor,
 		"miohentai.com":          miohentai.New(),
 		"muchohentai.com":        muchohentai.New(),
-		"niyaniya.moe":           niyaniya.New(),
 		"nhentai.net":            nhentai.New(),
 		"ohentai.org":            ohentai.New(),
 		"oppai.stream":           oppai.New(),

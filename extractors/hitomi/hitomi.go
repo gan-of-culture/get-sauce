@@ -1,9 +1,9 @@
 package hitomi
 
 import (
+	"cmp"
 	"encoding/binary"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"net/url"
 	"regexp"
@@ -42,14 +42,15 @@ type gallery struct {
 }
 
 const site = "https://hitomi.la/"
-const nozomi = "https://ltn.hitomi.la/"
+const domain2 = "gold-usergeneratedcontent.net"
+const nozomi = "https://ltn.gold-usergeneratedcontent.net/" // is domain for gg.js
 const readerURL = "https://hitomi.la/reader/"
 const nozomiExt = "nozomi"
 const galleriesPerPage = 25
 const ggURL = nozomi + "gg.js"
 
 var reSubdomainPart = regexp.MustCompile(`\/[0-9a-f]{61}([0-9a-f]{2})([0-9a-f])`)
-var reURLFromURL = regexp.MustCompile(`\/\/..?\.hitomi\.la\/`)
+var reURLFromURL = regexp.MustCompile(`\/\/..?\.(?:gold-usergeneratedcontent\.net|hitomi\.la)\/`)
 var rePathFromHash = regexp.MustCompile(`(..)(.)$`)
 
 var ggValues []*int
@@ -88,7 +89,7 @@ func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 }
 
 func parseURL(URL string) []string {
-	if ok, _ := regexp.MatchString(fmt.Sprintf("%s(?:manga|doujinshi|cg|gamecg)/", site), URL); ok {
+	if ok, _ := regexp.MatchString(fmt.Sprintf("%s(?:manga|doujinshi|cg|gamecg|imageset)/", site), URL); ok {
 		re := regexp.MustCompile(`(\d*).html#*\d*$`)
 		id := re.FindStringSubmatch(URL)[1]
 		return []string{fmt.Sprintf("%sgalleries/%s.js", nozomi, id)}
@@ -137,9 +138,6 @@ func extractData(URL string) (*static.Data, error) {
 	}
 
 	jsonStart := strings.Index(jsString, "{")
-	if err != nil {
-		return nil, errors.New("no json string found for")
-	}
 
 	galleryData := gallery{}
 	err = json.Unmarshal([]byte(jsString[jsonStart:]), &galleryData)
@@ -147,18 +145,18 @@ func extractData(URL string) (*static.Data, error) {
 		return nil, err
 	}
 
-	base := ""
+	dir := ""
 	u := ""
 	imgFile := img{}
 	URLs := []*static.URL{}
 	pages := utils.NeedDownloadList(len(galleryData.Files))
 	for _, pageIdx := range pages {
-		base = ""
+		dir = ""
 		imgFile = galleryData.Files[pageIdx-1]
 		if imgFile.HasWebp == 1 || imgFile.HasAVIF == 1 {
-			base = "a"
+			dir = "avif"
 		}
-		u = urlFromURL(urlFromHash(imgFile), base)
+		u = urlFromURL(urlFromHash(imgFile, dir), dir)
 		URLs = append(URLs, &static.URL{
 			URL: u,
 			Ext: utils.GetLastItemString(strings.Split(u, ".")),
@@ -179,45 +177,48 @@ func extractData(URL string) (*static.Data, error) {
 	}, nil
 }
 
-func subdomainFromURL(URL, base string) string {
-	retval := "b"
-	if base != "" {
-		retval = base
+func subdomainFromURL(URL, base, dir string) string {
+	retval := ""
+	if base == "" {
+		if dir == "webp" {
+			retval = "w"
+		} else if dir == "avif" {
+			retval = "a"
+		}
 	}
 
 	b := 16
 
 	var m = reSubdomainPart.FindStringSubmatch(URL)
 	if len(m) == 0 {
-		return "a"
+		return retval
 	}
 
 	g, err := strconv.ParseInt(m[2]+m[1], b, 64)
 	if err == nil {
-		retval = fmt.Sprintf("%c", 97+inGGValues(int(g))) + retval
+		if base != "" {
+			retval = fmt.Sprintf("%c", 97+inGGValues(int(g))) + base
+		} else {
+			retval = retval + fmt.Sprint((1 + inGGValues(int(g))))
+		}
 	}
 
 	return retval
 }
 
-func urlFromURL(URL, base string) string {
-	return reURLFromURL.ReplaceAllString(URL, fmt.Sprintf("//%s.hitomi.la/", subdomainFromURL(URL, base)))
+func urlFromURL(URL, dir string) string {
+	return reURLFromURL.ReplaceAllString(URL, fmt.Sprintf("//%s.%s/", subdomainFromURL(URL, "", dir), domain2))
 }
 
-func urlFromHash(imgFile img) string {
-	dir := "images"
-	if imgFile.HasWebp == 1 {
-		dir = "webp"
-	}
-	if imgFile.HasAVIF == 1 {
-		dir = "avif"
-	}
-	ext := dir
-	if ext == "images" {
-		ext = strings.Split(imgFile.Name, ".")[1]
+func urlFromHash(imgFile img, dir string) string {
+	ext := cmp.Or(dir, strings.Split(imgFile.Name, ".")[1])
+	if dir == "webp" || dir == "avif" {
+		dir = ""
+	} else {
+		dir += "/"
 	}
 
-	return "https://a.hitomi.la/" + dir + "/" + fullPathFromHash(imgFile.Hash) + "." + ext
+	return fmt.Sprintf("https://a.%s/%s/%s.%s", domain2, dir, fullPathFromHash(imgFile.Hash), ext)
 }
 
 func fullPathFromHash(hash string) string {
@@ -243,9 +244,6 @@ func initGGValues() error {
 		return err
 	}
 	ggMatchedValue, _ = strconv.Atoi(strings.Trim(matchedLimitValues[1], ";"))
-	if err != nil {
-		return err
-	}
 
 	re := regexp.MustCompile(`case (\d+)`)
 	matchedCases := re.FindAllStringSubmatch(jsStr, -1)
