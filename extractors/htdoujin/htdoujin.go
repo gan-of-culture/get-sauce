@@ -56,7 +56,7 @@ var cdnDetermenationID CDNDetermenationID
 var cdnPrefixLevels []int
 var readerURLPrefix string
 
-var reMainJsPath *regexp.Regexp = regexp.MustCompile(`js/main_\w+\.js`)
+var reMainJsPath *regexp.Regexp = regexp.MustCompile(`js/main[_\.]\w+\.js`)
 var reGID *regexp.Regexp = regexp.MustCompile(`/gallery/(\d+)/`)
 var reUIDLevels *regexp.Regexp = regexp.MustCompile(`u_id\s*>\s*(\d+)`)
 var reTitle *regexp.Regexp = regexp.MustCompile(`<title>(.+)</title>`)

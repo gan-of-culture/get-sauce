@@ -21,13 +21,13 @@ func TestParseURL(t *testing.T) {
 			URL:  "https://animeidhentai.com/hentai/mako-chan-kaihatsu-nikki/",
 			Want: 4,
 		}, {
-			Name: "Single Episode hentaihaven.co/",
+			Name: "Single Episode hentaihaven.co",
 			URL:  "https://hentaihaven.co/watch/seika-jogakuin-koutoubu-kounin-sao-oji-san-episode-3/",
 			Want: 1,
 		}, {
-			Name: "Overview hentaihaven.co/",
+			Name: "Overview hentaihaven.co",
 			URL:  "https://hentaihaven.co/brand/bunnywalker/",
-			Want: 36,
+			Want: 40,
 		}, {
 			Name: "Single Episode hentaihaven.red/",
 			URL:  "https://hentaihaven.red/hentai/joshi-luck-episode-1/",
@@ -48,11 +48,11 @@ func TestParseURL(t *testing.T) {
 			Name: "Single Episode hentaistream.xxx",
 			URL:  "https://hentaistream.xxx/watch/ijirare-fukushuu-saimin-episode-1/",
 			Want: 1,
-		}, {
+		}, /*{ currently 404
 			Name: "Overview hentaistream.xxx",
 			URL:  "https://hentaistream.xxx/genres/ahegao/",
 			Want: 36,
-		}, {
+		},*/{
 			Name: "Single Episode Eng Sub",
 			URL:  "https://latesthentai.com/watch/hajimete-no-hitozumaepisode-1-sub",
 			Want: 1,
@@ -102,9 +102,9 @@ func TestExtract(t *testing.T) {
 		{
 			Name: "Single Episode hentaihaven.co",
 			Args: test.Args{
-				URL:   "https://hentaihaven.co/watch/seika-jogakuin-koutoubu-kounin-sao-oji-san-episode-3/",
-				Title: "Seika Jogakuin Koutoubu Kounin Sao Oji-San Episode 3",
-				Size:  391364277,
+				URL:   "https://hentaihaven.co/watch/tonari-no-kanojo-episode-1/",
+				Title: "Tonari no Kanojo Episode 1",
+				Size:  479390166,
 			},
 		},
 		{

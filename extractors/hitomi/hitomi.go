@@ -113,6 +113,7 @@ func parseURL(URL string) []string {
 		pageNumber, _ = strconv.Atoi(matchedPageNumber[1])
 	}
 
+	// from galleryblock.js func fetchnozomi
 	startByte := (pageNumber - 1) * galleriesPerPage * 4
 	endByte := startByte + galleriesPerPage*4 - 1
 	htmlData, err := request.GetAsBytesWithHeaders(nozomiURL, map[string]string{

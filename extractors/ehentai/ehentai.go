@@ -108,7 +108,7 @@ func extractData(URL string) ([]*static.Data, error) {
 
 		matchedFileInfo := reFileInfo.FindAllStringSubmatch(htmlString, -1)
 		if len(matchedFileInfo) == 0 {
-			return nil, errors.New("invaild image file info")
+			return nil, fmt.Errorf("invaild image file info for image idx: %d", idx)
 		}
 		fileInfo := matchedFileInfo[0]
 

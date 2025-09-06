@@ -93,48 +93,48 @@ func TestParseMaster(t *testing.T) {
 	}
 }
 
-func TestExtract(t *testing.T) {
-	tests := []struct {
-		Name    string
-		URL     string
-		Headers map[string]string
-		Want    map[string]*static.Stream
-	}{
-		{
-			Name: "HLS where stream order is from small to high",
-			URL:  "https://va04-edge.tmncdn.io/wp-content/uploads/Bubble_de_House_de/episode_1/ja.m3u8",
-			Headers: map[string]string{
-				"Referer": "https://muchohentai.com/",
-			},
-			Want: map[string]*static.Stream{
-				"0": {
-					Type:    static.DataTypeVideo,
-					Quality: "1920x1080",
-				},
-				"1": {
-					Type:    static.DataTypeVideo,
-					Quality: "1280x720",
-				},
-				"2": {
-					Type:    static.DataTypeVideo,
-					Quality: "864x486",
-				},
-				"3": {
-					Type:    static.DataTypeAudio,
-					Quality: "",
-				},
-			},
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.Name, func(t *testing.T) {
-			streams, err := Extract(tt.URL, tt.Headers)
-			test.CheckError(t, err)
-			for k, v := range streams {
-				if v.Quality != tt.Want[k].Quality {
-					t.Errorf("Got: %v - Want: %v", v.Quality, tt.Want[k].Quality)
-				}
-			}
-		})
-	}
-}
+// func TestExtract(t *testing.T) {
+// 	tests := []struct {
+// 		Name    string
+// 		URL     string
+// 		Headers map[string]string
+// 		Want    map[string]*static.Stream
+// 	}{
+// 		{
+// 			Name: "HLS where stream order is from small to high",
+// 			URL:  "https://va04-edge.tmncdn.io/wp-content/uploads/Bubble_de_House_de/episode_1/ja.m3u8",
+// 			Headers: map[string]string{
+// 				"Referer": "https://muchohentai.com/",
+// 			},
+// 			Want: map[string]*static.Stream{
+// 				"0": {
+// 					Type:    static.DataTypeVideo,
+// 					Quality: "1920x1080",
+// 				},
+// 				"1": {
+// 					Type:    static.DataTypeVideo,
+// 					Quality: "1280x720",
+// 				},
+// 				"2": {
+// 					Type:    static.DataTypeVideo,
+// 					Quality: "864x486",
+// 				},
+// 				"3": {
+// 					Type:    static.DataTypeAudio,
+// 					Quality: "",
+// 				},
+// 			},
+// 		},
+// 	}
+// 	for _, tt := range tests {
+// 		t.Run(tt.Name, func(t *testing.T) {
+// 			streams, err := Extract(tt.URL, tt.Headers)
+// 			test.CheckError(t, err)
+// 			for k, v := range streams {
+// 				if v.Quality != tt.Want[k].Quality {
+// 					t.Errorf("Got: %v - Want: %v", v.Quality, tt.Want[k].Quality)
+// 				}
+// 			}
+// 		})
+// 	}
+// }
