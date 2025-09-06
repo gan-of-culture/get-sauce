@@ -288,7 +288,7 @@ The following links will direct you to adult content. Please keep that in mind!
 | [hentaimama.io(1080p, 720p)](https://hentaimama.io)                             |         ?          | :heavy_check_mark: |
 | [hentaipulse.com(720p, 420p)](https://hentaipulse.com)                          |         ?          | :heavy_check_mark: |
 | [hentairox.com](https://hentairox.com)                                          | :heavy_check_mark: |         ?          |
-| [hstream.moe (2160p, 1080p, 480p)](https://hstream.moe/)                        |         ?          | :heavy_check_mark: |   :cookie:   | #164 |
+| [hstream.moe (2160p, 1080p, 480p)](https://hstream.moe/)                        |         ?          | :heavy_check_mark: |   :cookie:   | [#164](https://github.com/gan-of-culture/get-sauce/issues/164) |
 | [hentaivideos.net (1080p, 720p, 480p, 360p)](https://hentaivideos.net/)         |         ?          | :heavy_check_mark: |
 | [hentaiworld.tv (1080p, 720p, 480p)](https://hentaiworld.tv/)                   |         ?          | :heavy_check_mark: |
 | [hentaiyes.com (1080p, 720p, 480p, 360p)](https://hentaiyes.com/)               |         ?          | :heavy_check_mark: |
