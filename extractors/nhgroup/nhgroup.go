@@ -57,7 +57,7 @@ func ParseURL(URL string) []string {
 		return []string{}
 	}
 
-	re := regexp.MustCompile(`https[^"\s]*?(?:hentai|video|watch|\d+)\/[\w\-_/]+"`)
+	re := regexp.MustCompile(`/(?:hentai|video|watch|\d+)\/[\w\-_/]+"`)
 	matchedURLs := re.FindAllString(htmlString, -1)
 	if len(matchedURLs) == 0 {
 		matchedURLs = animestream.ParseURLwoSite(URL)
@@ -92,7 +92,7 @@ func ExtractData(URL string) (*static.Data, error) {
 			return nil, err
 		}
 		if data[0].Title == strings.ToLower(data[0].Title) {
-			data[0].Title = utils.GetH1(&htmlString, -1)
+			data[0].Title = utils.GetH1(&htmlString, 0)
 			baseURL, err := url.Parse(URL)
 			if err != nil {
 				return nil, err

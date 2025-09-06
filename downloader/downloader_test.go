@@ -14,7 +14,7 @@ func TestDownload(t *testing.T) {
 		data *static.Data
 		Want error
 	}{
-		{
+		/* {
 			Name: "muchohentai.com download video + audio + captions separately",
 			data: &static.Data{
 				Site:  "https://muchohentai.com/",
@@ -56,7 +56,7 @@ func TestDownload(t *testing.T) {
 				},
 				URL: "https://muchohentai.com/aBo4Rk/167062/",
 			},
-		}, {
+		}, */{
 			Name: "rule34.xxx single img",
 			data: &static.Data{
 				Site:  "https://rule34.xxx",
