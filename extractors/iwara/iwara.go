@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"maps"
 	"net/url"
 	"regexp"
 	"strconv"
@@ -18,37 +19,37 @@ import (
 )
 
 type File struct {
-	ID            string      `json:"id"`
-	Type          string      `json:"type"`
-	Path          string      `json:"path"`
-	Name          string      `json:"name"`
-	Mime          string      `json:"mime"`
-	Size          int         `json:"size"`
-	Width         interface{} `json:"width"`
-	Height        interface{} `json:"height"`
-	Duration      interface{} `json:"duration"`
-	NumThumbnails int         `json:"numThumbnails"`
-	CreatedAt     time.Time   `json:"createdAt"`
-	UpdatedAt     time.Time   `json:"updatedAt"`
+	ID            string    `json:"id"`
+	Type          string    `json:"type"`
+	Path          string    `json:"path"`
+	Name          string    `json:"name"`
+	Mime          string    `json:"mime"`
+	Size          int       `json:"size"`
+	Width         any       `json:"width"`
+	Height        any       `json:"height"`
+	Duration      any       `json:"duration"`
+	NumThumbnails int       `json:"numThumbnails"`
+	CreatedAt     time.Time `json:"createdAt"`
+	UpdatedAt     time.Time `json:"updatedAt"`
 }
 
 type MediaInfo struct {
-	ID              string      `json:"id"`
-	Slug            string      `json:"slug"`
-	Title           string      `json:"title"`
-	Body            string      `json:"body"`
-	Status          string      `json:"status"`
-	Rating          string      `json:"rating"`
-	Private         bool        `json:"private"`
-	Unlisted        bool        `json:"unlisted"`
-	Thumbnail       interface{} `json:"thumbnail"`
-	EmbedURL        interface{} `json:"embedUrl"`
-	Liked           bool        `json:"liked"`
-	NumLikes        int         `json:"numLikes"`
-	NumViews        int         `json:"numViews"`
-	NumComments     int         `json:"numComments"`
-	File            File        `json:"file"`
-	CustomThumbnail interface{} `json:"customThumbnail"`
+	ID              string `json:"id"`
+	Slug            string `json:"slug"`
+	Title           string `json:"title"`
+	Body            string `json:"body"`
+	Status          string `json:"status"`
+	Rating          string `json:"rating"`
+	Private         bool   `json:"private"`
+	Unlisted        bool   `json:"unlisted"`
+	Thumbnail       any    `json:"thumbnail"`
+	EmbedURL        any    `json:"embedUrl"`
+	Liked           bool   `json:"liked"`
+	NumLikes        int    `json:"numLikes"`
+	NumViews        int    `json:"numViews"`
+	NumComments     int    `json:"numComments"`
+	File            File   `json:"file"`
+	CustomThumbnail any    `json:"customThumbnail"`
 	User            struct {
 		ID         string    `json:"id"`
 		Name       string    `json:"name"`
@@ -61,32 +62,32 @@ type MediaInfo struct {
 		Premium    bool      `json:"premium"`
 		SeenAt     time.Time `json:"seenAt"`
 		Avatar     struct {
-			ID            string      `json:"id"`
-			Type          string      `json:"type"`
-			Path          string      `json:"path"`
-			Name          string      `json:"name"`
-			Mime          string      `json:"mime"`
-			Size          int         `json:"size"`
-			Width         interface{} `json:"width"`
-			Height        interface{} `json:"height"`
-			Duration      interface{} `json:"duration"`
-			NumThumbnails interface{} `json:"numThumbnails"`
-			CreatedAt     time.Time   `json:"createdAt"`
-			UpdatedAt     time.Time   `json:"updatedAt"`
+			ID            string    `json:"id"`
+			Type          string    `json:"type"`
+			Path          string    `json:"path"`
+			Name          string    `json:"name"`
+			Mime          string    `json:"mime"`
+			Size          int       `json:"size"`
+			Width         any       `json:"width"`
+			Height        any       `json:"height"`
+			Duration      any       `json:"duration"`
+			NumThumbnails any       `json:"numThumbnails"`
+			CreatedAt     time.Time `json:"createdAt"`
+			UpdatedAt     time.Time `json:"updatedAt"`
 		} `json:"avatar"`
-		CreatedAt time.Time   `json:"createdAt"`
-		UpdatedAt time.Time   `json:"updatedAt"`
-		DeletedAt interface{} `json:"deletedAt"`
+		CreatedAt time.Time `json:"createdAt"`
+		UpdatedAt time.Time `json:"updatedAt"`
+		DeletedAt any       `json:"deletedAt"`
 	} `json:"user"`
 	Tags []struct {
 		ID   string `json:"id"`
 		Type string `json:"type"`
 	} `json:"tags"`
-	CreatedAt time.Time   `json:"createdAt"`
-	UpdatedAt time.Time   `json:"updatedAt"`
-	DeletedAt interface{} `json:"deletedAt"`
-	Files     []File      `json:"files"`
-	FileURL   string      `json:"fileUrl"`
+	CreatedAt time.Time `json:"createdAt"`
+	UpdatedAt time.Time `json:"updatedAt"`
+	DeletedAt any       `json:"deletedAt"`
+	Files     []File    `json:"files"`
+	FileURL   string    `json:"fileUrl"`
 }
 
 type VideoSource struct {
@@ -106,35 +107,35 @@ type SearchResult struct {
 	Limit   int `json:"limit"`
 	Page    int `json:"page"`
 	Results []struct {
-		ID        string      `json:"id"`
-		Slug      string      `json:"slug"`
-		Title     string      `json:"title"`
-		Body      interface{} `json:"body"`
+		ID        string `json:"id"`
+		Slug      string `json:"slug"`
+		Title     string `json:"title"`
+		Body      any    `json:"body"`
 		Thumbnail struct {
-			ID            string      `json:"id"`
-			Type          string      `json:"type"`
-			Path          string      `json:"path"`
-			Name          string      `json:"name"`
-			Mime          string      `json:"mime"`
-			Size          int         `json:"size"`
-			Width         int         `json:"width"`
-			Height        int         `json:"height"`
-			Duration      interface{} `json:"duration"`
-			NumThumbnails interface{} `json:"numThumbnails"`
-			CreatedAt     time.Time   `json:"createdAt"`
-			UpdatedAt     time.Time   `json:"updatedAt"`
+			ID            string    `json:"id"`
+			Type          string    `json:"type"`
+			Path          string    `json:"path"`
+			Name          string    `json:"name"`
+			Mime          string    `json:"mime"`
+			Size          int       `json:"size"`
+			Width         int       `json:"width"`
+			Height        int       `json:"height"`
+			Duration      any       `json:"duration"`
+			NumThumbnails any       `json:"numThumbnails"`
+			CreatedAt     time.Time `json:"createdAt"`
+			UpdatedAt     time.Time `json:"updatedAt"`
 		} `json:"thumbnail"`
-		Rating      string        `json:"rating"`
-		Liked       bool          `json:"liked"`
-		NumImages   int           `json:"numImages"`
-		NumLikes    int           `json:"numLikes"`
-		NumViews    int           `json:"numViews"`
-		NumComments int           `json:"numComments"`
-		File        File          `json:"file"`
-		CreatedAt   time.Time     `json:"createdAt"`
-		UpdatedAt   time.Time     `json:"updatedAt"`
-		DeletedAt   interface{}   `json:"deletedAt"`
-		Files       []interface{} `json:"files"`
+		Rating      string    `json:"rating"`
+		Liked       bool      `json:"liked"`
+		NumImages   int       `json:"numImages"`
+		NumLikes    int       `json:"numLikes"`
+		NumViews    int       `json:"numViews"`
+		NumComments int       `json:"numComments"`
+		File        File      `json:"file"`
+		CreatedAt   time.Time `json:"createdAt"`
+		UpdatedAt   time.Time `json:"updatedAt"`
+		DeletedAt   any       `json:"deletedAt"`
+		Files       []any     `json:"files"`
 		Tags        []struct {
 			ID   string `json:"id"`
 			Type string `json:"type"`
@@ -151,22 +152,22 @@ type SearchResult struct {
 			Premium    bool      `json:"premium"`
 			SeenAt     time.Time `json:"seenAt"`
 			Avatar     struct {
-				ID            string      `json:"id"`
-				Type          string      `json:"type"`
-				Path          string      `json:"path"`
-				Name          string      `json:"name"`
-				Mime          string      `json:"mime"`
-				Size          int         `json:"size"`
-				Width         int         `json:"width"`
-				Height        int         `json:"height"`
-				Duration      interface{} `json:"duration"`
-				NumThumbnails interface{} `json:"numThumbnails"`
-				CreatedAt     time.Time   `json:"createdAt"`
-				UpdatedAt     time.Time   `json:"updatedAt"`
+				ID            string    `json:"id"`
+				Type          string    `json:"type"`
+				Path          string    `json:"path"`
+				Name          string    `json:"name"`
+				Mime          string    `json:"mime"`
+				Size          int       `json:"size"`
+				Width         int       `json:"width"`
+				Height        int       `json:"height"`
+				Duration      any       `json:"duration"`
+				NumThumbnails any       `json:"numThumbnails"`
+				CreatedAt     time.Time `json:"createdAt"`
+				UpdatedAt     time.Time `json:"updatedAt"`
 			} `json:"avatar"`
-			CreatedAt time.Time   `json:"createdAt"`
-			UpdatedAt time.Time   `json:"updatedAt"`
-			DeletedAt interface{} `json:"deletedAt"`
+			CreatedAt time.Time `json:"createdAt"`
+			UpdatedAt time.Time `json:"updatedAt"`
+			DeletedAt any       `json:"deletedAt"`
 		} `json:"user"`
 	} `json:"results"`
 }
@@ -290,9 +291,7 @@ func extractData(URL string) ([]*static.Data, error) {
 		if err != nil {
 			return nil, err
 		}
-		for k, v := range mediaStreams {
-			streams[k] = v
-		}
+		maps.Copy(streams, mediaStreams)
 	}
 
 	return []*static.Data{

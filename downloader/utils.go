@@ -6,7 +6,7 @@ import (
 	"os/exec"
 	"path/filepath"
 	"regexp"
-	"sort"
+	"slices"
 	"strconv"
 	"strings"
 
@@ -25,9 +25,7 @@ func GenSortedStreams(streams map[string]*static.Stream) []*static.Stream {
 	if len(index) < 1 {
 		return nil
 	}
-	sort.Slice(index, func(i, j int) bool {
-		return index[i] < index[j]
-	})
+	slices.Sort(index)
 
 	sortedStreams := make([]*static.Stream, 0, len(streams))
 	for _, i := range index {

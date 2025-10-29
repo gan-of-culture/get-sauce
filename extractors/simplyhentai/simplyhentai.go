@@ -18,10 +18,10 @@ type state struct {
 			Status int `json:"status"`
 			Tag    struct {
 				Albums []struct {
-					CommentCount int         `json:"comment_count"`
-					Description  interface{} `json:"description"`
-					ID           int         `json:"id"`
-					ImageCount   int         `json:"image_count"`
+					CommentCount int `json:"comment_count"`
+					Description  any `json:"description"`
+					ID           int `json:"id"`
+					ImageCount   int `json:"image_count"`
 					Language     struct {
 						Name     string `json:"name"`
 						Slug     string `json:"slug"`
@@ -82,13 +82,13 @@ type state struct {
 						GiantThumb string `json:"giant_thumb"`
 					} `json:"sizes"`
 				} `json:"preview"`
-				Redirected bool        `json:"redirected"`
-				Related    interface{} `json:"related"`
-				Series     interface{} `json:"series"`
-				Slug       string      `json:"slug"`
-				Title      string      `json:"title"`
-				Type       string      `json:"type"`
-				Views      int         `json:"views"`
+				Redirected bool   `json:"redirected"`
+				Related    any    `json:"related"`
+				Series     any    `json:"series"`
+				Slug       string `json:"slug"`
+				Title      string `json:"title"`
+				Type       string `json:"type"`
+				Views      int    `json:"views"`
 			} `json:"tag"`
 			Manga struct {
 				Anijunky struct {
@@ -125,11 +125,11 @@ type state struct {
 					Synonyms    []string `json:"synonyms"`
 					Title       string   `json:"title"`
 				} `json:"anijunky"`
-				CommentCount int         `json:"comment_count"`
-				CreatedAt    time.Time   `json:"created_at"`
-				Description  interface{} `json:"description"`
-				ID           int         `json:"id"`
-				ImageCount   int         `json:"image_count"`
+				CommentCount int       `json:"comment_count"`
+				CreatedAt    time.Time `json:"created_at"`
+				Description  any       `json:"description"`
+				ID           int       `json:"id"`
+				ImageCount   int       `json:"image_count"`
 				Images       []struct {
 					ID      int `json:"id"`
 					PageNum int `json:"page_num"`
@@ -152,8 +152,8 @@ type state struct {
 					Slug     string `json:"slug"`
 					FlagCode string `json:"flag_code"`
 				} `json:"language"`
-				New            bool          `json:"new"`
-				OtherLanguages []interface{} `json:"other_languages"`
+				New            bool  `json:"new"`
+				OtherLanguages []any `json:"other_languages"`
 				Parodies       []struct {
 					ID          int    `json:"id"`
 					Letter      string `json:"letter"`
@@ -176,10 +176,10 @@ type state struct {
 				} `json:"reactions"`
 				Redirected bool `json:"redirected"`
 				Related    []struct {
-					CommentCount int         `json:"comment_count"`
-					Description  interface{} `json:"description"`
-					ID           int         `json:"id"`
-					ImageCount   int         `json:"image_count"`
+					CommentCount int `json:"comment_count"`
+					Description  any `json:"description"`
+					ID           int `json:"id"`
+					ImageCount   int `json:"image_count"`
 					Language     struct {
 						Name     string `json:"name"`
 						Slug     string `json:"slug"`
@@ -237,13 +237,13 @@ type state struct {
 		Type string `json:"type"`
 		Slug string `json:"slug"`
 	} `json:"query"`
-	BuildID      string        `json:"buildId"`
-	IsFallback   bool          `json:"isFallback"`
-	DynamicIds   []int         `json:"dynamicIds"`
-	CustomServer bool          `json:"customServer"`
-	Gip          bool          `json:"gip"`
-	AppGip       bool          `json:"appGip"`
-	ScriptLoader []interface{} `json:"scriptLoader"`
+	BuildID      string `json:"buildId"`
+	IsFallback   bool   `json:"isFallback"`
+	DynamicIds   []int  `json:"dynamicIds"`
+	CustomServer bool   `json:"customServer"`
+	Gip          bool   `json:"gip"`
+	AppGip       bool   `json:"appGip"`
+	ScriptLoader []any  `json:"scriptLoader"`
 }
 
 const site = "https://www.simply-hentai.com/"

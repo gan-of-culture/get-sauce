@@ -25,8 +25,8 @@ type stream struct {
 }
 
 type videoData struct {
-	Error          interface{} `json:"error"`
-	ServerRendered bool        `json:"serverRendered"`
+	Error          any  `json:"error"`
+	ServerRendered bool `json:"serverRendered"`
 	State          struct {
 		Data struct {
 			Video struct {

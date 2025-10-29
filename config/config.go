@@ -1,7 +1,7 @@
 package config
 
 var (
-	//Amount of files to download
+	// Amount of files to download
 	Amount int
 	// Caption to download if available
 	Caption int

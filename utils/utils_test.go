@@ -377,23 +377,69 @@ func TestWrap(t *testing.T) {
 
 func TestGetFileExt(t *testing.T) {
 	tests := []struct {
-		in   string
+		Name string
+		In   string
 		Want string
 	}{
 		{
-			in:   "https://longurl.demo?fileext=mp4",
+			Name: "From URL query",
+			In:   "https://longurl.demo?fileext=mp4",
 			Want: "mp4",
 		}, {
-			in:   "filename.mkv",
+			Name: "Default",
+			In:   "filename.mkv",
 			Want: "mkv",
 		},
 	}
 	for _, tt := range tests {
-		t.Run(tt.in, func(t *testing.T) {
-			ext := GetFileExt(tt.in)
+		t.Run(tt.Name, func(t *testing.T) {
+			ext := GetFileExt(tt.In)
 
 			if ext != tt.Want {
 				t.Errorf("Got: %v - Want: %v", ext, tt.Want)
+			}
+		})
+	}
+}
+
+func TestSortStreamsBySize(t *testing.T) {
+	tests := []struct {
+		Name string
+		In   map[string]*static.Stream
+		Want map[string]*static.Stream
+	}{
+		{
+			Name: "Unsorted",
+			In: map[string]*static.Stream{
+				"0": {
+					Size: 1234567,
+				},
+				"1": {
+					Size: 123456,
+				},
+				"2": {
+					Size: 12345678,
+				},
+			},
+			Want: map[string]*static.Stream{
+				"0": {
+					Size: 12345678,
+				},
+				"1": {
+					Size: 1234567,
+				},
+				"2": {
+					Size: 123456,
+				},
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.Name, func(t *testing.T) {
+			streams := SortStreamsBySize(tt.In)
+
+			if !reflect.DeepEqual(streams, tt.Want) {
+				t.Errorf("Got: %v - Want: %v", streams, tt.Want)
 			}
 		})
 	}

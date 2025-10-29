@@ -40,9 +40,10 @@ func TestExtract(t *testing.T) {
 		{
 			Name: "Single Episode using HLS only",
 			Args: test.Args{
-				URL:   "https://hentaimama.io/episodes/kuroinu-ii-animation-episode-1/",
-				Title: "Kuroinu II The Animation Episode 1",
-				Size:  172537611,
+				URL:     "https://hentaimama.io/episodes/kuroinu-ii-animation-episode-1/",
+				Title:   "Kuroinu II The Animation Episode 1",
+				Quality: "1280x720",
+				Size:    446315760,
 			},
 		},
 		{

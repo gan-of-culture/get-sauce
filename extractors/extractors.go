@@ -13,10 +13,9 @@ import (
 	"github.com/gan-of-culture/get-sauce/extractors/hentai2w"
 	"github.com/gan-of-culture/get-sauce/extractors/hentaicloud"
 	"github.com/gan-of-culture/get-sauce/extractors/hentaifoundry"
-	"github.com/gan-of-culture/get-sauce/extractors/hentaihaven"
-	"github.com/gan-of-culture/get-sauce/extractors/hentaihavenred"
 	"github.com/gan-of-culture/get-sauce/extractors/hentaimama"
 	"github.com/gan-of-culture/get-sauce/extractors/hentaimoon"
+	"github.com/gan-of-culture/get-sauce/extractors/hentainexus"
 	"github.com/gan-of-culture/get-sauce/extractors/hentaipulse"
 	"github.com/gan-of-culture/get-sauce/extractors/hentaivideos"
 	"github.com/gan-of-culture/get-sauce/extractors/hentaiworld"
@@ -70,9 +69,8 @@ func init() {
 		"www.hentai-foundry.com": hentaifoundry.New(),
 		"hentaifox.com":          htdoujinExtractor,
 		"hentaihaven.co":         nhgroupExtractor,
-		"hentaihaven.com":        hentaihaven.New(),
-		"hentaihaven.red":        hentaihavenred.New(),
 		"hentaimama.io":          hentaimama.New(),
+		"hentainexus.com":        hentainexus.New(),
 		"hentaipulse.com":        hentaipulse.New(),
 		"hentairox.com":          htdoujinExtractor,
 		"hstream.moe":            hstream.New(),

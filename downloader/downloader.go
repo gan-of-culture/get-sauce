@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"log"
+	"maps"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -137,9 +138,7 @@ func (downloader *downloaderStruct) downloadStream(data *static.Data) (string, e
 
 	headers := config.FakeHeaders
 	headers["Referer"] = data.URL
-	for k, v := range downloader.stream.Headers {
-		headers[k] = v
-	}
+	maps.Copy(headers, downloader.stream.Headers)
 
 	lenOfUrls := len(downloader.stream.URLs)
 	appendEnum := false
@@ -150,16 +149,11 @@ func (downloader *downloaderStruct) downloadStream(data *static.Data) (string, e
 	var saveErr error
 	lock := sync.Mutex{}
 	URLchan := make(chan downloadInfo, lenOfUrls)
-
-	workers := config.Workers
-	if config.Workers > lenOfUrls {
-		workers = lenOfUrls
-	}
-
+	workers := min(config.Workers, lenOfUrls)
 	var wg sync.WaitGroup
 	wg.Add(workers)
 
-	for i := 0; i < workers; i++ {
+	for range workers {
 		go func() {
 			defer wg.Done()
 			for {

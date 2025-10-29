@@ -153,7 +153,7 @@ func extractData(URL string) (*static.Data, error) {
 	pages := utils.NeedDownloadList(len(galleryData.Files))
 	for _, pageIdx := range pages {
 		dir = ""
-		imgFile = galleryData.Files[pageIdx-1]
+		imgFile = galleryData.Files[pageIdx]
 		if imgFile.HasWebp == 1 || imgFile.HasAVIF == 1 {
 			dir = "avif"
 		}
@@ -181,9 +181,10 @@ func extractData(URL string) (*static.Data, error) {
 func subdomainFromURL(URL, base, dir string) string {
 	retval := ""
 	if base == "" {
-		if dir == "webp" {
+		switch dir {
+		case "webp":
 			retval = "w"
-		} else if dir == "avif" {
+		case "avif":
 			retval = "a"
 		}
 	}

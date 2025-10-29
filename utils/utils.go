@@ -4,7 +4,10 @@ import (
 	"errors"
 	"fmt"
 	"html"
+	"maps"
 	"regexp"
+	"slices"
+	"sort"
 	"strconv"
 	"strings"
 
@@ -59,9 +62,9 @@ func NeedDownloadList(length int) []int {
 	if config.Pages != "" {
 		var items []int
 		var selStart, selEnd int
-		temp := strings.Split(config.Pages, ",")
+		temp := strings.SplitSeq(config.Pages, ",")
 
-		for _, i := range temp {
+		for i := range temp {
 			selection := strings.Split(i, "-")
 			selStart, _ = strconv.Atoi(strings.TrimSpace(selection[0]))
 
@@ -78,7 +81,7 @@ func NeedDownloadList(length int) []int {
 		return items
 	}
 	out := []int{}
-	for i := 1; i <= length; i++ {
+	for i := range length {
 		out = append(out, i)
 	}
 	return out
@@ -165,4 +168,17 @@ func Wrap(err error, ctx string) error {
 func GetFileExt(str string) string {
 	re := regexp.MustCompile(`\w+$`)
 	return re.FindString(str)
+}
+
+// SortStreamsBySize descending
+func SortStreamsBySize(streams map[string]*static.Stream) map[string]*static.Stream {
+	s := slices.Collect(maps.Values(streams))
+	sort.Slice(s, func(i, j int) bool {
+		return s[i].Size > s[j].Size
+	})
+	out := make(map[string]*static.Stream, len(s))
+	for idx, stream := range s {
+		out[fmt.Sprint(idx)] = stream
+	}
+	return out
 }

@@ -154,8 +154,8 @@ func extractData(URL string) (*static.Data, error) {
 
 		idx += 1
 		mirrorIdx += 1
-		log.Println(streams)
-		log.Println(idx)
+		//log.Println(streams)
+		//log.Println(idx)
 		streams[fmt.Sprint(idx)] = &static.Stream{
 			Type: static.DataTypeVideo,
 			URLs: []*static.URL{
@@ -170,6 +170,8 @@ func extractData(URL string) (*static.Data, error) {
 		}
 		continue
 	}
+
+	streams = utils.SortStreamsBySize(streams)
 
 	return &static.Data{
 		Site:    site,

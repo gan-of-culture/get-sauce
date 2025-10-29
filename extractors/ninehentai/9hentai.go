@@ -41,10 +41,10 @@ type items struct {
 }
 
 type searchTag struct {
-	Items items         `json:"items"`
-	Tags  []interface{} `json:"tags"`
-	Text  string        `json:"text"`
-	Type  uint          `json:"type"`
+	Items items  `json:"items"`
+	Tags  []any  `json:"tags"`
+	Text  string `json:"text"`
+	Type  uint   `json:"type"`
 }
 
 type pages struct {

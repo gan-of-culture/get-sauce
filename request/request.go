@@ -104,8 +104,8 @@ func Request(method string, URL string, headers map[string]string, body io.Reade
 	}
 
 	if config.UserHeaders != "" {
-		values := strings.Split(config.UserHeaders, "\n")
-		for _, val := range values {
+		values := strings.SplitSeq(config.UserHeaders, "\n")
+		for val := range values {
 			keyValue := strings.Split(val, ":")
 			if len(keyValue) < 2 {
 				continue

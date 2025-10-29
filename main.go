@@ -66,10 +66,7 @@ func download(URL string) {
 		3. lenOfData = 1-10 but big file size e.g.hentai video
 		here in main we will deal with the first type
 	*/
-	workers := config.Workers
-	if workers > lenOfData {
-		workers = lenOfData
-	}
+	workers := min(config.Workers, lenOfData)
 
 	var wg sync.WaitGroup
 	wg.Add(workers)

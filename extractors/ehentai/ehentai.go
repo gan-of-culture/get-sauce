@@ -96,7 +96,7 @@ func extractData(URL string) ([]*static.Data, error) {
 
 	data := []*static.Data{}
 	for _, idx := range utils.NeedDownloadList(len(imgURLs)) {
-		htmlString, err := request.Get(imgURLs[idx-1])
+		htmlString, err := request.Get(imgURLs[idx])
 		if err != nil {
 			return nil, err
 		}
@@ -122,7 +122,7 @@ func extractData(URL string) ([]*static.Data, error) {
 
 		data = append(data, &static.Data{
 			Site:  site,
-			Title: fmt.Sprintf("%s - %d", title, idx),
+			Title: fmt.Sprintf("%s - %d", title, idx+1),
 			Type:  static.DataTypeImage,
 			Streams: map[string]*static.Stream{
 				"0": {
@@ -137,7 +137,7 @@ func extractData(URL string) ([]*static.Data, error) {
 					Size:    utils.CalcSizeInByte(fSize, fileInfo[4]),
 				},
 			},
-			URL: imgURLs[idx-1],
+			URL: imgURLs[idx],
 		})
 
 	}

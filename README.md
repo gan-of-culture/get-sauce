@@ -282,10 +282,9 @@ The following links will direct you to adult content. Please keep that in mind!
 | [www.hentai-foundry.com](https://www.hentai-foundry.com/)                       | :heavy_check_mark: |         ?          |
 | [hentaifox.com](https://hentaifox.com)                                          | :heavy_check_mark: |         ?          |
 | [hentaihaven.co (1080p, 720p, 480p, 360p)](https://hentaihaven.co)              |         ?          | :heavy_check_mark: |
-| [hentaihaven.com (1080p, 720p, 480p, 360p)](https://hentaihaven.com)            |         ?          | :heavy_check_mark: |
-| [hentaihaven.red (1080p, 720p, 480p, 360p)](https://hentaihaven.red)            |         ?          | :heavy_check_mark: |
 | [hentaihaven.xxx (1080p, 720p, 480p, 360p)](https://hentaihaven.xxx)            |         ?          | :heavy_check_mark: |
 | [hentaimama.io(1080p, 720p)](https://hentaimama.io)                             |         ?          | :heavy_check_mark: |
+| [hentainexus.com](https://hentainexus.com)                                      | :heavy_check_mark: |         ?          |
 | [hentaipulse.com(720p, 420p)](https://hentaipulse.com)                          |         ?          | :heavy_check_mark: |
 | [hentairox.com](https://hentairox.com)                                          | :heavy_check_mark: |         ?          |
 | [hstream.moe (2160p, 1080p, 480p)](https://hstream.moe/)                        |         ?          | :heavy_check_mark: |   :cookie:   | [#164](https://github.com/gan-of-culture/get-sauce/issues/164) |

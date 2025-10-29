@@ -59,7 +59,7 @@ func ParseMaster(master *string) ([]*static.Stream, error) {
 	}
 
 	params := map[string]string{}
-	for _, param := range strings.Split(matchedAudioStream[1], ",") {
+	for param := range strings.SplitSeq(matchedAudioStream[1], ",") {
 		splitParam := strings.Split(param, "=")
 		params[splitParam[0]] = strings.Trim(splitParam[1], `"`)
 	}
@@ -211,13 +211,13 @@ func Extract(URL string, headers map[string]string) (map[string]*static.Stream, 
 	sort.Slice(mediaStreams, func(i, j int) bool {
 		resVal := 0
 		resValI := 0
-		for _, v := range strings.Split(mediaStreams[i].Quality, "x") {
+		for v := range strings.SplitSeq(mediaStreams[i].Quality, "x") {
 			resVal, _ = strconv.Atoi(v)
 			resValI += resVal
 		}
 
 		resValJ := 0
-		for _, v := range strings.Split(mediaStreams[j].Quality, "x") {
+		for v := range strings.SplitSeq(mediaStreams[j].Quality, "x") {
 			resVal, _ = strconv.Atoi(v)
 			resValJ += resVal
 		}
