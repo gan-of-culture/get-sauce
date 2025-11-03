@@ -147,6 +147,7 @@ func decryptJson(base64String string) (*string, error) {
 	// Compute hash for prime index
 	var hashVal uint
 	//for _, r := range origData {
+	//hashVal ^= uint(byte(r))
 	for i := range 64 {
 		hashVal ^= uint(byte(origData[i]))
 		for range 8 {

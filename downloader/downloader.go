@@ -72,6 +72,18 @@ func (downloader *downloaderStruct) Download(data *static.Data) error {
 	// sanitize filename here
 	data.Title = strings.TrimSpace(reSanitizeTitle.ReplaceAllString(data.Title, " "))
 
+	if config.Subdirectory {
+		downloader.filePath = config.OutputPath
+		downloader.filePath = filepath.Join(downloader.filePath, data.Title)
+	}
+
+	if downloader.filePath != "" {
+		err := os.MkdirAll(downloader.filePath, os.ModePerm)
+		if err != nil {
+			return err
+		}
+	}
+
 	fileURI, err := downloader.downloadStream(data)
 	if err != nil {
 		return err
@@ -182,7 +194,7 @@ func (downloader *downloaderStruct) downloadStream(data *static.Data) (string, e
 			fileURI = data.Title
 		}
 
-		//build final file URI
+		// build final file URI
 		fileURI = filepath.Join(downloader.filePath, fileURI+"."+URL.Ext)
 		if streamNeedsMerge {
 			fileURI = filepath.Join(downloader.tmpFilePath, fmt.Sprintf("%d.%s", pageNumbers[idx], URL.Ext))
@@ -196,8 +208,8 @@ func (downloader *downloaderStruct) downloadStream(data *static.Data) (string, e
 		return "", saveErr
 	}
 
-	// build final file URI
 	if streamNeedsMerge {
+		// build final file URI
 		fileURI = filepath.Join(downloader.filePath, data.Title+"."+downloader.stream.Ext)
 		err := downloader.MergeFilesWithSameExtension(fileURI)
 		if err != nil {
@@ -233,7 +245,7 @@ func (downloader *downloaderStruct) save(URL static.URL, fileURI string, headers
 		return nil
 	}
 
-	//if stream size bigger than 10MB then use concurWrite
+	// if stream size bigger than 10MB then use concurWrite
 	if downloader.stream.Size > 10_000_000 && config.Workers > 1 && downloader.stream.Ext == "" {
 		return downloader.concurWriteFile(URL.URL, file, headers)
 	}
@@ -360,8 +372,8 @@ func (downloader *downloaderStruct) writeFile(URL string, file *os.File, headers
 
 	var writer io.Writer
 	writer = file
-	//some sites do not return "content-type" or "content-length" in http header
-	//it will render a spinner progressbar
+	// some sites do not return "content-type" or "content-length" in http header
+	// it will render a spinner progressbar
 	downloader.initPB(res.ContentLength, fmt.Sprintf("Downloading %s ...", file.Name()), true)
 	if downloader.bar {
 		writer = io.MultiWriter(file, downloader.progressBar)
