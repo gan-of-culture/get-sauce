@@ -27,6 +27,7 @@ func init() {
 	flag.StringVar(&config.Pages, "p", "", "Enter pages like 1,2,3-4,6,7,8-9 for doujins")
 	flag.BoolVar(&config.Quiet, "q", false, "Quiet mode - show minimal information")
 	flag.StringVar(&config.SelectStream, "s", "0", "Select a stream")
+	flag.BoolVar(&config.Subdirectory, "S", false, "Subdirectory for the downloaded content. The directory name defaults to a cleaned up version of the data title")
 	flag.BoolVar(&config.Truncate, "t", false, "Truncate file if it already exists")
 	flag.IntVar(&config.Timeout, "T", 10, "Timeout for the http.client in minutes")
 	flag.IntVar(&config.Workers, "w", 1, "Number of workers used for downloading")
@@ -73,7 +74,7 @@ func download(URL string) {
 	datachan := make(chan *static.Data, lenOfData)
 
 	downloader := downloader.New(true)
-	for i := 0; i < workers; i++ {
+	for range workers {
 		go func() {
 			defer wg.Done()
 			for {

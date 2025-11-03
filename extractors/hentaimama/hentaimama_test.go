@@ -37,32 +37,32 @@ func TestExtract(t *testing.T) {
 		Name string
 		Args test.Args
 	}{
-		// {
-		// 	Name: "Single Episode using HLS only",
-		// 	Args: test.Args{
-		// 		URL:     "https://hentaimama.io/episodes/kuroinu-ii-animation-episode-1/",
-		// 		Title:   "Kuroinu II The Animation Episode 1",
-		// 		Quality: "1280x720",
-		// 		Size:    446315760,
-		// 	},
-		// },
-		// {
-		// 	Name: "Single Episode using a single mp4 file",
-		// 	Args: test.Args{
-		// 		URL:   "https://hentaimama.io/episodes/ura-jutaijima-episode-1/",
-		// 		Title: "Ura Jutaijima Episode 1",
-		// 		Size:  77530809,
-		// 	},
-		// },
-		// {
-		// 	Name: "Single Episode using a both mp4 and HLS",
-		// 	Args: test.Args{
-		// 		URL:     "https://hentaimama.io/episodes/torokase-orgasm-animation-episode-1/",
-		// 		Title:   "Torokase Orgasm The Animation Episode 1",
-		// 		Quality: "1280x720",
-		// 		Size:    427589832,
-		// 	},
-		// },
+		{
+			Name: "Single Episode using HLS only",
+			Args: test.Args{
+				URL:     "https://hentaimama.io/episodes/kuroinu-ii-animation-episode-1/",
+				Title:   "Kuroinu II The Animation Episode 1",
+				Quality: "1280x720",
+				Size:    446315760,
+			},
+		},
+		{
+			Name: "Single Episode using a single mp4 file",
+			Args: test.Args{
+				URL:   "https://hentaimama.io/episodes/ura-jutaijima-episode-1/",
+				Title: "Ura Jutaijima Episode 1",
+				Size:  77530809,
+			},
+		},
+		{
+			Name: "Single Episode using a both mp4 and HLS",
+			Args: test.Args{
+				URL:     "https://hentaimama.io/episodes/torokase-orgasm-animation-episode-1/",
+				Title:   "Torokase Orgasm The Animation Episode 1",
+				Quality: "1280x720",
+				Size:    427589832,
+			},
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.Name, func(t *testing.T) {

@@ -21,6 +21,8 @@ var (
 	ShowExtractedData bool
 	// ShowInfo of all available streams
 	ShowInfo bool
+	// Subdirectory for the downloaded content. The directory name defaults to a cleaned up version of the data title
+	Subdirectory bool
 	// Timeout for the http.client in minutes
 	Timeout int
 	// Truncate file if it already exists
