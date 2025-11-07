@@ -7,6 +7,7 @@ import (
 	"log"
 	"os"
 	"os/exec"
+	"runtime/debug"
 	"sync"
 
 	"github.com/gan-of-culture/get-sauce/config"
@@ -108,6 +109,13 @@ func main() {
 	flag.Parse()
 	args := flag.Args()
 	if config.Version {
+		// if installed with go install
+		if version == "" || version == "v0.0.0" {
+			bi, ok := debug.ReadBuildInfo()
+			if ok && bi.Main.Version != "" {
+				version = bi.Main.Version
+			}
+		}
 		fmt.Printf("\n%s: version %s\n\n", name, version)
 	}
 
