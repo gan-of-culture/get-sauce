@@ -11,6 +11,7 @@ Is a command line program to download Hentai videos and images from multiple web
   - [Multiple inputs](#multiple-inputs)
   - [Captions](#captions)
 - [Options](#options)
+  - [Proxy](#proxy)
 - [Supported sites](#supported-sites)
   - [Site requirements](#site-requirements)
 - [Credit](#credit)
@@ -216,7 +217,7 @@ get-sauce -i https://hentai-moon.com/videos/285/isekai-harem-monogatari-ep-1/
 
 ---------------------------------------------------------------------------------------------------------
 
- -O             Output path of the files
+ -O             Output path of the files. This will create the directory if it doesn't exist
 
  get-sauce -O C://Users//User//Downloads// http...
 
@@ -266,6 +267,22 @@ get-sauce -i https://hentai-moon.com/videos/285/isekai-harem-monogatari-ep-1/
 
  get-sauce -w 4 http...
 
+```
+
+### Proxy
+
+You can set the HTTP/HTTPS/SOCKS5 proxy using environment variables:
+
+```console
+$ HTTP_PROXY="http://127.0.0.1:1087/" get-sauce -i "https://rule34.paheal.net/post/view/7106055"
+```
+
+```console
+$ HTTPS_PROXY="http://127.0.0.1:1087/" get-sauce -i "https://rule34.paheal.net/post/view/7106055"
+```
+
+```console
+$ HTTP_PROXY="socks5://127.0.0.1:1080/" get-sauce -i "https://rule34.paheal.net/post/view/7106055"
 ```
 
 ## Supported sites
