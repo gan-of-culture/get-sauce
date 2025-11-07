@@ -29,6 +29,8 @@ var (
 	Truncate bool
 	// UserHeaders for the HTTP requests. To bypass Cloudflare or DDOS-GUARD protection
 	UserHeaders string
+	// Version prints current application version
+	Version bool
 	// Workers for downloading
 	Workers int
 )

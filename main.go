@@ -15,6 +15,12 @@ import (
 	"github.com/gan-of-culture/get-sauce/static"
 )
 
+// name of the application
+const name = "get-sauce"
+
+// version is overridden by ldflags in release
+var version = "v0.0.0"
+
 func init() {
 	flag.IntVar(&config.Amount, "a", 0, "Amount of files to download")
 	flag.IntVar(&config.Caption, "c", -1, "Download caption to a extra file")
@@ -30,6 +36,7 @@ func init() {
 	flag.BoolVar(&config.Subdirectory, "S", false, "Subdirectory for the downloaded content. The directory name defaults to a cleaned up version of the data title")
 	flag.BoolVar(&config.Truncate, "t", false, "Truncate file if it already exists")
 	flag.IntVar(&config.Timeout, "T", 10, "Timeout for the http.client in minutes")
+	flag.BoolVar(&config.Version, "v", false, "Print the current version")
 	flag.IntVar(&config.Workers, "w", 1, "Number of workers used for downloading")
 }
 
@@ -100,6 +107,10 @@ func download(URL string) {
 func main() {
 	flag.Parse()
 	args := flag.Args()
+	if config.Version {
+		fmt.Printf("\n%s: version %s\n\n", name, version)
+	}
+
 	if len(args) < 1 {
 		fmt.Println("Too few arguments")
 		fmt.Println("Usage: get-sauce [args] URLs...")
