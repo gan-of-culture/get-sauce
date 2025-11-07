@@ -15,6 +15,9 @@ builds:
       - linux
       - windows
       - darwin
+    ldflags:
+      - -s -w # Strip debug info and symbols for smaller binaries
+      - -X main.version={{ .Version }} # Inject Git tag as version
 archives:
 - format: tar.gz
   format_overrides:
@@ -25,6 +28,7 @@ archives:
   wrap_in_directory: false
   name_template: >-
       {{ .ProjectName }}_
+      {{- .Version }}_
       {{- title .Os }}_
       {{- if eq .Arch "amd64" }}x86_64
       {{- else if eq .Arch "386" }}i386

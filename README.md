@@ -257,6 +257,11 @@ get-sauce -i https://hentai-moon.com/videos/285/isekai-harem-monogatari-ep-1/
  get-sauce -T 15 http...
 
 ---------------------------------------------------------------------------------------------------------
+ -v             Show version 
+
+ get-sauce -v ...
+
+---------------------------------------------------------------------------------------------------------
  -w             Number of download workers
 
  get-sauce -w 4 http...
