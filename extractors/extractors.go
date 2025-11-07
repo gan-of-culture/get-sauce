@@ -4,7 +4,6 @@ import (
 	"log"
 	"net/url"
 
-	"github.com/gan-of-culture/get-sauce/extractors/booru"
 	"github.com/gan-of-culture/get-sauce/extractors/danbooru"
 	"github.com/gan-of-culture/get-sauce/extractors/ehentai"
 	"github.com/gan-of-culture/get-sauce/extractors/haho"
@@ -53,7 +52,6 @@ func init() {
 		"9hentai.to":             ninehentaiExtractor,
 		"www1.9hentai.ru":        ninehentaiExtractor,
 		"animeidhentai.com":      nhgroupExtractor,
-		"booru.io":               booru.New(),
 		"comicporn.xxx":          htdoujinExtractor,
 		"danbooru.donmai.us":     danbooru.New(),
 		"e-hentai.org":           ehentai.New(),
