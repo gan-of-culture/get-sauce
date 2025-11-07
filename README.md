@@ -294,7 +294,6 @@ The following links will direct you to adult content. Please keep that in mind!
 | [9hentai.to/ru](https://9hentai.to/)                                            | :heavy_check_mark: |         ?          |
 | [animeidhentai.com (1080p, 720p, 480p, 360p)](https://animeidhentai.com)        |         ?          | :heavy_check_mark: |
 | [booruproject (ex. rule34, gelbooru)](https://booru.org/top)                    | :heavy_check_mark: | :heavy_check_mark: |
-| [booru.io](https://booru.io/)                                                   | :heavy_check_mark: |         ?          |
 | [comicporn.xxx](https://comicporn.xxx)                                          | :heavy_check_mark: |         ?          |
 | [danbooru.donmai.us](https://danbooru.donmai.us)                                | :heavy_check_mark: |         ?          |
 | [e-hentai.org](http://e-hentai.org/)                                            | :heavy_check_mark: |         ?          |
