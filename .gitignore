@@ -23,6 +23,5 @@ media
 *.aac
 
 *token
-*muchohentai_test.go
-*hentaimama_test.go
 get-sauce*
+extractors/hentaimama/hentaimama_test.go
