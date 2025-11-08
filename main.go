@@ -18,9 +18,10 @@ import (
 
 // name of the application
 const name = "get-sauce"
+const versionDefault = "v0.0.0"
 
 // version is overridden by ldflags in release
-var version = "v0.0.0"
+var version = versionDefault
 
 func init() {
 	flag.IntVar(&config.Amount, "a", 0, "Amount of files to download")
@@ -110,13 +111,14 @@ func main() {
 	args := flag.Args()
 	if config.Version {
 		// if installed with go install
-		if version == "" || version == "v0.0.0" {
+		if version == "" || version == versionDefault {
 			bi, ok := debug.ReadBuildInfo()
 			if ok && bi.Main.Version != "" {
 				version = bi.Main.Version
 			}
 		}
 		fmt.Printf("\n%s: version %s\n\n", name, version)
+		return
 	}
 
 	if len(args) < 1 {
