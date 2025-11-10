@@ -125,6 +125,9 @@ func extractData(URL string) (*static.Data, error) {
 	streams := map[string]*static.Stream{}
 	for idx, streamData := range vData.State.Data.Video.VideosManifest.Servers[0].Streams {
 		mediaStr, err := request.Get(streamData.URL)
+		if err != nil {
+			return nil, err
+		}
 
 		URLs, key, err := hls.ParseMediaStream(&mediaStr, site)
 		if err != nil {

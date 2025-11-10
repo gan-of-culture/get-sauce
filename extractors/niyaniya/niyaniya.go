@@ -219,7 +219,7 @@ func extractData(URL string) ([]*static.Data, error) {
 	}
 
 	entryMetadata := &apiEntryMetaData{}
-	err = json.Unmarshal(res, entryMetadata)
+	err = json.Unmarshal(res, &entryMetadata)
 	if err != nil {
 		return nil, err
 	}
@@ -228,7 +228,7 @@ func extractData(URL string) ([]*static.Data, error) {
 		return nil, static.ErrDataSourceParseFailed
 	}
 
-	// this request needs a crt which is aquired through a cf challenge
+	// this request needs a crt which is acquired through a cf challenge
 	res, err = request.PostAsBytesWithHeaders(URL, map[string]string{
 		"Origin":  origin,
 		"Referer": site,
