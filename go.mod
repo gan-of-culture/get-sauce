@@ -6,9 +6,8 @@ require (
 	github.com/andybalholm/brotli v1.2.0
 	github.com/gan-of-culture/jsurl v0.0.0-20221216084718-9978d7873326
 	github.com/schollz/progressbar/v3 v3.18.0
+	golang.org/x/sync v0.17.0
 )
-
-require golang.org/x/sync v0.18.0 // indirect
 
 require (
 	github.com/mattn/go-runewidth v0.0.19 // indirect
