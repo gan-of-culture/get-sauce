@@ -8,6 +8,8 @@ require (
 	github.com/schollz/progressbar/v3 v3.18.0
 )
 
+require golang.org/x/sync v0.18.0 // indirect
+
 require (
 	github.com/mattn/go-runewidth v0.0.19 // indirect
 	github.com/mitchellh/colorstring v0.0.0-20190213212951-d06e56a500db // indirect
