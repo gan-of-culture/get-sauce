@@ -3,6 +3,7 @@ package hentainexus
 import (
 	"encoding/base64"
 	"encoding/json"
+	"html"
 	"net/url"
 	"regexp"
 	"strings"
@@ -79,7 +80,7 @@ func extractData(URL string) (*static.Data, error) {
 		return nil, err
 	}
 
-	title := utils.GetMeta(&htmlString, "og:title")
+	title := html.UnescapeString(utils.GetMeta(&htmlString, "og:title"))
 
 	firstPageURL, err := url.JoinPath(strings.Replace(URL, "view", "read", 1), "001")
 	if err != nil {
