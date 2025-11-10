@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
 	"flag"
 	"fmt"
@@ -8,12 +9,12 @@ import (
 	"os"
 	"os/exec"
 	"runtime/debug"
-	"sync"
 
 	"github.com/gan-of-culture/get-sauce/config"
 	"github.com/gan-of-culture/get-sauce/downloader"
 	"github.com/gan-of-culture/get-sauce/extractors"
 	"github.com/gan-of-culture/get-sauce/static"
+	"golang.org/x/sync/errgroup"
 )
 
 // name of the application
@@ -42,7 +43,7 @@ func init() {
 	flag.IntVar(&config.Workers, "w", 1, "Number of workers used for downloading")
 }
 
-func download(URL string) {
+func download(URL string) error {
 	if !config.Keep {
 		_, err := exec.LookPath("ffmpeg")
 		if err != nil {
@@ -53,7 +54,7 @@ func download(URL string) {
 
 	data, err := extractors.Extract(URL)
 	if err != nil {
-		log.Fatalf("%+v", err)
+		return err
 	}
 
 	if config.ShowExtractedData {
@@ -61,7 +62,7 @@ func download(URL string) {
 			jsonData, _ := json.MarshalIndent(singleData, "", "    ")
 			fmt.Printf("%s\n", jsonData)
 		}
-		return
+		return nil
 	}
 
 	if config.SelectStream == "" {
@@ -69,6 +70,10 @@ func download(URL string) {
 	}
 
 	lenOfData := len(data)
+	datachan := make(chan *static.Data, lenOfData)
+	errs, _ := errgroup.WithContext(context.TODO())
+	downloader := downloader.New(true)
+
 	/*
 		We have 3 main types of data that has to be downloaded concurrently
 		1. lenOfData = 3000 e.g. mass scraping image boards
@@ -76,34 +81,26 @@ func download(URL string) {
 		3. lenOfData = 1-10 but big file size e.g.hentai video
 		here in main we will deal with the first type
 	*/
-	workers := min(config.Workers, lenOfData)
-
-	var wg sync.WaitGroup
-	wg.Add(workers)
-	datachan := make(chan *static.Data, lenOfData)
-
-	downloader := downloader.New(true)
-	for range workers {
-		go func() {
-			defer wg.Done()
+	for range min(config.Workers, lenOfData) {
+		errs.Go(func() error {
 			for {
 				d, ok := <-datachan
 				if !ok {
-					return
+					return nil
 				}
 				err := downloader.Download(d)
 				if err != nil {
-					log.Println(err)
+					return err
 				}
 			}
-		}()
+		})
 	}
 
 	for _, d := range data {
 		datachan <- d
 	}
 	close(datachan)
-	wg.Wait()
+	return errs.Wait()
 }
 
 func main() {
@@ -129,6 +126,8 @@ func main() {
 	}
 
 	for _, a := range args {
-		download(a)
+		if err := download(a); err != nil {
+			log.Fatalf("%+v", err)
+		}
 	}
 }
