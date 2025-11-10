@@ -1,6 +1,7 @@
 package downloader
 
 import (
+	"cmp"
 	"context"
 	"crypto/sha1"
 	"fmt"
@@ -67,10 +68,7 @@ func (downloader *downloaderStruct) Download(data *static.Data) error {
 		return nil
 	}
 
-	if config.OutputName != "" {
-		data.Title = config.OutputName
-	}
-
+	data.Title = cmp.Or(config.OutputName, data.Title)
 	// sanitize filename here
 	data.Title = strings.TrimSpace(reSanitizeTitle.ReplaceAllString(data.Title, " "))
 
