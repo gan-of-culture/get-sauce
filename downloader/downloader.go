@@ -1,6 +1,7 @@
 package downloader
 
 import (
+	"context"
 	"crypto/sha1"
 	"fmt"
 	"io"
@@ -20,6 +21,7 @@ import (
 	"github.com/gan-of-culture/get-sauce/static"
 	"github.com/gan-of-culture/get-sauce/utils"
 	"github.com/schollz/progressbar/v3"
+	"golang.org/x/sync/errgroup"
 )
 
 type filePiece struct {
@@ -158,29 +160,23 @@ func (downloader *downloaderStruct) downloadStream(data *static.Data) (string, e
 		appendEnum = true
 	}
 
-	var saveErr error
-	lock := sync.Mutex{}
 	URLchan := make(chan downloadInfo, lenOfUrls)
 	workers := min(config.Workers, lenOfUrls)
-	var wg sync.WaitGroup
-	wg.Add(workers)
+	errs, _ := errgroup.WithContext(context.TODO())
 
 	for range workers {
-		go func() {
-			defer wg.Done()
+		errs.Go(func() error {
 			for {
 				dlInfo, ok := <-URLchan
 				if !ok {
-					return
+					return nil
 				}
 				err := downloader.save(dlInfo.URL, dlInfo.Title, dlInfo.Headers)
 				if err != nil {
-					lock.Lock()
-					saveErr = err
-					lock.Unlock()
+					return err
 				}
 			}
-		}()
+		})
 	}
 
 	// get page numbers if -p is supplied to name files correctly
@@ -203,9 +199,8 @@ func (downloader *downloaderStruct) downloadStream(data *static.Data) (string, e
 		URLchan <- downloadInfo{*URL, fileURI, headers}
 	}
 	close(URLchan)
-	wg.Wait()
-	if saveErr != nil {
-		return "", saveErr
+	if err := errs.Wait(); err != nil {
+		return "", err
 	}
 
 	if streamNeedsMerge {
@@ -231,7 +226,6 @@ func (downloader *downloaderStruct) save(URL static.URL, fileURI string, headers
 	if err != nil {
 		return err
 	}
-	defer file.Close()
 
 	stat, err := file.Stat()
 	if err != nil {
@@ -250,7 +244,14 @@ func (downloader *downloaderStruct) save(URL static.URL, fileURI string, headers
 		return downloader.concurWriteFile(URL.URL, file, headers)
 	}
 
-	return downloader.writeFile(URL.URL, file, headers)
+	if err = downloader.writeFile(URL.URL, file, headers); err != nil {
+		file.Close()
+		os.Remove(fileURI)
+		return err
+	}
+
+	file.Close()
+	return nil
 }
 
 func (downloader *downloaderStruct) concurWriteFile(URL string, file *os.File, headers map[string]string) error {
