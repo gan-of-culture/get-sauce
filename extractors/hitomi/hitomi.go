@@ -220,7 +220,11 @@ func urlFromHash(imgFile img, dir string) string {
 		dir += "/"
 	}
 
-	return fmt.Sprintf("https://a.%s/%s/%s.%s", domain2, dir, fullPathFromHash(imgFile.Hash), ext)
+	p, err := url.JoinPath(fmt.Sprintf("https://a.%s", domain2), dir, fullPathFromHash(imgFile.Hash)+"."+ext)
+	if err != nil {
+		return ""
+	}
+	return p
 }
 
 func fullPathFromHash(hash string) string {
