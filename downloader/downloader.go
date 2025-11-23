@@ -426,7 +426,7 @@ func (downloader *downloaderStruct) MergeFilesWithSameExtension(fileURI string) 
 
 	var d []byte
 	for i, u := range downloader.stream.URLs {
-		partURL := filepath.Join(downloader.tmpFilePath, fmt.Sprintf("%d.%s", i+1, u.Ext))
+		partURL := filepath.Join(downloader.tmpFilePath, fmt.Sprintf("%d.%s", i, u.Ext))
 		if len(downloader.stream.Key) > 0 {
 			d, err = decrypt(downloader.stream.Key, partURL)
 			if err != nil {
