@@ -38,12 +38,17 @@ func TestExtract(t *testing.T) {
 		Args test.Args
 	}{
 		{
+			Name: "Single Gallery Multiple Chapters",
+			Args: test.Args{
+				URL:   "https://hentai2read.com/shounen_ga_otona_ni_natta_natsu/",
+				Title: "Shounen Ga Otona Ni Natta Natsu",
+			},
+		},
+		{
 			Name: "Single Gallery",
 			Args: test.Args{
-				URL:     "https://hentai2read.com/elevenpm_miniature_garden/#availableChapters",
-				Title:   "11PM Miniature Garden",
-				Quality: "",
-				Size:    0,
+				URL:   "https://hentai2read.com/elevenpm_miniature_garden/#availableChapters",
+				Title: "11PM Miniature Garden",
 			},
 		},
 	}

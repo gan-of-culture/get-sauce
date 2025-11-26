@@ -300,7 +300,7 @@ The following links will direct you to adult content. Please keep that in mind!
 | [haho.moe (1080p, 720p, 480p, 360p)](https://haho.moe)                          |         ?          | :heavy_check_mark: |
 | [hanime.tv (720p, 480p, 360p)](https://hanime.tv)                               |         ?          | :heavy_check_mark: |
 | [hentai.tv (1080p, 720p, 480p, 360p)](https://hentai.tv/)                       |         ?          | :heavy_check_mark: |
-| [hentai-moon.com (720p, 480p)](https://hentai-moon.com)                         |         ?          | :heavy_check_mark: |
+| [hentai-moon.com (720p, 480p)](https://hentai-moon.com/watch-h/)                |         ?          | :heavy_check_mark: |
 | [hentai2read.com](https://hentai2read.com)                                      | :heavy_check_mark: |         ?          |
 | [hentai2w.com(720p, 480p, 360p)](https://hentai2w.com)                          |         ?          | :heavy_check_mark: |
 | [hentaicloud.com(720p)](https://www.hentaicloud.com)                            |        :x:         | :heavy_check_mark: |
