@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"html"
 	"regexp"
+	"slices"
 	"strings"
 
 	"github.com/gan-of-culture/get-sauce/request"
@@ -72,30 +73,41 @@ func parseURL(URL string) []string {
 }
 
 func extractData(URL string) (*static.Data, error) {
-	htmlString, err := request.Get(URL + "1/")
+	URLs, err := fetchChapterURLs(URL)
 	if err != nil {
 		return nil, err
 	}
 
-	jsonString := strings.ReplaceAll(reJSONString.FindString(htmlString), "'", `"`)
+	var imagesParts []string
+	var title string
+	for _, u := range URLs {
+		htmlString, err := request.Get(u)
+		if err != nil {
+			return nil, err
+		}
 
-	galleryData := gData{}
-	err = json.Unmarshal([]byte(jsonString), &galleryData)
-	if err != nil {
-		return nil, err
+		jsonString := strings.ReplaceAll(reJSONString.FindString(htmlString), "'", `"`)
+
+		galleryData := gData{}
+		err = json.Unmarshal([]byte(jsonString), &galleryData)
+		if err != nil {
+			return nil, err
+		}
+		imagesParts = append(imagesParts, galleryData.Images...)
+
+		if title == "" {
+			title = html.UnescapeString(strings.TrimSpace(reTitle.FindString(galleryData.Title)))
+		}
 	}
-
-	title := html.UnescapeString(strings.TrimSpace(reTitle.FindString(galleryData.Title)))
 
 	return &static.Data{
 		Site:  site,
 		Title: title,
-		Type:  "image",
+		Type:  static.DataTypeImage,
 		Streams: map[string]*static.Stream{
 			"0": {
 				Type: static.DataTypeImage,
-				URLs: buildFullImgURL(galleryData.Images),
-				Size: 0,
+				URLs: buildFullImgURL(imagesParts),
 			},
 		},
 		URL: URL,
@@ -104,11 +116,30 @@ func extractData(URL string) (*static.Data, error) {
 
 func buildFullImgURL(URIParts []string) []*static.URL {
 	out := []*static.URL{}
-	for _, URIPart := range URIParts {
+
+	for _, idx := range utils.NeedDownloadList(len(URIParts)) {
+		URIPart := URIParts[idx]
 		out = append(out, &static.URL{
 			URL: cdn + URIPart,
 			Ext: utils.GetLastItemString(strings.Split(URIPart, ".")),
 		})
 	}
 	return out
+}
+
+func fetchChapterURLs(URL string) ([]string, error) {
+	htmlString, err := request.Get(URL)
+	if err != nil {
+		return nil, err
+	}
+
+	chapterURLs := regexp.MustCompile(URL+`[\d\.]+/`).FindAllString(htmlString, -1)
+	fallbackURL := URL + "1/"
+	// the chapter URLs come sorted, but are preceeded by a couple of duplicates -> remove them
+	chapterURLs = slices.DeleteFunc(chapterURLs, func(s string) bool { return s == fallbackURL })
+	chapterURLs = append(chapterURLs, fallbackURL)
+	// chapters come sorted newest -> oldest so we reverse it
+	slices.Reverse(chapterURLs)
+
+	return chapterURLs, nil
 }
