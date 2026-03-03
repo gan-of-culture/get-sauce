@@ -27,7 +27,6 @@ import (
 	"github.com/gan-of-culture/get-sauce/extractors/muchohentai"
 	"github.com/gan-of-culture/get-sauce/extractors/nhentai"
 	"github.com/gan-of-culture/get-sauce/extractors/nhgroup"
-	"github.com/gan-of-culture/get-sauce/extractors/ninehentai"
 	"github.com/gan-of-culture/get-sauce/extractors/ohentai"
 	"github.com/gan-of-culture/get-sauce/extractors/oppai"
 	"github.com/gan-of-culture/get-sauce/extractors/rule34"
@@ -42,15 +41,12 @@ var extractorsMap map[string]static.Extractor
 
 func init() {
 	htdoujinExtractor := htdoujin.New()
-	ninehentaiExtractor := ninehentai.New()
 	nhgroupExtractor := nhgroup.New()
 	iwaraExtractor := iwara.New()
 
 	extractorsMap = map[string]static.Extractor{
 		"": universal.New(),
 
-		"9hentai.to":             ninehentaiExtractor,
-		"www1.9hentai.ru":        ninehentaiExtractor,
 		"animeidhentai.com":      nhgroupExtractor,
 		"asmhentai.com":          htdoujinExtractor,
 		"comicporn.xxx":          htdoujinExtractor,
