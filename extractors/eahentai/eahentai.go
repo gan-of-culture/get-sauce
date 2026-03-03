@@ -121,10 +121,10 @@ func (e extractor) Extract(URL string) ([]*static.Data, error) {
 	}
 
 	data := []*static.Data{}
-	for _, id := range URLs {
-		d, err := extractData(id)
+	for _, u := range URLs {
+		d, err := extractData(u)
 		if err != nil {
-			return nil, utils.Wrap(err, id)
+			return nil, utils.Wrap(err, u)
 		}
 		data = append(data, d)
 	}

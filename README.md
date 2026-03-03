@@ -313,14 +313,15 @@ The following links will direct you to adult content. Please keep that in mind!
 | [hentaihaven.xxx (1080p, 720p, 480p, 360p)](https://hentaihaven.xxx)            |         ?          | :heavy_check_mark: |
 | [hentaimama.io(1080p, 720p)](https://hentaimama.io)                             |         ?          | :heavy_check_mark: |
 | [hentainexus.com](https://hentainexus.com)                                      | :heavy_check_mark: |         ?          |
-| [hentaipulse.com(720p, 420p)](https://hentaipulse.com)                          |         ?          | :heavy_check_mark: |
+| [hentaiplay.net(720p, 480p)](https://hentaiplay.net)                            |         ?          | :heavy_check_mark: |
+| [hentaipulse.com(720p, 480p)](https://hentaipulse.com)                          |         ?          | :heavy_check_mark: |
 | [hentairox.com](https://hentairox.com)                                          | :heavy_check_mark: |         ?          |
-| [hstream.moe (2160p, 1080p, 480p)](https://hstream.moe/)                        |         ?          | :heavy_check_mark: |   :cookie:   | [#164](https://github.com/gan-of-culture/get-sauce/issues/164) |
 | [hentaivideos.net (1080p, 720p, 480p, 360p)](https://hentaivideos.net/)         |         ?          | :heavy_check_mark: |
 | [hentaiworld.tv (1080p, 720p, 480p)](https://hentaiworld.tv/)                   |         ?          | :heavy_check_mark: |
 | [hentaiyes.com (1080p, 720p, 480p, 360p)](https://hentaiyes.com/)               |         ?          | :heavy_check_mark: |
 | [hentaizap.com](https://hentaizap.com)                                          | :heavy_check_mark: |         ?          |
 | [hitomi.la](https://hitomi.la/)                                                 | :heavy_check_mark: |         ?          |
+| [hstream.moe (2160p, 1080p, 480p)](https://hstream.moe/)                        |         ?          | :heavy_check_mark: |   :cookie:   | [#164](https://github.com/gan-of-culture/get-sauce/issues/164) |
 | [imhentai.xxx](https://imhentai.xxx)                                            | :heavy_check_mark: |         ?          |
 | [iwara.tv](https://iwara.tv/)                                                   | :heavy_check_mark: | :heavy_check_mark: |
 | [konachan.com](https://konachan.com/post?tags=)                                 | :heavy_check_mark: |         ?          |
