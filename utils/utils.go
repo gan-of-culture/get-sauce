@@ -182,3 +182,9 @@ func SortStreamsBySize(streams map[string]*static.Stream) map[string]*static.Str
 	}
 	return out
 }
+
+// GetJSONFromJSObjStr
+func GetJSONFromJSObjStr(JSObj string) string {
+	replacer := strings.NewReplacer(`\"`, `"`, `\'`, `'`)
+	return replacer.Replace(JSObj)
+}

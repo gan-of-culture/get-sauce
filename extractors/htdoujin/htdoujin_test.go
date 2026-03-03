@@ -20,7 +20,7 @@ func TestParseURL(t *testing.T) {
 			URL:  "https://asmhentai.com/g/625425/",
 			Want: 1,
 		}, {
-			Name: "Single Gallery AsmHentai",
+			Name: "Tag AsmHentai",
 			URL:  "https://asmhentai.com/tag/tentacles/",
 			Want: 20,
 		}, {

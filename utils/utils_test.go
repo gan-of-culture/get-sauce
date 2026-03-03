@@ -444,3 +444,26 @@ func TestSortStreamsBySize(t *testing.T) {
 		})
 	}
 }
+
+func Test(t *testing.T) {
+	tests := []struct {
+		Name string
+		In   string
+		Want string
+	}{
+		{
+			Name: "Default",
+			In:   `[{\"imageID\":2307763,\"addDt\":\"2026-02-27T05:02:30.273\",\"imageUri\":\"galleries/ee638cf7c5fc4b949558b5663825b1d9/image1.webp\",\"thumbnailUri\":\"galleries/ee638cf7c5fc4b949558b5663825b1d9/thumbnail/image1t.jpg\",\"title\":\"image1\",\"author\":\"fudisen\",\"albumID\":62293,\"views\":0,\"sort\":100,\"album\":null}]`,
+			Want: `[{"imageID":2307763,"addDt":"2026-02-27T05:02:30.273","imageUri":"galleries/ee638cf7c5fc4b949558b5663825b1d9/image1.webp","thumbnailUri":"galleries/ee638cf7c5fc4b949558b5663825b1d9/thumbnail/image1t.jpg","title":"image1","author":"fudisen","albumID":62293,"views":0,"sort":100,"album":null}]`,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.Name, func(t *testing.T) {
+			JSONStr := GetJSONFromJSObjStr(tt.In)
+
+			if JSONStr != tt.Want {
+				t.Errorf("Got: %v - Want: %v", JSONStr, tt.Want)
+			}
+		})
+	}
+}
