@@ -1,6 +1,7 @@
 package htdoujin
 
 import (
+	"cmp"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -19,16 +20,40 @@ I have noticed there there are some doujin sites with the same site design just 
 because they linked to some of the htstreaming sites I called this extractor htdoujin this might change in the future
 */
 
+type CDNDetermenationType string
+
+const (
+	// Simple means there is only one CDN prefix
+	Simple CDNDetermenationType = "simple"
+	// ServerID is used to get the correct CDN prefix
+	ServerID CDNDetermenationType = "server_id"
+	// uID is used to get the correct CDN prefix
+	UID CDNDetermenationType = "u_id"
+	// Unknown CDN prefix identifier
+	Unknown CDNDetermenationType = "unknown"
+)
+
 type siteConfig struct {
+	BaseURL string
+	CDNDetermenationType
+	CDNPrefix           string
+	CDNPrefixLevels     []int
 	CDNPrefixSrcURLPart string
+	ImageExt            string
+	GalleryPrefix       string
 	ReaderURLPrefix     string
 }
 
+const defaultGalleryPrefix = "gallery"
+
 var sites map[string]siteConfig = map[string]siteConfig{
-	"comicporn.xxx": {
-		ReaderURLPrefix: "view",
+	"asmhentai.com": {
+		CDNPrefix:       "images",
+		GalleryPrefix:   "g",
+		ImageExt:        "jpg",
+		ReaderURLPrefix: "gallery",
 	},
-	"imhentai.xxx": {
+	"comicporn.xxx": {
 		ReaderURLPrefix: "view",
 	},
 	"hentaienvy.com": {
@@ -38,6 +63,7 @@ var sites map[string]siteConfig = map[string]siteConfig{
 		ReaderURLPrefix: "view",
 	},
 	"hentaifox.com": {
+		CDNPrefix:           "i",
 		CDNPrefixSrcURLPart: "i",
 		ReaderURLPrefix:     "g",
 	},
@@ -47,17 +73,20 @@ var sites map[string]siteConfig = map[string]siteConfig{
 	"hentaizap.com": {
 		ReaderURLPrefix: "g",
 	},
+	"imhentai.xxx": {
+		ReaderURLPrefix: "view",
+	},
 }
 
-var host string
-var site string
-var cdn string
-var cdnDetermenationID CDNDetermenationID
-var cdnPrefixLevels []int
-var readerURLPrefix string
+var extensionMap = map[string]string{
+	"j": "jpg",
+	"p": "png",
+	"b": "bmp",
+	"g": "gif",
+	"w": "webp",
+}
 
-var reMainJsPath *regexp.Regexp = regexp.MustCompile(`js/main[_\.]\w+\.js`)
-var reGID *regexp.Regexp = regexp.MustCompile(`/gallery/(\d+)/`)
+var reMainJsPath *regexp.Regexp = regexp.MustCompile(`js/main[_\.]?\w*\.js`)
 var reUIDLevels *regexp.Regexp = regexp.MustCompile(`u_id\s*>\s*(\d+)`)
 var reTitle *regexp.Regexp = regexp.MustCompile(`<title>(.+)</title>`)
 var reJSONData *regexp.Regexp = regexp.MustCompile(`'{[^']+`)
@@ -66,17 +95,7 @@ var reGalleryID *regexp.Regexp = regexp.MustCompile(`gallery_id" value="([^"]*)`
 var reUID *regexp.Regexp = regexp.MustCompile(`u_id" value="([^"]*)`)
 var reServerID *regexp.Regexp = regexp.MustCompile(`server_id" value="([^"]*)`)
 var reServerIDLevels *regexp.Regexp = regexp.MustCompile(`server_id\s*==\s*(\d+)`)
-
-type CDNDetermenationID string
-
-const (
-	// ServerID is used to get the correct CDN prefix
-	ServerID CDNDetermenationID = "server_id"
-	// uID is used to get the correct CDN prefix
-	UID CDNDetermenationID = "u_id"
-	// Unknown CDN prefix identifier
-	Unknown CDNDetermenationID = "unknown"
-)
+var rePages = regexp.MustCompile(`pages" value="([^"]*)`)
 
 type extractor struct{}
 
@@ -91,27 +110,29 @@ func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 		return nil, err
 	}
 
-	host = u.Host
-
-	if _, ok := sites[host]; !ok {
+	siteCfg, ok := sites[u.Host]
+	if !ok {
 		return nil, errors.New("site not configured for htdoujin extractor")
 	}
-	site = "https://" + host + "/"
+	siteCfg.GalleryPrefix = cmp.Or(siteCfg.GalleryPrefix, defaultGalleryPrefix)
+	siteCfg.BaseURL = cmp.Or(siteCfg.BaseURL, fmt.Sprintf("%s://%s", u.Scheme, u.Host))
+	if siteCfg.CDNDetermenationType == "" {
+		siteCfg.CDNPrefixLevels, siteCfg.CDNDetermenationType, err = parseCDNPrefixLevels(siteCfg)
+		if err != nil {
+			return nil, err
+		}
+	}
+	// set prased/default values for next calls of Extractor
+	sites[u.Host] = siteCfg
 
-	IDs := parseURL(URL)
+	IDs := parseURL(URL, siteCfg)
 	if len(IDs) == 0 {
 		return nil, static.ErrURLParseFailed
 	}
 
-	readerURLPrefix = sites[host].ReaderURLPrefix
-	cdnPrefixLevels, cdnDetermenationID, err = parseCDNPrefixLevels()
-	if err != nil {
-		return nil, err
-	}
-
 	data := []*static.Data{}
 	for _, id := range IDs {
-		d, err := extractData(id)
+		d, err := extractData(id, siteCfg)
 		if err != nil {
 			return nil, utils.Wrap(err, id)
 		}
@@ -121,9 +142,10 @@ func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 	return data, nil
 }
 
-func parseURL(URL string) []string {
-	if strings.HasPrefix(URL, site+"gallery/") {
-		return []string{URL[len(site+"gallery/") : len(URL)-1]}
+func parseURL(URL string, siteCfg siteConfig) []string {
+	galleryPrefixURL, _ := url.JoinPath(siteCfg.BaseURL, siteCfg.GalleryPrefix)
+	if urlPart, ok := strings.CutPrefix(URL, galleryPrefixURL); ok {
+		return strings.Split(strings.TrimPrefix(urlPart, "/"), "/")[:1]
 	}
 
 	htmlString, err := request.Get(URL)
@@ -131,39 +153,41 @@ func parseURL(URL string) []string {
 		return nil
 	}
 
+	var reGID *regexp.Regexp = regexp.MustCompile(fmt.Sprintf(`/%s/(\d+)/`, siteCfg.GalleryPrefix))
 	IDs := []string{}
 	for _, v := range reGID.FindAllStringSubmatch(htmlString, -1) {
-		IDs = append(IDs, v[1])
+		IDs = append(IDs, utils.GetLastItemString(v))
 	}
 
 	return utils.RemoveAdjDuplicates(IDs)
 }
 
-func extractData(ID string) (*static.Data, error) {
-
-	htmlString, err := request.Get(fmt.Sprintf("%s%s/%s/1/", site, readerURLPrefix, ID))
+func extractData(ID string, siteCfg siteConfig) (*static.Data, error) {
+	readerURL, err := url.JoinPath(siteCfg.BaseURL, siteCfg.ReaderURLPrefix, ID, "1/")
 	if err != nil {
-		return &static.Data{}, err
+		return nil, err
+	}
+	htmlString, err := request.Get(readerURL)
+	if err != nil {
+		return nil, err
 	}
 
-	title := strings.Split(reTitle.FindStringSubmatch(htmlString)[1], " - Page 1 - ")[0]
+	title := strings.Split(strings.Split(reTitle.FindStringSubmatch(htmlString)[1], " - Page 1 - ")[0], " Page 1 -")[0]
 
 	jsonString := strings.Trim(reJSONData.FindString(htmlString), "'")
 
 	gData := map[string]string{}
-	err = json.Unmarshal([]byte(jsonString), &gData)
-	if err != nil {
-		return &static.Data{}, err
-	}
+	// ignore error here. AsmHentai has no gData container
+	_ = json.Unmarshal([]byte(jsonString), &gData)
 
 	imageDir := reImgDir.FindStringSubmatch(htmlString)
 	if len(imageDir) < 1 {
-		return &static.Data{}, errors.New("cannot find image_dir for")
+		return nil, errors.New("cannot find image_dir for")
 	}
 
 	gID := reGalleryID.FindStringSubmatch(htmlString)
 	if len(gID) < 1 {
-		return &static.Data{}, errors.New("cannot find gallery_id for")
+		return nil, errors.New("cannot find gallery_id for")
 	}
 
 	prefixSelectionID := utils.GetLastItemString(reUID.FindStringSubmatch(htmlString))
@@ -171,38 +195,60 @@ func extractData(ID string) (*static.Data, error) {
 		prefixSelectionID = utils.GetLastItemString(reServerID.FindStringSubmatch(htmlString))
 	}
 
-	CDNPrefix, err := getCDNPrefix(prefixSelectionID, cdnDetermenationID)
+	CDNPrefix, err := getCDNPrefix(prefixSelectionID, siteCfg)
 	if err != nil {
 		return nil, err
 	}
 
-	cdn = fmt.Sprintf("https://%s.%s/", CDNPrefix, host)
+	cdnURL, err := url.Parse(siteCfg.BaseURL)
+	if err != nil {
+		return nil, err
+	}
+	cdnURL.Host = CDNPrefix + "." + cdnURL.Host
 
-	pages := utils.NeedDownloadList(len(gData))
+	pagesCount := len(gData)
+	if pagesCount < 1 {
+		matchedPages := rePages.FindStringSubmatch(htmlString)
+		if len(imageDir) < 1 {
+			return nil, errors.New("cannot find pages for")
+		}
+		pagesCount, err = strconv.Atoi(utils.GetLastItemString(matchedPages))
+		if err != nil {
+			return nil, err
+		}
+	}
+	pages := utils.NeedDownloadList(pagesCount)
 
+	var ok bool
 	URLs := []*static.URL{}
 	for _, i := range pages {
-		params := strings.Split(gData[fmt.Sprint(i)], ",") //type, width, height
-		switch params[0] {
-		case "j":
-			params[0] = "jpg"
-		case "p":
-			params[0] = "png"
-		case "b":
-			params[0] = "bmp"
-		case "g":
-			params[0] = "gif"
-		case "w":
-			params[0] = "webp"
+		ext := siteCfg.ImageExt
+		if ext == "" {
+			ext = strings.Split(gData[fmt.Sprint(i+1)], ",")[0] //type, width, height
+			ext, ok = extensionMap[ext]
+			if !ok {
+				return nil, fmt.Errorf("extension %s cannot be mapped", ext)
+			}
 		}
+		imagePath, err := url.JoinPath(imageDir[1], gID[1], fmt.Sprintf("%d.%s", i+1, ext))
+		if err != nil {
+			return nil, err
+		}
+		cdnURL.Path = imagePath
+
 		URLs = append(URLs, &static.URL{
-			URL: fmt.Sprintf("%s%s/%s/%d.%s", cdn, imageDir[1], gID[1], i, params[0]),
-			Ext: params[0],
+			URL: cdnURL.String(),
+			Ext: ext,
 		})
 	}
 
+	galleryURL, err := url.JoinPath(siteCfg.BaseURL, siteCfg.GalleryPrefix, ID)
+	if err != nil {
+		return nil, err
+	}
+
 	return &static.Data{
-		Site:  site,
+		Site:  siteCfg.BaseURL,
 		Title: title,
 		Type:  static.DataTypeImage,
 		Streams: map[string]*static.Stream{
@@ -211,13 +257,13 @@ func extractData(ID string) (*static.Data, error) {
 				URLs: URLs,
 			},
 		},
-		URL: fmt.Sprintf("%sgallery/%s/", site, ID),
+		URL: galleryURL,
 	}, nil
 }
 
-func getCDNPrefix(prefixSelectionID string, cdnDetId CDNDetermenationID) (string, error) {
-	if host == "hentaifox.com" {
-		return "i", nil
+func getCDNPrefix(prefixSelectionID string, siteCfg siteConfig) (string, error) {
+	if siteCfg.CDNDetermenationType == Simple {
+		return siteCfg.CDNPrefix, nil
 	}
 
 	IDAsNumber, err := strconv.Atoi(prefixSelectionID)
@@ -225,14 +271,14 @@ func getCDNPrefix(prefixSelectionID string, cdnDetId CDNDetermenationID) (string
 		return "", err
 	}
 
-	for i := len(cdnPrefixLevels); i >= 1; i-- {
-		switch cdnDetId {
+	for i := len(siteCfg.CDNPrefixLevels); i >= 1; i-- {
+		switch siteCfg.CDNDetermenationType {
 		case ServerID:
-			if IDAsNumber == cdnPrefixLevels[i-1] {
+			if IDAsNumber == siteCfg.CDNPrefixLevels[i-1] {
 				return fmt.Sprintf("m%d", i), nil
 			}
 		default:
-			if IDAsNumber > cdnPrefixLevels[i-1] {
+			if IDAsNumber > siteCfg.CDNPrefixLevels[i-1] {
 				return fmt.Sprintf("m%d", i), nil
 			}
 		}
@@ -241,8 +287,12 @@ func getCDNPrefix(prefixSelectionID string, cdnDetId CDNDetermenationID) (string
 	return "", errors.New("no CDN prefix was found. Check if CDNPrefixLevels have been parsed correctly")
 }
 
-func parseCDNPrefixLevels() ([]int, CDNDetermenationID, error) {
-	htmlString, err := request.Get(site)
+func parseCDNPrefixLevels(siteCfg siteConfig) ([]int, CDNDetermenationType, error) {
+	if siteCfg.CDNPrefix != "" {
+		return nil, Simple, nil
+	}
+
+	htmlString, err := request.Get(siteCfg.BaseURL)
 	if err != nil {
 		return nil, Unknown, err
 	}
@@ -252,7 +302,12 @@ func parseCDNPrefixLevels() ([]int, CDNDetermenationID, error) {
 		return nil, Unknown, errors.New("no main_*.js file was found linked from the homepage")
 	}
 
-	jsString, err := request.Get(site + mainJsPathPart)
+	mainJSPath, err := url.JoinPath(siteCfg.BaseURL, mainJsPathPart)
+	if err != nil {
+		return nil, Unknown, err
+	}
+
+	jsString, err := request.Get(mainJSPath)
 	if err != nil {
 		return nil, Unknown, err
 	}

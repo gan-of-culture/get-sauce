@@ -1,6 +1,7 @@
 package htdoujin
 
 import (
+	"cmp"
 	"fmt"
 	"net/url"
 	"testing"
@@ -15,6 +16,14 @@ func TestParseURL(t *testing.T) {
 		Want int
 	}{
 		{
+			Name: "Single Gallery AsmHentai",
+			URL:  "https://asmhentai.com/g/625425/",
+			Want: 1,
+		}, {
+			Name: "Single Gallery AsmHentai",
+			URL:  "https://asmhentai.com/tag/tentacles/",
+			Want: 20,
+		}, {
 			Name: "Single Gallery HentaiEra",
 			URL:  "https://hentaiera.com/gallery/150354/",
 			Want: 1,
@@ -73,12 +82,14 @@ func TestParseURL(t *testing.T) {
 			u, err := url.Parse(tt.URL)
 			test.CheckError(t, err)
 
-			if cdnPrefix, ok := sites[u.Host]; ok {
-				site = "https://" + u.Host + "/"
-				cdn = fmt.Sprintf("https://%s.%s/", cdnPrefix, u.Host)
+			siteCfg, ok := sites[u.Host]
+			if !ok {
+				t.Errorf("site %s not in site config", u.Host)
 			}
+			siteCfg.GalleryPrefix = cmp.Or(siteCfg.GalleryPrefix, defaultGalleryPrefix)
+			siteCfg.BaseURL = cmp.Or(siteCfg.BaseURL, fmt.Sprintf("%s://%s", u.Scheme, u.Host))
 
-			URLs := parseURL(tt.URL)
+			URLs := parseURL(tt.URL, siteCfg)
 			if len(URLs) > tt.Want || len(URLs) == 0 {
 				t.Errorf("Got: %v - Want: %v", len(URLs), tt.Want)
 			}
@@ -91,6 +102,15 @@ func TestExtract(t *testing.T) {
 		Name string
 		Args test.Args
 	}{
+		{
+			Name: "Single Gallery AsmHentai",
+			Args: test.Args{
+				URL:     "https://asmhentai.com/g/625425/",
+				Title:   "Heroine Pinch Vol. 17",
+				Quality: "",
+				Size:    0,
+			},
+		},
 		{
 			Name: "Single Gallery HentaiEra",
 			Args: test.Args{
