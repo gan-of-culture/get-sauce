@@ -292,7 +292,6 @@ The following links will direct you to adult content. Please keep that in mind!
 | Site                                                                            |       Images       |       Videos       | Requirements | Info |
 | ------------------------------------------------------------------------------- | :----------------: | :----------------: | :----------: |:----:|
 | [asmhentai.com](https://asmhentai.com)                                          | :heavy_check_mark: |         ?          |
-| [9hentai.to](https://9hentai.to/)                                               | :heavy_check_mark: |         ?          |
 | [animeidhentai.com (1080p, 720p, 480p, 360p)](https://animeidhentai.com)        |         ?          | :heavy_check_mark: |
 | [booruproject (ex. rule34, gelbooru)](https://booru.org/top)                    | :heavy_check_mark: | :heavy_check_mark: |
 | [comicporn.xxx](https://comicporn.xxx)                                          | :heavy_check_mark: |         ?          |
