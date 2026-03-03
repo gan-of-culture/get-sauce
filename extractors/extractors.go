@@ -52,6 +52,7 @@ func init() {
 		"9hentai.to":             ninehentaiExtractor,
 		"www1.9hentai.ru":        ninehentaiExtractor,
 		"animeidhentai.com":      nhgroupExtractor,
+		"asmhentai.com":          htdoujinExtractor,
 		"comicporn.xxx":          htdoujinExtractor,
 		"danbooru.donmai.us":     danbooru.New(),
 		"e-hentai.org":           ehentai.New(),

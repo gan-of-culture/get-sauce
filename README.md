@@ -291,7 +291,8 @@ The following links will direct you to adult content. Please keep that in mind!
 
 | Site                                                                            |       Images       |       Videos       | Requirements | Info |
 | ------------------------------------------------------------------------------- | :----------------: | :----------------: | :----------: |:----:|
-| [9hentai.to/ru](https://9hentai.to/)                                            | :heavy_check_mark: |         ?          |
+| [asmhentai.com](https://asmhentai.com)                                          | :heavy_check_mark: |         ?          |
+| [9hentai.to](https://9hentai.to/)                                               | :heavy_check_mark: |         ?          |
 | [animeidhentai.com (1080p, 720p, 480p, 360p)](https://animeidhentai.com)        |         ?          | :heavy_check_mark: |
 | [booruproject (ex. rule34, gelbooru)](https://booru.org/top)                    | :heavy_check_mark: | :heavy_check_mark: |
 | [comicporn.xxx](https://comicporn.xxx)                                          | :heavy_check_mark: |         ?          |
@@ -320,7 +321,7 @@ The following links will direct you to adult content. Please keep that in mind!
 | [hentaiyes.com (1080p, 720p, 480p, 360p)](https://hentaiyes.com/)               |         ?          | :heavy_check_mark: |
 | [hentaizap.com](https://hentaizap.com)                                          | :heavy_check_mark: |         ?          |
 | [hitomi.la](https://hitomi.la/)                                                 | :heavy_check_mark: |         ?          |
-| [imhentai.com](https://imhentai.xxx)                                            | :heavy_check_mark: |         ?          |
+| [imhentai.xxx](https://imhentai.xxx)                                            | :heavy_check_mark: |         ?          |
 | [iwara.tv](https://iwara.tv/)                                                   | :heavy_check_mark: | :heavy_check_mark: |
 | [konachan.com](https://konachan.com/post?tags=)                                 | :heavy_check_mark: |         ?          |
 | [latesthentai.com (1080p, 720p, 480p, 360p)](https://latesthentai.com/)         |         ?          | :heavy_check_mark: |
