@@ -20,7 +20,6 @@ import (
 	"github.com/gan-of-culture/get-sauce/extractors/hentaipulse"
 	"github.com/gan-of-culture/get-sauce/extractors/hentaivideos"
 	"github.com/gan-of-culture/get-sauce/extractors/hentaiworld"
-	"github.com/gan-of-culture/get-sauce/extractors/hentaiyes"
 	"github.com/gan-of-culture/get-sauce/extractors/hitomi"
 	"github.com/gan-of-culture/get-sauce/extractors/hstream"
 	"github.com/gan-of-culture/get-sauce/extractors/htdoujin"
@@ -28,7 +27,6 @@ import (
 	"github.com/gan-of-culture/get-sauce/extractors/miohentai"
 	"github.com/gan-of-culture/get-sauce/extractors/muchohentai"
 	"github.com/gan-of-culture/get-sauce/extractors/nhentai"
-	"github.com/gan-of-culture/get-sauce/extractors/nhgroup"
 	"github.com/gan-of-culture/get-sauce/extractors/ohentai"
 	"github.com/gan-of-culture/get-sauce/extractors/oppai"
 	"github.com/gan-of-culture/get-sauce/extractors/rule34"
@@ -43,13 +41,11 @@ var extractorsMap map[string]static.Extractor
 
 func init() {
 	htdoujinExtractor := htdoujin.New()
-	nhgroupExtractor := nhgroup.New()
 	iwaraExtractor := iwara.New()
 
 	extractorsMap = map[string]static.Extractor{
 		"": universal.New(),
 
-		"animeidhentai.com":      nhgroupExtractor,
 		"asmhentai.com":          htdoujinExtractor,
 		"comicporn.xxx":          htdoujinExtractor,
 		"danbooru.donmai.us":     danbooru.New(),
@@ -57,7 +53,6 @@ func init() {
 		"eahentai.com":           eahentai.New(),
 		"haho.moe":               haho.New(),
 		"hanime.tv":              hanime.New(),
-		"hentai.tv":              nhgroupExtractor,
 		"hentai-moon.com":        hentaimoon.New(),
 		"hentai2read.com":        hentai2read.New(),
 		"hentai2w.com":           hentai2w.New(),
@@ -66,23 +61,19 @@ func init() {
 		"hentaienvy.com":         htdoujinExtractor,
 		"www.hentai-foundry.com": hentaifoundry.New(),
 		"hentaifox.com":          htdoujinExtractor,
-		"hentaihaven.co":         nhgroupExtractor,
 		"hentaimama.io":          hentaimama.New(),
 		"hentainexus.com":        hentainexus.New(),
 		"hentaiplay.net":         hentaiplay.New(),
 		"hentaipulse.com":        hentaipulse.New(),
 		"hentairox.com":          htdoujinExtractor,
-		"hentaistream.xxx":       nhgroupExtractor,
 		"hentaivideos.net":       hentaivideos.New(),
 		"hentaiworld.tv":         hentaiworld.New(),
-		"hentaiyes.com":          hentaiyes.New(),
 		"hentaizap.com":          htdoujinExtractor,
 		"hitomi.la":              hitomi.New(),
 		"hstream.moe":            hstream.New(),
 		"imhentai.xxx":           htdoujinExtractor,
 		"iwara.tv":               iwaraExtractor,
 		"www.iwara.tv":           iwaraExtractor,
-		"latesthentai.com":       nhgroupExtractor,
 		"miohentai.com":          miohentai.New(),
 		"muchohentai.com":        muchohentai.New(),
 		"nhentai.net":            nhentai.New(),
@@ -92,7 +83,6 @@ func init() {
 		"rule34video.com":        rule34video.New(),
 		"www.simply-hentai.com":  simplyhentai.New(),
 		"thehentaiworld.com":     thehentaiworld.New(),
-		"uncensoredhentai.xxx":   nhgroupExtractor,
 	}
 }
 

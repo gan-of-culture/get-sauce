@@ -89,7 +89,7 @@ func extractData(URL string) (*static.Data, error) {
 
 	return &static.Data{
 		Site:  site,
-		Title: title,
+		Title: strings.TrimSpace(title),
 		Type:  utils.GetMediaType(strings.Split(headers.Get("content-type"), "/")[1]),
 		Streams: map[string]*static.Stream{
 			"0": {
