@@ -286,7 +286,7 @@ func extractData(URL string) ([]*static.Data, error) {
 		case "image":
 			mediaStreams, err = imageFileInfoToStream(&file, idx)
 		case "video":
-			mediaStreams, err = videoFileInfoToStream(&file, mediaInfo.FileURL, idx)
+			mediaStreams, err = videoFileInfoToStream(&file, &mediaInfo, idx)
 		}
 		if err != nil {
 			return nil, err
@@ -329,18 +329,21 @@ func imageFileInfoToStream(fileInfo *File, idx int) (map[string]*static.Stream, 
 
 }
 
-func videoFileInfoToStream(fileInfo *File, fileURL string, idx int) (map[string]*static.Stream, error) {
-	u, err := url.Parse(fileURL)
+func videoFileInfoToStream(fileInfo *File, mediaInfo *MediaInfo, idx int) (map[string]*static.Stream, error) {
+	u, err := url.Parse(mediaInfo.FileURL)
 	if err != nil {
 		return nil, err
 	}
+	q := u.Query()
+	q.Add("download", fmt.Sprintf("Iwara - %s [%s].mp4", mediaInfo.Title, mediaInfo.ID))
+	u.RawQuery = q.Encode()
 
 	// https://www.iwara.tv/main.c0260392c56cd1aad6a4.js contains the hash salt
 	// if you search for X-Version it should be above
 	h := sha1.New()
-	io.WriteString(h, fmt.Sprintf("%s_%s_5nFp9kmbNnHdAFhaqMvt", fileInfo.ID, u.Query().Get("expires")))
+	io.WriteString(h, fmt.Sprintf("%s_%s_mSvL05GfEmeEmsEYfGCnVpEjYgTJraJN", fileInfo.ID, q.Get("expires")))
 
-	res, err := request.GetAsBytesWithHeaders(fileURL, map[string]string{
+	res, err := request.GetAsBytesWithHeaders(u.String(), map[string]string{
 		"Referer":   site,
 		"X-Version": fmt.Sprintf("%x", h.Sum(nil)),
 	})

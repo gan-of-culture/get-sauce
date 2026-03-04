@@ -40,10 +40,9 @@ func TestExtract(t *testing.T) {
 		{
 			Name: "Single Episode",
 			Args: test.Args{
-				URL:     "https://miohentai.com/enjo-kouhai-episode-2/",
-				Title:   "Enjo Kouhai – Episode 2",
-				Quality: "",
-				Size:    133204909,
+				URL:   "https://miohentai.com/enjo-kouhai-episode-2/",
+				Title: "Enjo Kouhai – Episode 2",
+				Size:  133204909,
 			},
 		},
 	}
