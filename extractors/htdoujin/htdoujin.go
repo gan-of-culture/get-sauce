@@ -230,14 +230,10 @@ func extractData(ID string, siteCfg siteConfig) (*static.Data, error) {
 				return nil, fmt.Errorf("extension %s cannot be mapped", ext)
 			}
 		}
-		imagePath, err := url.JoinPath(imageDir[1], gID[1], fmt.Sprintf("%d.%s", i+1, ext))
-		if err != nil {
-			return nil, err
-		}
-		cdnURL.Path = imagePath
+		imageURL := cdnURL.JoinPath(imageDir[1], gID[1], fmt.Sprintf("%d.%s", i+1, ext))
 
 		URLs = append(URLs, &static.URL{
-			URL: cdnURL.String(),
+			URL: imageURL.String(),
 			Ext: ext,
 		})
 	}

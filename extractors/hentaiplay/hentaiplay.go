@@ -69,10 +69,7 @@ func parseURL(URL string) ([]string, error) {
 	if err != nil {
 		return nil, err
 	}
-	APIURL.Path, err = url.JoinPath(APIURL.Path, "posts")
-	if err != nil {
-		return nil, err
-	}
+	APIURL = APIURL.JoinPath("posts")
 	q := APIURL.Query()
 	q.Add("slug", slug)
 	APIURL.RawQuery = q.Encode()
@@ -122,10 +119,7 @@ func extractData(URL string) (*static.Data, error) {
 	if err != nil {
 		return nil, err
 	}
-	APIURL.Path, err = url.JoinPath(APIURL.Path, "posts")
-	if err != nil {
-		return nil, err
-	}
+	APIURL = APIURL.JoinPath("posts")
 	q := APIURL.Query()
 	q.Add("slug", slug)
 	APIURL.RawQuery = q.Encode()
