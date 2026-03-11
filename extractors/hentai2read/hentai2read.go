@@ -135,7 +135,7 @@ func fetchChapterURLs(URL string) ([]string, error) {
 
 	chapterURLs := regexp.MustCompile(URL+`[\d\.]+/`).FindAllString(htmlString, -1)
 	fallbackURL := URL + "1/"
-	// the chapter URLs come sorted, but are preceeded by a couple of duplicates -> remove them
+	// the chapter URLs come sorted, but are preceded by a couple of duplicates -> remove them
 	chapterURLs = slices.DeleteFunc(chapterURLs, func(s string) bool { return s == fallbackURL })
 	chapterURLs = append(chapterURLs, fallbackURL)
 	// chapters come sorted newest -> oldest so we reverse it
