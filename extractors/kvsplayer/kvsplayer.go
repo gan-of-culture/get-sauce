@@ -150,7 +150,7 @@ func getRealURL(videoURL, licenseCode string) (string, error) {
 	newMagic := URLParts[5][:32]
 
 	for o := len(newMagic) - 1; o > -1; o-- {
-		new := ""
+		var new strings.Builder
 		lNum := 0
 		nAsInt := 0
 		for _, n := range license[o:] {
@@ -161,15 +161,16 @@ func getRealURL(videoURL, licenseCode string) (string, error) {
 		l := (o + lNum) % 32
 
 		for i := 0; i < len(newMagic); i++ {
-			if i == o {
-				new += string(newMagic[l])
-			} else if i == l {
-				new += string(newMagic[o])
-			} else {
-				new += string(newMagic[i])
+			switch i {
+			case o:
+				new.WriteString(string(newMagic[l]))
+			case l:
+				new.WriteString(string(newMagic[o]))
+			default:
+				new.WriteString(string(newMagic[i]))
 			}
 		}
-		newMagic = new
+		newMagic = new.String()
 	}
 
 	URLParts[5] = newMagic + URLParts[5][32:]
@@ -190,17 +191,17 @@ func getLicenseToken(license string) string {
 	}
 
 	modlicense = fmt.Sprint(4 * int(math.Abs(float64(fronthalf-backhalf))))
-	retVal := ""
+	var retVal strings.Builder
 	val1 := 0
 	val2 := 0
 	for o := 0; o < center+1; o++ {
 		for i := 1; i < 5; i++ {
 			val1, _ = strconv.Atoi(string(license[o+i]))
 			val2, _ = strconv.Atoi(string(modlicense[o]))
-			retVal += fmt.Sprint((val1 + val2) % 10)
+			retVal.WriteString(fmt.Sprint((val1 + val2) % 10))
 		}
 	}
-	return retVal
+	return retVal.String()
 }
 
 func parseFlashVars(htmlString *string) (map[string]string, error) {
