@@ -26,6 +26,7 @@ const cdn = "https://static.hentaicdn.com/hentai"
 
 var reJSONString = regexp.MustCompile(`{\s*'mangaID'[\s\S]*?}`)
 var reTitle = regexp.MustCompile(`[^[(|]*`)
+var reMangaID = regexp.MustCompile(`data-manga-id="\d+"`)
 
 type extractor struct{}
 
@@ -35,9 +36,12 @@ func New() static.Extractor {
 }
 
 func (e *extractor) Extract(URL string) ([]*static.Data, error) {
-	URLs := parseURL(URL)
-	if len(URLs) == 0 {
-		return nil, static.ErrURLParseFailed
+	URLs, err := parseURL(URL)
+	if len(URLs) < 1 {
+		err = static.ErrURLParseFailed
+	}
+	if err != nil {
+		return nil, err
 	}
 
 	data := []*static.Data{}
@@ -52,15 +56,16 @@ func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 	return data, nil
 }
 
-func parseURL(URL string) []string {
-	URL = strings.Split(URL, "#")[0]
-	if strings.Contains(URL, "_") {
-		return []string{URL}
-	}
+func parseURL(URL string) ([]string, error) {
+	URL, _, _ = strings.Cut(URL, "#")
 
 	htmlString, err := request.Get(URL)
 	if err != nil {
-		return []string{}
+		return []string{}, err
+	}
+
+	if reMangaID.MatchString(htmlString) {
+		return []string{URL}, nil
 	}
 
 	re := regexp.MustCompile(`([^/]*/)" class="title"`)
@@ -69,7 +74,7 @@ func parseURL(URL string) []string {
 	for _, u := range re.FindAllStringSubmatch(htmlString, -1) {
 		URLs = append(URLs, site+u[1])
 	}
-	return URLs
+	return URLs, nil
 }
 
 func extractData(URL string) (*static.Data, error) {
