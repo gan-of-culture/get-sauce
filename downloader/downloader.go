@@ -365,8 +365,10 @@ func (downloader *downloaderStruct) writeFile(URL string, file *os.File, headers
 	if res.StatusCode != http.StatusOK {
 		time.Sleep(1 * time.Second)
 		res, err = downloader.client.Get(URL)
-		res.Body.Close()
-		return fmt.Errorf("downloading URL: '%s' returned status %d even after retrying", URL, res.StatusCode)
+		if res.StatusCode != http.StatusOK {
+			res.Body.Close()
+			return fmt.Errorf("downloading URL: '%s' returned status %d even after retrying", URL, res.StatusCode)
+		}
 	}
 	defer res.Body.Close()
 
