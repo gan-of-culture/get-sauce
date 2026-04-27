@@ -3,8 +3,6 @@ package downloader
 import (
 	"fmt"
 	"os"
-	"os/exec"
-	"path/filepath"
 	"regexp"
 	"slices"
 	"strconv"
@@ -105,59 +103,6 @@ func printStreamInfo(data *static.Data, streamKey string) {
 
 	fmt.Println("\n Stream:   ")
 	printStream(streamKey, data.Streams[streamKey])
-}
-
-// mergeMediaFiles into one output file using ffmpeg | merges video + audio + subtitles
-func mergeMediaFiles(files []string, outFile string) error {
-	if len(files) < 2 {
-		return nil
-	}
-	if !config.Quiet {
-		fmt.Println("\nMerging files using ffmpeg...")
-	}
-
-	if strings.HasSuffix(outFile, ".webm") {
-		outFile = strings.ReplaceAll(outFile, ".webm", ".mp4")
-	}
-
-	command := []string{"-y"}
-	var caption string
-	for _, f := range files {
-		p, _ := filepath.Abs(f)
-		switch utils.GetFileExt(f) {
-		case "ass", "srt", "vtt":
-			caption = p
-		}
-		command = append(command, "-i")
-		command = append(command, p)
-	}
-	command = append(command, "-c")
-	command = append(command, "copy")
-	if caption != "" {
-		command = append(command, "-c:s")
-		command = append(command, "mov_text")
-	}
-	command = append(command, outFile)
-
-	if !config.Quiet {
-		fmt.Println(command)
-	}
-	cmd := exec.Command("ffmpeg", command...)
-	if err := cmd.Run(); err != nil {
-		return err
-	}
-
-	for _, f := range files {
-		err := os.Remove(f)
-		if err != nil {
-			return err
-		}
-	}
-	if !config.Quiet {
-		fmt.Println("Success!")
-	}
-
-	return nil
 }
 
 func sanitizeVTT(fileURI string) error {

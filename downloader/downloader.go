@@ -93,8 +93,8 @@ func (downloader *downloaderStruct) Download(data *static.Data) error {
 	if downloader.stream.Type != static.DataTypeVideo {
 		return nil
 	}
-	var files []string
-	files = append(files, fileURI)
+	var files []MergeFile
+	files = append(files, MergeFile{path: fileURI, dataType: static.DataTypeVideo})
 
 	audioFilePath, err := downloader.downloadExtraAudio(data)
 	if err != nil {
@@ -111,10 +111,10 @@ func (downloader *downloaderStruct) Download(data *static.Data) error {
 	}
 
 	if audioFilePath != "" {
-		files = append(files, audioFilePath)
+		files = append(files, MergeFile{path: audioFilePath, dataType: static.DataTypeAudio})
 	}
 	if captionFilePath != "" {
-		files = append(files, captionFilePath)
+		files = append(files, MergeFile{path: captionFilePath, dataType: static.DataTypeText})
 	}
 
 	if downloader.stream.Ext == "" {
@@ -365,6 +365,9 @@ func (downloader *downloaderStruct) writeFile(URL string, file *os.File, headers
 	if res.StatusCode != http.StatusOK {
 		time.Sleep(1 * time.Second)
 		res, err = downloader.client.Get(URL)
+		if err != nil {
+			return err
+		}
 		if res.StatusCode != http.StatusOK {
 			res.Body.Close()
 			return fmt.Errorf("downloading URL: '%s' returned status %d even after retrying", URL, res.StatusCode)
