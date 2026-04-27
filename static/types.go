@@ -46,6 +46,8 @@ const (
 	DataTypeAudio DataType = "audio"
 	// DataTypeImage indicates the type of extracted data is the image.
 	DataTypeImage DataType = "image"
+	// DataTypeText indicates the type of extracted data is the text.
+	DataTypeText DataType = "text"
 	// DataTypeUnknown indicates the type of extracted data is the unknown.
 	DataTypeUnknown DataType = "unknown"
 )

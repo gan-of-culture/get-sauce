@@ -16,8 +16,8 @@ import (
 const site = "https://oppai.stream/"
 const episodeURLTemplate = "https://oppai.stream/watch.php?e="
 
-var reSources = regexp.MustCompile(`var availableres = ({[^}]+})`)           // 1=srcURL 2=Resolution
-var reCaptions = regexp.MustCompile(`<track.+label="([^"]+)"\ssrc="([^"]+)`) // 1=Language 2=srcURL
+var reSources = regexp.MustCompile(`var availableres = ({[^}]+})`)                      // 1=srcURL 2=Resolution
+var reCaptions = regexp.MustCompile(`<track.+label=["']([^'"]+)["']\ssrc=["']([^"']+)`) // 1=Language 2=srcURL
 
 type extractor struct{}
 
