@@ -43,9 +43,9 @@ func TestExtract(t *testing.T) {
 			Name: "Default extraction",
 			Args: test.Args{
 				URL:     "https://danbooru.donmai.us/posts/3749687",
-				Title:   "konpaku youmu (touhou) drawn by niwashi_(yuyu)",
-				Quality: "1782 x 2048",
-				Size:    0,
+				Title:   "konpaku_youmu_touhou_drawn_by_niwashi_yuyu_3749687",
+				Quality: "1782x2048",
+				Size:    394000,
 			},
 		},
 	}

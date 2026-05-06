@@ -4,7 +4,10 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"net/url"
+	"path"
 	"regexp"
+	"strconv"
 	"strings"
 
 	"github.com/gan-of-culture/get-sauce/request"
@@ -14,8 +17,13 @@ import (
 )
 
 const site = "https://danbooru.donmai.us"
+const postURLTemplate = site + "/posts/%s"
 
+// [1] = img original width [2] image original height [3] src URL [4] image name
 var reIMGData = regexp.MustCompile(`data-width="([^"]+)"[ ]+data-height="([^"]+)"[\s\S]*?alt="([^"]+)".+src="([^"]+)"`)
+
+// src URL, size, width, height
+var reIMGData2 = regexp.MustCompile(`Size: <a href="([^"]+)">([^A-Z]+[^\s]+)[^(]+\(([^)]+)`)
 
 type extractor struct {
 	client *http.Client
@@ -27,24 +35,22 @@ func New() static.Extractor {
 }
 
 func newForTesting() *extractor {
-	return &extractor{
-		client: request.Firefox117Client(),
-	}
+	return &extractor{client: request.Firefox117Client()}
 }
 
 // Extract for danbooru pages
 func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 
-	posts, err := e.parseURL(URL)
+	postIDs, err := e.parseURL(URL)
 	if err != nil {
 		return nil, err
 	}
 
 	data := []*static.Data{}
-	for _, post := range posts {
-		contentData, err := e.extractData(site + post)
+	for _, postID := range postIDs {
+		contentData, err := e.extractData(postID)
 		if err != nil {
-			log.Println(site + post)
+			log.Printf(postURLTemplate, postID)
 			return nil, err
 		}
 		data = append(data, contentData)
@@ -55,66 +61,74 @@ func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 
 // parseURL for danbooru pages
 func (e *extractor) parseURL(URL string) ([]string, error) {
-	re := regexp.MustCompile(`page=([0-9]+)`)
-	pageNo := re.FindAllString(URL, -1)
-	// pageNo = URL?page=number -> if it's there it means overview page otherwise single post or invalid
-	if len(pageNo) == 0 {
-
-		re := regexp.MustCompile(`/posts/[0-9]+`)
-		linkToPost := re.FindString(URL)
-		if linkToPost == "" {
-			return nil, errors.WithStack(static.ErrURLParseFailed)
-		}
-
-		return []string{linkToPost}, nil
-	}
-
-	htmlString, err := request.GetAsBytesWithClient(e.client, URL, URL)
+	u, err := url.Parse(URL)
 	if err != nil {
 		return nil, errors.WithStack(err)
 	}
 
-	re = regexp.MustCompile(`data-id="([^"]+)`)
-	matchedIDs := re.FindAllSubmatch(htmlString, -1)
+	pathSplit := strings.Split(u.Path, "/")
+	lenPathSplit := len(pathSplit)
+	if lenPathSplit >= 2 && pathSplit[lenPathSplit-2] == "posts" {
+		return []string{pathSplit[lenPathSplit-1]}, nil
+	}
 
+	htmlString, err := request.GetAsBytesWithClient(e.client, URL, URL)
+	if err != nil {
+		return nil, err
+	}
+
+	re := regexp.MustCompile(`data-id="([^"]+)`)
 	out := []string{}
-	for _, submatchID := range matchedIDs {
-		out = append(out, "/posts/"+string(submatchID[1]))
+	for _, submatchID := range re.FindAllSubmatch(htmlString, -1) {
+		out = append(out, string(submatchID[1]))
 	}
 
 	return out, nil
 }
 
-func (e *extractor) extractData(postURL string) (*static.Data, error) {
-	htmlString, err := request.GetAsBytesWithClient(e.client, postURL, postURL)
+func (e *extractor) extractData(postID string) (*static.Data, error) {
+	postURL := fmt.Sprintf(postURLTemplate, postID)
+	htmlBytes, err := request.GetAsBytesWithClient(e.client, postURL, postURL)
 	if err != nil {
 		return nil, errors.WithStack(err)
 	}
 
-	matchedImgData := reIMGData.FindStringSubmatch(string(htmlString))
-	if len(matchedImgData) != 5 {
-		log.Println(htmlString)
+	matchedImgData := reIMGData2.FindStringSubmatch(string(htmlBytes))
+	if len(matchedImgData) != 4 {
+		log.Println(string(htmlBytes))
 		return nil, errors.WithStack(static.ErrDataSourceParseFailed)
 	}
-	// [1] = img original width [2] image original height [3] image name [4] src URL
+
+	_, fname := path.Split(matchedImgData[1])
+	fnameSplit := strings.Split(fname, "_")
+	fname = strings.Trim(strings.Join(fnameSplit[:len(fnameSplit)-2], "_"), "_")
+	size, unit, ok := strings.Cut(matchedImgData[2], " ")
+	var s int64
+	if ok {
+		sizeF, err := strconv.ParseFloat(size, 10)
+		if err != nil {
+			return nil, errors.WithStack(err)
+		}
+		s = utils.CalcSizeInByte(sizeF, unit)
+	}
 
 	return &static.Data{
 		Site:  site,
-		Title: matchedImgData[3],
+		Title: fmt.Sprintf("%s_%s", fname, postID),
 		Type:  static.DataTypeImage,
 		Streams: map[string]*static.Stream{
 			"0": {
 				Type: static.DataTypeImage,
 				URLs: []*static.URL{
 					{
-						URL: matchedImgData[4],
-						Ext: utils.GetLastItemString(strings.Split(matchedImgData[4], ".")),
+						URL: matchedImgData[1],
+						Ext: utils.GetFileExt(matchedImgData[1]),
 					},
 				},
-				Quality: fmt.Sprintf("%s x %s", matchedImgData[1], matchedImgData[2]),
-				Size:    0,
+				Quality: matchedImgData[3],
+				Size:    s,
 			},
 		},
-		URL: postURL,
+		URL: postID,
 	}, nil
 }
