@@ -41,8 +41,8 @@ func printHeader(data *static.Data) {
 
 func printCaption(i int, caption *static.Caption) {
 	fmt.Printf("\n     [%d]  -------------------", i)
-	fmt.Printf("\n     Language:            %s\n", caption.Language)
-	fmt.Printf("     # download with: ")
+	fmt.Printf("\n     Language:            %s", caption.Language)
+	fmt.Printf("\n     # download with: ")
 	fmt.Printf("get-sauce -c %d ...\n\n", i)
 }
 
@@ -51,28 +51,28 @@ func printStream(key string, stream *static.Stream) {
 	if stream.Type == "" {
 		stream.Type = static.DataTypeUnknown
 	}
-	if stream.Type != "" {
-		fmt.Printf("\n     Type:            %s", stream.Type)
-	}
+	fmt.Printf("\n     Type:            %s", stream.Type)
+
 	if stream.Info != "" {
 		fmt.Printf("\n     Info:            %s", stream.Info)
 	}
-	if stream.Quality == "" {
-		stream.Quality = "unknown"
+	if stream.Quality != "" {
+		fmt.Printf("\n     Quality:         %s", stream.Quality)
 	}
-	fmt.Printf("\n     Quality:         %s", stream.Quality)
 	if len(stream.URLs) > 1 {
 		fmt.Printf("\n     Parts:           %d", len(stream.URLs))
 	}
 
-	// for HLS streams the size is only approximated
-	sizeFString := "%s\n"
-	if stream.Ext != "" && stream.Size > 0 {
-		sizeFString = "~ " + sizeFString
+	if stream.Size > 0 {
+		// for HLS streams the size is only approximated
+		sizeFString := "%s"
+		if stream.Ext != "" {
+			sizeFString = "~ " + sizeFString
+		}
+		fmt.Printf("\n     Size:            ")
+		fmt.Printf(sizeFString, utils.ByteCountSI(stream.Size))
 	}
-	fmt.Printf("\n     Size:            ")
-	fmt.Printf(sizeFString, utils.ByteCountSI(stream.Size))
-	fmt.Printf("     # download with: ")
+	fmt.Printf("\n     # download with: ")
 	fmt.Printf("get-sauce -s %s ...\n\n", key)
 }
 
@@ -80,7 +80,7 @@ func printInfo(data *static.Data) {
 	printHeader(data)
 
 	if len(data.Captions) > 0 {
-		fmt.Println("\n Captions:  # All available languages")
+		fmt.Print("\n Captions:  # All available languages")
 	}
 	for i, caption := range data.Captions {
 		printCaption(i, caption)

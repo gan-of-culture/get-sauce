@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bufio"
 	"context"
 	"encoding/json"
 	"flag"
@@ -9,6 +10,7 @@ import (
 	"os"
 	"os/exec"
 	"runtime/debug"
+	"strings"
 
 	"github.com/gan-of-culture/get-sauce/config"
 	"github.com/gan-of-culture/get-sauce/downloader"
@@ -27,6 +29,7 @@ var version = versionDefault
 func init() {
 	flag.IntVar(&config.Amount, "a", 0, "Amount of files to download")
 	flag.IntVar(&config.Caption, "c", -1, "Download caption to a extra file")
+	flag.StringVar(&config.File, "F", "", "Download all URLs from a file")
 	flag.StringVar(&config.UserHeaders, "h", "", "UserHeaders for the HTTP requests. To bypass Cloudflare or DDOS-GUARD protection")
 	flag.BoolVar(&config.ShowInfo, "i", false, "Show info")
 	flag.BoolVar(&config.ShowExtractedData, "j", false, "Show extracted data as json")
@@ -116,6 +119,18 @@ func main() {
 		}
 		fmt.Printf("\n%s: version %s\n\n", name, version)
 		return
+	}
+
+	if config.File != "" {
+		f, err := os.Open(config.File)
+		if err != nil {
+			log.Fatalf("%+v", err)
+		}
+		defer f.Close()
+		s := bufio.NewScanner(f)
+		for s.Scan() {
+			args = append(args, strings.TrimSpace(s.Text()))
+		}
 	}
 
 	if len(args) < 1 {
