@@ -55,9 +55,9 @@ get-sauce https://hentaimama.io/episodes/torokase-orgasm-animation-episode-1/
 ```
 
 > Note: wrap the URL(s) in quotation marks if it contains special characters.  
-> ```get-sauce "https://..."```
+> `get-sauce "https://..."`
 
-The ```-i``` option displays all available quality of video without downloading.
+The `-i` option displays all available quality of video without downloading.
 
 ```console
 get-sauce -i https://hentaimama.io/episodes/torokase-orgasm-animation-episode-1/
@@ -109,7 +109,7 @@ get-sauce -i https://hentaimama.io/episodes/torokase-orgasm-animation-episode-1/
      # download with: get-sauce -s 4 ...
 ```
 
-The default stream is 0 and it also offers the best available quality. If you want to download a different quality or from a mirrored server you can manually choose a stream with ```-s```.
+The default stream is 0 and it also offers the best available quality. If you want to download a different quality or from a mirrored server you can manually choose a stream with `-s`.
 
 ### Multiple inputs
 
@@ -144,11 +144,27 @@ get-sauce -i https://nhentai.net/g/364616/ https://nhentai.net/g/364591/
 
 The URLs will be downloaded one by one.
 
+You can also use the `-F` option to read URLs from file:
+
+```console
+$ get-sauce -F ~/Desktop/URLs.txt
+
+ Site:      cdn.discordapp.com
+ Title:     LateNightSnack
+ Type:      image
+ Stream:
+     [0]  -------------------
+     Size:            7.8 MB
+     # download with: get-sauce -s 0 ...
+```
+
+URLs have to be separated with a new line.
+
 ### Captions
 
-For most of the sites the captions (CC, OC or Subtitles) are hard encoded into the video file and can't be downloaded separately. If it is not encoded into the video and a caption file was found, then you can download it using the option ```-c```.
+For most of the sites the captions (CC, OC or Subtitles) are hard encoded into the video file and can't be downloaded separately. If it is not encoded into the video and a caption file was found, then you can download it using the option `-c`.
 
-To see if the captions can be downloaded separately use the option ```-i```. There will be extra information displayed if the option ```-c``` can be used.
+To see if the captions can be downloaded separately use the option `-i`. There will be extra information displayed if the option `-c` can be used.
 
 ```console
 get-sauce -i https://hentai-moon.com/videos/285/isekai-harem-monogatari-ep-1/
@@ -157,7 +173,6 @@ get-sauce -i https://hentai-moon.com/videos/285/isekai-harem-monogatari-ep-1/
  Title:     Isekai Harem Monogatari - Ep.1
  Type:      video
  Captions:  # All available languages
-
      [0]  -------------------
      Language:            English
      # download with: get-sauce -c 0 ...
@@ -187,10 +202,15 @@ get-sauce -i https://hentai-moon.com/videos/285/isekai-harem-monogatari-ep-1/
 
 ---------------------------------------------------------------------------------------------------------
 
+ -F             Download URLs listed in this file path
+
+ get-sauce -F /path/to/file
+
+---------------------------------------------------------------------------------------------------------
+
  -h             UserHeaders for the http requests. To bypass Cloudflare or DDOS-GUARD protection
 
  get-sauce -h "cf_clearance=..." http...
-
 
 ---------------------------------------------------------------------------------------------------------
  
@@ -211,6 +231,7 @@ get-sauce -i https://hentai-moon.com/videos/285/isekai-harem-monogatari-ep-1/
  get-sauce -k http...
 
 ---------------------------------------------------------------------------------------------------------
+
  -o             Output name of the file
 
  get-sauce -o myfilename http...
@@ -258,11 +279,13 @@ get-sauce -i https://hentai-moon.com/videos/285/isekai-harem-monogatari-ep-1/
  get-sauce -T 15 http...
 
 ---------------------------------------------------------------------------------------------------------
+
  -v             Show version 
 
  get-sauce -v ...
 
 ---------------------------------------------------------------------------------------------------------
+
  -w             Number of download workers
 
  get-sauce -w 4 http...

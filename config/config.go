@@ -5,6 +5,8 @@ var (
 	Amount int
 	// Caption to download if available
 	Caption int
+	// File download URLs listed in this filepath
+	File string
 	// Keep video, audio and subtitles. Don't merge using ffmpeg
 	Keep bool
 	// OutputPath for files
