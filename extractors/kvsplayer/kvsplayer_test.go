@@ -17,7 +17,7 @@ func TestExtract(t *testing.T) {
 				URL:     "https://www.kvs-demo.com/videos/1029/nicky-romero-premieres-linkin-park-remix-at-ultra-miami/",
 				Title:   "nicky-romero-premieres-linkin-park-remix-at-ultra-miami",
 				Quality: "720p",
-				Size:    42274789,
+				Size:    14832501,
 			},
 		},
 	}

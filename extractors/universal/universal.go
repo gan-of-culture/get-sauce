@@ -19,7 +19,7 @@ func New() static.Extractor {
 	return &extractor{}
 }
 
-// Extract unviersal url
+// Extract unviersal URL
 func (e *extractor) Extract(URL string) ([]*static.Data, error) {
 	data, err := imgboard.New().Extract(URL)
 	if len(data) > 0 && err == nil {
