@@ -1,10 +1,11 @@
 //go:build localonly
 
-package hanime
+package hentaifoundry
 
 import (
 	"testing"
 
+	"github.com/gan-of-culture/get-sauce/config"
 	"github.com/gan-of-culture/get-sauce/test"
 )
 
@@ -15,15 +16,20 @@ func TestParseURL(t *testing.T) {
 		Want int
 	}{
 		{
-			Name: "Single Episode",
-			URL:  "https://hanime.tv/videos/hentai/inkou-kyoushi-no-saimin-seikatsu-shidouroku-2",
+			Name: "Single Post",
+			URL:  "https://www.hentai-foundry.com/pictures/user/LumiNyu/930609/Ty-Lee",
 			Want: 1,
 		}, {
-			Name: "Overview",
-			URL:  "https://hanime.tv/browse/tags/fantasy",
-			Want: 24,
+			Name: "Overview User",
+			URL:  "https://www.hentai-foundry.com/pictures/user/LumiNyu",
+			Want: 50,
+		}, {
+			Name: "Overview Category",
+			URL:  "https://www.hentai-foundry.com/categories/372/Anime-and-Manga/Chobits/pictures",
+			Want: 18,
 		},
 	}
+	config.Amount = 50
 	for _, tt := range tests {
 		t.Run(tt.Name, func(t *testing.T) {
 			URLs := parseURL(tt.URL)
@@ -42,10 +48,10 @@ func TestExtract(t *testing.T) {
 		{
 			Name: "Single Episode",
 			Args: test.Args{
-				URL:     "https://hanime.tv/videos/hentai/inkou-kyoushi-no-saimin-seikatsu-shidouroku-2",
-				Title:   "Inkou Kyoushi no Saimin Seikatsu Shidouroku 2",
-				Quality: "720p; 1280 x 720",
-				Size:    115000000,
+				URL:     "https://www.hentai-foundry.com/pictures/user/AyyaSAP/795835/Albedo",
+				Title:   "AyyaSAP-795835-Albedo",
+				Quality: "720x1008",
+				Size:    517783960,
 			},
 		},
 	}

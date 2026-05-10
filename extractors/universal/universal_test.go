@@ -26,7 +26,7 @@ func TestExtract(t *testing.T) {
 				URL:     "https://wimg.rule34.xxx//images/41/d54d1f1dde83ff670c5932ab8f2d42a5cf18e587.jpg?40602",
 				Title:   "d54d1f1dde83ff670c5932ab8f2d42a5cf18e587",
 				Quality: "",
-				Size:    125079,
+				Size:    131058,
 			},
 		},
 	}

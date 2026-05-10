@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"html"
 	"regexp"
+	"slices"
 	"sort"
 	"strconv"
 	"strings"
@@ -200,7 +201,7 @@ func parseURL(URL string) []string {
 }
 
 func extractData(pID string) ([]*static.Data, error) {
-	//set per_page value to max (100) I have seen posts that contain 20+ images
+	// set per_page value to max (100) I have seen posts that contain 20+ images
 	mediaJSON, err := request.GetAsBytes(mediaAPI + pID + "&per_page=100")
 	if err != nil {
 		return nil, err
@@ -214,12 +215,7 @@ func extractData(pID string) ([]*static.Data, error) {
 
 	// for vids you get thumbnail and video - discard the thumbnail
 	if len(mS) > 1 {
-		for i, v := range mS {
-			if strings.Contains(v.Slug, "-thumbnail") {
-				mS = remove(mS, i)
-				break
-			}
-		}
+		mS = slices.DeleteFunc(mS, func(m media) bool { return strings.Contains(m.Slug, "-thumbnail") })
 	}
 
 	data := []*static.Data{}
@@ -280,11 +276,6 @@ func genSortedStreams(sizes map[string]size) []size {
 	})
 
 	return sortedSizes
-}
-
-func remove(s []media, i int) []media {
-	s[len(s)-1], s[i] = s[i], s[len(s)-1]
-	return s[:len(s)-1]
 }
 
 func getTagIDFromSlug(slug string) string {
