@@ -95,7 +95,7 @@ func TestNeedDownloadList(t *testing.T) {
 				len: 3,
 			},
 			pages: "1, 3",
-			Want:  []int{1, 3},
+			Want:  []int{0, 2},
 		},
 		{
 			Name: "from to item selection 1",
@@ -103,7 +103,7 @@ func TestNeedDownloadList(t *testing.T) {
 				len: 10,
 			},
 			pages: "1-3, 5, 7-8, 10",
-			Want:  []int{1, 2, 3, 5, 7, 8, 10},
+			Want:  []int{0, 1, 2, 4, 6, 7, 9},
 		},
 		{
 			Name: "from to item selection 2",
@@ -111,7 +111,7 @@ func TestNeedDownloadList(t *testing.T) {
 				len: 10,
 			},
 			pages: "1,2, 4 , 5, 7-8  , 10",
-			Want:  []int{1, 2, 4, 5, 7, 8, 10},
+			Want:  []int{0, 1, 3, 4, 6, 7, 9},
 		},
 		{
 			Name: "from to item selection 3",
@@ -119,7 +119,7 @@ func TestNeedDownloadList(t *testing.T) {
 				len: 10,
 			},
 			pages: "5-1, 2",
-			Want:  []int{2},
+			Want:  []int{1},
 		},
 	}
 	for _, tt := range tests {

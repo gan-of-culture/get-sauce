@@ -11,16 +11,16 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
-	"regexp"
 	"runtime"
-	"strings"
 	"sync"
 	"time"
 
 	"github.com/gan-of-culture/get-sauce/config"
+	"github.com/gan-of-culture/get-sauce/merger"
 	"github.com/gan-of-culture/get-sauce/request"
 	"github.com/gan-of-culture/get-sauce/static"
 	"github.com/gan-of-culture/get-sauce/utils"
+	"github.com/pkg/errors"
 	"github.com/schollz/progressbar/v3"
 	"golang.org/x/sync/errgroup"
 )
@@ -32,7 +32,7 @@ type filePiece struct {
 
 type downloadInfo struct {
 	URL     static.URL
-	Title   string
+	FileURI string
 	Headers map[string]string
 }
 
@@ -42,11 +42,10 @@ type downloaderStruct struct {
 	client      *http.Client
 	filePath    string
 	tmpFilePath string
+	filename    string
 	progressBar *progressbar.ProgressBar
 	bar         bool
 }
-
-var reSanitizeTitle = regexp.MustCompile(`["&|:?<>/*\\ ]+`)
 
 func init() {
 	runtime.GOMAXPROCS(runtime.NumCPU())
@@ -70,11 +69,11 @@ func (downloader *downloaderStruct) Download(data *static.Data) error {
 
 	data.Title = cmp.Or(config.OutputName, data.Title)
 	// sanitize filename here
-	data.Title = strings.TrimSpace(reSanitizeTitle.ReplaceAllString(data.Title, " "))
+	downloader.filename = sanitizeTitle(data.Title)
 
 	if config.Subdirectory {
 		downloader.filePath = config.OutputPath
-		downloader.filePath = filepath.Join(downloader.filePath, data.Title)
+		downloader.filePath = filepath.Join(downloader.filePath, downloader.filename)
 	}
 
 	if downloader.filePath != "" {
@@ -84,68 +83,62 @@ func (downloader *downloaderStruct) Download(data *static.Data) error {
 		}
 	}
 
-	fileURI, err := downloader.downloadStream(data)
+	fileURIs, err := downloader.downloadStream(data)
 	if err != nil {
 		return err
 	}
 
-	// everything besides of video streams doesn't need the following logic to merge using FFmpeg
-	if downloader.stream.Type != static.DataTypeVideo {
-		return nil
-	}
-	var files []MergeFile
-	files = append(files, MergeFile{path: fileURI, dataType: static.DataTypeVideo})
-
-	audioFilePath, err := downloader.downloadExtraAudio(data)
+	additionalFiles, err := downloader.downloadAdditionalStreams(data)
 	if err != nil {
 		return err
 	}
 
-	captionFilePath, err := downloader.downloadCaption(data)
-	if err != nil {
-		return err
-	}
-
-	if config.Keep {
+	if config.Merge == config.MergeOptNone {
 		return nil
 	}
 
-	if audioFilePath != "" {
-		files = append(files, MergeFile{path: audioFilePath, dataType: static.DataTypeAudio})
-	}
-	if captionFilePath != "" {
-		files = append(files, MergeFile{path: captionFilePath, dataType: static.DataTypeText})
+	mergeFiles := make([]*merger.MergeFile, len(fileURIs))
+	for i, f := range fileURIs {
+		mergeFiles[i] = &merger.MergeFile{Path: f, DataType: static.DataTypeImage}
 	}
 
-	if downloader.stream.Ext == "" {
-		downloader.stream.Ext = downloader.stream.URLs[0].Ext
+	switch config.Merge {
+	case config.MergeOptDefault:
+		if len(additionalFiles) < 1 {
+			break
+		}
+		downloader.stream.Ext = cmp.Or(downloader.stream.Ext, downloader.stream.URLs[0].Ext)
+		mergeFiles = append(mergeFiles, additionalFiles...)
+		return merger.NewDataMerger().Merge(mergeFiles, filepath.Join(downloader.filePath, fmt.Sprintf("%s_merged.%s", downloader.filename, data.Streams[config.SelectStream].Ext)))
+	case config.MergeOptCBZ:
+		return merger.NewArchiveMerger(downloader.bar, data).Merge(mergeFiles, filepath.Join(downloader.filePath, fmt.Sprintf("%s.cbz", downloader.filename)))
 	}
-	return mergeMediaFiles(files, filepath.Join(downloader.filePath, data.Title+"_merged."+data.Streams[config.SelectStream].Ext))
+
+	return nil
 }
 
-func (downloader *downloaderStruct) downloadStream(data *static.Data) (string, error) {
+func (downloader *downloaderStruct) downloadStream(data *static.Data) ([]string, error) {
 	// select stream to download
 	var ok bool
 	if downloader.stream, ok = data.Streams[config.SelectStream]; !ok {
 		log.Println(data.Streams)
-		return "", fmt.Errorf("stream %s not found", config.SelectStream)
+		return nil, fmt.Errorf("stream %s not found", config.SelectStream)
 	}
 
 	if !config.Quiet {
 		printStreamInfo(data, config.SelectStream)
 	}
 
-	streamNeedsMerge := false
-	if downloader.stream.Ext != "" {
+	streamNeedsMerge := (downloader.stream.Ext != "")
+	if streamNeedsMerge {
 		// ensure a different tmpDir for each download so concurrent processes won't colide
 		h := sha1.New()
 		h.Write([]byte(data.Title + config.SelectStream))
 		downloader.tmpFilePath = filepath.Join(downloader.filePath, fmt.Sprintf("%x/", h.Sum(nil)[15:]))
 		err := os.MkdirAll(downloader.tmpFilePath, os.ModePerm)
 		if err != nil {
-			return "", err
+			return nil, err
 		}
-		streamNeedsMerge = true
 	}
 
 	headers := config.FakeHeaders
@@ -169,7 +162,7 @@ func (downloader *downloaderStruct) downloadStream(data *static.Data) (string, e
 				if !ok {
 					return nil
 				}
-				err := downloader.save(dlInfo.URL, dlInfo.Title, dlInfo.Headers)
+				err := downloader.save(dlInfo.URL, dlInfo.FileURI, dlInfo.Headers)
 				if err != nil {
 					return err
 				}
@@ -180,12 +173,17 @@ func (downloader *downloaderStruct) downloadStream(data *static.Data) (string, e
 	// get page numbers if -p is supplied to name files correctly
 	pageNumbers := utils.NeedDownloadList(lenOfUrls)
 
+	var fileURIs []string
 	var fileURI string
 	for idx, URL := range downloader.stream.URLs {
 		if appendEnum {
-			fileURI = fmt.Sprintf("%s_%d", data.Title, pageNumbers[idx])
+			if config.Merge == config.MergeOptCBZ {
+				fileURI = fmt.Sprint(pageNumbers[idx])
+			} else {
+				fileURI = fmt.Sprintf("%s_%d", downloader.filename, pageNumbers[idx])
+			}
 		} else {
-			fileURI = data.Title
+			fileURI = downloader.filename
 		}
 
 		// build final file URI
@@ -193,24 +191,38 @@ func (downloader *downloaderStruct) downloadStream(data *static.Data) (string, e
 		if streamNeedsMerge {
 			fileURI = filepath.Join(downloader.tmpFilePath, fmt.Sprintf("%d.%s", pageNumbers[idx], URL.Ext))
 		}
+		fileURIs = append(fileURIs, fileURI)
 
 		URLchan <- downloadInfo{*URL, fileURI, headers}
 	}
 	close(URLchan)
 	if err := errs.Wait(); err != nil {
-		return "", err
+		return nil, err
 	}
 
 	if streamNeedsMerge {
 		// build final file URI
-		fileURI = filepath.Join(downloader.filePath, data.Title+"."+downloader.stream.Ext)
-		err := downloader.MergeFilesWithSameExtension(fileURI)
-		if err != nil {
-			return "", err
+		fileURI = filepath.Join(downloader.filePath, downloader.filename+"."+downloader.stream.Ext)
+
+		tmpFiles := []*merger.MergeFile{}
+		for i, u := range downloader.stream.URLs {
+			tmpFiles = append(tmpFiles, &merger.MergeFile{Path: filepath.Join(downloader.tmpFilePath, fmt.Sprintf("%d.%s", i, u.Ext)), DataType: downloader.stream.Type})
 		}
+
+		err := merger.NewFragmentMerger(downloader.stream.Key, downloader.bar).Merge(tmpFiles, fileURI)
+		if err != nil {
+			return nil, err
+		}
+
+		err = os.RemoveAll(downloader.tmpFilePath)
+		if err != nil {
+			return nil, errors.WithStack(err)
+		}
+
+		return []string{fileURI}, nil
 	}
 
-	return fileURI, nil
+	return fileURIs, nil
 }
 
 func (downloader *downloaderStruct) save(URL static.URL, fileURI string, headers map[string]string) error {
@@ -329,7 +341,11 @@ func (downloader *downloaderStruct) concurWriteFile(URL string, file *os.File, h
 		}()
 	}
 
-	downloader.initPB(fileSize, fmt.Sprintf("Downloading %s using %d workers...", file.Name(), config.Workers), true)
+	downloader.progressBar = utils.InitPB(utils.ProgressBarConfig{
+		Length:      fileSize,
+		Description: fmt.Sprintf("Downloading %s using %d workers...", file.Name(), config.Workers),
+		AsBytes:     true,
+	})
 
 	var offset int64
 	for ; fileSize > 0; fileSize -= pieceSize {
@@ -379,7 +395,11 @@ func (downloader *downloaderStruct) writeFile(URL string, file *os.File, headers
 	writer = file
 	// some sites do not return "content-type" or "content-length" in http header
 	// it will render a spinner progressbar
-	downloader.initPB(res.ContentLength, fmt.Sprintf("Downloading %s ...", file.Name()), true)
+	downloader.progressBar = utils.InitPB(utils.ProgressBarConfig{
+		Length:      res.ContentLength,
+		Description: fmt.Sprintf("Downloading %s ...", file.Name()),
+		AsBytes:     true,
+	})
 	if downloader.bar {
 		writer = io.MultiWriter(file, downloader.progressBar)
 	}
@@ -393,77 +413,37 @@ func (downloader *downloaderStruct) writeFile(URL string, file *os.File, headers
 	return nil
 }
 
-func (downloader *downloaderStruct) initPB(len int64, descr string, asBytes bool) {
-	if !downloader.bar {
-		return
+// downloadAdditionalStreams needed for e.g. a video file to be complete. Downloads audio and captions if separate and requested
+func (downloader *downloaderStruct) downloadAdditionalStreams(data *static.Data) ([]*merger.MergeFile, error) {
+	// everything besides of video streams doesn't need the following logic to merge using FFmpeg
+	if downloader.stream.Type != static.DataTypeVideo {
+		return nil, nil
 	}
-	if asBytes {
-		downloader.progressBar = progressbar.NewOptions(
-			int(len),
-			progressbar.OptionShowBytes(true),
-			progressbar.OptionSetDescription(descr),
-			progressbar.OptionSetPredictTime(true),
-			progressbar.OptionSetRenderBlankState(true),
-		)
-		return
+
+	var files []*merger.MergeFile
+	audioFileURIs, err := downloader.downloadExtraAudio(data)
+	if err != nil {
+		return nil, err
 	}
-	downloader.progressBar = progressbar.NewOptions(
-		int(len),
-		progressbar.OptionShowIts(),
-		progressbar.OptionSetDescription(descr),
-		progressbar.OptionSetPredictTime(true),
-		progressbar.OptionSetRenderBlankState(true),
-	)
+
+	captionFileURI, err := downloader.downloadCaption(data)
+	if err != nil {
+		return nil, err
+	}
+
+	if len(audioFileURIs) > 0 {
+		for _, a := range audioFileURIs {
+			files = append(files, &merger.MergeFile{Path: a, DataType: static.DataTypeAudio})
+		}
+	}
+	if captionFileURI != "" {
+		files = append(files, &merger.MergeFile{Path: captionFileURI, DataType: static.DataTypeText})
+	}
+
+	return files, nil
 }
 
-func (downloader *downloaderStruct) MergeFilesWithSameExtension(fileURI string) error {
-	lenOfUrls := len(downloader.stream.URLs)
-	if lenOfUrls <= 1 {
-		return nil
-	}
-
-	file, err := os.OpenFile(fileURI, os.O_APPEND|os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644)
-	if err != nil {
-		return err
-	}
-	defer file.Close()
-
-	downloader.initPB(int64(lenOfUrls), fmt.Sprintf("Merging into %s ...", file.Name()), false)
-
-	var d []byte
-	for i, u := range downloader.stream.URLs {
-		partURL := filepath.Join(downloader.tmpFilePath, fmt.Sprintf("%d.%s", i, u.Ext))
-		if len(downloader.stream.Key) > 0 {
-			d, err = decrypt(downloader.stream.Key, partURL)
-			if err != nil {
-				return err
-			}
-		} else {
-			d, err = os.ReadFile(partURL)
-			if err != nil {
-				return err
-			}
-		}
-
-		if _, err := file.Write(d); err != nil {
-			return err
-		}
-
-		if downloader.bar {
-			downloader.progressBar.Add(1)
-		}
-
-	}
-
-	err = os.RemoveAll(downloader.tmpFilePath)
-	if err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (downloader *downloaderStruct) downloadExtraAudio(data *static.Data) (string, error) {
+func (downloader *downloaderStruct) downloadExtraAudio(data *static.Data) ([]string, error) {
 	// if audio is in separate stream -> download it with the video stream.
 	// normally audio is included in the video streams. With this only special cases where this is not
 	// the case are handled.
@@ -476,18 +456,18 @@ func (downloader *downloaderStruct) downloadExtraAudio(data *static.Data) (strin
 		streamID = k
 	}
 	if streamID == "" {
-		return "", nil
+		return nil, nil
 	}
 	selectStreamOld := config.SelectStream
 	config.SelectStream = streamID
 
-	fileURI, err := downloader.downloadStream(data)
+	fileURIs, err := downloader.downloadStream(data)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 	config.SelectStream = selectStreamOld
 
-	return fileURI, nil
+	return fileURIs, nil
 }
 
 func (downloader *downloaderStruct) downloadCaption(data *static.Data) (string, error) {
@@ -498,7 +478,7 @@ func (downloader *downloaderStruct) downloadCaption(data *static.Data) (string, 
 	headers := config.FakeHeaders
 	headers["Referer"] = data.URL
 
-	fileURI := filepath.Join(downloader.filePath, fmt.Sprintf("%s_caption_%s.%s", data.Title, data.Captions[config.Caption].Language, data.Captions[config.Caption].URL.Ext))
+	fileURI := filepath.Join(downloader.filePath, fmt.Sprintf("%s_caption_%s.%s", downloader.filename, data.Captions[config.Caption].Language, data.Captions[config.Caption].URL.Ext))
 	err := downloader.save(data.Captions[config.Caption].URL, fileURI, headers)
 	if err != nil {
 		return "", err

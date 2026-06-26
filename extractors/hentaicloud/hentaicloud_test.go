@@ -40,10 +40,10 @@ func TestExtract(t *testing.T) {
 		{
 			Name: "Single Episode",
 			Args: test.Args{
-				URL:     "https://www.hentaicloud.com/video/750/boy-meets-harem-the-animation/episode1",
-				Title:   "Boy Meets Harem The Animation",
+				URL:     "https://www.hentaicloud.com/video/3910/goblin-no-suana/episode2/english",
+				Title:   "Goblin no Suana",
 				Quality: "720p",
-				Size:    244322800,
+				Size:    101645255,
 			},
 		},
 	}

@@ -67,9 +67,16 @@ func NeedDownloadList(length int) []int {
 		for i := range temp {
 			selection := strings.Split(i, "-")
 			selStart, _ = strconv.Atoi(strings.TrimSpace(selection[0]))
+			// -1 to index into slice while keeping it user friendly
+			if selStart > 0 {
+				selStart -= 1
+			}
 
 			if len(selection) >= 2 {
 				selEnd, _ = strconv.Atoi(strings.TrimSpace(selection[1]))
+				if selEnd > 0 {
+					selEnd -= 1
+				}
 			} else {
 				selEnd = selStart
 			}

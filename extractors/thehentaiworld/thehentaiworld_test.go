@@ -35,7 +35,7 @@ func TestParseURL(t *testing.T) {
 			Want: 1,
 		}, {
 			Name: "Single Gallery hentai-images",
-			URL:  "https://thehentaiworld.com/hentai-images/nico-robin-tit-flash-one-piece-hentai-image/",
+			URL:  "https://thehentaiworld.com/hentai-images/konohamaru-what-are-you-doing-naruto-hentai-image/",
 			Want: 1,
 		}, {
 			Name: "Overview",

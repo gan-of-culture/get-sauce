@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"cmp"
 	"context"
 	"encoding/json"
 	"flag"
@@ -33,7 +34,7 @@ func init() {
 	flag.StringVar(&config.UserHeaders, "h", "", "UserHeaders for the HTTP requests. To bypass Cloudflare or DDOS-GUARD protection")
 	flag.BoolVar(&config.ShowInfo, "i", false, "Show info")
 	flag.BoolVar(&config.ShowExtractedData, "j", false, "Show extracted data as json")
-	flag.BoolVar(&config.Keep, "k", false, "Keep video, audio and subtitles. Don't merge using ffmpeg")
+	flag.Var(&config.Merge, "m", "Merge output (default, none, cbz). CBZ only works if output is a stream of datatype image")
 	flag.StringVar(&config.OutputName, "o", "", "Output name")
 	flag.StringVar(&config.OutputPath, "O", "", "Output path (include ending delimiter)")
 	flag.StringVar(&config.Pages, "p", "", "Enter pages like 1,2,3-4,6,7,8-9 for doujins")
@@ -47,11 +48,11 @@ func init() {
 }
 
 func download(URL string) error {
-	if !config.Keep {
+	if config.Merge == config.MergeOptDefault {
 		_, err := exec.LookPath("ffmpeg")
 		if err != nil {
 			log.Println("No merging possible, because ffmpeg is not installed or not found in PATH")
-			config.Keep = true
+			config.Merge = config.MergeOptNone
 		}
 	}
 
@@ -75,7 +76,7 @@ func download(URL string) error {
 	lenOfData := len(data)
 	datachan := make(chan *static.Data, lenOfData)
 	errs, _ := errgroup.WithContext(context.TODO())
-	downloader := downloader.New(true)
+	downloader := downloader.New(!config.Quiet)
 
 	/*
 		We have 3 main types of data that has to be downloaded concurrently
@@ -132,6 +133,8 @@ func main() {
 			args = append(args, strings.TrimSpace(s.Text()))
 		}
 	}
+
+	config.Merge = cmp.Or(config.Merge, config.MergeOptDefault)
 
 	if len(args) < 1 {
 		fmt.Println("Too few arguments")

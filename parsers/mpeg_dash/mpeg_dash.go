@@ -11,6 +11,7 @@ import (
 	"github.com/gan-of-culture/get-sauce/request"
 	"github.com/gan-of-culture/get-sauce/static"
 	"github.com/gan-of-culture/get-sauce/utils"
+	"github.com/pkg/errors"
 )
 
 type AdaptationSet struct {
@@ -103,7 +104,7 @@ func ParseDASHManifest(xmlString *string, URL string) (map[string]*static.Stream
 	mpd := MPD{}
 	err := xml.Unmarshal([]byte(*xmlString), &mpd)
 	if err != nil {
-		return nil, err
+		return nil, errors.WithStack(err)
 	}
 
 	out := map[string]*static.Stream{}
@@ -124,7 +125,7 @@ func replaceIdentifier(URI string, vars map[string]string) (string, error) {
 			iNameTrimmed = strings.Replace(iNameTrimmed, formatTag, "", 1)
 			number, err := strconv.Atoi(vars[iNameTrimmed])
 			if err != nil {
-				return "", err
+				return "", errors.WithStack(err)
 			}
 			vars[iNameTrimmed] = fmt.Sprintf(formatTag, number)
 		}
@@ -170,14 +171,14 @@ func parseAdaptionSet(aSet *AdaptationSet, URL string) (*static.Stream, error) {
 
 	baseURL, err := url.Parse(URL)
 	if err != nil {
-		return nil, err
+		return nil, errors.WithStack(err)
 	}
 	for _, URL := range URLs {
 		URL.URL = strings.ReplaceAll(URL.URL, `\`, "/")
 		if !strings.Contains(URL.URL, "http") {
 			segmentURL, err := baseURL.Parse(URL.URL)
 			if err != nil {
-				return nil, err
+				return nil, errors.WithStack(err)
 			}
 			URL.URL = segmentURL.String()
 		}

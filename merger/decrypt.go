@@ -1,4 +1,4 @@
-package downloader
+package merger
 
 import (
 	"crypto/aes"
@@ -6,6 +6,8 @@ import (
 	"encoding/binary"
 	"io"
 	"os"
+
+	"github.com/pkg/errors"
 )
 
 // thanks to https://github.com/canhlinh/hlsdl for creating to beautiful way to decrypt
@@ -18,7 +20,7 @@ import (
 func decryptAES128(crypted, key, iv []byte) ([]byte, error) {
 	block, err := aes.NewCipher(key)
 	if err != nil {
-		return nil, err
+		return nil, errors.WithStack(err)
 	}
 	blockSize := block.BlockSize()
 	blockMode := cipher.NewCBCDecrypter(block, iv[:blockSize])
@@ -45,13 +47,13 @@ func decrypt(key []byte, fileName string) ([]byte, error) {
 
 	file, err := os.Open(fileName)
 	if err != nil {
-		return nil, err
+		return nil, errors.WithStack(err)
 	}
 	defer file.Close()
 
 	data, err := io.ReadAll(file)
 	if err != nil {
-		return nil, err
+		return nil, errors.WithStack(err)
 	}
 
 	iv := defaultIV(uint64(0))

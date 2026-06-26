@@ -1,4 +1,4 @@
-package downloader
+package merger
 
 import (
 	"fmt"
@@ -10,13 +10,10 @@ import (
 	"github.com/gan-of-culture/get-sauce/static"
 )
 
-type MergeFile struct {
-	path     string
-	dataType static.DataType
-}
+// dataMerger merge multiple streams into one final file e.g combine video, audio and captions stream.
+type dataMerger struct{}
 
-// mergeMediaFiles into one output file using ffmpeg | merges video + audio + subtitles
-func mergeMediaFiles(files []MergeFile, outFile string) error {
+func (dM dataMerger) Merge(files []*MergeFile, outFile string) error {
 	if len(files) < 2 {
 		return nil
 	}
@@ -26,7 +23,7 @@ func mergeMediaFiles(files []MergeFile, outFile string) error {
 
 	command := []string{"-y"}
 	for _, f := range files {
-		p, _ := filepath.Abs(f.path)
+		p, _ := filepath.Abs(f.Path)
 		command = append(command, "-i")
 		command = append(command, p)
 	}
@@ -67,7 +64,7 @@ func mergeMediaFiles(files []MergeFile, outFile string) error {
 	}
 
 	for _, f := range files {
-		err := os.Remove(f.path)
+		err := os.Remove(f.Path)
 		if err != nil {
 			return err
 		}
@@ -79,10 +76,10 @@ func mergeMediaFiles(files []MergeFile, outFile string) error {
 	return nil
 }
 
-func getAudioMapping(files []MergeFile) []string {
+func getAudioMapping(files []*MergeFile) []string {
 	var cmd []string
 	for idx, a := range files {
-		if a.dataType != static.DataTypeAudio {
+		if a.DataType != static.DataTypeAudio {
 			continue
 		}
 		cmd = append(cmd, "-map")
@@ -96,14 +93,18 @@ func getAudioMapping(files []MergeFile) []string {
 	return cmd
 }
 
-func getCaptionMapping(files []MergeFile) []string {
+func getCaptionMapping(files []*MergeFile) []string {
 	var cmd []string
 	for idx, a := range files {
-		if a.dataType != static.DataTypeText {
+		if a.DataType != static.DataTypeText {
 			continue
 		}
 		cmd = append(cmd, "-map")
 		cmd = append(cmd, fmt.Sprintf("%d:s", idx))
 	}
 	return cmd
+}
+
+func NewDataMerger() merger {
+	return &dataMerger{}
 }

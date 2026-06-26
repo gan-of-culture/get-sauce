@@ -120,7 +120,7 @@ func TestDownload(t *testing.T) {
 	}
 	config.Workers = 5
 	config.SelectStream = "0"
-	config.Keep = true
+	config.Merge = config.MergeOptNone
 	config.Truncate = true
 	downloader := New(false)
 	for _, tt := range tests {
