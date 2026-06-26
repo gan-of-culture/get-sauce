@@ -1,5 +1,41 @@
 package config
 
+import (
+	"fmt"
+	"maps"
+	"slices"
+	"strings"
+)
+
+type MergeOpt string
+
+const (
+	MergeOptDefault MergeOpt = "default"
+	MergeOptNone    MergeOpt = "none"
+	MergeOptCBZ     MergeOpt = "cbz"
+)
+
+var mergeOpts = map[MergeOpt]string{
+	MergeOptDefault: "default",
+	MergeOptNone:    "none",
+	MergeOptCBZ:     "cbz",
+}
+
+// String returns the string representation (required by flag.Value)
+func (m MergeOpt) String() string {
+	return mergeOpts[m]
+}
+
+// Set validates and sets the value (required by flag.Value)
+func (m *MergeOpt) Set(value string) error {
+	_, ok := mergeOpts[MergeOpt(value)]
+	if !ok {
+		return fmt.Errorf("invalid MergeOpt %q. Allowed values: %s", value, strings.Join(slices.Collect(maps.Values(mergeOpts)), ","))
+	}
+	*m = MergeOpt(value)
+	return nil
+}
+
 var (
 	// Amount of files to download
 	Amount int
@@ -7,8 +43,8 @@ var (
 	Caption int
 	// File download URLs listed in this file path
 	File string
-	// Keep video, audio and subtitles. Don't merge using ffmpeg
-	Keep bool
+	// Merge output (default, none, cbz). CBZ only works if output is a stream of datatype image
+	Merge MergeOpt
 	// OutputPath for files
 	OutputPath string
 	// OutputName for file

@@ -1,4 +1,4 @@
-package kvsplayer
+package muchohentai
 
 import (
 	"testing"
@@ -12,12 +12,12 @@ func TestExtract(t *testing.T) {
 		Args test.Args
 	}{
 		{
-			Name: "Single Episode www.kvs-demo.com",
+			Name: "Single Episode",
 			Args: test.Args{
-				URL:     "https://www.kvs-demo.com/video/219/kylie-minogue-all-the-lovers/",
-				Title:   "kylie-minogue-all-the-lovers",
-				Quality: "720p",
-				Size:    34374746,
+				URL:     "https://muchohentai.com/avH6Dh/198883",
+				Title:   "Ichijouma Mankitsu Gurashi! Episode 6 English Subbed",
+				Quality: "1920x1080",
+				Size:    581279472,
 			},
 		},
 	}

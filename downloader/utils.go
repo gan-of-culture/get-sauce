@@ -13,6 +13,8 @@ import (
 	"github.com/gan-of-culture/get-sauce/utils"
 )
 
+var reSanitizeTitle = regexp.MustCompile(`["&|:?<>/*\\ ]+`)
+
 // GenSortedStreams for stream map
 func GenSortedStreams(streams map[string]*static.Stream) []*static.Stream {
 	index := make([]int64, 0, len(streams))
@@ -121,4 +123,12 @@ func sanitizeVTT(fileURI string) error {
 	}
 
 	return os.WriteFile(fileURI, []byte(out), 0644)
+}
+
+func sanitizeTitle(title string) string {
+	title = reSanitizeTitle.ReplaceAllString(title, " ")
+	title = strings.TrimSpace(title)
+	title = strings.TrimRight(title, ".")
+	title = strings.ReplaceAll(title, "  ", " ")
+	return title
 }

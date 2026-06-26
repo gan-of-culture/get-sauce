@@ -19,11 +19,8 @@ import (
 const site = "https://danbooru.donmai.us"
 const postURLTemplate = site + "/posts/%s"
 
-// [1] = img original width [2] image original height [3] src URL [4] image name
-var reIMGData = regexp.MustCompile(`data-width="([^"]+)"[ ]+data-height="([^"]+)"[\s\S]*?alt="([^"]+)".+src="([^"]+)"`)
-
 // src URL, size, width, height
-var reIMGData2 = regexp.MustCompile(`Size: <a href="([^"]+)">([^A-Z]+[^\s]+)[^(]+\(([^)]+)`)
+var reIMGData = regexp.MustCompile(`Size: <a href="([^"]+)">([^A-Z]+[^\s]+)[^(]+\(([^)]+)`)
 
 type extractor struct {
 	client *http.Client
@@ -93,7 +90,7 @@ func (e *extractor) extractData(postID string) (*static.Data, error) {
 		return nil, errors.WithStack(err)
 	}
 
-	matchedImgData := reIMGData2.FindStringSubmatch(string(htmlBytes))
+	matchedImgData := reIMGData.FindStringSubmatch(string(htmlBytes))
 	if len(matchedImgData) != 4 {
 		log.Println(string(htmlBytes))
 		return nil, errors.WithStack(static.ErrDataSourceParseFailed)

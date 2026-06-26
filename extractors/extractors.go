@@ -6,7 +6,6 @@ import (
 
 	"github.com/gan-of-culture/get-sauce/extractors/danbooru"
 	"github.com/gan-of-culture/get-sauce/extractors/eahentai"
-	"github.com/gan-of-culture/get-sauce/extractors/ehentai"
 	"github.com/gan-of-culture/get-sauce/extractors/haho"
 	"github.com/gan-of-culture/get-sauce/extractors/hanime"
 	"github.com/gan-of-culture/get-sauce/extractors/hentai2read"
@@ -49,7 +48,6 @@ func init() {
 		"asmhentai.com":          htdoujinExtractor,
 		"comicporn.xxx":          htdoujinExtractor,
 		"danbooru.donmai.us":     danbooru.New(),
-		"e-hentai.org":           ehentai.New(),
 		"eahentai.com":           eahentai.New(),
 		"haho.moe":               haho.New(),
 		"hanime.tv":              hanime.New(),

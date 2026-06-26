@@ -174,7 +174,7 @@ func extractData(URL string) (*static.Data, error) {
 				URLs: URLs,
 			},
 		},
-		URL: fmt.Sprintf("%s%s.html", readerURL, string(galleryData.ID)),
+		URL: fmt.Sprintf("%s%s.html", readerURL, strings.Trim(string(galleryData.ID), `"`)),
 	}, nil
 }
 

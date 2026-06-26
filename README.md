@@ -198,7 +198,7 @@ get-sauce -i https://hentai-moon.com/videos/285/isekai-harem-monogatari-ep-1/
 
  -F             Download URLs listed in this file path
 
- get-sauce -F /path/to/file
+ get-sauce -F "/path/to/file"
 
 ---------------------------------------------------------------------------------------------------------
 
@@ -220,21 +220,21 @@ get-sauce -i https://hentai-moon.com/videos/285/isekai-harem-monogatari-ep-1/
 
 ---------------------------------------------------------------------------------------------------------
 
- -k             Keep video, audio and subtitles. Don't merge using ffmpeg
+ -m             Merge output (default, none, cbz). CBZ only works if output is a stream of datatype image
 
- get-sauce -k http...
+ get-sauce -m "mergeOption" http...
 
 ---------------------------------------------------------------------------------------------------------
 
  -o             Output name of the file
 
- get-sauce -o myfilename http...
+ get-sauce -o "myfilename" http...
 
 ---------------------------------------------------------------------------------------------------------
 
  -O             Output path of the files. This will create the directory if it doesn't exist
 
- get-sauce -O C://Users//User//Downloads// http...
+ get-sauce -O "/directory/path" http...
 
 ---------------------------------------------------------------------------------------------------------
 
@@ -312,7 +312,6 @@ The following links will direct you to adult content. Please keep that in mind!
 | [booruproject (ex. rule34, gelbooru)](https://booru.org/top)                    | :heavy_check_mark: | :heavy_check_mark: |
 | [comicporn.xxx](https://comicporn.xxx)                                          | :heavy_check_mark: |         ?          |
 | [danbooru.donmai.us](https://danbooru.donmai.us)                                | :heavy_check_mark: |         ?          |
-| [e-hentai.org](https://e-hentai.org)                                            | :heavy_check_mark: |         ?          |
 | [eahentai.com](https://eahentai.com)                                            | :heavy_check_mark: |         ?          |
 | [haho.moe (1080p, 720p, 480p, 360p)](https://haho.moe)                          |         ?          | :heavy_check_mark: |
 | [hanime.tv (720p, 480p, 360p)](https://hanime.tv)                               |         ?          | :heavy_check_mark: |

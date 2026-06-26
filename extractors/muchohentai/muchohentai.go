@@ -23,7 +23,7 @@ import (
 )
 
 const site = "https://muchohentai.com/"
-const urlPart = "Ygh1ZX"
+const urlPart = "avH6Dh"
 
 var reEpisodeURL = regexp.MustCompile(site + urlPart + `/\d+/`)
 var reServerPrefixes = regexp.MustCompile(`va\d\d`)
