@@ -1,8 +1,10 @@
 package hentainexus
 
 import (
+	"cmp"
 	"encoding/base64"
 	"encoding/json"
+	"fmt"
 	"html"
 	"net/url"
 	"regexp"
@@ -19,10 +21,11 @@ const site = "https://" + domain
 var reReader = regexp.MustCompile(`initReader\("([^"]+)`)
 
 type gallery []struct {
-	Image    string `json:"image"`
-	Label    string `json:"label"`
-	URLLabel string `json:"url_label"`
-	Type     string `json:"type"`
+	ImageAVIF     string `json:"image_avif"`
+	ImageFallback string `json:"image_fallback"`
+	Label         string `json:"label"`
+	URLLabel      string `json:"url_label"`
+	Type          string `json:"type"`
 }
 
 type extractor struct{}
@@ -92,7 +95,9 @@ func extractData(URL string) (*static.Data, error) {
 	}
 
 	base64String := utils.GetLastItemString(reReader.FindStringSubmatch(htmlString))
+	//fmt.Println(base64String)
 	jsonString, err := decryptJson(base64String)
+	//fmt.Println(jsonString)
 	if err != nil {
 		return nil, err
 	}
@@ -102,13 +107,18 @@ func extractData(URL string) (*static.Data, error) {
 	if err != nil {
 		return nil, err
 	}
+
 	var URLs []*static.URL
 	wantedPages := utils.NeedDownloadList(len(gallery))
 	for _, pIdx := range wantedPages {
 		page := gallery[pIdx]
+		imageURL := cmp.Or(page.ImageAVIF, page.ImageFallback)
+		if imageURL == "" {
+			return nil, fmt.Errorf("no image URL for page %d", pIdx)
+		}
 		URLs = append(URLs, &static.URL{
-			URL: page.Image,
-			Ext: utils.GetFileExt(page.Image),
+			URL: imageURL,
+			Ext: utils.GetFileExt(imageURL),
 		})
 	}
 
