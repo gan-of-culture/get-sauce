@@ -11,6 +11,7 @@ media
 *.avif
 *.gif
 *.jpg
+*.jpeg
 *.png
 *.mp4
 *.mkv

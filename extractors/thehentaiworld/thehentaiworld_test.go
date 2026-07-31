@@ -80,7 +80,7 @@ func TestExtract(t *testing.T) {
 			Name: "Single video",
 			Args: test.Args{
 				URL:     "https://thehentaiworld.com/videos/ahri-bewyx-league-of-legends-9/",
-				Title:   "153088 – Ahri – Bewyx – League of Legends Animated Hentai 3D CGI Video_T1_C1",
+				Title:   "153087 – Ahri – Bewyx – League of Legends",
 				Quality: "720p; 1280 x 720",
 				Size:    2345048,
 			},
@@ -89,7 +89,7 @@ func TestExtract(t *testing.T) {
 			Name: "Single Gallery hentai-images",
 			Args: test.Args{
 				URL:     "https://thehentaiworld.com/hentai-cosplay-images/ahri-helly-von-valentine-league-of-legends-2/",
-				Title:   "153371 – Ahri – Helly von Valentine – League of Legends Hentai Cosplay (20)",
+				Title:   "153351 – Ahri – Helly von Valentine – League of Legends",
 				Quality: "1242p; 1824 x 1242",
 				Size:    0,
 			},

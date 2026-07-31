@@ -14,15 +14,11 @@ import (
 	"github.com/gan-of-culture/get-sauce/request"
 	"github.com/gan-of-culture/get-sauce/static"
 	"github.com/gan-of-culture/get-sauce/utils"
+	"github.com/pkg/errors"
 )
 
 type tag struct {
 	ID uint `json:"id"`
-}
-
-type post struct {
-	ID   uint   `json:"id"`
-	Link string `json:"Link"`
 }
 
 type title struct {
@@ -88,11 +84,30 @@ type media struct {
 	SourceURL    string       `json:"source_url"`
 }
 
+type post struct {
+	ID      int    `json:"id"`
+	Date    string `json:"date"`
+	DateGmt string `json:"date_gmt"`
+	GUID    struct {
+		Rendered string `json:"rendered"`
+	} `json:"guid"`
+	Modified    string `json:"modified"`
+	ModifiedGmt string `json:"modified_gmt"`
+	Slug        string `json:"slug"`
+	Status      string `json:"status"`
+	Type        string `json:"type"`
+	Link        string `json:"link"`
+	Title       struct {
+		Rendered string `json:"rendered"`
+	} `json:"title"`
+}
+
 const site = "https://thehentaiworld.com/"
 const postPerPage = "24"
-const postsAPI = "https://thehentaiworld.com/wp-json/wp/v2/posts?"
-const tagsAPI = "https://thehentaiworld.com/wp-json/wp/v2/tags?slug="
-const mediaAPI = "https://thehentaiworld.com/wp-json/wp/v2/media?parent="
+const api = site + "wp-json/wp/v2/"
+const postsAPI = api + "posts?"
+const tagsAPI = api + "tags?slug="
+const mediaAPI = api + "media?parent="
 
 // https://thehentaiworld.com/wp-json/wp/v2/categories
 var rePost *regexp.Regexp = regexp.MustCompile(`https://thehentaiworld.com/(?:3d-cgi-hentai-images|gif-animated-hentai-images|hentai-cosplay-images|hentai-doujinshi|flash-hentai|hentai-images|videos)/([^/]+)`)
@@ -201,6 +216,18 @@ func parseURL(URL string) []string {
 }
 
 func extractData(pID string) ([]*static.Data, error) {
+
+	postJSON, err := request.GetAsBytes(fmt.Sprintf("%sposts/%s", api, pID))
+	if err != nil {
+		return nil, err
+	}
+
+	post := post{}
+	err = json.Unmarshal(postJSON, &post)
+	if err != nil {
+		return nil, errors.WithStack(err)
+	}
+
 	// set per_page value to max (100) I have seen posts that contain 20+ images
 	mediaJSON, err := request.GetAsBytes(mediaAPI + pID + "&per_page=100")
 	if err != nil {
@@ -210,7 +237,7 @@ func extractData(pID string) ([]*static.Data, error) {
 	mS := []media{}
 	err = json.Unmarshal(mediaJSON, &mS)
 	if err != nil {
-		return nil, err
+		return nil, errors.WithStack(err)
 	}
 
 	// for vids you get thumbnail and video - discard the thumbnail
@@ -253,10 +280,10 @@ func extractData(pID string) ([]*static.Data, error) {
 		// need to append m.ID for unique file name
 		data = append(data, &static.Data{
 			Site:    site,
-			Title:   fmt.Sprintf("%d – %s", m.ID, html.UnescapeString(m.Title.Rendered)),
+			Title:   fmt.Sprintf("%d – %s", post.ID, html.UnescapeString(post.Title.Rendered)),
 			Type:    static.DataType(strings.Split(m.MimeType, "/")[0]),
 			Streams: streams,
-			URL:     "https://thehentaiworld.com/?p=" + fmt.Sprint(m.ID),
+			URL:     post.Link,
 		})
 	}
 
