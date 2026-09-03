@@ -445,7 +445,7 @@ func TestSortStreamsBySize(t *testing.T) {
 	}
 }
 
-func Test(t *testing.T) {
+func TestGetJSONFromJSObjStr(t *testing.T) {
 	tests := []struct {
 		Name string
 		In   string
@@ -460,6 +460,29 @@ func Test(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.Name, func(t *testing.T) {
 			JSONStr := GetJSONFromJSObjStr(tt.In)
+
+			if JSONStr != tt.Want {
+				t.Errorf("Got: %v - Want: %v", JSONStr, tt.Want)
+			}
+		})
+	}
+}
+
+func TestGetJSONFromRelaxedJSObjStr(t *testing.T) {
+	tests := []struct {
+		Name string
+		In   string
+		Want string
+	}{
+		{
+			Name: "Default",
+			In:   `{sources: [{type: "mp4",file: "https:\/\/gdvid.info\/K\/kanojo-saimin-1.mp4"        }],advertising: {client:"vast",tag:"https:\/\/ad.twinrdengine.com\/adraw?zone=01DXF6DT004000000000002284&kw=COMMA_SEPARATED_KEYWORDS",skipoffset:5,requestTimeout:5000,loadVideoTimeout:5000,creativeTimeout:5000,vastLoadTimeout:5000},image: "https:\/\/hentaimama.io\/wp-content\/uploads\/2026\/08\/kanojo-saimin-1_preview_108-1-dtp1280x720sq85w.webp",width: "100%",height: "100%",playbackRateControls: true,playbackRates: [0.5, 0.75, 1, 1.25, 1.5, 2],}`,
+			Want: `{"sources": [{"type": "mp4","file": "https:\/\/gdvid.info\/K\/kanojo-saimin-1.mp4"        }],"advertising": {"client":"vast","tag":"https:\/\/ad.twinrdengine.com\/adraw?zone=01DXF6DT004000000000002284&kw=COMMA_SEPARATED_KEYWORDS","skipoffset":5,"requestTimeout":5000,"loadVideoTimeout":5000,"creativeTimeout":5000,"vastLoadTimeout":5000},"image": "https:\/\/hentaimama.io\/wp-content\/uploads\/2026\/08\/kanojo-saimin-1_preview_108-1-dtp1280x720sq85w.webp","width": "100%","height": "100%","playbackRateControls": true,"playbackRates": [0.5, 0.75, 1, 1.25, 1.5, 2]}`,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.Name, func(t *testing.T) {
+			JSONStr := GetJSONFromRelaxedJSObjStr(tt.In)
 
 			if JSONStr != tt.Want {
 				t.Errorf("Got: %v - Want: %v", JSONStr, tt.Want)

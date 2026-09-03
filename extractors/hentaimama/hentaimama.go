@@ -2,8 +2,9 @@ package hentaimama
 
 import (
 	"encoding/base64"
-	"errors"
+	"encoding/json"
 	"fmt"
+	"html"
 	"io"
 	"log"
 	"net/http"
@@ -15,20 +16,104 @@ import (
 	"github.com/gan-of-culture/get-sauce/request"
 	"github.com/gan-of-culture/get-sauce/static"
 	"github.com/gan-of-culture/get-sauce/utils"
+	"github.com/pkg/errors"
 )
+
+type setup struct {
+	Sources []struct {
+		Type string `json:"type"`
+		File string `json:"file"`
+	} `json:"sources"`
+}
 
 type source struct {
 	URL     string
 	Referer string
 }
 
+type sourceParser interface {
+	resolve(URL *url.URL) ([]*source, error)
+}
+
+type defaultParser struct{}
+
+func (dp *defaultParser) resolve(URL *url.URL) ([]*source, error) {
+	sources := []*source{}
+
+	b64Path, err := base64.StdEncoding.DecodeString(URL.Query().Get("p"))
+	if err != nil {
+		return nil, errors.WithStack(err)
+	}
+	b64Paths := strings.Split(string(b64Path), "?")
+
+	HTMLString, err := request.Get(URL.String())
+	if err != nil {
+		return nil, err
+	}
+
+	reSrc := regexp.MustCompile(fmt.Sprintf(`[^"']*/%s[^"']*`, string(b64Paths[0])))
+	videoURL := reSrc.FindString(HTMLString)
+	if videoURL == "" {
+		log.Printf("skipping broken source: %s", URL.String())
+		return nil, nil
+	}
+	sources = append(sources, &source{
+		URL:     videoURL,
+		Referer: URL.String(),
+	})
+
+	return sources, nil
+}
+
+func NewDefaultParser() sourceParser {
+	return &defaultParser{}
+}
+
+type embedParser struct {
+	reSetup *regexp.Regexp
+}
+
+func (ep *embedParser) resolve(URL *url.URL) ([]*source, error) {
+	HTMLString, err := request.Get(URL.String())
+	if err != nil {
+		return nil, err
+	}
+
+	matchedSetup := ep.reSetup.FindStringSubmatch(HTMLString)
+	if len(matchedSetup) == 0 || matchedSetup[1] == "" {
+		return nil, errors.WithStack(fmt.Errorf("setup string with source info not found"))
+	}
+
+	jsonString := utils.GetJSONFromRelaxedJSObjStr(matchedSetup[1])
+
+	setup := setup{}
+	err = json.Unmarshal([]byte(jsonString), &setup)
+	if err != nil {
+		return nil, errors.WithStack(err)
+	}
+
+	sources := []*source{}
+	for _, parsedSource := range setup.Sources {
+		sources = append(sources, &source{
+			URL:     parsedSource.File,
+			Referer: URL.String(),
+		})
+	}
+
+	return sources, nil
+}
+
+func NewEmbedParser() sourceParser {
+	return &embedParser{reSetup: regexp.MustCompile(`setup\(([^\)]+)`)}
+}
+
 const site = "https://hentaimama.io/"
 const api = "https://hentaimama.io/wp-admin/admin-ajax.php"
 
-var reMirrorURLs = regexp.MustCompile(`[^"]*new\d.php\?p=([^"]*)`)
+var rePlayerContentURLs = regexp.MustCompile(`https:\\\/\\\/hentaimama.io[^"]+`)
 var reExt = regexp.MustCompile(`([a-z][\w]*)(?:\?|$)`)
 var reMimeType = regexp.MustCompile(`video/[^']*`)
-var rePostID = regexp.MustCompile(`a:'(\d+)'`)
+var rePostID = regexp.MustCompile(`a:\s'(\d+)'`)
 
 type extractor struct{}
 
@@ -64,49 +149,44 @@ func parseURL(URL string) []string {
 		return []string{}
 	}
 
-	htmlString, err := request.Get(URL)
+	HTMLString, err := request.Get(URL)
 	if err != nil {
 		return []string{}
 	}
 
 	re := regexp.MustCompile(`https://hentaimama.io/episodes[^"]*`)
-	return re.FindAllString(htmlString, -1)
+	return re.FindAllString(HTMLString, -1)[1:]
 }
 
 func extractData(URL string) (*static.Data, error) {
-	episodeHtmlString, err := request.Get(URL)
+	episodeHTMLString, err := request.Get(URL)
 	if err != nil {
 		return nil, err
 	}
 
-	matchedMirrorURLs, err := getMirrorURLs(&episodeHtmlString, URL)
+	matchedPlayerContentURLs, err := getPlayerContentURLs(&episodeHTMLString, URL)
 	if err != nil {
 		return nil, err
 	}
 
-	sources := []source{}
-	for _, u := range matchedMirrorURLs {
-		b64Path, err := base64.StdEncoding.DecodeString(u[1])
+	sources := []*source{}
+	for _, playerContentURL := range matchedPlayerContentURLs {
+		playerContentURL = strings.ReplaceAll(html.UnescapeString(playerContentURL), `\`, "")
+		u, err := url.Parse(playerContentURL)
+		if err != nil {
+			return nil, errors.WithStack(err)
+		}
+
+		sourceParser := NewDefaultParser()
+		if u.Query().Has("dt_embed") {
+			sourceParser = NewEmbedParser()
+		}
+
+		s, err := sourceParser.resolve(u)
 		if err != nil {
 			return nil, err
 		}
-		b64Paths := strings.Split(string(b64Path), "?")
-
-		htmlString, err := request.Get(u[0])
-		if err != nil {
-			return nil, err
-		}
-
-		reSrc := regexp.MustCompile(fmt.Sprintf(`[^"']*/%s[^"']*`, string(b64Paths[0])))
-		videoURL := reSrc.FindString(htmlString)
-		if videoURL == "" {
-			log.Printf("skipping broken source: %s", u)
-			continue
-		}
-		sources = append(sources, source{
-			URL:     videoURL,
-			Referer: u[0],
-		})
+		sources = append(sources, s...)
 	}
 
 	mirrorIdx := 0
@@ -175,7 +255,7 @@ func extractData(URL string) (*static.Data, error) {
 
 	return &static.Data{
 		Site:    site,
-		Title:   utils.GetMeta(&episodeHtmlString, "og:title"),
+		Title:   utils.GetH1(&episodeHTMLString, -1),
 		Type:    "video",
 		Streams: streams,
 		URL:     URL,
@@ -183,8 +263,8 @@ func extractData(URL string) (*static.Data, error) {
 
 }
 
-func getMirrorURLs(htmlString *string, URL string) ([][]string, error) {
-	matchedID := rePostID.FindStringSubmatch(*htmlString)
+func getPlayerContentURLs(HTMLString *string, URL string) ([]string, error) {
+	matchedID := rePostID.FindStringSubmatch(*HTMLString)
 	if len(matchedID) < 1 {
 		return nil, static.ErrDataSourceParseFailed
 	}
@@ -207,8 +287,5 @@ func getMirrorURLs(htmlString *string, URL string) ([][]string, error) {
 		return nil, err
 	}
 
-	resString := string(buffer)
-	resString = strings.ReplaceAll(resString, `\`, "")
-
-	return reMirrorURLs.FindAllStringSubmatch(resString, -1), nil
+	return rePlayerContentURLs.FindAllString(string(buffer), -1), nil
 }
