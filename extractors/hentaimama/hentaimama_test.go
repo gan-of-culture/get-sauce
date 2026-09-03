@@ -1,5 +1,6 @@
 //go:build localonly
 
+
 package hentaimama
 
 import (
@@ -40,10 +41,19 @@ func TestExtract(t *testing.T) {
 		Args test.Args
 	}{
 		{
+			Name: "Single Episode new embed player",
+			Args: test.Args{
+				URL:     "https://hentaimama.io/episodes/kanojo-saimin-episode-1/",
+				Title:   "Kanojo Saimin - Episode 1",
+				Quality: "1280x720",
+				Size:    114644676,
+			},
+		},
+		{
 			Name: "Single Episode using HLS only",
 			Args: test.Args{
 				URL:     "https://hentaimama.io/episodes/kuroinu-ii-animation-episode-1/",
-				Title:   "Kuroinu II The Animation Episode 1",
+				Title:   "Kuroinu II The Animation - Episode 1",
 				Quality: "1280x720",
 				Size:    446315760,
 			},
@@ -52,7 +62,7 @@ func TestExtract(t *testing.T) {
 			Name: "Single Episode using a single mp4 file",
 			Args: test.Args{
 				URL:   "https://hentaimama.io/episodes/ura-jutaijima-episode-1/",
-				Title: "Ura Jutaijima Episode 1",
+				Title: "Ura Jutaijima - Episode 1",
 				Size:  77530809,
 			},
 		},
@@ -60,7 +70,7 @@ func TestExtract(t *testing.T) {
 			Name: "Single Episode using a both mp4 and HLS",
 			Args: test.Args{
 				URL:     "https://hentaimama.io/episodes/torokase-orgasm-animation-episode-1/",
-				Title:   "Torokase Orgasm The Animation Episode 1",
+				Title:   "Torokase Orgasm The Animation - Episode 1",
 				Quality: "1280x720",
 				Size:    427589832,
 			},

@@ -18,8 +18,8 @@ func TestParseURL(t *testing.T) {
 			Want: 1,
 		}, {
 			Name: "Collection",
-			URL:  "https://eahentai.com/search?type=from&q=86&p=1",
-			Want: 20,
+			URL:  "https://eahentai.com/search?p=1&q=big%20breasts",
+			Want: 42,
 		},
 	}
 	for _, tt := range tests {

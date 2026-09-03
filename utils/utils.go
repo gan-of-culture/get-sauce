@@ -195,3 +195,16 @@ func GetJSONFromJSObjStr(JSObj string) string {
 	replacer := strings.NewReplacer(`\"`, `"`, `\'`, `'`)
 	return replacer.Replace(JSObj)
 }
+
+func GetJSONFromRelaxedJSObjStr(relaxedJSObj string) string {
+	// 1. Wrap unquoted keys in double quotes
+	// Matches identifiers followed by a colon
+	reKeys := regexp.MustCompile(`([{,]\s*)([a-zA-Z_][a-zA-Z0-9_]*)\s*:`)
+	relaxedJSObj = reKeys.ReplaceAllString(relaxedJSObj, `$1"$2":`)
+
+	// 2. Remove trailing commas before closing braces or brackets
+	reTrailingCommas := regexp.MustCompile(`,(\s*[}\]])`)
+	relaxedJSObj = reTrailingCommas.ReplaceAllString(relaxedJSObj, "$1")
+
+	return relaxedJSObj
+}
