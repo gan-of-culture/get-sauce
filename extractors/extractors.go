@@ -22,6 +22,7 @@ import (
 	"github.com/gan-of-culture/get-sauce/extractors/hstream"
 	"github.com/gan-of-culture/get-sauce/extractors/htdoujin"
 	"github.com/gan-of-culture/get-sauce/extractors/iwara"
+	"github.com/gan-of-culture/get-sauce/extractors/mhtdoujin"
 	"github.com/gan-of-culture/get-sauce/extractors/miohentai"
 	"github.com/gan-of-culture/get-sauce/extractors/muchohentai"
 	"github.com/gan-of-culture/get-sauce/extractors/nhentai"
@@ -39,6 +40,7 @@ var extractorsMap map[string]static.Extractor
 
 func init() {
 	htdoujinExtractor := htdoujin.New()
+	mhtdoujinExtractor := mhtdoujin.New()
 	iwaraExtractor := iwara.New()
 
 	extractorsMap = map[string]static.Extractor{
@@ -54,7 +56,7 @@ func init() {
 		"hentai2w.com":           hentai2w.New(),
 		"www.hentaicloud.com":    hentaicloud.New(),
 		"hentaiera.com":          htdoujinExtractor,
-		"hentaienvy.com":         htdoujinExtractor,
+		"hentaienvy.com":         mhtdoujinExtractor,
 		"www.hentai-foundry.com": hentaifoundry.New(),
 		"hentaifox.com":          htdoujinExtractor,
 		"hentaimama.io":          hentaimama.New(),
@@ -64,7 +66,7 @@ func init() {
 		"hentairox.com":          htdoujinExtractor,
 		"hentaivideos.net":       hentaivideos.New(),
 		"hentaiworld.tv":         hentaiworld.New(),
-		"hentaizap.com":          htdoujinExtractor,
+		"hentaizap.com":          mhtdoujinExtractor,
 		"hitomi.la":              hitomi.New(),
 		"hstream.moe":            hstream.New(),
 		"imhentai.xxx":           htdoujinExtractor,
