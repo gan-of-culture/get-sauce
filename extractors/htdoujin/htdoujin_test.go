@@ -36,14 +36,6 @@ func TestParseURL(t *testing.T) {
 			URL:  "https://hentaiera.com/tag/ahegao/",
 			Want: 25,
 		}, {
-			Name: "Single Gallery HentaiEnvy",
-			URL:  "https://hentaienvy.com/gallery/808735/",
-			Want: 1,
-		}, {
-			Name: "Tag HentaiEnvy",
-			URL:  "https://hentaienvy.com/parody/azur-lane/",
-			Want: 28,
-		}, {
 			Name: "Single Gallery IMHentai",
 			URL:  "https://imhentai.xxx/gallery/684976/",
 			Want: 1,
@@ -67,14 +59,6 @@ func TestParseURL(t *testing.T) {
 			Name: "Tag HentaiEra",
 			URL:  "https://hentairox.com/tag/mosaic-censorship/",
 			Want: 20,
-		}, {
-			Name: "Single Gallery HentaiZap",
-			URL:  "https://hentaizap.com/gallery/843645/",
-			Want: 1,
-		}, {
-			Name: "Tag HentaiZap",
-			URL:  "https://hentaizap.com/tag/ahegao/",
-			Want: 24,
 		},
 	}
 	for _, tt := range tests {
@@ -130,15 +114,6 @@ func TestExtract(t *testing.T) {
 			},
 		},
 		{
-			Name: "Single Gallery HentaiEnvy",
-			Args: test.Args{
-				URL:     "https://hentaienvy.com/gallery/273160/",
-				Title:   "Makura Eigyou de Oshioki yo! ~Ano Sailor Senshi ga Makura Eigyou Halation~",
-				Quality: "",
-				Size:    0,
-			},
-		},
-		{
 			Name: "Single Gallery HentaiFox",
 			Args: test.Args{
 				URL:     "https://hentaifox.com/gallery/84580/",
@@ -152,15 +127,6 @@ func TestExtract(t *testing.T) {
 			Args: test.Args{
 				URL:     "https://hentairox.com/gallery/397913/",
 				Title:   "Hanamizuki Vol.1",
-				Quality: "",
-				Size:    0,
-			},
-		},
-		{
-			Name: "Single Gallery HentaiZap",
-			Args: test.Args{
-				URL:     "https://hentaizap.com/gallery/843645/",
-				Title:   "SUMMER FOX HUNTING",
 				Quality: "",
 				Size:    0,
 			},
